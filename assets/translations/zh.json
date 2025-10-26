@@ -1,0 +1,213 @@
+{
+  "demo": {
+    "description": "基于 Vue3 全家桶、TypeScript、Vite 构建工具，开箱即用的 H5 移动端项目基础模板。",
+    "tabbar": {
+      "home": "首页",
+      "tools": "工具",
+      "about": "关于"
+    }
+  },
+  "index": {
+    "title": "首页",
+    "live": "直播中",
+    "dates": "时间",
+    "confirm": "确认",
+    "loginOut": "退出登录"
+  },
+  "public": {
+    "pulling-text": "下拉刷新",
+    "loading-text": "加载中...",
+    "loosing-text": "释放可刷新",
+    "noMore-text": "没有更多了",
+    "error-text": "请求错误",
+    "bet": "投注",
+    "get": "获取",
+    "forget-password": "忘记密码",
+    "get-captcha": "获取验证码",
+    "register": "充值",
+    "withdraw": "提现",
+    "tabbar": {
+      "home": "首页",
+      "my": "我的"
+    }
+  },
+  "bet": {
+    "title": "投注",
+    "maximum": "此选择的最大赌注为",
+    "norm": "限额",
+    "bettors": "投注",
+    "out-range": "不在透支范围内",
+    "Winning": "预计可赢",
+    "port-closed": "当前盘口已关闭",
+    "balance": "您的余额",
+    "name": "名称",
+    "halfField": "半场",
+    "fullField": "全场",
+    "single": "单",
+    "double": "双",
+    "large": "大",
+    "small": "小",
+    "capot": "独赢",
+    "handicap": "让球",
+    "grounder": "滚球",
+    "earlyEarth": "早球",
+    "today": "热门",
+    "home": "主队",
+    "away": "客队"
+  },
+  "deposit": {
+    "title": "充值",
+    "info": {
+      "title": "备注信息",
+      "placeholder": "备注"
+    },
+    "amount": {
+      "title": "充值金额",
+      "maximum": "最大金额",
+      "minimum": "最小金额",
+      "required": "请输入充值金额",
+      "hint": "输入金额"
+    },
+    "payment": {
+      "title": "充值方式",
+      "methods": {
+        "normal": "标准充值",
+        "large": "大额充值"
+      },
+      "selector": {
+        "title": "选择付款方式"
+      }
+    }
+  },
+  "withdraw": {
+    "all": "all",
+    "details": "Details",
+    "title": "Withdraw",
+    "overview": {
+      "title": "Balance",
+      "locked": "Locked Deposit",
+      "available": "Available Amount"
+    },
+    "payment": {
+      "title": "Withdrawal Type"
+    },
+    "bankList": {
+      "empty": "No withdraw method"
+    },
+    "methods": {
+      "title": "Withdrawal Method"
+    },
+    "amount": {
+      "title": "Withdraw Amount",
+      "hint": "Enter the amount"
+    },
+    "actions": {
+      "max": "MAX",
+      "confirm": "Deposit",
+      "addCard": "新增银行卡",
+      "more": "新增绑定银行卡"
+    },
+    "messages": {
+      "success": "Withdrawal Successful",
+      "errors": {
+        "amount": "Please enter the deposit amount"
+      }
+    }
+  },
+  "login": {
+    "title": "登录",
+    "sign-in": "登录",
+    "tab-phone": "手机号登录",
+    "tab-password": "密码登录",
+    "register-tips": "没有账号",
+    "register-link": "立即注册",
+    "login-success": "登录成功",
+    "login-register": "登陆/注册"
+  },
+  "register": {
+    "title": "注册",
+    "sub-title": "欢迎加入我们！",
+    "sign-up": "注册",
+    "login-tips": "已有账号",
+    "login-link": "登录",
+    "accept-tips": "注册即代表你已同意我们的",
+    "and": "和",
+    "terms-condition": "条款",
+    "privacy-policy": "隐私政策",
+    "register-success": "注册成功"
+  },
+  "my": {
+    "title": "个人中心",
+    "referral": "你好,欢迎加入",
+    "amount": "可用金额",
+    "found-details": "Found Details",
+    "betting-record": "投注记录",
+    "my-message": "我的消息",
+    "competition-results": "赛事结果",
+    "event-announcement": "活动公告",
+    "tutorials": "教程",
+    "betting-rules": "投注规则",
+    "delete": "删除",
+    "noMessage": "暂无消息"
+  },
+  "tools": {
+    "successBtn": "成功请求",
+    "errorBtn": "失败请求",
+    "reqOK": "请求成功",
+    "reqErr": "请求失败"
+  },
+  "fields": {
+    "phone": {
+      "name": "手机号",
+      "placeholder": "手机号",
+      "required": "请输入你的手机号码",
+      "invalid": "请输入正确的手机号"
+    },
+    "password": {
+      "name": "密码",
+      "placeholder": "密码",
+      "required": "请输入你的密码",
+      "invalid": "密码必须同时包含字母和数字",
+      "format": "密码必须为8-16位，包含大写字母、小写字母、数字和特殊字符",
+      "length": "密码长度必须为8-16位",
+      "uppercase": "密码必须包含大写字母",
+      "lowercase": "密码必须包含小写字母",
+      "digit": "密码必须包含数字",
+      "special": "密码必须包含特殊字符"
+    },
+    "captcha": {
+      "name": "验证码",
+      "placeholder": "验证码",
+      "required": "请输入正确的验证码"
+    }
+  },
+  "withdrawalRecord": {
+    "cardTitle": "可用金额"
+  },
+  "setting": {
+    "name": "设置",
+    "personalInfo": "个人信息",
+    "changeBank": "修改银行卡信息",
+    "changePhone": "修改绑定的手机号",
+    "changePw": "修改密码",
+    "accountMsg": "账户信息",
+    "contactInfo": "联系信息",
+    "personal": {
+      "uid": "用户 ID",
+      "genders": "性别",
+      "area": "地区",
+      "birthdays": "生日",
+      "username": "用户名",
+      "email": "邮箱",
+      "mobileNumber": "电话号码",
+      "editBirthdays": "修改生日",
+      "editEmail": "修改邮箱",
+      "edit": "编辑",
+      "fields": {
+        "requiredNewEmail": "请输入你新的邮箱",
+        "requiredOldEmail": "请输入你当前的邮箱",
+        "invalid": "请输入正确的邮箱"
+      }
+    }
+  }
+}

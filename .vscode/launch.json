@@ -1,0 +1,280 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "default",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "program": "lib/main.dart",
+      "args": [
+      ],
+    },
+    {
+      "name": "oppo Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": [
+        "--flavor",
+        "oppo",
+        "--dart-define",
+        "ANDROID_CHANNEL=oppo"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "oppo Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": [
+        "--flavor",
+        "oppo",
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "oppo Release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": [
+        "--flavor",
+        "oppo"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "vivo Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": [
+        "--flavor",
+        "vivo"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "vivo Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": [
+        "--flavor",
+        "vivo"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "vivo Release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": [
+        "--flavor",
+        "vivo"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "xiaomi Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": [
+        "--flavor",
+        "xiaomi"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "xiaomi Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": [
+        "--flavor",
+        "xiaomi"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "xiaomi Release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": [
+        "--flavor",
+        "xiaomi"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "transsion Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": [
+        "--flavor",
+        "transsion"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "transsion Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": [
+        "--flavor",
+        "transsion"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "transsion Release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": [
+        "--flavor",
+        "transsion"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "huawei Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": [
+        "--flavor",
+        "huawei"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "huawei Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": [
+        "--flavor",
+        "huawei"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "huawei Release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": [
+        "--flavor",
+        "huawei"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "samsung Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": [
+        "--flavor",
+        "samsung"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "samsung Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": [
+        "--flavor",
+        "samsung"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "samsung Release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": [
+        "--flavor",
+        "samsung"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "google_android Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": [
+        "--flavor",
+        "google_android"
+      ],
+      "program": "lib/main_google.dart"
+    },
+    {
+      "name": "google_android Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": [
+        "--flavor",
+        "google_android"
+      ],
+      "program": "lib/main_google.dart"
+    },
+    {
+      "name": "google_android Release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": [
+        "--flavor",
+        "google_android"
+      ],
+      "program": "lib/main_google.dart"
+    },
+    {
+      "name": "apk Debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": [
+        "--flavor",
+        "apk"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "apk Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": [
+        "--flavor",
+        "apk"
+      ],
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "apk Release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "args": [
+        "--flavor",
+        "apk"
+      ],
+      "program": "lib/main.dart"
+    }
+  ]
+}

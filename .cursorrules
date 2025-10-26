@@ -1,0 +1,106 @@
+# Flutter项目Cursor规则配置
+
+# 代码风格和格式
+- 使用Dart/Flutter官方代码风格指南
+- 行长度限制为120个字符
+- 使用2个空格进行缩进
+- 在文件末尾保留一个空行
+- 使用单引号定义字符串
+- 避免不必要的分号
+
+# 命名约定
+- 类名使用PascalCase（大驼峰命名法）
+- 方法、变量和参数使用camelCase（小驼峰命名法）
+- 常量使用UPPER_SNAKE_CASE（大写下划线命名法）
+- 库名使用lowercase_with_underscores（小写下划线命名法）
+- 文件名使用lowercase_with_underscores（小写下划线命名法）
+
+# Flutter/Dart特定规则
+- 优先使用const构造函数
+- 优先使用final字段
+- 避免使用print()，使用logger包替代
+- 使用BuildContext时确保同步使用
+- 在Widget构造函数中使用Key参数
+- 避免在createState方法中编写逻辑
+- 使用SizedBox明确指定小部件大小
+- 将children属性放在其他小部件属性之后
+
+# 状态管理
+- 使用BLOC模式进行状态管理
+- 遵循flutter_bloc和bloc包的最佳实践
+- 使用Cubit进行简单状态管理
+- 使用Bloc进行复杂状态管理
+
+# 网络请求
+- 使用dio包进行网络请求
+- 遵循retrofit代码生成模式
+- 使用拦截器处理请求和响应
+- 实现适当的错误处理
+
+# 国际化
+- 使用easy_localization包进行国际化
+- 将所有用户可见的文本提取到翻译文件中
+- 支持中文和英文两种语言
+
+# 路由
+- 使用go_router包进行路由管理
+- 定义命名路由
+- 实现适当的页面过渡动画
+
+# 资源管理
+- 将图片资源放在assets/img目录下
+- 将SVG资源放在assets/svg目录下
+- 将字体资源放在assets/fonts目录下
+- 将翻译文件放在assets/translations目录下
+
+# 代码生成
+- 使用freezed进行数据类生成
+- 使用json_serializable进行JSON序列化
+- 使用build_runner运行代码生成
+- 生成的文件应包含在.gitignore中
+
+# 测试
+- 为所有业务逻辑编写单元测试
+- 为小部件编写小部件测试
+- 为重要流程编写集成测试
+- 使用mockito进行模拟
+
+# 性能优化
+- 使用const构造函数减少重建
+- 使用ListView.builder处理长列表
+- 使用CachedNetworkImage加载网络图片
+- 避免不必要的重建
+
+# 注释规范
+- 使用///进行文档注释
+- 使用//进行行内注释
+- 为公共API提供文档注释
+- 注释应解释为什么，而不是什么
+
+# 文件组织
+- 遵循feature-first组织结构
+- 每个功能模块包含controller、model、page、state和widgets
+- 将通用组件放在lib/widgets目录下
+- 将工具类放在lib/utils目录下
+- 将服务类放在lib/service目录下
+
+# 依赖管理
+- 使用pubspec.yaml管理依赖
+- 遵循语义化版本控制
+- 定期更新依赖
+
+# Git工作流
+- 使用feature分支进行开发
+- 提交消息应清晰描述更改
+- 在合并前进行代码审查
+- 遵循Git Flow工作流
+
+# 安全考虑
+- 不要在代码中硬编码敏感信息
+- 使用环境变量存储配置
+- 实现适当的输入验证
+- 遵循Flutter安全最佳实践 
+
+# 其他说明
+ - 除非特别说明，解决问题后，不要生成md文档来说明如何解决问题，直接在聊天窗口说明即可。
+ - 大型重构，添加新组件可以添加一定说明，但不要生成md文档。

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="31px" height="31px" viewBox="0 0 31 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>返回</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="登录页01" transform="translate(-331, -54)">
+            <g id="返回" transform="translate(331, 54)">
+                <circle id="圆形-2" fill-opacity="0.600000024" fill="#FFFFFF" fill-rule="nonzero" cx="15.5" cy="15.5" r="15.5"></circle>
+                <path d="M16,8.5 L16,15 L22.5,15 L22.5,16 L16,16 L16,22.5 L15,22.5 L15,16 L8.5,16 L8.5,14.9999231 L15,14.9989231 L15,8.5 L16,8.5 Z" id="形状结合" stroke="#979797" fill="#D8D8D8" transform="translate(15.5, 15.5) rotate(-45) translate(-15.5, -15.5)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

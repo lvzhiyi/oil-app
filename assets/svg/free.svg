@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="17px" viewBox="0 0 15 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="等待支付" transform="translate(-177, -537)" stroke="#0082FF" stroke-width="0.833333333">
+            <g id="编组-8" transform="translate(20, 434)">
+                <g id="编组" transform="translate(158, 104)">
+                    <rect id="矩形" fill="#0082FF" fill-rule="nonzero" stroke-linejoin="round" transform="translate(6.9046, 7.5296) rotate(-45) translate(-6.9046, -7.5296)" x="4.82127825" y="5.44625" width="4.16666667" height="4.16666667" rx="0.833333333"></rect>
+                    <path d="M13.5917083,4.16666667 C12.3644583,1.697125 9.81608333,0 6.87133333,0 C3.92654167,0 1.43558333,1.697125 0.208333333,4.16666667" id="路径"></path>
+                    <line x1="0.208333333" y1="0.833333333" x2="0.208333333" y2="4.16666667" id="路径"></line>
+                    <line x1="3.03345833" y1="4.16666667" x2="0.2083875" y2="4.16666667" id="路径"></line>
+                    <path d="M0.208333333,10.8333333 C1.43558333,13.302875 3.98395833,15 6.92875,15 C9.8735,15 12.3644583,13.302875 13.5917083,10.8333333" id="路径"></path>
+                    <line x1="13.5917083" y1="14.1666667" x2="13.5917083" y2="10.8333333" id="路径"></line>
+                    <line x1="10.7665833" y1="10.8333333" x2="13.5916667" y2="10.8333333" id="路径"></line>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="14px" viewBox="0 0 12 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.5">
+        <g id="首页备份" transform="translate(-343.000000, -349.000000)" fill="#1f1f22" fill-rule="nonzero">
+            <g id="编组-12" transform="translate(0.000000, 278.000000)">
+                <g id="编组" transform="translate(349.000000, 78.000000) rotate(-270.000000) translate(-349.000000, -78.000000) translate(342.000000, 72.000000)">
+                    <path d="M7.30783939,1.00831947 L2.10282558,6 L7.30783939,10.9916805 L6.2564266,12 L-5.68434189e-14,6 L6.2564266,-6.4293957e-14 L7.30783939,1.00831947 Z M14,1.00831947 L8.79498619,6 L14,10.9916805 L12.9485872,12 L6.69216061,6 L12.9485872,-6.4293957e-14 L14,1.00831947 Z" id="形状"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

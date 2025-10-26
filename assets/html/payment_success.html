@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>支付成功</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      padding: 40px 30px;
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: #52c41a;
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: zoomIn 0.5s ease-out 0.2s both;
+    }
+
+    @keyframes zoomIn {
+      from {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .success-icon::before {
+      content: '✓';
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+    }
+
+    .title {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    .amount {
+      font-size: 32px;
+      color: #52c41a;
+      font-weight: bold;
+      margin-bottom: 24px;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-item:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .info-value {
+      color: #333;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .button {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 32px;
+      transition: all 0.3s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .countdown {
+      color: #999;
+      font-size: 12px;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="success-icon"></div>
+    <h1 class="title">支付成功！</h1>
+    <p class="subtitle">您的订单已支付成功，感谢您的购买</p>
+
+    <div class="amount" id="paymentAmount">¥0.00</div>
+
+    <div class="info-list">
+      <div class="info-item">
+        <span class="info-label">订单号</span>
+        <span class="info-value" id="orderId">-</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">支付方式</span>
+        <span class="info-value" id="paymentMethod">第三方支付</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">支付时间</span>
+        <span class="info-value" id="paymentTime">-</span>
+      </div>
+    </div>
+
+    <button class="button" onclick="returnToApp()">
+      返回应用
+    </button>
+
+    <div class="countdown" id="countdown">
+      页面将在 <span id="countdownSeconds">5</span> 秒后自动返回
+    </div>
+  </div>
+
+  <script>
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function () {
+      initPage();
+      startCountdown();
+    });
+
+    // 初始化页面数据
+    function initPage() {
+      try {
+        // 从URL参数或占位符获取支付信息
+        const urlParams = new URLSearchParams(window.location.search);
+        let orderId = urlParams.get('orderId') || '${orderId}' || '';
+        let amount = urlParams.get('amount') || '${amount}' || '0';
+        let paymentMethod = urlParams.get('paymentMethod') || '${paymentMethod}' || '第三方支付';
+
+        // 如果是占位符，使用默认值
+        if (orderId === '${orderId}') orderId = '';
+        if (amount === '${amount}') amount = '0';
+        if (paymentMethod === '${paymentMethod}') paymentMethod = '第三方支付';
+
+        // 更新页面内容
+        document.getElementById('orderId').textContent = orderId;
+        document.getElementById('paymentAmount').textContent = '¥' + (parseFloat(amount) / 100).toFixed(2);
+        document.getElementById('paymentMethod').textContent = paymentMethod;
+        document.getElementById('paymentTime').textContent = getCurrentTime();
+
+        // 通知APP支付成功
+        notifyAppPaymentSuccess({
+          orderId: orderId,
+          amount: amount,
+          paymentMethod: paymentMethod,
+          paymentTime: Date.now()
+        });
+
+      } catch (error) {
+        console.error('初始化页面失败:', error);
+      }
+    }
+
+    // 通知APP支付成功
+    function notifyAppPaymentSuccess(data) {
+      try {
+        // 尝试调用Flutter注入的方法
+        if (window.notifyPaymentSuccess) {
+          window.notifyPaymentSuccess(data);
+        }
+
+        // 发送postMessage（作为备用方案）
+        if (window.parent && window.parent.postMessage) {
+          window.parent.postMessage({
+            type: 'payment_success',
+            data: data
+          }, '*');
+        }
+
+        // 发送消息到WebView（Android/iOS）
+        if (window.PaymentResult && window.PaymentResult.postMessage) {
+          window.PaymentResult.postMessage(JSON.stringify({
+            type: 'payment_success',
+            data: data
+          }));
+        }
+
+      } catch (error) {
+        console.error('通知APP失败:', error);
+      }
+    }
+
+    // 返回应用
+    function returnToApp() {
+      try {
+        // 尝试调用Flutter注入的方法
+        if (window.notifyPaymentSuccess) {
+          window.notifyPaymentSuccess({
+            action: 'return_to_app'
+          });
+        }
+
+        // 如果在WebView中，尝试关闭
+        if (window.close) {
+          window.close();
+        }
+
+        // 如果以上方法都不行，回到上一页
+        if (window.history && window.history.length > 1) {
+          window.history.back();
+        }
+
+      } catch (error) {
+        console.error('返回应用失败:', error);
+      }
+    }
+
+    // 倒计时自动返回
+    function startCountdown() {
+      let seconds = 5;
+      const countdownElement = document.getElementById('countdownSeconds');
+
+      const timer = setInterval(() => {
+        seconds--;
+        countdownElement.textContent = seconds;
+
+        if (seconds <= 0) {
+          clearInterval(timer);
+          returnToApp();
+        }
+      }, 1000);
+    }
+
+    // 获取当前时间字符串
+    function getCurrentTime() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+
+    // 监听页面隐藏事件，防止重复通知
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) {
+        // 页面被隐藏时的处理
+        console.log('页面被隐藏');
+      } else {
+        // 页面重新显示时的处理
+        console.log('页面重新显示');
+      }
+    });
+  </script>
+</body>
+
+</html>

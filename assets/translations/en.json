@@ -1,0 +1,338 @@
+{
+  "demo": {
+    "description": "Basic template for an H5 mobile project, based on Vue 3 ecosystem, TypeScript, and Vite build tool, ready to use.",
+    "tabbar": {
+      "home": "Home",
+      "tools": "Tools",
+      "about": "About"
+    }
+  },
+  "accessError": {
+    "title": "access restricted"
+  },
+  "boxing": {
+    "red": "Red",
+    "draw": "Draw",
+    "blue": "Blue",
+    "winner": "Winner",
+    "round": "Round",
+    "odd": "Odd",
+    "height": "Height",
+    "reach": "Reach",
+    "weight": "Weight(KG)",
+    "record": "Record",
+    "ko": "KO",
+    "full": "Full",
+    "not-start": "Not yet started",
+    "over": "Over"
+  },
+  "index": {
+    "title": "Index",
+    "dates": "Dates"
+  },
+  "login": {
+    "title": "Sign In",
+    "sign-in": "Sign In",
+    "tab-phone": "Phone",
+    "tab-password": "Password",
+    "register-tips": "Don't have an account",
+    "register-link": "Sign-Up",
+    "login-success": "Login Successful",
+    "login-register": "Login/Register",
+    "Login": "Login",
+    "needHelp": "Need Help?"
+  },
+  "register": {
+    "title": "Sign Up",
+    "sub-title": "Welcome to join us!",
+    "sign-up": "Sign Up",
+    "login-tips": "Already have an account",
+    "login-link": "Sign-In",
+    "accept-tips": "By registering, you are confirming that you are above 21 years old, and have agreed to our",
+    "and": " and ",
+    "terms-condition": " Terms and Conditons ",
+    "privacy-policy": " Privacy Notice",
+    "register-success": "Sign Up Successful"
+  },
+  "password-change": {
+    "title": "Change Password",
+    "sub-title": "Please remember your password",
+    "success": "Password Change Successful"
+  },
+  "password-set": {
+    "title": "Set Password",
+    "main-title": "SET A PASSWORD",
+    "sub-title": "Set your login password",
+    "success": "Password Set Successful"
+  },
+  "password-reset": {
+    "title": "Reset Password",
+    "sub-title": "Please remember your password",
+    "success": "Password reset successful"
+  },
+  "phone-change": {
+    "title": "Change Number",
+    "sub-title": "Please remember your number",
+    "success": "Phone number update successful",
+    "fields": {
+      "captcha-old": {
+        "placeholder": "Old Phone Captcha",
+        "required": "Please enter the correctOTP",
+        "invalid": "Old phone captcha is invalid"
+      },
+      "captcha-new": {
+        "placeholder": "New Phone Captcha",
+        "required": "Please enter the correctOTP"
+      }
+    }
+  },
+  "notice": {
+    "title": "Announcement"
+  },
+  "message": {
+    "title": "My Message"
+  },
+  "ticket-record": {
+    "more": "More",
+    "clickClalm": "Click to clalm",
+    "claimed": "Claimed",
+    "no-prize": "No prize drawn",
+    "lose-lotttery": "Losing lottery",
+    "winning": "winning lottery",
+    "receive": "Receive award"
+  },
+  "my": {
+    "title": "User Center",
+    "referral": "Hi, Welcome aboard",
+    "amount": "Available Balance",
+    "found-details": "Funds Details",
+    "betting-record": "Betting Record",
+    "my-message": "My Message",
+    "competition-results": "Competition Results",
+    "event-announcement": "Event Announcement",
+    "tutorials": "Tutorials",
+    "betting-rules": "Betting Rules",
+    "Login/Register": "Login/Register",
+    "delete": "Delete",
+    "marker": "Read",
+    "clear-all": "clear all",
+    "tickey-record": "Lottery Ticket Record",
+    "noMessage": "No fabric information",
+    "message-detail": "Message Detail",
+    "operation-tips": "Your operation is too frequent, please try again later!",
+    "operation-tips-second": "second"
+  },
+  "profile-photo": {
+    "title": "Profile Photo",
+    "edit": "Edit Profile photo",
+    "take-photo": "Take Photo",
+    "choose-photo": "Choose Photo"
+  },
+  "public": {
+    "login-success-title": "IMPORTANT NOTICE",
+    "login-success-content": "The following personalities are not allowed to register and/or play in this online gaming website:\n\nGovernment Official or employee connected directly with the operation of the Government or any of its agencies.\nMember of the Armed Forces of the Philippines, including the Army, Navy, Air Force, or the Philippine National Police.\nPersons under 21 years of age.\nPersons included in the PAGCOR's National Database of Restricted Persons (NDRP).\nGaming Employment License (GEL) holder.\n\nFunds or credits in the account of player who is found ineligible to play shall mean forfeiture of said funds/credits in favor of the Government.",
+    "pulling-text": "Pull up to refresh",
+    "loading-text": "Loading...",
+    "loosing-text": "Release flushable",
+    "noMore-text": "No More Data",
+    "loading-more": "Loading more data...",
+    "pull-up-text": "Pull up to load more",
+    "unload-more": "Unload more",
+    "error-text": "Error",
+    "bet": "Bet",
+    "forget-password": "Forgot Password",
+    "get-captcha": "Get CAPTCHA",
+    "edit": "Edit",
+    "recharge": "recharge",
+    "withdraw": "withdraw",
+    "tabbar": {
+      "home": "Home",
+      "my": "My"
+    },
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "page": {
+      "error": "Page loading failed, please check the network",
+      "no-data": "No More",
+      "refresh": "Refresh"
+    },
+    "login-expire": {
+      "title": "You haven't logged in yet",
+      "tips": "Please log in first before proceeding with the operation",
+      "buttons": {
+        "confirm": "Log in now",
+        "cancel": "Cancel"
+      }
+    },
+    "login-out": {
+      "title": "Log out of this account?",
+      "buttons": {
+        "confirm": "Logout Now"
+      }
+    },
+    "toast": {
+      "wait": "Please wait a moment"
+    },
+    "empty": {
+      "withdraw": {
+        "cards": "No withdraw method"
+      },
+      "deposit": {
+        "cards": "No Deposit Method"
+      }
+    },
+    "noMiddleName": "I don’t have a middle name"
+  },
+  "tools": {
+    "successBtn": "Successful Request",
+    "errorBtn": "Failed Request",
+    "reqOK": "Request Successful",
+    "reqErr": "Request Failed",
+    "updateSuccess": "Update Successful",
+    "reqTimeOut": "Request timed out"
+  },
+  "fields": {
+    "phone": {
+      "name": "Phone",
+      "placeholder": "Mobile Number",
+      "required": "Please enter your phone number",
+      "invalid": "Please enter a valid phone number"
+    },
+    "smsCode": {
+      "name": "SMSCode",
+      "placeholder": "Verify Code",
+      "required": "Please enter the correctOTP"
+    },
+    "password": {
+      "name": "Password",
+      "placeholder": "Enter Password",
+      "required": "Please enter your password",
+      "invalid": "Must contain both numbers and letters",
+      "min": "Password is too short",
+      "format": "Password must be 8-16 characters and contain uppercase, lowercase, digits and special characters",
+      "length": "Password must be 8-16 characters long",
+      "uppercase": "Password must contain uppercase letters",
+      "lowercase": "Password must contain lowercase letters",
+      "digit": "Password must contain digits",
+      "special": "Password must contain special characters"
+    },
+    "captcha": {
+      "name": "Captcha",
+      "placeholder": "Captcha",
+      "required": "Please enter the CAPTCHA"
+    },
+    "oldPassword": {
+      "name": "Old Password",
+      "placeholder": "Enter Old Password",
+      "required": "Please enter your old password"
+    },
+    "newPassword": {
+      "name": "New Password",
+      "placeholder": "Enter New Password",
+      "required": "Please enter your new password"
+    },
+    "confirmPassword": {
+      "name": "Confirm Password",
+      "placeholder": "Re-enter Confirm Password",
+      "required": "Please enter your confirm password",
+      "invalid": "The confirmed password do not match"
+    },
+    "nickName": {
+      "placeholder": "Your Nickname",
+      "required": "Please enter your nickname"
+    },
+    "email": {
+      "placeholder": "Your Email",
+      "required": "Please enter your email"
+    },
+    "dob": {
+      "placeholder": "Day Of Birth",
+      "required": "Please enter your day of birth",
+      "min": "You must be at least 21 years old"
+    },
+    "withdrawChannel": {
+      "name": "Withdraw Channel",
+      "placeholder": "Select Withdraw Channel",
+      "required": "Please select withdraw channel"
+    }
+  },
+  "funds": {
+    "title": "Funds Details",
+    "summary": {
+      "title": "Available Amount"
+    }
+  },
+  "setPw": {
+    "title": "Set a Password",
+    "subTitle": "Set your login password"
+  },
+  "bettingRule": {
+    "title": "Betting Rules"
+  },
+  "setting": {
+    "title": "Settings",
+    "name": "Settings",
+    "smsNotifications": "SMS Notifications",
+    "personalInfo": "Personal Information",
+    "changeBank": "Change of Bank Information",
+    "changePhone": "Change of Binding Phone Number",
+    "changePw": "Change Password",
+    "accountMsg": "Account info",
+    "contactInfo": "Contact Info",
+    "fileExceed": "The file size cannot exceed",
+    "uploading": "uploading...",
+    "personal": {
+      "uid": "User ID",
+      "genders": "Genders",
+      "area": "Area",
+      "birthday": "Birthday",
+      "username": "Username",
+      "email": "Email",
+      "mobileNumber": "Mobile Number",
+      "editAvatar": "Modify avatar",
+      "complete": "complete",
+      "cancellation": "cancellation",
+      "editBirthday": "Change Birthday",
+      "edit": "Change",
+      "enterYourName": "Enter Your Nickname",
+      "enterYourEmail": "Enter Your Email",
+      "enterOldEmail": "Enter Old Email",
+      "enterNewEmail": "Enter New Email",
+      "setUpLater": "Set Up later",
+      "fields": {
+        "requiredNewEmail": "Please enter you new email",
+        "requiredOldEmail": "Please enter you old email",
+        "invalid": "Please enter a valid email"
+      }
+    }
+  },
+  "about": {
+    "name": "About Us",
+    "title": "About Us",
+    "update": "Update",
+    "company": "Company Profile",
+    "notice": "Privacy Notice",
+    "policy": "Privacy Policy"
+  },
+  "customerService": {
+    "title": "Customer Service",
+    "welcome": "Welcome to our",
+    "center": "Customer Service Center",
+    "service": "Service",
+    "callBack": "Call Back Request",
+    "faceBook": "Facebook Live Chat 24/7",
+    "liveChat": "Live Chat",
+    "callBackContent": "Leave Us a phone number.Our CS Representative will call you back in no time.",
+    "faceBookContent": "Tap on icon to start chattingwith our CS.",
+    "liveChatContent": "365 days uninterrupted online service.",
+    "emailText": "If you have a good suggestion for the game orplatform or find a Bug to submit, the officialcustomer service will reply within 48 hours. We willtimely fix bugs or refer to your feedback tocontinuously optimize our products and services. (lfthere are many people who give feedback on thesame suggestion or Bug, the bonus will be given tothe first person who gives feedback. Remember togive feedback as soon as you find any problem."
+  },
+  "matches": {
+    "title": "Competltion Results"
+  },
+  "bettingRecord": {
+    "title": "Betting Record",
+    "unsettled": "Unsettled",
+    "settled": "Settled"
+  }
+}

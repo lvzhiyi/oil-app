@@ -1,0 +1,9 @@
+[2025-09-06 11:52:36] 上传成功: oil_business_app_1.0.0_005_pro.apk | 环境: qa | 文件大小: 30.79 MB | 上传耗时: 114.514724s秒 | 获取下载地址: 成功
+[2025-09-06 11:52:36] 下载地址响应: {"data":"https://xianyangkeji.oss-cn-chengdu.aliyuncs.com/lottery-platform-backend/dev/bin/01991d26-e180-726c-83a8-2ac743f6dfd5.apk?OSSAccessKeyId=LTAI5t7x8pyTeYfFJrsKoxTy&Expires=1757217157&Signature=wcQ1Axu9Mn3ulNdF23aoXbNQY7Y%3D","code":0,"message":"success","requestId":"01991d27-932e-7733-a624-c8898e86bf8d"}
+[2025-09-07 11:41:58] 上传成功: oil_business_app_1.0.0_006_pro.apk | 环境: qa | 文件大小: 30.79 MB | 上传耗时: 47.533414s秒 | 获取下载地址: 成功
+[2025-09-07 11:41:58] 下载地址响应: {"data":"https://xianyangkeji.oss-cn-chengdu.aliyuncs.com/lottery-platform-backend/dev/bin/01992243-804e-7622-a3bc-1acf7d24e639.apk?OSSAccessKeyId=LTAI5t7x8pyTeYfFJrsKoxTy&Expires=1757302919&Signature=duxnjor7BDVb0pThHXcZnAVYMA4%3D","code":0,"message":"success","requestId":"01992244-3178-753e-b555-4d58128468c9"}
+[2025-09-08 19:05:11] 上传成功: oil_business_app_1.0.0_007_qa.apk | 环境: qa | 文件大小: 30.74 MB | 上传耗时: 48.974871s秒 | 获取下载地址: 成功
+[2025-09-08 19:05:11] 下载地址响应: {"data":"https://xianyangkeji.oss-cn-chengdu.aliyuncs.com/lottery-platform-backend/dev/bin/019928ff-b4ba-759a-af28-37cdacc2d1b1.apk?OSSAccessKeyId=LTAI5t7x8pyTeYfFJrsKoxTy&Expires=1757415916&Signature=oaCqkpcR2iqT2WDZwgvusaDh%2Bew%3D","code":0,"message":"success","requestId":"01992900-65d4-70d2-9beb-74a072f3b69c"}
+[2025-09-09 17:41:58] 上传成功: oil_business_app_1.0.0_001_pro.apk | 环境: pro | 文件大小: 30.73 MB | 上传耗时: 75.090002s秒 | 获取下载地址: 成功
+[2025-09-09 17:41:58] 下载地址响应: {"data":"https://xianyangkeji.oss-cn-chengdu.aliyuncs.com/lottery-platform-backend/pro/bin/01992dd9-c1e4-73f4-aa5e-c27457f1870e.apk?OSSAccessKeyId=LTAI5t7x8pyTeYfFJrsKoxTy&Expires=1757497319&Signature=IqFbbKIi%2Bf69GoZPCBTUuehidDg%3D","code":0,"message":"success","requestId":"01992dda-81f7-77bd-b300-97da43f46089"}
+[2025-09-11 17:15:38] 下载地址响应:

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="34px" height="34px" viewBox="0 0 34 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 2</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="white" fill-rule="evenodd">
+        <g id="联系客服备份" transform="translate(-207.000000, -181.000000)">
+            <g id="编组-2" transform="translate(211.000000, 185.000000)">
+                <circle id="椭圆形" stroke="white" stroke-width="4" fill="#0082FF" cx="13" cy="13" r="15"></circle>
+                <rect id="矩形" fill="#FFFFFF" x="12" y="5" width="2" height="16" rx="1"></rect>
+                <rect id="矩形备份-6" fill="#FFFFFF" transform="translate(13.000000, 13.000000) rotate(-90.000000) translate(-13.000000, -13.000000) " x="12" y="5" width="2" height="16" rx="1"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

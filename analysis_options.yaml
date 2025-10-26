@@ -1,0 +1,206 @@
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.gr.dart"
+    - "**/*.iconfig.dart"
+    - "**/*.injection.dart"
+    - "**/*.mocks.dart"
+    - "**/*.router.dart"
+    - "**/*.r.g.dart"
+    - "**/*.part.dart"
+    - "lib/generated_plugin_registrant.dart"
+  errors:
+    always_require_non_null_named_parameters: info
+    annotate_overrides: info
+    avoid_empty_else: info
+    avoid_function_literals_in_foreach_calls: info
+    avoid_init_to_null: info
+    avoid_null_checks_in_equality_operators: info
+    avoid_print: false
+    avoid_relative_lib_imports: info
+    avoid_renaming_method_parameters: info
+    avoid_return_types_on_setters: info
+    avoid_returning_null_for_void: info
+    avoid_shadowing_type_parameters: info
+    avoid_single_cascade_in_expression_statements: info
+    avoid_types_as_parameter_names: info
+    avoid_unnecessary_containers: info
+    avoid_web_libraries_in_flutter: info
+    await_only_futures: info
+    camel_case_extensions: info
+    camel_case_types: info
+    constant_identifier_names: false
+    control_flow_in_finally: info
+    curly_braces_in_flow_control_structures: info
+    depend_on_referenced_packages: info
+    empty_catches: info
+    empty_constructor_bodies: info
+    empty_statements: info
+    exhaustive_cases: info
+    file_names: info
+    hash_and_equals: info
+    implementation_imports: info
+    iterable_contains_unrelated_type: info
+    library_names: info
+    library_prefixes: info
+    library_private_types_in_public_api: info
+    list_remove_unrelated_type: info
+    no_duplicate_case_values: info
+    no_leading_underscores_for_library_prefixes: info
+    no_leading_underscores_for_local_identifiers: info
+    no_logic_in_create_state: info
+    non_constant_identifier_names: info
+    null_check_on_nullable_type_parameter: info
+    null_closures: info
+    overridden_fields: info
+    package_names: info
+    package_prefixed_library_names: info
+    prefer_adjacent_string_concatenation: info
+    prefer_collection_literals: info
+    prefer_conditional_assignment: info
+    prefer_const_constructors: info
+    prefer_const_constructors_in_immutables: info
+    prefer_const_declarations: info
+    prefer_const_literals_to_create_immutables: info
+    prefer_contains: info
+    prefer_equal_for_default_values: info
+    prefer_final_fields: info
+    prefer_for_elements_to_map_fromIterable: info
+    prefer_function_declarations_over_variables: info
+    prefer_generic_function_type_aliases: info
+    prefer_if_null_operators: info
+    prefer_initializing_formals: info
+    prefer_inlined_adds: info
+    prefer_interpolation_to_compose_strings: info
+    prefer_is_empty: info
+    prefer_is_not_empty: info
+    prefer_is_not_operator: info
+    prefer_iterable_whereType: info
+    prefer_null_aware_operators: info
+    prefer_spread_collections: info
+    prefer_typing_uninitialized_variables: info
+    prefer_void_to_null: info
+    provide_deprecation_message: info
+    recursive_getters: info
+    sized_box_for_whitespace: info
+    slash_for_doc_comments: info
+    sort_child_properties_last: info
+    type_init_formals: info
+    unnecessary_brace_in_string_interps: info
+    unnecessary_const: info
+    unnecessary_constructor_name: info
+    unnecessary_getters_setters: info
+    unnecessary_late: info
+    unnecessary_new: info
+    unnecessary_null_aware_assignments: info
+    unnecessary_null_in_if_null_operators: info
+    unnecessary_nullable_for_final_variable_declarations: info
+    unnecessary_overrides: info
+    unnecessary_string_escapes: info
+    unnecessary_string_interpolations: info
+    unnecessary_this: info
+    unrelated_type_equality_checks: info
+    use_build_context_synchronously: info
+    use_full_hex_values_for_flutter_colors: info
+    use_function_type_syntax_for_parameters: info
+    use_key_in_widget_constructors: info
+    use_rethrow_when_possible: info
+    valid_regexps: info
+    void_checks: info
+linter:
+  rules:
+    - max_line_length: 120 # 强制行长度不超过 120 个字符。
+    - annotate_overrides # 强制注释被覆盖的类成员。
+    - avoid_empty_else # 避免空的 else 代码块。
+    - avoid_function_literals_in_foreach_calls # 禁止在 `forEach` 调用中使用函数字面量。
+    - avoid_init_to_null # 禁止将变量初始化为 `null`。
+    - avoid_null_checks_in_equality_operators # 禁止在 `==` 和 `!=` 操作符中进行 `null` 检查。
+    - avoid_print # 避免在生产代码中使用 print()。
+    - avoid_relative_lib_imports # 避免相对于库文件的相对导入。
+    - avoid_renaming_method_parameters # 禁止在方法中重命名参数。
+    - avoid_return_types_on_setters # 禁止在 setter 中指定返回类型。
+    - avoid_returning_null_for_void # 禁止为 `void` 函数返回 `null`。
+    - avoid_shadowing_type_parameters # 避免在泛型类型参数和类成员之间发生名称冲突。
+    - avoid_single_cascade_in_expression_statements # 禁止在表达式语句中使用单一的级联符号。
+    - avoid_types_as_parameter_names # 避免将类型名称用作参数名称。
+    - avoid_unnecessary_containers # 避免使用不必要的 Container 组件。
+    - avoid_web_libraries_in_flutter # 避免在 Flutter 应用程序中使用 Web 库。
+    - await_only_futures # 只在futures时使用 await。
+    - camel_case_extensions # 在扩展名称中使用驼峰命名法。
+    - camel_case_types # 在类型名称中使用驼峰命名法。
+    - constant_identifier_names # 强制常量标识符使用小写字母的 snake_case 命名法。
+    - control_flow_in_finally # 禁止在 `finally` 块中使用控制流语句。
+    - curly_braces_in_flow_control_structures # 在流控制结构中使用大括号。
+    - depend_on_referenced_packages # 在 pubspec.yaml 中指定所有直接依赖项。
+    - empty_catches # 避免空的 catch 代码块。
+    - empty_constructor_bodies # 禁止空的构造函数体。
+    - empty_statements # 禁止空语句。
+    - exhaustive_cases # 确保 `switch` 语句中的所有情况都得到处理。
+    - file_names # 使用小写和下划线分隔符的文件名。
+    - hash_and_equals # 实现 hashCode 和 ==。
+    - implementation_imports # 禁止导入实现库。
+    - library_names # 强制库名使用小写字母的 snake_case 命名法。
+    - library_prefixes # 禁止使用无意义的库前缀。
+    - library_private_types_in_public_api # 禁止在公共 API 中使用库的私有类型。
+    - no_duplicate_case_values # 在 switch 语句中避免重复的 case 值。
+    - no_leading_underscores_for_library_prefixes # 禁止库前缀名称前面有下划线。
+    # - no_leading_underscores_for_local_identifiers # 禁止局部标识符名称前面有下划线。
+    - no_logic_in_create_state # 避免在 createState 方法中编写逻辑。
+    # - non_constant_identifier_names # 避免在非常量标识符中使用小写字母 l、大写字母 O 或大写字母 I。
+    - null_check_on_nullable_type_parameter # 在可空类型参数上避免使用 null 检查。
+    - null_closures # 禁止使用 `null` 作为闭包值。
+    - overridden_fields # 禁止覆盖字段。
+    - package_names # 强制包名使用小写字母的 snake_case 命名法。
+    - package_prefixed_library_names # 在库名称上使用包前缀。
+    - prefer_adjacent_string_concatenation # 建议使用相邻字符串拼接。
+    - prefer_collection_literals # 建议使用集合字面量，而不是通过构造函数创建集合。
+    - prefer_conditional_assignment # 建议使用条件赋值运算符（`??=`）。
+    - prefer_const_constructors # 在可以使用 const 构造函数的情况下使用它们。
+    - prefer_const_constructors_in_immutables # 在不可变对象上使用 const 构造函数。
+    - prefer_const_declarations # 在可以使用 final 或 const 的情况下，尽可能使用它们。
+    - prefer_const_literals_to_create_immutables # 使用 const 字面量创建不可变对象。
+    - prefer_contains # 建议使用 `contains` 方法检查集合中是否存在元素。
+    - prefer_final_fields # 建议将字段声明为 `final`，除非需要在构造函数中初始化它们。
+    - prefer_for_elements_to_map_fromIterable # 建议使用 `for` 循环处理集合元素，而不是 `fromIterable` 方法。
+    - prefer_function_declarations_over_variables # 建议使用函数声明，而不是变量声明。
+    - prefer_generic_function_type_aliases # 在函数类型别名中使用泛型函数类型语法。
+    - prefer_if_null_operators # 建议使用空值判断运算符（`??`）。
+    - prefer_initializing_formals # 建议将构造函数参数声明为 final 并在构造函数中初始化。
+    - prefer_inlined_adds # 建议在集合的末尾添加元素时使用 `add` 方法，而不是 `addAll` 方法。
+    - prefer_interpolation_to_compose_strings # 建议使用字符串插值来构建字符串，而不是使用 `+` 运算符连接。
+    - prefer_is_empty # 使用 isEmpty 检查集合是否为空。
+    - prefer_is_not_empty # 使用 isNotEmpty 检查集合是否非空。
+    - prefer_is_not_operator # 建议使用 `is!` 运算符，而不是 `!(obj is Type)`。
+    - prefer_iterable_whereType # 使用 whereType() 过滤 Iterable 中的元素。
+    - prefer_null_aware_operators # 建议使用空值判断运算符（`?.` 和 `?.[]`）。
+    - prefer_spread_collections # 建议使用扩展运算符（`...`）来创建集合。
+    - prefer_typing_uninitialized_variables # 对未初始化的变量使用类型。
+    - prefer_void_to_null # 建议将返回类型声明为 `void`，而不是 `null`。
+    - provide_deprecation_message # 在弃用的代码上提供消息。
+    - recursive_getters # 禁止递归调用 getter 方法。
+    - sized_box_for_whitespace # 使用 SizedBox 明确指定小部件的大小。
+    - slash_for_doc_comments # 要求在文档注释中使用斜杠（`/`）。
+    - sort_child_properties_last # 将 children 属性放在其他小部件属性的后面。
+    - type_init_formals # 要求在构造函数中初始化类型参数。
+    - unnecessary_brace_in_string_interps # 禁止在字符串插值中使用不必要的大括号。
+    - unnecessary_const # 禁止使用不必要的 `const` 关键字。
+    - unnecessary_constructor_name # 禁止在构造函数中使用类名作为构造函数名称。
+    - unnecessary_getters_setters # 禁止在没有额外逻辑的情况下创建 getter 和 setter 方法。
+    - unnecessary_late # 禁止在不需要延迟初始化的情况下使用 late 关键字。
+    - unnecessary_new # 禁止在不需要创建新实例的情况下使用 new 关键字。
+    - unnecessary_null_aware_assignments # 禁止在使用 ??= 时将 null 赋值给变量。
+    - unnecessary_null_in_if_null_operators # 禁止在 if null 运算符中使用 null。
+    - unnecessary_nullable_for_final_variable_declarations # 禁止在声明 final 变量时使用可空类型。
+    - unnecessary_overrides # 避免不必要的成员重写。
+    - unnecessary_string_escapes # 禁止在字符串中使用不必要的转义字符。
+    - unnecessary_string_interpolations # 禁止在字符串插值中只有变量名时使用大括号。
+    - unnecessary_this # 禁止在不需要使用 this 的情况下使用 this。
+    - unrelated_type_equality_checks # 禁止在两个不相关类型之间进行相等性检查。
+    - use_build_context_synchronously # 同步使用 BuildContext。
+    - use_full_hex_values_for_flutter_colors # 在 Flutter 中使用完整的十六进制颜色值。
+    - use_function_type_syntax_for_parameters # 在函数类型参数中使用函数类型语法。
+    - use_key_in_widget_constructors # 在小部件构造函数中使用 Key。
+    - use_rethrow_when_possible # 在需要重新抛出异常时使用 rethrow。
+    - valid_regexps # 避免使用无效的正则表达式。
+    - void_checks # 将返回类型为 void 的函数

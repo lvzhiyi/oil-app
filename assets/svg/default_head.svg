@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="70px" height="70px" viewBox="0 0 70 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>头像</title>
+    <defs>
+        <radialGradient cx="50%" cy="29.476194%" fx="50%" fy="29.476194%" r="89.8804398%" gradientTransform="translate(0.500000,0.294762),rotate(90.000000),scale(1.000000,0.991319),translate(-0.500000,-0.294762)" id="radialGradient-1">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#E8EDF8" offset="100%"></stop>
+        </radialGradient>
+        <circle id="path-2" cx="35" cy="35" r="35"></circle>
+        <filter x="-29.7%" y="-29.7%" width="159.4%" height="159.4%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="0" dy="3" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.809706096   0 0 0 0 0.83332658   0 0 0 0 0.896314538  0 0 0 0.700147509 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="个人信息修改" transform="translate(-147.000000, -109.000000)">
+            <g id="编组-3" transform="translate(142.000000, 104.000000)">
+                <g id="头像" transform="translate(5.000000, 5.000000)">
+                    <mask id="mask-3" fill="white">
+                        <use xlink:href="#path-2"></use>
+                    </mask>
+                    <use id="椭圆形" fill="url(#radialGradient-1)" xlink:href="#path-2"></use>
+                    <g id="编组" filter="url(#filter-4)" mask="url(#mask-3)" fill="#FFFFFF" fill-rule="nonzero">
+                        <g transform="translate(8.076923, 16.153846)" id="形状">
+                            <path d="M28.457551,26.8387192 C34.6278954,26.1573688 39.6238631,21.1607987 40.3051314,14.9897102 C41.2005127,6.86541706 34.8679614,0 26.9263193,0 C19.4907622,0 13.4631596,6.0218403 13.4631596,13.4582939 L13.4631596,13.464783 C13.4631596,21.4073827 20.3342373,27.7342084 28.457551,26.8387192 Z M26.9263193,30.7710848 C17.9400657,30.7710848 0,35.9233921 0,46.1566272 L0,51.9253944 C0,52.989599 0.862939872,53.8461538 1.92052783,53.8461538 L51.9256225,53.8461538 C52.9896987,53.8461538 53.8461521,52.9831099 53.8461521,51.9253944 L53.8461521,46.1566272 C53.8526386,35.9298812 35.9125728,30.7710848 26.9263193,30.7710848 Z"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

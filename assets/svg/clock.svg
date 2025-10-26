@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="等待支付" transform="translate(-42, -174)">
+            <g id="编组" transform="translate(42, 174)">
+                <path d="M10,20 C15.52285,20 20,15.52285 20,10 C20,4.47715 15.52285,0 10,0 C4.47715,0 0,4.47715 0,10 C0,15.52285 4.47715,20 10,20 Z" id="路径" fill="#FFFFFF" fill-rule="nonzero"></path>
+                <polyline id="路径" stroke="#0082FF" stroke-linecap="round" stroke-linejoin="round" points="10.0042 4.00005 10.0036 10.00445 14.2433 14.24415"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>
