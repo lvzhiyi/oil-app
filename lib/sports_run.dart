@@ -12,14 +12,14 @@ import 'package:flutter_ume_plus/flutter_ume_plus.dart';
 // ignore: depend_on_referenced_packages
 import 'package:hive/hive.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:lottery_app/config/config.dart';
-import 'package:lottery_app/utils/log.dart';
+import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/utils/log.dart';
 import 'package:path_provider/path_provider.dart';
 import 'app.dart';
 import 'config/address.dart';
 import 'net/net_manager.dart';
 
-void sportsFlutterRun(
+void oilAppFlutterRun(
   Future<void> Function() prepareAppRun, {
   VoidCallback? appRun,
   String? packageName,

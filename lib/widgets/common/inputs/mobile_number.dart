@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-import 'package:lottery_app/resources/colors.dart';
-import 'package:lottery_app/resources/style.dart';
-import 'package:lottery_app/utils/pt.dart';
-import 'package:lottery_app/utils/validators.dart' as app_validators;
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/resources/style.dart';
+import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/utils/validators.dart' as app_validators;
 
 class MobileNumberInput extends StatelessWidget {
   final String? phoneNumber;

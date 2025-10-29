@@ -1,6 +1,6 @@
-import 'package:lottery_app/router/router.dart';
-import 'package:lottery_app/router/routes.dart';
-import 'package:lottery_app/widgets/popup/dialog.dart';
+import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
+import 'package:oil_business_app/widgets/popup/dialog.dart';
 
 /// 退出登录弹窗
 showLogoutDialog() async {

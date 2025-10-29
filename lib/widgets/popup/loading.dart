@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:lottery_app/resources/colors.dart';
+import 'package:oil_business_app/resources/colors.dart';
 
 enum LoadingType { def }
 

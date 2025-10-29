@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
-import 'package:lottery_app/resources/colors.dart';
-import 'package:lottery_app/utils/pt.dart';
-import 'package:lottery_app/widgets/common/hidden_scroll_behavior.dart';
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/widgets/common/hidden_scroll_behavior.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 typedef OnRefresh = void Function();

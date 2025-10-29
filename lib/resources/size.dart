@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lottery_app/utils/pt.dart';
+import 'package:oil_business_app/utils/pt.dart';
 
 class AppSize {
   static final EdgeInsets pagePadding =

@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
-import 'package:lottery_app/global/storage.dart';
-import 'package:lottery_app/net/dio_io.dart';
-import 'package:lottery_app/net/http_header_interceptor.dart';
-import 'package:lottery_app/net/http_log_interceptor.dart';
-import 'package:lottery_app/net/http_resp_interceptor.dart';
-import 'package:lottery_app/utils/log.dart';
+import 'package:oil_business_app/global/storage.dart';
+import 'package:oil_business_app/net/dio_io.dart';
+import 'package:oil_business_app/net/http_header_interceptor.dart';
+import 'package:oil_business_app/net/http_log_interceptor.dart';
+import 'package:oil_business_app/net/http_resp_interceptor.dart';
+import 'package:oil_business_app/utils/log.dart';
 
 /// 连接超时30秒 - 增加超时时间
 const int timeOut = 30 * 1000;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lottery_app/resources/colors.dart';
+import 'package:oil_business_app/resources/colors.dart';
 import 'package:intl/intl.dart';
 
 import 'pt.dart';

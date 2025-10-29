@@ -1,5 +1,5 @@
-import 'package:lottery_app/config/config.dart';
-import 'package:lottery_app/config/env.dart';
+import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/config/env.dart';
 
 /// 地址数据
 class BaseAddress {

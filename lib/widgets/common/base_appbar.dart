@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lottery_app/router/router.dart';
-import 'package:lottery_app/utils/pt.dart';
-import 'package:lottery_app/utils/screen.dart';
+import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/utils/screen.dart';
 
 // 统一通用的appbar
 class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {

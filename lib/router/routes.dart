@@ -1,21 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottery_app/pages/gift_lottery_qr_dynamic/page.dart';
-import 'package:lottery_app/pages/gift_lottery_qr_static/page.dart';
-import 'package:lottery_app/pages/pay_order_detail/page.dart';
-import 'package:lottery_app/pages/splase/page.dart';
-import 'package:lottery_app/pages/login/page.dart';
-import 'package:lottery_app/pages/dashboard/page.dart';
+import 'package:oil_business_app/pages/splase/page.dart';
+import 'package:oil_business_app/pages/login/page.dart';
 
-import 'package:lottery_app/pages/unified_payment/page.dart';
-import 'package:lottery_app/pages/profile/page.dart';
-import 'package:lottery_app/pages/profile/change_password/page.dart';
-import 'package:lottery_app/pages/employee_management/page.dart';
-import 'package:lottery_app/pages/gift_lottery/page.dart';
-import 'package:lottery_app/pages/gift_records/page.dart';
-import 'package:lottery_app/pages/main_layout/page.dart';
-import 'package:lottery_app/router/pageTransition/bottom_to_top_page.dart';
-import 'package:lottery_app/router/router.dart';
+import 'package:oil_business_app/pages/profile/page.dart';
+import 'package:oil_business_app/pages/main_layout/page.dart';
+import 'package:oil_business_app/router/pageTransition/bottom_to_top_page.dart';
+import 'package:oil_business_app/router/router.dart';
 
 enum AppPage {
   /// 启动页
@@ -91,37 +82,8 @@ extension PageRoute on AppPage {
       case AppPage.mainLayoutPage:
         return (context, state) => const MainLayoutPage();
 
-      case AppPage.dashboardPage:
-        return (context, state) => const DashboardPage();
-
       case AppPage.profilePage:
         return (context, state) => const ProfilePage();
-
-      case AppPage.employeeManagementPage:
-        return (context, state) => const EmployeeManagementPage();
-
-      case AppPage.giftLotteryPage:
-        return (context, state) => const GiftLotteryPage();
-
-      case AppPage.giftLotteryQrStaticPage:
-        return (context, state) => const GiftLotteryQrStaticPage();
-
-      case AppPage.giftLotteryQrDynamicPage:
-        return (context, state) => const GiftLotteryQrDynamicPage();
-
-      case AppPage.giftRecordsPage:
-        return (context, state) => const GiftRecordsPage();
-
-      case AppPage.unifiedPaymentPage:
-        return (context, state) => const UnifiedPaymentPage();
-
-      case AppPage.changePasswordPage:
-        return (context, state) => const ProfileChangePasswordPage();
-
-      case AppPage.payOrderDetailPage:
-        return (context, state) => PayOrderDetailPage(
-              uuid: state.extra as String,
-            );
 
       default:
         return (context, state) => const Text('404');

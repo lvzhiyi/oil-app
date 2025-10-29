@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:lottery_app/resources/colors.dart';
-import 'package:lottery_app/resources/style.dart';
-import 'package:lottery_app/static/svg.dart';
-import 'package:lottery_app/utils/pt.dart';
-import 'package:lottery_app/widgets/common/svg_asset.dart';
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/resources/style.dart';
+import 'package:oil_business_app/static/svg.dart';
+import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/widgets/common/svg_asset.dart';
 
 ///**
 /// 默认输入框

@@ -2,7 +2,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lottery_app/utils/pt.dart';
+import 'package:oil_business_app/utils/pt.dart';
 
 typedef OnRefresh = void Function();
 typedef OnLoading = void Function();

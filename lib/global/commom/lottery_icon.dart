@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lottery_app/global/enum/common.dart';
+import 'package:oil_business_app/global/enum/common.dart';
 
 /// 获取彩票类型对应的图标
 IconData getLotteryTypeIcon(LotteryType type) {

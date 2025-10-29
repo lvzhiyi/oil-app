@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottery_app/resources/colors.dart';
-import 'package:lottery_app/resources/style.dart';
-import 'package:lottery_app/utils/pt.dart';
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/resources/style.dart';
+import 'package:oil_business_app/utils/pt.dart';
 
 /// 统一的头部导航栏组件
 class SportsAppBar extends StatelessWidget implements PreferredSizeWidget {

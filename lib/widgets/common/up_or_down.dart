@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lottery_app/utils/pt.dart';
+import 'package:oil_business_app/utils/pt.dart';
 
 /// 赛事列表，赛事详情，banner上赔率变化展示动画组件
 ///

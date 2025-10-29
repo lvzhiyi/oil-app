@@ -1,4 +1,4 @@
-import 'package:lottery_app/utils/screen.dart';
+import 'package:oil_business_app/utils/screen.dart';
 
 pt(
   double size, {

@@ -2,15 +2,14 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottery_app/config/config.dart';
-import 'package:lottery_app/global/app_controller.dart';
-import 'package:lottery_app/global/model/user_profile_type.dart';
-import 'package:lottery_app/pages/profile/state.dart';
-import 'package:lottery_app/router/router.dart';
-import 'package:lottery_app/router/routes.dart';
-import 'package:lottery_app/utils/token_manager.dart';
-import 'package:lottery_app/widgets/popup/toast.dart';
-import 'package:lottery_app/utils/log.dart';
+import 'package:oil_business_app/global/app_controller.dart';
+import 'package:oil_business_app/global/model/user_profile_type.dart';
+import 'package:oil_business_app/pages/profile/state.dart';
+import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
+import 'package:oil_business_app/utils/token_manager.dart';
+import 'package:oil_business_app/widgets/popup/toast.dart';
+import 'package:oil_business_app/utils/log.dart';
 
 class ProfileCtrl extends Cubit<ProfileState> {
   late final AppController _appController;
@@ -30,61 +29,11 @@ class ProfileCtrl extends Cubit<ProfileState> {
 
     try {
       /// 从本地存储获取当前用户信息和代理商信息
-      final currentUserInfo =
-          BaseConfig.appContext!.read<AppController>().getCurrentEmployee();
 
-      /// 获取余额
-      final balance =
-          BaseConfig.appContext!.read<AppController>().state.agentInfo?.balance;
-      l.d('ProfileCtrl', 'currentUserInfo: $currentUserInfo');
-
-      if (currentUserInfo != null) {
-        l.d('ProfileCtrl', '加载用户信息: ${currentUserInfo.username}');
-        final isOwner =
-            currentUserInfo.roles?.contains(UserRole.owner.value) ?? false;
-        final isManager =
-            currentUserInfo.roles?.contains(UserRole.manager.value) ?? false;
-
-        // 根据当前用户信息创建UserProfile
-        // 修复空安全和类型不匹配问题，保证所有必填字段为非空字符串
-        // username优先使用非空username，否则用phone，若都为空则用空字符串
-        final userProfile = UserProfile(
-          id: currentUserInfo.uuid ?? '',
-          username: currentUserInfo.username ?? '',
-          contactName: currentUserInfo.username ?? '',
-          contactPhone: currentUserInfo.phone ?? '',
-          role: isOwner
-              ? UserRole.owner
-              : isManager
-                  ? UserRole.manager
-                  : UserRole.employee, // 默认为员工角色，可根据需要扩展
-          permissions: UserPermissions(
-            canManageEmployees: isOwner || isManager,
-            canRecharge: isOwner,
-            canExportData: isOwner,
-            canSetManager: isOwner,
-            canDisableEmployee: isOwner || isManager,
-          ),
-          balance: balance ?? '0.0', // 余额信息需要从其他接口获取
-          lotteryCount: 0, // 彩票数量需要从其他接口获取
-          registrationTime: DateTime.now(), // 注册时间需要从其他接口获取
-          avatar: null,
-          enabled: true,
-          tenantUuid: TokenManager.instance.getTenantUuid() ?? '',
-        );
-
-        emit(state.copyWith()
-          ..isLoading = false
-          ..userProfile = userProfile
-          ..hasError = false
-          ..errorMessage = null);
-      } else {
-        // 没有用户信息，可能未登录
-        emit(state.copyWith()
-          ..isLoading = false
-          ..hasError = true
-          ..errorMessage = '未找到用户信息，请重新登录');
-      }
+      emit(state.copyWith()
+        ..isLoading = false
+        ..hasError = false
+        ..errorMessage = null);
     } catch (e) {
       l.e('ProfileCtrl', '加载用户信息失败: $e');
       emit(state.copyWith()
@@ -232,7 +181,6 @@ class ProfileCtrl extends Cubit<ProfileState> {
       await Future.delayed(const Duration(seconds: 1));
       await TokenManager.instance.clearAuth();
       // 清理本地状态
-      _appController.setCurrentEmployee(null);
       BaseRouter.replace(url: AppPage.loginPage.path);
       emit(state.copyWith()
         ..isLoggingOut = false
@@ -244,7 +192,6 @@ class ProfileCtrl extends Cubit<ProfileState> {
         ..errorMessage = e.toString());
 
       // 即使服务端退出失败，也要清理本地状态
-      _appController.setCurrentEmployee(null);
     }
   }
 
@@ -252,7 +199,6 @@ class ProfileCtrl extends Cubit<ProfileState> {
   Future<void> refreshProfile() async {
     // 先刷新全局的代理商信息和当前员工信息
     await _appController.fetchAgentInfo();
-    await _appController.fetchCurrentEmployee();
 
     // 然后刷新个人页面的信息
     await loadUserProfile();

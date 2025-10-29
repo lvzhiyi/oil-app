@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:lottery_app/config/config.dart';
-import 'package:lottery_app/net/base_interceptor.dart';
-import 'package:lottery_app/utils/log.dart';
+import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/net/base_interceptor.dart';
+import 'package:oil_business_app/utils/log.dart';
 
 /// 网络日志拦截器
 class HttpLogInterceptor extends BaseInterceptor {

@@ -1,4 +1,4 @@
-import 'package:lottery_app/global/model/user_profile_type.dart';
+import 'package:oil_business_app/global/model/user_profile_type.dart';
 
 class ProfileState {
   /// 是否正在加载

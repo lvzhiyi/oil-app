@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:lottery_app/resources/colors.dart';
-import 'package:lottery_app/static/svg.dart';
-import 'package:lottery_app/utils/pt.dart';
-import 'package:lottery_app/widgets/common/svg_asset.dart';
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/static/svg.dart';
+import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/widgets/common/svg_asset.dart';
 
 enum ToastType {
   text,

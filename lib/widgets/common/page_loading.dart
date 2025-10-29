@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:lottery_app/resources/colors.dart';
-import 'package:lottery_app/static/img.dart';
-import 'package:lottery_app/utils/pt.dart';
-import 'package:lottery_app/widgets/base/btn.dart';
-import 'package:lottery_app/widgets/common/image_asset_pro.dart';
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/static/img.dart';
+import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/widgets/base/btn.dart';
+import 'package:oil_business_app/widgets/common/image_asset_pro.dart';
 
 enum PageStatus { loading, success, error, empty }
 

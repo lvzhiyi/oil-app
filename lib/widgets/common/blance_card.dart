@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottery_app/config/config.dart';
-import 'package:lottery_app/global/app_controller.dart';
-import 'package:lottery_app/global/app_state.dart';
-import 'package:lottery_app/global/commom/lottery_icon.dart';
-import 'package:lottery_app/global/enum/common.dart';
-import 'package:lottery_app/resources/colors.dart';
-import 'package:lottery_app/router/router.dart';
-import 'package:lottery_app/router/routes.dart';
-import 'package:lottery_app/utils/pt.dart';
+import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/global/app_controller.dart';
+import 'package:oil_business_app/global/app_state.dart';
+import 'package:oil_business_app/global/commom/lottery_icon.dart';
+import 'package:oil_business_app/global/enum/common.dart';
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
+import 'package:oil_business_app/utils/pt.dart';
 
 class BlanceCard extends StatefulWidget {
   const BlanceCard({super.key});

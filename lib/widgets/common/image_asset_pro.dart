@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lottery_app/static/img.dart';
+import 'package:oil_business_app/static/img.dart';
 
 class ImageAsset extends StatefulWidget {
   final String assetName;

@@ -4,11 +4,11 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:lottery_app/config/env.dart';
-import 'package:lottery_app/global/storage.dart';
-import 'package:lottery_app/models/device_info.dart';
-import 'package:lottery_app/utils/app_util.dart';
-import 'package:lottery_app/utils/log.dart';
+import 'package:oil_business_app/config/env.dart';
+import 'package:oil_business_app/global/storage.dart';
+import 'package:oil_business_app/models/device_info.dart';
+import 'package:oil_business_app/utils/app_util.dart';
+import 'package:oil_business_app/utils/log.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class BaseConfig {

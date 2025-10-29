@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:lottery_app/widgets/popup/toast.dart';
+import 'package:oil_business_app/widgets/popup/toast.dart';
 
 /// 文本处理工具类
 class TextUtil {

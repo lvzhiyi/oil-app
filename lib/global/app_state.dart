@@ -1,21 +1,15 @@
-import 'package:lottery_app/global/model/agent_info_type.dart';
-import 'package:lottery_app/pages/employee_management/model/employee_type.dart';
+import 'package:oil_business_app/global/model/agent_info_type.dart';
 
 class AppState {
-  /// 当前登录员工信息
-  CurrentEmployeeData? currentEmployee;
-
   /// 代理商信息
   AgentInfo? agentInfo;
 
-  AppState({this.currentEmployee, this.agentInfo});
+  AppState({this.agentInfo});
 
   AppState copyWith({
-    CurrentEmployeeData? currentEmployee,
     AgentInfo? agentInfo,
   }) {
     return AppState(
-      currentEmployee: currentEmployee ?? this.currentEmployee,
       agentInfo: agentInfo ?? this.agentInfo,
     );
   }

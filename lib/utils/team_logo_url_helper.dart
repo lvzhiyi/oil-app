@@ -1,6 +1,6 @@
 // lib/utils/url_helper.dart
 
-import 'package:lottery_app/config/config.dart';
+import 'package:oil_business_app/config/config.dart';
 
 // 根据环境配置选择基础URL
 // 在生产环境中使用https://d304ddif59eis.cloudfront.net/pic/

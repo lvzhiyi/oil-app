@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lottery_app/resources/colors.dart';
-import 'package:lottery_app/utils/pt.dart';
-import 'package:lottery_app/utils/text_util.dart';
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/utils/text_util.dart';
 import 'package:tdesign_flutter/tdesign_flutter.dart';
 
 class SportsIconBtn extends StatelessWidget {

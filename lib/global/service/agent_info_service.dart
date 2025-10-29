@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:lottery_app/global/model/agent_info_type.dart';
-import 'package:lottery_app/global/model/common_response_type.dart';
-import 'package:lottery_app/net/net_manager.dart';
+import 'package:oil_business_app/global/model/agent_info_type.dart';
+import 'package:oil_business_app/global/model/common_response_type.dart';
+import 'package:oil_business_app/net/net_manager.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'agent_info_service.g.dart';
@@ -16,7 +16,8 @@ abstract class AgentInfoService {
 
   /// 更新代理商信息
   @PATCH('/info')
-  Future<CommonBoolResponse> updateAgentInfo(@Body() UpdateAgentInfoRequest request);
+  Future<CommonBoolResponse> updateAgentInfo(
+      @Body() UpdateAgentInfoRequest request);
 }
 
 /// 获取AgentInfoService实例，确保网络管理器已初始化

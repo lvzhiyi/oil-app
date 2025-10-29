@@ -2,23 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
-import 'package:lottery_app/config/config.dart';
-import 'package:lottery_app/global/app_controller.dart';
-import 'package:lottery_app/pages/profile/controller.dart';
-import 'package:lottery_app/pages/profile/state.dart';
-import 'package:lottery_app/pages/profile/skeleton.dart';
-import 'package:lottery_app/pages/profile/widgets/agent_info_card.dart';
-import 'package:lottery_app/pages/profile/widgets/employee_info_card.dart';
-import 'package:lottery_app/pages/profile/widgets/lottery_types_dialog.dart';
-import 'package:lottery_app/resources/colors.dart';
-import 'package:lottery_app/resources/style.dart';
-import 'package:lottery_app/utils/app_version_util.dart';
-import 'package:lottery_app/utils/pt.dart';
-import 'package:lottery_app/widgets/base/btn.dart';
-import 'package:lottery_app/widgets/common/page_loading.dart';
-import 'package:lottery_app/widgets/common/pull_refresh_easy.dart';
-import 'package:lottery_app/widgets/popup/dialog.dart';
-import 'package:lottery_app/widgets/common/balance_info_card_widget.dart';
+import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/global/app_controller.dart';
+import 'package:oil_business_app/pages/profile/controller.dart';
+import 'package:oil_business_app/pages/profile/state.dart';
+import 'package:oil_business_app/pages/profile/skeleton.dart';
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/resources/style.dart';
+import 'package:oil_business_app/utils/app_version_util.dart';
+import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/widgets/base/btn.dart';
+import 'package:oil_business_app/widgets/common/page_loading.dart';
+import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
+import 'package:oil_business_app/widgets/popup/dialog.dart';
+import 'package:oil_business_app/widgets/common/balance_info_card_widget.dart';
 
 class ProfileView extends HookWidget {
   final ProfileState state;
@@ -93,10 +90,6 @@ class ProfileView extends HookWidget {
         child: Column(
           children: [
             _buildHeader(context, ctrl),
-            // Gap(pt(8)),
-            AgentInfoCard(userProfile: state.userProfile),
-            Gap(pt(8)),
-            EmployeeInfoCard(userProfile: state.userProfile),
             Gap(pt(8)),
             const BalanceInfoCardWidget(),
             Gap(pt(8)),
@@ -181,7 +174,7 @@ class ProfileView extends HookWidget {
       {
         'title': '支持的彩种',
         'icon': Icons.confirmation_number_outlined,
-        'onTap': () => showLotteryTypesDialog(context),
+        'onTap': () => {},
         'showAlways': true,
       },
     ];

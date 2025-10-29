@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:lottery_app/pages/login/changePw/state.dart';
+import 'package:oil_business_app/pages/login/changePw/state.dart';
 
 class ChangePwCtrl extends Cubit<ChangePwState> {
   ChangePwCtrl()

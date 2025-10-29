@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:lottery_app/config/address.dart';
-import 'package:lottery_app/config/config.dart';
-import 'package:lottery_app/global/model/app_version_type.dart';
-import 'package:lottery_app/global/service/app_version_service.dart';
-import 'package:lottery_app/global/storage.dart';
-import 'package:lottery_app/utils/date_util.dart';
-import 'package:lottery_app/widgets/popup/dialog.dart';
+import 'package:oil_business_app/config/address.dart';
+import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/global/model/app_version_type.dart';
+import 'package:oil_business_app/global/service/app_version_service.dart';
+import 'package:oil_business_app/global/storage.dart';
+import 'package:oil_business_app/utils/date_util.dart';
+import 'package:oil_business_app/widgets/popup/dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// print(result); // 输出 1, 因为 '1.0.1' 较新。

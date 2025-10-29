@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:lottery_app/resources/size.dart';
+import 'package:oil_business_app/resources/size.dart';
 
 class EmptyCard extends StatelessWidget {
   final String desc;

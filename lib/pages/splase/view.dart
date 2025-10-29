@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lottery_app/pages/splase/state.dart';
-import 'package:lottery_app/static/img.dart';
-import 'package:lottery_app/widgets/common/image_asset_pro.dart';
+import 'package:oil_business_app/pages/splase/state.dart';
+import 'package:oil_business_app/static/img.dart';
+import 'package:oil_business_app/widgets/common/image_asset_pro.dart';
 
 class SplaseView extends HookWidget {
   final SplaseState state;

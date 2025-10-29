@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottery_app/pages/profile/state.dart';
-import 'package:lottery_app/pages/profile/view.dart';
-import 'package:lottery_app/widgets/common/base_page.dart';
+import 'package:oil_business_app/pages/profile/state.dart';
+import 'package:oil_business_app/pages/profile/view.dart';
+import 'package:oil_business_app/widgets/common/base_page.dart';
 
 import 'controller.dart';
 

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:lottery_app/global/model/app_version_type.dart';
-import 'package:lottery_app/net/net_manager.dart';
+import 'package:oil_business_app/global/model/app_version_type.dart';
+import 'package:oil_business_app/net/net_manager.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'app_version_service.g.dart';

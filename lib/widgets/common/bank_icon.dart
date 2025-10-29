@@ -1,8 +1,8 @@
 // import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:lottery_app/static/svg.dart';
-import 'package:lottery_app/widgets/common/svg_asset.dart';
+import 'package:oil_business_app/static/svg.dart';
+import 'package:oil_business_app/widgets/common/svg_asset.dart';
 
 // import 'cached_network_image_pro.dart';
 

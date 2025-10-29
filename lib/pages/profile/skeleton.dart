@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:lottery_app/resources/colors.dart';
-import 'package:lottery_app/utils/pt.dart';
-import 'package:lottery_app/widgets/common/skeleton_loading.dart';
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/widgets/common/skeleton_loading.dart';
 
 /// 个人中心骨架屏
 class ProfileSkeleton extends StatelessWidget {

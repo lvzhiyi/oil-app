@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottery_app/config/config.dart';
-import 'package:lottery_app/global/app_controller.dart';
-import 'package:lottery_app/global/model/auth_type.dart';
-import 'package:lottery_app/global/service/auth_service.dart';
-import 'package:lottery_app/pages/login/state.dart';
+import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/global/app_controller.dart';
+import 'package:oil_business_app/global/model/auth_type.dart';
+import 'package:oil_business_app/global/service/auth_service.dart';
+import 'package:oil_business_app/pages/login/state.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:lottery_app/net/code.dart';
-import 'package:lottery_app/utils/token_manager.dart';
-import 'package:lottery_app/utils/log.dart';
+import 'package:oil_business_app/net/code.dart';
+import 'package:oil_business_app/utils/token_manager.dart';
+import 'package:oil_business_app/utils/log.dart';
 
 class LoginCtrl extends Cubit<LoginState> {
   LoginCtrl()
@@ -66,10 +66,6 @@ class LoginCtrl extends Cubit<LoginState> {
               .saveTenantUuid(response.data!.tenantUuid!);
         }
 
-        // 获取当前登录用户信息
-        await BaseConfig.appContext!
-            .read<AppController>()
-            .fetchCurrentEmployee();
         // 获取当前代理商信息
         await BaseConfig.appContext!.read<AppController>().fetchAgentInfo();
 

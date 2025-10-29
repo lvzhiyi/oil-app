@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lottery_app/resources/size.dart';
-import 'package:lottery_app/utils/pt.dart';
+import 'package:oil_business_app/resources/size.dart';
+import 'package:oil_business_app/utils/pt.dart';
 
 ///**
 /// 通用白色背景容器

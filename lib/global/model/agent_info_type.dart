@@ -1,4 +1,4 @@
-import 'package:lottery_app/global/enum/common.dart';
+import 'package:oil_business_app/global/enum/common.dart';
 
 /// 代理商余额信息
 class AgentBalance {

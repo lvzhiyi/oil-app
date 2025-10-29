@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:lottery_app/global/model/agent_info_type.dart';
-import 'package:lottery_app/global/service/agent_info_service.dart';
-import 'package:lottery_app/net/code.dart';
-import 'package:lottery_app/pages/employee_management/model/employee_type.dart';
-import 'package:lottery_app/pages/employee_management/service/employee_service.dart';
-import 'package:lottery_app/utils/token_manager.dart';
+import 'package:oil_business_app/global/model/agent_info_type.dart';
+import 'package:oil_business_app/global/service/agent_info_service.dart';
+import 'package:oil_business_app/net/code.dart';
+import 'package:oil_business_app/utils/token_manager.dart';
 
 import 'app_state.dart';
 
@@ -64,15 +62,6 @@ class AppController extends HydratedCubit<AppState>
       return;
     }
     fetchAgentInfo();
-    fetchCurrentEmployee();
-  }
-
-  setCurrentEmployee(CurrentEmployeeData? currentEmployee) {
-    emit(state.copyWith(currentEmployee: currentEmployee));
-  }
-
-  CurrentEmployeeData? getCurrentEmployee() {
-    return state.currentEmployee;
   }
 
   setAgentInfo(AgentInfo? agentInfo) {
@@ -99,15 +88,6 @@ class AppController extends HydratedCubit<AppState>
     }
   }
 
-  /// 获取当前员工信息
-  Future<void> fetchCurrentEmployee() async {
-    final employeeResponse = await employeeService.getCurrentEmployee();
-    if (employeeResponse.code == HttpCode.success &&
-        employeeResponse.data != null) {
-      setCurrentEmployee(employeeResponse.data);
-    }
-  }
-
   @override
   void onError(Object error, StackTrace stackTrace) {
     super.onError(error, stackTrace);
@@ -116,14 +96,10 @@ class AppController extends HydratedCubit<AppState>
 
   @override
   AppState? fromJson(Map<String, dynamic> json) {
-    final currentEmployee = json['currentEmployee'] != null
-        ? CurrentEmployeeData.fromJson(json['currentEmployee'])
-        : null;
     final agentInfo = json['agentInfo'] != null
         ? AgentInfo.fromJson(json['agentInfo'])
         : null;
     return AppState(
-      currentEmployee: currentEmployee,
       agentInfo: agentInfo,
     );
   }
@@ -131,7 +107,6 @@ class AppController extends HydratedCubit<AppState>
   @override
   Map<String, dynamic>? toJson(AppState state) {
     return {
-      'currentEmployee': state.currentEmployee?.toJson(),
       'agentInfo': state.agentInfo?.toJson(),
     };
   }

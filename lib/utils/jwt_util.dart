@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:lottery_app/utils/log.dart';
+import 'package:oil_business_app/utils/log.dart';
 
 /// JWT工具类
 ///

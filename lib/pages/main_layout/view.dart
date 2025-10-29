@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottery_app/pages/dashboard/page.dart';
-import 'package:lottery_app/pages/gift_lottery/page.dart';
-import 'package:lottery_app/pages/main_layout/controller.dart';
-import 'package:lottery_app/pages/main_layout/state.dart';
-import 'package:lottery_app/pages/profile/page.dart';
-import 'package:lottery_app/pages/recharge_records/page.dart';
-import 'package:lottery_app/resources/colors.dart';
-import 'package:lottery_app/utils/pt.dart';
+import 'package:oil_business_app/pages/main_layout/controller.dart';
+import 'package:oil_business_app/pages/main_layout/state.dart';
+import 'package:oil_business_app/pages/profile/page.dart';
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/utils/pt.dart';
 
 class MainLayoutView extends StatefulWidget {
   final MainLayoutState state;
@@ -40,11 +37,10 @@ class _MainLayoutViewState extends State<MainLayoutView> {
         },
         child: IndexedStack(
           index: widget.state.selectedIndex,
-          children: const [
-            DashboardPage(key: ValueKey('dashboard')),
-            GiftLotteryPage(key: ValueKey('giftLottery')),
-            RechargeRecordsPage(key: ValueKey('rechargeRecord')),
-            ProfilePage(key: ValueKey('profile')),
+          children: [
+            Container(key: const ValueKey('giftLottery')),
+            Container(key: const ValueKey('rechargeRecord')),
+            const ProfilePage(key: ValueKey('profile')),
           ],
         ),
       ),
@@ -79,24 +75,17 @@ class _MainLayoutViewState extends State<MainLayoutView> {
           child: Row(
             children: [
               _buildTabItem(
-                index: 0,
-                icon: Icons.home_outlined,
-                activeIcon: Icons.home,
-                label: '首页',
-                controller: controller,
-              ),
-              _buildTabItem(
                 index: 1,
                 icon: Icons.wallet_giftcard_outlined,
                 activeIcon: Icons.wallet_giftcard_rounded,
-                label: '赠送',
+                label: '采购',
                 controller: controller,
               ),
               _buildTabItem(
                 index: 2,
                 icon: Icons.wallet_outlined,
                 activeIcon: Icons.wallet,
-                label: '账户',
+                label: '提油',
                 controller: controller,
               ),
               _buildTabItem(

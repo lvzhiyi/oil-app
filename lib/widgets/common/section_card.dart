@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lottery_app/resources/colors.dart';
-import 'package:lottery_app/resources/style.dart';
-import 'package:lottery_app/utils/pt.dart';
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/resources/style.dart';
+import 'package:oil_business_app/utils/pt.dart';
 
 /// 卡片式区块容器
 class SectionCard extends StatelessWidget {

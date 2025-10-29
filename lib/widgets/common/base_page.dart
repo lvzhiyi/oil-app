@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:lottery_app/utils/screen.dart';
-import 'package:lottery_app/utils/log.dart';
+import 'package:oil_business_app/utils/screen.dart';
+import 'package:oil_business_app/utils/log.dart';
 
 abstract class BasePage extends StatefulWidget {
   const BasePage({Key? key}) : super(key: key);

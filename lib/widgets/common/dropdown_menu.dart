@@ -1,6 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:lottery_app/resources/colors.dart';
+import 'package:oil_business_app/resources/colors.dart';
 
 class LotteryDropdownMenu<T> extends StatelessWidget {
   final String hintText;

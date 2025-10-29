@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lottery_app/utils/log.dart';
+import 'package:oil_business_app/utils/log.dart';
 import 'package:go_router/go_router.dart';
 
 extension Compatible on GoRouterState {

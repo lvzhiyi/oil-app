@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:lottery_app/config/config.dart';
-import 'package:lottery_app/models/device_info.dart';
-import 'package:lottery_app/net/base_interceptor.dart';
-import 'package:lottery_app/utils/token_manager.dart';
+import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/models/device_info.dart';
+import 'package:oil_business_app/net/base_interceptor.dart';
+import 'package:oil_business_app/utils/token_manager.dart';
 
 /// 请求header拦截器
 /// 主要是为每个请求添加header

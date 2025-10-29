@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:gap/gap.dart';
-import 'package:lottery_app/resources/colors.dart';
-import 'package:lottery_app/resources/style.dart';
-import 'package:lottery_app/static/svg.dart';
-import 'package:lottery_app/utils/pt.dart';
-import 'package:lottery_app/widgets/common/svg_asset.dart';
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/resources/style.dart';
+import 'package:oil_business_app/static/svg.dart';
+import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/widgets/common/svg_asset.dart';
 
 class CaptchaInputs extends StatefulWidget {
   /// 图片节点，如果传了ImageChild，代表手动传入图片和调用获取图形验证码的接口

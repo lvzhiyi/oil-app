@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:lottery_app/resources/colors.dart';
-import 'package:lottery_app/static/svg.dart';
-import 'package:lottery_app/utils/hex_color.dart';
-import 'package:lottery_app/utils/pt.dart';
-import 'package:lottery_app/widgets/common/svg_asset.dart';
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/static/svg.dart';
+import 'package:oil_business_app/utils/hex_color.dart';
+import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/widgets/common/svg_asset.dart';
 
 class NumberIndicator extends StatefulWidget {
   final String title;
