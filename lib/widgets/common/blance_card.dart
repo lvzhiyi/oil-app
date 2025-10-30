@@ -45,8 +45,6 @@ class _BlanceCardState extends State<BlanceCard>
     // 开始旋转动画
     _rotationController.repeat();
 
-    await BaseConfig.appContext!.read<AppController>().fetchAgentInfo();
-
     // 停止旋转动画
     _rotationController.stop();
 

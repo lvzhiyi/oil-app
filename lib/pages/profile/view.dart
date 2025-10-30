@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
-import 'package:oil_business_app/config/config.dart';
-import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/pages/profile/controller.dart';
 import 'package:oil_business_app/pages/profile/state.dart';
 import 'package:oil_business_app/pages/profile/skeleton.dart';
@@ -270,16 +268,7 @@ class ProfileView extends HookWidget {
   }
 
   /// 显示开放平台信息
-  void _showOpenPlatformInfo(BuildContext context) {
-    final agentInfo =
-        BaseConfig.appContext!.read<AppController>().getAgentInfo();
-    if (agentInfo == null) return;
-
-    SportsDialog.show(
-      title: '开放平台信息',
-      bodyText: 'API Key: ${agentInfo.clientKey}',
-    );
-  }
+  void _showOpenPlatformInfo(BuildContext context) {}
 
   /// 显示更新对话框
   void _showUpdateDialog() {

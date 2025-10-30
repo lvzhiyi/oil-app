@@ -18,8 +18,16 @@ abstract class AuthService {
   Future<RefreshTokenResponse> refreshToken(
       @Body() RefreshTokenRequest request);
 
+  /// 用户注册
+  @POST('/auth/register')
+  Future<RegisterResponse> register(@Body() RegisterRequest request);
+
+  /// 发送验证码
+  @POST('/auth/send-verification')
+  Future sendCode(@Body() SendCodeRequest request);
+
   /// 退出登录
-  @POST('/auths/logout')
+  @POST('/auth/logout')
   Future<LogoutResponse> logout();
 }
 

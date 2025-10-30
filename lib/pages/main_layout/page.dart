@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/pages/main_layout/state.dart';
 import 'package:oil_business_app/pages/main_layout/view.dart';
-import 'package:oil_business_app/pages/profile/controller.dart';
 import 'package:oil_business_app/widgets/common/base_page.dart';
 
 import 'controller.dart';
@@ -21,8 +19,6 @@ class _MainLayoutPage extends BaseState<MainLayoutPage> with BasicInitPage {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => MainLayoutCtrl()),
-        BlocProvider(
-            create: (context) => ProfileCtrl(context.read<AppController>())),
       ],
       child: BlocBuilder<MainLayoutCtrl, MainLayoutState>(
         builder: (context, state) {

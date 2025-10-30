@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oil_business_app/config/config.dart';
-import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/model/auth_type.dart';
 import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/pages/login/state.dart';
@@ -65,9 +63,6 @@ class LoginCtrl extends Cubit<LoginState> {
           await TokenManager.instance
               .saveTenantUuid(response.data!.tenantUuid!);
         }
-
-        // 获取当前代理商信息
-        await BaseConfig.appContext!.read<AppController>().fetchAgentInfo();
 
         l.d('Login', '登录成功');
         emit(state.copyWith(

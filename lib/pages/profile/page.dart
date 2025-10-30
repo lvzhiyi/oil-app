@@ -16,9 +16,11 @@ class ProfilePage extends BasePage {
 class _ProfilePage extends BaseState<ProfilePage> with BasicInitPage {
   @override
   Widget body(context) {
-    // 使用从上层传递下来的ProfileCtrl，不再创建新实例
-    return BlocBuilder<ProfileCtrl, ProfileState>(builder: (context, state) {
-      return ProfileView(state: state);
-    });
+    return BlocProvider(
+      create: (BuildContext context) => ProfileCtrl(),
+      child: BlocBuilder<ProfileCtrl, ProfileState>(builder: (context, state) {
+        return ProfileView(state: state);
+      }),
+    );
   }
 }

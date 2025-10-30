@@ -72,6 +72,10 @@ class HttpRespInterceptor extends InterceptorsWrapper {
       }
     }
 
+    if (err.response?.data is String) {
+      SportsToast.showWarning(err.response?.data as String);
+    }
+
     if (err.response?.data['message'] != null) {
       SportsToast.showWarning(err.response?.data['message']);
     } else {

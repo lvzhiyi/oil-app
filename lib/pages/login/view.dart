@@ -4,13 +4,14 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:oil_business_app/pages/login/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/resources/style.dart';
+import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/static/img.dart';
 import 'package:oil_business_app/utils/platform.dart';
 import 'package:oil_business_app/utils/pt.dart';
 import 'package:oil_business_app/widgets/common/image_asset_pro.dart';
 import 'package:oil_business_app/widgets/common/inputs/mobile_number.dart';
 import 'package:oil_business_app/widgets/common/inputs/password.dart';
-import 'package:oil_business_app/widgets/popup/dialog.dart';
 
 import 'controller.dart';
 
@@ -80,7 +81,18 @@ class _LoginViewState extends State<LoginView> {
                           _buildLoginForm(),
                           _buildErrorDisplay(),
                           SizedBox(height: pt(16)),
-                          _buildForgetPassword(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _buildLoginOtherLink('忘记密码？', () {
+                                BaseRouter.push(
+                                    url: AppPage.changePasswordPage.path);
+                              }),
+                              _buildLoginOtherLink('注册', () {
+                                BaseRouter.push(url: AppPage.registerPage.path);
+                              }),
+                            ],
+                          ),
                           SizedBox(height: pt(32)),
                           _buildLoginButton(ctrl),
                           SizedBox(height: pt(48)),
@@ -204,26 +216,21 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  /// 构建忘记密码 - 极简文本链接
-  Widget _buildForgetPassword() {
+  /// 构建登录链接 - 极简文本链接
+  Widget _buildLoginOtherLink(String title, VoidCallback onPressed) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: pt(16)),
       child: Align(
         alignment: Alignment.centerRight,
         child: TextButton(
-          onPressed: () {
-            SportsDialog.show(
-              title: '忘记密码？',
-              bodyText: '请联系您的老板或平台',
-            );
-          },
+          onPressed: onPressed,
           style: TextButton.styleFrom(
             padding: EdgeInsets.symmetric(horizontal: pt(8), vertical: pt(4)),
             minimumSize: Size.zero,
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
           child: Text(
-            '忘记密码？',
+            title,
             style: SportsTextStyle.baseNormal.copyWith(
               fontSize: pt(15),
               color: AppColors.primary,

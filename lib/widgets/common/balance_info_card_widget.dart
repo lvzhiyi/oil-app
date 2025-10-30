@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/app_state.dart';
 import 'package:oil_business_app/global/commom/lottery_icon.dart';
@@ -54,8 +53,6 @@ class _BalanceInfoCardWidgetState extends State<BalanceInfoCardWidget>
     });
 
     _rotationController.repeat();
-
-    await BaseConfig.appContext!.read<AppController>().fetchAgentInfo();
 
     _rotationController.stop();
 
@@ -198,9 +195,7 @@ class _BalanceInfoCardWidgetState extends State<BalanceInfoCardWidget>
                       onTap: () async {
                         await BaseRouter.push(
                             url: AppPage.unifiedPaymentPage.path);
-                        BaseConfig.appContext!
-                            .read<AppController>()
-                            .fetchAgentInfo();
+
                         widget.popHandler?.call();
                       },
                       child: Container(

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:gap/gap.dart';
+import 'package:oil_business_app/global/model/auth_type.dart';
+import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/resources/style.dart';
 import 'package:oil_business_app/static/svg.dart';
@@ -82,6 +84,12 @@ class _VerifyCodeState extends State<VerifyCode> {
       isLoading = true;
     });
 
+    final SendCodeRequest request = SendCodeRequest(
+      phone: widget.formkey.currentState?.fields['phone']?.value as String,
+      type: widget.sence,
+    );
+    await authService.sendCode(request);
+
     setState(() {
       isLoading = false;
       isSending = true;
@@ -120,9 +128,10 @@ class _VerifyCodeState extends State<VerifyCode> {
         if (widget.showPreIcon == true) Gap(pt(15)),
         Expanded(
           child: Container(
+            padding: EdgeInsets.symmetric(vertical: pt(5)),
             alignment: Alignment.center,
             child: FormBuilderTextField(
-              name: widget.formName ?? 'smsCode',
+              name: widget.formName ?? 'code',
               textAlignVertical: TextAlignVertical.center,
               maxLength: 4,
               keyboardType: const TextInputType.numberWithOptions(signed: true),
@@ -135,10 +144,10 @@ class _VerifyCodeState extends State<VerifyCode> {
                   width: pt(75),
                   alignment: Alignment.centerLeft,
                   child: SportsBtn(
-                    text: isSending ? '${count}s' : 'Send',
+                    text: isSending ? '${count}s' : '发送',
                     tapHandle: send,
                     width: pt(75),
-                    height: pt(32),
+                    height: pt(40),
                     fontSize: pt(14),
                     btnLoading: isLoading,
                     loadingSize: TDLoadingSize.small,

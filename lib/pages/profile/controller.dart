@@ -2,7 +2,6 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/model/user_profile_type.dart';
 import 'package:oil_business_app/pages/profile/state.dart';
 import 'package:oil_business_app/router/router.dart';
@@ -12,9 +11,8 @@ import 'package:oil_business_app/widgets/popup/toast.dart';
 import 'package:oil_business_app/utils/log.dart';
 
 class ProfileCtrl extends Cubit<ProfileState> {
-  late final AppController _appController;
   final EasyRefreshController refreshController = EasyRefreshController();
-  ProfileCtrl(this._appController) : super(ProfileState()) {
+  ProfileCtrl() : super(ProfileState()) {
     initState();
   }
 
@@ -197,9 +195,6 @@ class ProfileCtrl extends Cubit<ProfileState> {
 
   /// 刷新用户信息
   Future<void> refreshProfile() async {
-    // 先刷新全局的代理商信息和当前员工信息
-    await _appController.fetchAgentInfo();
-
     // 然后刷新个人页面的信息
     await loadUserProfile();
     await loadOpenPlatformConfig();

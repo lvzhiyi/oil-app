@@ -3,9 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/resources/style.dart';
-import 'package:oil_business_app/static/svg.dart';
 import 'package:oil_business_app/utils/pt.dart';
-import 'package:oil_business_app/widgets/common/svg_asset.dart';
 
 ///**
 /// 默认输入框
@@ -16,16 +14,18 @@ class DefaultInput extends StatefulWidget {
     this.showUnderling = true,
     this.hintText,
     this.validators,
-    this.obscureText = true,
-    this.readOnly = false,
     this.maxLength,
     required this.name,
+    this.focusNode,
+    this.onEditingComplete,
+    this.onChanged,
+    this.initialValue,
   });
 
   ///**
   /// [String] 是否显示下滑线
   /// */
-  final String name;
+  final String? name;
 
   ///**
   /// [bool] 是否展示输入内容
@@ -37,10 +37,21 @@ class DefaultInput extends StatefulWidget {
   /// */
   final String? hintText;
 
-  final bool? obscureText;
+  ///**
+  /// [FocusNode] focusNode
+  final FocusNode? focusNode;
 
-  //是否只读
-  final bool? readOnly;
+  ///**
+  /// [void Function()] onEditingComplete
+  final void Function()? onEditingComplete;
+
+  ///**
+  /// [void Function(String?)] onChanged
+  final void Function(String?)? onChanged;
+
+  ///**
+  /// [String?] initialValue
+  final String? initialValue;
 
   /// 最大长度
   final int? maxLength;
@@ -50,60 +61,58 @@ class DefaultInput extends StatefulWidget {
   /// */
   final String? Function(String?)? validators;
   @override
-  State<DefaultInput> createState() => _PasswordInputState();
+  State<DefaultInput> createState() => _DefaultInputState();
 }
 
-class _PasswordInputState extends State<DefaultInput> {
+class _DefaultInputState extends State<DefaultInput> {
   // bool obscureText = true;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(
-          child: Container(
-            alignment: Alignment.center,
-            child: FormBuilderTextField(
-              readOnly: widget.readOnly == true,
-              name: widget.name,
-              maxLength: widget.maxLength,
-              textAlignVertical: TextAlignVertical.center,
-              obscureText: widget.obscureText == true,
-              decoration: InputDecoration(
-                labelStyle: SportsTextStyle.grayNormal,
-                hintText: widget.hintText ?? 'Please Enter ${widget.name}',
-                hintStyle: SportsTextStyle.grayNormal,
-                enabledBorder: widget.showUnderling == true
-                    ? UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.inputText),
-                      )
-                    : InputBorder.none,
-                focusedBorder: widget.showUnderling == true
-                    ? UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.darkBlue),
-                      )
-                    : InputBorder.none,
-                suffixIcon: Container(
-                  width: pt(20),
-                  alignment: Alignment.centerRight,
-                  child: SvgAsset(
-                    assetName: (widget.obscureText == true)
-                        ? AssetsSvg.EYE_CLOSE_ICON
-                        : AssetsSvg.EYE_FILL_ICON,
-                    color: Colors.transparent,
-                  ),
-                ),
-              ),
-              validator: widget.validators ??
-                  FormBuilderValidators.compose([
-                    FormBuilderValidators.required(
-                        errorText: '${widget.name} is required'),
-                  ]),
+    return Container(
+      alignment: Alignment.center,
+      child: FormBuilderTextField(
+        focusNode: widget.focusNode,
+        onEditingComplete: widget.onEditingComplete,
+        initialValue: widget.initialValue,
+        name: widget.name ?? 'name',
+        onChanged: widget.onChanged,
+        textAlignVertical: TextAlignVertical.center,
+        keyboardType: TextInputType.text,
+        decoration: InputDecoration(
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: pt(16), vertical: pt(14)),
+          labelStyle: SportsTextStyle.grayNormal,
+          filled: true,
+          fillColor: const Color(0xFFF8F9FB),
+          hintText: widget.hintText ?? '请输入${widget.name}',
+          hintStyle: SportsTextStyle.grayNormal.copyWith(
+            color: const Color(0xFFBBBBBB),
+            fontSize: pt(16),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(pt(12)),
+            borderSide: const BorderSide(
+              color: Color(0xFFE8E8E8),
+              width: 1,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(pt(12)),
+            borderSide: BorderSide(
+              color: AppColors.primary,
+              width: 2,
             ),
           ),
         ),
-      ],
+        validator: widget.validators != null
+            ? widget.validators ?? FormBuilderValidators.compose([])
+            : FormBuilderValidators.compose([
+                FormBuilderValidators.required(
+                  errorText: '${widget.name}不能为空',
+                ),
+              ]),
+      ),
     );
   }
 }

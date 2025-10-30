@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/pages/splase/state.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
-import 'package:oil_business_app/utils/app_version_util.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/utils/token_manager.dart';
 
@@ -19,7 +18,7 @@ class SplaseCtrl extends Cubit<SplaseState> {
 
   initState() async {
     try {
-      await AppVersionUtil.checkVersionShowDialog();
+      // await AppVersionUtil.checkVersionShowDialog();
 
       /// 替换当前页面跳转到登录页，避免返回时显示启动页
       final currentUserToken = TokenManager.instance.getAccessToken();

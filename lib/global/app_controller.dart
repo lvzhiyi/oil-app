@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:oil_business_app/global/model/agent_info_type.dart';
-import 'package:oil_business_app/global/service/agent_info_service.dart';
-import 'package:oil_business_app/net/code.dart';
 import 'package:oil_business_app/utils/token_manager.dart';
 
 import 'app_state.dart';
@@ -60,31 +58,6 @@ class AppController extends HydratedCubit<AppState>
   initState() async {
     if (TokenManager.instance.getAccessToken() == null) {
       return;
-    }
-    fetchAgentInfo();
-  }
-
-  setAgentInfo(AgentInfo? agentInfo) {
-    emit(state.copyWith(agentInfo: agentInfo));
-  }
-
-  AgentInfo? getAgentInfo() {
-    return state.agentInfo;
-  }
-
-  /// 获取当前代理商信息
-  Future<void> fetchAgentInfo() async {
-    final agentResponse = await agentInfoService.getAgentInfo();
-    if (agentResponse.code == HttpCode.success && agentResponse.data != null) {
-      setAgentInfo(agentResponse.data);
-    }
-  }
-
-  /// 更新代理商信息
-  Future<void> updateAgentInfo(UpdateAgentInfoRequest request) async {
-    final agentResponse = await agentInfoService.updateAgentInfo(request);
-    if (agentResponse.code == HttpCode.success && agentResponse.data != null) {
-      fetchAgentInfo();
     }
   }
 

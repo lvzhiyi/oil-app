@@ -2,7 +2,7 @@
 ///业务错误，非状态错误
 class HttpCode {
   ///请求成功
-  static const success = 0;
+  static const success = 1;
 
   /// 登陆失效
   static const logout = 401;

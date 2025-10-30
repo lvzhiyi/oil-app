@@ -13,13 +13,13 @@ class BaseAddress {
 
   /// 远程服务器地址映射
   static Map<HttpEnv, String> envDomainMap = {
-    HttpEnv.qa: 'https://dev-lyjk.quicksales.cn',
+    HttpEnv.qa: 'http://8.137.80.155',
     HttpEnv.pro: 'https://sszc.quicksales.cn',
   };
 
   /// 远程服务器地址映射
   static String get envBaseUrlPath =>
-      '${envDomainMap[BaseConfig.share.httpEnv]}/api/lottery-tenant/';
+      '${envDomainMap[BaseConfig.share.httpEnv]}/api/app/';
 
   static String get envAppDownloadUrl =>
       '${envDomainMap[BaseConfig.share.httpEnv]}/app-download';

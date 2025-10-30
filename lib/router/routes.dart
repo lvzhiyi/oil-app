@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:oil_business_app/pages/login/changePw/page.dart';
 import 'package:oil_business_app/pages/splase/page.dart';
 import 'package:oil_business_app/pages/login/page.dart';
+import 'package:oil_business_app/pages/login/register/page.dart';
 
 import 'package:oil_business_app/pages/profile/page.dart';
 import 'package:oil_business_app/pages/main_layout/page.dart';
@@ -14,6 +16,9 @@ enum AppPage {
 
   /// 登录
   loginPage("/login"),
+
+  /// 注册
+  registerPage("/register"),
 
   /// 主布局页面 (包含TabBar)
   mainLayoutPage('/'),
@@ -79,6 +84,12 @@ extension PageRoute on AppPage {
       case AppPage.loginPage:
         return (context, state) => const LoginPage();
 
+      case AppPage.registerPage:
+        return (context, state) => const RegisterPage();
+
+      case AppPage.changePasswordPage:
+        return (context, state) => const ChangePwPage();
+
       case AppPage.mainLayoutPage:
         return (context, state) => const MainLayoutPage();
 
@@ -94,6 +105,11 @@ extension PageRoute on AppPage {
     if (this == AppPage.loginPage) {
       return (context, state) => bottomToTopPageTransition(
           context: context, state: state, child: const LoginPage());
+    }
+
+    if (this == AppPage.registerPage) {
+      return (context, state) => bottomToTopPageTransition(
+          context: context, state: state, child: const RegisterPage());
     }
 
     return null;
