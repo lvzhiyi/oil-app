@@ -4,7 +4,7 @@ part 'http_config_type.freezed.dart';
 part 'http_config_type.g.dart';
 
 @freezed
-class HttpConfigType with _$HttpConfigType {
+abstract class HttpConfigType with _$HttpConfigType {
   factory HttpConfigType({
     /// 0关 1开
     int? canVisit,

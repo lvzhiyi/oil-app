@@ -31,7 +31,7 @@ scripts:
   # 上传 OSS
   upload_app: sh ./scripts/upload_oss.sh
   # 生成model代码
-  gen_model: flutter packages pub run build_runner build --delete-conflicting-outputs
+  gen_model: dart run build_runner build --delete-conflicting-outputs
   # 生成静态资源
   gen_assets: dart ./scripts/gen_assets.dart
   # 生成基础页面结构
@@ -88,8 +88,8 @@ dependencies:
   qr_flutter: ^4.1.0 # 二维码生成
   internet_connection_checker: ^3.0.1
   retrofit: # 编译 - restApi
-  json_annotation: # 编译 - module
-  freezed_annotation: # 编译 - module
+  json_annotation: ^4.9.0 # 编译 - module
+  freezed_annotation: ^3.1.0 # 编译 - module
   flutter_spinkit: ^5.2.2
   event_bus: ^2.0.0 # 全局 event
   auto_size_text: ^3.0.0 #自动调整字体大小
@@ -126,15 +126,18 @@ dependencies:
   share_plus: ^11.1.0
   pdf: ^3.11.3
   dropdown_button2: ^2.3.9
+  flutter_screenutil: ^5.9.3
+  intl_phone_field: ^3.2.0
+  shared_preferences: ^2.5.3
+  get_it: ^8.2.0
 dev_dependencies:
   flutter_flavorizr: ^2.2.3
   flutter_lints: ^6.0.0
-  freezed:
+  freezed: ^3.2.3
   analyzer:
-  json_serializable:
+  json_serializable: ^6.9.0
   retrofit_generator:
-  hive_generator: 2.0.1
-  build_runner:
+  build_runner: ^2.5.4
 
 flutter_launcher_icons:
   android: "launcher_icon"

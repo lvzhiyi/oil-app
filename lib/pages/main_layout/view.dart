@@ -63,7 +63,7 @@ class _MainLayoutViewState extends State<MainLayoutView> {
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.08),
+            color: AppColor.primary.withValues(alpha: 0.08),
             blurRadius: pt(16),
             offset: Offset(0, -pt(4)),
           ),
@@ -111,7 +111,7 @@ class _MainLayoutViewState extends State<MainLayoutView> {
     required MainLayoutCtrl controller,
   }) {
     final isSelected = widget.state.selectedIndex == index;
-    final color = isSelected ? AppColors.primary : AppColors.textTertiary;
+    final color = isSelected ? AppColor.primary : AppColor.txtGrey;
 
     return Expanded(
       child: Material(

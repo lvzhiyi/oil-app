@@ -5,7 +5,7 @@ import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/resources/style.dart';
 import 'package:oil_business_app/static/svg.dart';
 import 'package:oil_business_app/utils/pt.dart';
-import 'package:oil_business_app/widgets/base/btn.dart';
+import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/common/svg_asset.dart';
 
 /// UI设计稿的通用弹窗
@@ -43,7 +43,7 @@ class SportsDialog {
               style: TextStyle(
                 fontSize: pt(18, isFontSize: true),
                 fontWeight: FontWeight.w500,
-                color: AppColors.darkBlue,
+                color: AppColor.txtDarkBlue,
               ),
               overflow: TextOverflow.ellipsis,
             ),
@@ -81,10 +81,10 @@ class SportsDialog {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
-            child: SportsBtn(
+            child: CommonButton(
               height: pt(42),
-              tapHandle: () => _handleSingleBtnClick(onOk, onCancel),
-              text: footerText,
+              btnText: footerText,
+              onTap: () => _handleSingleBtnClick(onOk, onCancel),
             ),
           )
         ],
@@ -95,9 +95,9 @@ class SportsDialog {
     if (footer == null) {
       if (onCancel != null) {
         children.add(Expanded(
-          child: SportsOutLineBtn(
-            tapHandle: () => _handleCancel(onCancel),
-            text: cancelText ?? '',
+          child: CommonButton(
+            onTap: () => _handleCancel(onCancel),
+            btnText: cancelText ?? '',
             height: pt(42),
           ),
         ));
@@ -112,11 +112,10 @@ class SportsDialog {
 
       if (onOk != null) {
         children.add(Expanded(
-          child: SportsBtn(
-            tapHandle: () => _handleOk(onOk),
-            text: okText ?? '',
+          child: CommonButton(
+            onTap: () => _handleOk(onOk),
+            btnText: okText ?? '',
             height: pt(48),
-            btnLoading: okLoading,
           ),
         ));
       }

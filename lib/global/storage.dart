@@ -13,26 +13,21 @@ class GlobalStorage {
   static set httpEnv(int value) =>
       GlobalStorage.sportsSingleton.put(StorageKey.httpEnv, value);
 
-  /// dio 代理 uri
-  static String get dioProxyUri => GlobalStorage.sportsSingleton
-      .get(StorageKey.dioProxyUri, defaultValue: '');
+  static String get proxyUri =>
+      GlobalStorage.sportsSingleton.get(StorageKey.proxyUri, defaultValue: '');
 
-  static String get oldVersion => GlobalStorage.sportsSingleton
-      .get(StorageKey.oldVersion, defaultValue: '1.0.0');
-
-  /// 是否已经进入过基础信息页面
-  static int get hasEnteredBasicInfo => GlobalStorage.sportsSingleton
-      .get(StorageKey.hasEnteredBasicInfo, defaultValue: 0);
+  static set proxyUri(String value) =>
+      GlobalStorage.sportsSingleton.put(StorageKey.proxyUri, value);
 
   static DateTime? get lastShowVersionTime => GlobalStorage.sportsSingleton
       .get(StorageKey.lastShowVersionTime, defaultValue: null);
+
+  static set lastShowVersionTime(DateTime? value) =>
+      GlobalStorage.sportsSingleton.put(StorageKey.lastShowVersionTime, value);
 }
 
 class StorageKey {
   static String httpEnv = 'httpenv';
-  static String lastShownTimeKey = 'lastShownTimeKey';
-  static String oldVersion = 'oldVersion';
-  static String hasEnteredBasicInfo = 'hasEnteredBasicInfo';
+  static String proxyUri = 'proxyUri';
   static String lastShowVersionTime = 'lastShowVersionTime';
-  static String dioProxyUri = 'dioProxyUri';
 }

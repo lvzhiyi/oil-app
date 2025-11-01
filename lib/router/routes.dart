@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oil_business_app/pages/login/changePw/page.dart';
+import 'package:oil_business_app/pages/otp/page.dart';
 import 'package:oil_business_app/pages/splase/page.dart';
 import 'package:oil_business_app/pages/login/page.dart';
-import 'package:oil_business_app/pages/login/register/page.dart';
+import 'package:oil_business_app/pages/register/page.dart';
 
 import 'package:oil_business_app/pages/profile/page.dart';
 import 'package:oil_business_app/pages/main_layout/page.dart';
@@ -16,6 +16,9 @@ enum AppPage {
 
   /// 登录
   loginPage("/login"),
+
+  /// 验证码登录
+  otpPage("/otp"),
 
   /// 注册
   registerPage("/register"),
@@ -84,11 +87,14 @@ extension PageRoute on AppPage {
       case AppPage.loginPage:
         return (context, state) => const LoginPage();
 
+      case AppPage.otpPage:
+        return (context, state) => const OtpPage();
+
       case AppPage.registerPage:
         return (context, state) => const RegisterPage();
 
       case AppPage.changePasswordPage:
-        return (context, state) => const ChangePwPage();
+        return (context, state) => const Text('Change Password');
 
       case AppPage.mainLayoutPage:
         return (context, state) => const MainLayoutPage();

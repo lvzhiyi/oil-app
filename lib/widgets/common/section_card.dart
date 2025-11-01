@@ -37,7 +37,7 @@ class SectionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(pt(16)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.06),
+            color: AppColor.primary.withValues(alpha: 0.06),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -55,7 +55,7 @@ class SectionCard extends StatelessWidget {
                     title,
                     style: SportsTextStyle.baseBold.copyWith(
                       fontSize: pt(16),
-                      color: AppColors.textPrimary,
+                      color: AppColor.txtWhite,
                     ),
                   ),
                 ),

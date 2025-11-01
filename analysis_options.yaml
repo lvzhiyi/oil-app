@@ -11,6 +11,7 @@ analyzer:
     - "**/*.part.dart"
     - "lib/generated_plugin_registrant.dart"
   errors:
+    invalid_annotation_target: false
     always_require_non_null_named_parameters: info
     annotate_overrides: info
     avoid_empty_else: info

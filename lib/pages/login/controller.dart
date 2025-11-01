@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oil_business_app/global/model/auth_type.dart';
-import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/pages/login/state.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:oil_business_app/net/code.dart';
-import 'package:oil_business_app/utils/token_manager.dart';
 import 'package:oil_business_app/utils/log.dart';
 
 class LoginCtrl extends Cubit<LoginState> {
@@ -40,36 +36,27 @@ class LoginCtrl extends Cubit<LoginState> {
     l.d('Login', '开始登录: 手机号=$phone');
 
     // 调用真实登录接口
-    final loginRequest = LoginRequest(phone: phone, password: password);
-    final LoginResponse response;
 
     try {
-      response = await authService.login(loginRequest);
+      // response = await authService.login(loginRequest);
 
-      // 检查登录结果
-      if (response.code == HttpCode.success) {
-        // 登录成功，保存access_token、refresh_token、tenantUuid和用户信息
-        if (response.data?.accessToken != null) {
-          await TokenManager.instance
-              .saveAccessToken(response.data!.accessToken!);
-        }
+      // // 检查登录结果
+      // if (response.code == HttpCode.success) {
+      //   // 登录成功，保存access_token、refresh_token、tenantUuid和用户信息
+      //   if (response.data?.accessToken != null) {
+      //     await TokenManager.instance
+      //         .saveAccessToken(response.data!.accessToken!);
+      //   }
 
-        if (response.data?.refreshToken != null) {
-          await TokenManager.instance
-              .saveRefreshToken(response.data!.refreshToken!);
-        }
+      //   if (response.data?.refreshToken != null) {
+      //     await TokenManager.instance
+      //         .saveRefreshToken(response.data!.refreshToken!);
+      //   }
 
-        if (response.data?.tenantUuid != null) {
-          await TokenManager.instance
-              .saveTenantUuid(response.data!.tenantUuid!);
-        }
-
-        l.d('Login', '登录成功');
-        emit(state.copyWith(
-          loginLoading: false,
-          loginSuccess: true,
-        ));
-      }
+      //   if (response.data?.tenantUuid != null) {
+      //     await TokenManager.instance
+      //         .saveTenantUuid(response.data!.tenantUuid!);
+      //   }
     } catch (e) {
       emit(state.copyWith(loginLoading: false));
       return;

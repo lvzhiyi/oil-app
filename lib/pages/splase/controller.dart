@@ -4,7 +4,6 @@ import 'package:oil_business_app/pages/splase/state.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
-import 'package:oil_business_app/utils/token_manager.dart';
 
 class SplaseCtrl extends Cubit<SplaseState> {
   SplaseCtrl() : super(SplaseState(percent: 0)) {
@@ -21,11 +20,11 @@ class SplaseCtrl extends Cubit<SplaseState> {
       // await AppVersionUtil.checkVersionShowDialog();
 
       /// 替换当前页面跳转到登录页，避免返回时显示启动页
-      final currentUserToken = TokenManager.instance.getAccessToken();
+      const currentUserToken = '';
       if (currentUserToken == null) {
         BaseRouter.replace(url: AppPage.loginPage.path);
       } else {
-        BaseRouter.replace(url: AppPage.mainLayoutPage.path);
+        BaseRouter.replace(url: AppPage.loginPage.path);
       }
     } catch (e) {
       l.e('SplaseCtrl', '启动页初始化失败: $e');

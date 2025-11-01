@@ -51,7 +51,7 @@ class _Loading {
             width: double.infinity,
             height: double.infinity,
             decoration: BoxDecoration(
-              color: AppColors.nearlyWhite.withValues(alpha: 0.5),
+              color: AppColor.white.withValues(alpha: 0.5),
             ),
           ),
       builder: (ctx) => Center(
@@ -64,7 +64,7 @@ class _Loading {
             Text(
               msg ?? '',
               style: textStyle ??
-                  TextStyle(fontSize: 14, color: AppColors.textGray),
+                  const TextStyle(fontSize: 14, color: AppColor.txtGrey),
             ),
           ],
         ),

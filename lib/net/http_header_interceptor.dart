@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:oil_business_app/config/config.dart';
-import 'package:oil_business_app/models/device_info.dart';
+import 'package:oil_business_app/models/global.dart';
 import 'package:oil_business_app/net/base_interceptor.dart';
-import 'package:oil_business_app/utils/token_manager.dart';
 
 /// 请求header拦截器
 /// 主要是为每个请求添加header
@@ -21,9 +20,9 @@ class HttpHeaderInterceptor extends BaseInterceptor {
     final bool isLoginApi =
         options.path == '/auths/login' || options.path.endsWith('auths/login');
     // 获取认证信息
-    var _accessToken = TokenManager.instance.getAccessToken();
-    var _refreshToken = TokenManager.instance.getRefreshToken();
-    var _tenantUuid = TokenManager.instance.getTenantUuid();
+    const _accessToken = '';
+    const _refreshToken = '';
+    const _tenantUuid = '';
 
     DeviceInfo _deviceDetail = deviceInfo ?? BaseConfig.share.deviceInfo;
 

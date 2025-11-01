@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:oil_business_app/global/model/agent_info_type.dart';
-import 'package:oil_business_app/utils/token_manager.dart';
 
 import 'app_state.dart';
 
@@ -55,11 +53,7 @@ class AppController extends HydratedCubit<AppState>
     WidgetsBinding.instance.addObserver(this);
   }
 
-  initState() async {
-    if (TokenManager.instance.getAccessToken() == null) {
-      return;
-    }
-  }
+  initState() async {}
 
   @override
   void onError(Object error, StackTrace stackTrace) {
@@ -69,19 +63,12 @@ class AppController extends HydratedCubit<AppState>
 
   @override
   AppState? fromJson(Map<String, dynamic> json) {
-    final agentInfo = json['agentInfo'] != null
-        ? AgentInfo.fromJson(json['agentInfo'])
-        : null;
-    return AppState(
-      agentInfo: agentInfo,
-    );
+    return AppState();
   }
 
   @override
   Map<String, dynamic>? toJson(AppState state) {
-    return {
-      'agentInfo': state.agentInfo?.toJson(),
-    };
+    return {};
   }
 }
 

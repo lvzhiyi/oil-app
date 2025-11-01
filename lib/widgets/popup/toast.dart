@@ -209,7 +209,7 @@ class _ToastBody extends StatelessWidget {
     var fStyle = textStyle ??
         TextStyle(
           fontSize: pt(12),
-          color: AppColors.inputText,
+          color: AppColor.txtGrey,
           fontFamily: "PingFangSC",
           decoration: TextDecoration.none,
         );

@@ -45,7 +45,7 @@ class _NetManager {
       );
 
       /** 配置代理设置（如果需要） */
-      final proxyUri = GlobalStorage.dioProxyUri;
+      final proxyUri = GlobalStorage.proxyUri;
       if (proxyUri.isNotEmpty) {
         (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
           final client = HttpClient();

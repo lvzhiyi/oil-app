@@ -88,7 +88,7 @@ class PullOrRefresh extends HookWidget {
                             Text(
                               _headerText[status] ?? 'Refreshing...',
                               style: TextStyle(
-                                color: AppColors.darkBlue,
+                                color: AppColor.btnPurple,
                                 fontSize: pt(12),
                               ),
                             ),

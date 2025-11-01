@@ -1,0 +1,37 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'controller.dart';
+import 'state.dart';
+import 'widgets/sign_up_screen.dart';
+
+class OtpView extends StatefulWidget {
+  final OtpState state;
+
+  const OtpView({super.key, required this.state});
+
+  @override
+  State<OtpView> createState() => _OtpViewState();
+}
+
+class _OtpViewState extends State<OtpView> {
+  FocusNode passwordFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    passwordFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ctrl = context.read<OtpCtrl>();
+
+    return const SignUpScreen();
+  }
+}

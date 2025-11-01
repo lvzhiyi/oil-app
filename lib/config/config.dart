@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:oil_business_app/config/env.dart';
 import 'package:oil_business_app/global/storage.dart';
-import 'package:oil_business_app/models/device_info.dart';
+import 'package:oil_business_app/models/global.dart';
 import 'package:oil_business_app/utils/app_util.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -64,7 +64,7 @@ class BaseConfig {
   Future<void> _setDeviceInfo() async {
     DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     final deviceInfo = await deviceInfoPlugin.deviceInfo;
-    share.deviceInfo = DeviceInfo.fromMap(deviceInfo.data);
+    share.deviceInfo = DeviceInfo.fromJson(deviceInfo.data);
     if (Platform.isAndroid && share.deviceInfo.identifierForVendor == null) {
       String deviceId = await getAndroidDeviceId();
       share.deviceInfo.identifierForVendor = deviceId;
