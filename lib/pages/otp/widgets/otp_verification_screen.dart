@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
 
 import '../../../resources/colors.dart';
 import '../../../utils/sizer_utils.dart';
@@ -7,7 +9,8 @@ import '../../../widgets/base/text/common_text.dart';
 import '../../../widgets/base/textfield/common_digit_textformfield.dart';
 
 class OtpVerificationScreen extends StatelessWidget {
-  const OtpVerificationScreen({super.key});
+  const OtpVerificationScreen({super.key, this.extra});
+  final Map<String, dynamic>? extra;
 
   static Route route() {
     return MaterialPageRoute(
@@ -112,14 +115,20 @@ class OtpVerificationScreen extends StatelessWidget {
                   textDecoration: TextDecoration.underline,
                 ),
               ),
-              IgnorePointer(
-                ignoring: true,
-                child: Padding(
-                  padding: EdgeInsets.only(top: AppSizes.setHeight(143)),
-                  child: CommonButton(
-                    btnText: '继续',
-                    onTap: () => {},
-                  ),
+              Padding(
+                padding: EdgeInsets.only(top: AppSizes.setHeight(143)),
+                child: CommonButton(
+                  btnText: '继续',
+                  onTap: () => {
+                    if (extra?["type"] == "register")
+                      {
+                        BaseRouter.push(url: AppPage.registerPage.path),
+                      }
+                    else
+                      {
+                        BaseRouter.push(url: AppPage.mainLayoutPage.path),
+                      },
+                  },
                 ),
               ),
               Padding(

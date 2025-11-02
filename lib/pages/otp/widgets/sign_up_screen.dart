@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/static/icon.dart';
 
 import '../../../utils/sizer_utils.dart';
 import '../../../widgets/base/button/common_button.dart';
 import '../../../widgets/base/text/common_text.dart';
 import '../../../widgets/base/textfield/common_textformfield.dart';
-import 'otp_verification_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+  const SignUpScreen({super.key, this.extra});
+  final Map<String, dynamic>? extra;
 
   static Route route() {
     return MaterialPageRoute(builder: (context) => const SignUpScreen());
@@ -44,7 +46,7 @@ class SignUpScreen extends StatelessWidget {
                   bottom: AppSizes.setHeight(25),
                 ),
                 child: CommonText(
-                  text: '注册',
+                  text: extra?["type"] == "register" ? '注册' : '登录',
                   fontWeight: FontWeight.w800,
                   fontSize: AppSizes.setFontSize(35),
                 ),
@@ -69,18 +71,17 @@ class SignUpScreen extends StatelessWidget {
                   hintText: '手机号码',
                 ),
               ),
-              IgnorePointer(
-                ignoring: true,
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(vertical: AppSizes.setHeight(35)),
-                  child: CommonButton(
-                    onTap: () => Navigator.push(
-                      context,
-                      OtpVerificationScreen.route(),
-                    ),
-                    btnText: '发送验证码',
-                  ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(35)),
+                child: CommonButton(
+                  onTap: () => {
+                    BaseRouter.push(
+                        url: AppPage.otpVerificationPage.path,
+                        extra: {
+                          "type": extra?["type"],
+                        }),
+                  },
+                  btnText: '发送验证码',
                 ),
               )
             ],

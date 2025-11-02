@@ -32,16 +32,16 @@ class LoginToYourAccountScreen extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(top: AppSizes.setHeight(61)),
-                  child: Align(
+                  child: const Align(
                     alignment: Alignment.topLeft,
-                    child: InkWell(
-                      onTap: () => Navigator.pop(context),
-                      child: Image.asset(
-                        AssetsIcon.IC_LEFT_ARROW,
-                        width: AppSizes.setWidth(20),
-                        height: AppSizes.setHeight(20),
-                      ),
-                    ),
+                    // child: InkWell(
+                    //   onTap: () => Navigator.pop(context),
+                    //   child: Image.asset(
+                    //     AssetsIcon.IC_LEFT_ARROW,
+                    //     width: AppSizes.setWidth(20),
+                    //     height: AppSizes.setHeight(20),
+                    //   ),
+                    // ),
                   ),
                 ),
                 Image.asset(
@@ -95,7 +95,11 @@ class LoginToYourAccountScreen extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: AppSizes.setHeight(10)),
                       child: TextButton(
-                        onPressed: () => {},
+                        onPressed: () => {
+                          BaseRouter.push(url: AppPage.otpPage.path, extra: {
+                            "type": "login",
+                          }),
+                        },
                         child: CommonText(
                           text: "验证码登录",
                           fontSize: AppSizes.setFontSize(14),
@@ -116,7 +120,11 @@ class LoginToYourAccountScreen extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () => {
-                              BaseRouter.push(url: AppPage.otpPage.path),
+                              BaseRouter.push(
+                                  url: AppPage.otpPage.path,
+                                  extra: {
+                                    "type": "register",
+                                  }),
                             },
                             child: CommonText(
                               text: '注册',

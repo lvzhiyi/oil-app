@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oil_business_app/pages/otp/page.dart';
+import 'package:oil_business_app/pages/otp/widgets/otp_verification_screen.dart';
 import 'package:oil_business_app/pages/splase/page.dart';
 import 'package:oil_business_app/pages/login/page.dart';
 import 'package:oil_business_app/pages/register/page.dart';
@@ -19,6 +20,9 @@ enum AppPage {
 
   /// 验证码登录
   otpPage("/otp"),
+
+  /// 验证码登录
+  otpVerificationPage("/otpVerification"),
 
   /// 注册
   registerPage("/register"),
@@ -88,7 +92,12 @@ extension PageRoute on AppPage {
         return (context, state) => const LoginPage();
 
       case AppPage.otpPage:
-        return (context, state) => const OtpPage();
+        return (context, state) =>
+            OtpPage(extra: state.extra as Map<String, dynamic>? ?? {});
+
+      case AppPage.otpVerificationPage:
+        return (context, state) => OtpVerificationScreen(
+            extra: state.extra as Map<String, dynamic>? ?? {});
 
       case AppPage.registerPage:
         return (context, state) => const RegisterPage();

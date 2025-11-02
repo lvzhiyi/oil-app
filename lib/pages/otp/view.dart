@@ -7,8 +7,9 @@ import 'widgets/sign_up_screen.dart';
 
 class OtpView extends StatefulWidget {
   final OtpState state;
+  final Map<String, dynamic>? extra;
 
-  const OtpView({super.key, required this.state});
+  const OtpView({super.key, required this.state, this.extra});
 
   @override
   State<OtpView> createState() => _OtpViewState();
@@ -32,6 +33,6 @@ class _OtpViewState extends State<OtpView> {
   Widget build(BuildContext context) {
     final ctrl = context.read<OtpCtrl>();
 
-    return const SignUpScreen();
+    return SignUpScreen(extra: widget.extra);
   }
 }
