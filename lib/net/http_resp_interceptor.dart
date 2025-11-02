@@ -54,6 +54,7 @@ class HttpRespInterceptor extends InterceptorsWrapper {
 
     if (err.response?.data is String) {
       SportsToast.showWarning(err.response?.data as String);
+      return handler.reject(err);
     }
 
     if (err.response?.data['message'] != null) {

@@ -4,20 +4,22 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/pages/register/state.dart';
-import 'package:oil_business_app/net/code.dart';
 import 'package:oil_business_app/utils/log.dart';
 
 class RegisterCtrl extends Cubit<RegisterState> {
-  RegisterCtrl()
+  RegisterCtrl({this.extra})
       : super(
           RegisterState(loading: false),
         ) {
     initState();
   }
+  final Map<String, dynamic>? extra;
 
   final formKey = GlobalKey<FormBuilderState>();
 
-  initState() async {}
+  initState() async {
+    print('extra: $extra');
+  }
 
   /// 注册前置检查
   bool registerPrecheck() {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oil_business_app/pages/otp/controller.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
@@ -19,6 +21,8 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ctrl = context.read<OtpCtrl>();
+
     return Scaffold(
       backgroundColor: CustomAppColor.of(context).bgScaffold,
       body: SingleChildScrollView(
@@ -32,7 +36,7 @@ class SignUpScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.topLeft,
                 child: InkWell(
-                  onTap: () => Navigator.pop(context),
+                  onTap: () => BaseRouter.pop(),
                   child: Image.asset(
                     AssetsIcon.IC_LEFT_ARROW,
                     width: AppSizes.setWidth(20),
@@ -66,6 +70,7 @@ class SignUpScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(30)),
                 child: CommonTextFormField(
+                  controller: ctrl.phoneController,
                   isPhoneNumberField: true,
                   borderColor: CustomAppColor.of(context).textFieldBorder,
                   hintText: '手机号码',
@@ -75,11 +80,7 @@ class SignUpScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(35)),
                 child: CommonButton(
                   onTap: () => {
-                    BaseRouter.push(
-                        url: AppPage.otpVerificationPage.path,
-                        extra: {
-                          "type": extra?["type"],
-                        }),
+                    ctrl.sendOtp(type: extra?["type"]),
                   },
                   btnText: '发送验证码',
                 ),

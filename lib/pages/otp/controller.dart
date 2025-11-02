@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:oil_business_app/pages/login/state.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:oil_business_app/global/service/auth_service.dart';
+import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
 
 import 'state.dart';
@@ -15,46 +15,46 @@ class OtpCtrl extends Cubit<OtpState> {
     initState();
   }
 
-  static final formKey = GlobalKey<FormBuilderState>();
+  final phoneController = TextEditingController();
+
+  final codeController = [
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController()
+  ];
 
   initState() async {}
 
-  /// 登录前置检查
+  sendOtp({required String type}) async {
+    emit(state.copyWith(phone: phoneController.text));
 
-  submit() async {
     try {
-      // // 检查登录结果
-      // if (response.code == HttpCode.success) {
-      //   // 登录成功，保存access_token、refresh_token、tenantUuid和用户信息
-      //   if (response.data?.accessToken != null) {
-      //     await TokenManager.instance
-      //         .saveAccessToken(response.data!.accessToken!);
-      //   }
+      // await authService.sendCode(
+      //   SendCodeRequest(phone: phoneController.text, type: 'register'),
+      // );
 
-      //   if (response.data?.refreshToken != null) {
-      //     await TokenManager.instance
-      //         .saveRefreshToken(response.data!.refreshToken!);
-      //   }
-
-      //   if (response.data?.tenantUuid != null) {
-      //     await TokenManager.instance
-      //         .saveTenantUuid(response.data!.tenantUuid!);
-      //   }
+      BaseRouter.push(url: AppPage.otpVerificationPage.path, extra: {
+        "type": type,
+      });
     } catch (e) {
-      return;
+      l.e('Otp', '发送验证码失败: $e');
     }
   }
 
-  /// 登录成功后跳转到首页
-  void navigateToHome(BuildContext context) {
-    // 跳转到主布局页面（包含TabBar的首页）
-    context.go('/');
-  }
-
-  unFocus(BuildContext context) {
-    FocusScopeNode currentFocus = FocusScope.of(context);
-    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-      currentFocus.focusedChild?.unfocus();
+  submit({required String type}) async {
+    if (type == "register") {
+      print('submit register');
+      BaseRouter.push(url: AppPage.registerPage.path, extra: {
+        "phone": phoneController.text,
+        "code": codeController.map((e) => e.text).join(''),
+      });
+    } else {
+      BaseRouter.push(url: AppPage.mainLayoutPage.path, extra: {
+        "type": type,
+      });
     }
   }
 }
+
+final otpCtrl = OtpCtrl();

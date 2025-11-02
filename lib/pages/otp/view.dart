@@ -31,8 +31,6 @@ class _OtpViewState extends State<OtpView> {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = context.read<OtpCtrl>();
-
     return SignUpScreen(extra: widget.extra);
   }
 }

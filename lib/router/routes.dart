@@ -100,7 +100,11 @@ extension PageRoute on AppPage {
             extra: state.extra as Map<String, dynamic>? ?? {});
 
       case AppPage.registerPage:
-        return (context, state) => const RegisterPage();
+        return (context, state) {
+          print('registerPage state: ${state.extra}');
+          return RegisterPage(
+              extra: state.extra as Map<String, dynamic>? ?? {});
+        };
 
       case AppPage.changePasswordPage:
         return (context, state) => const Text('Change Password');
@@ -120,11 +124,6 @@ extension PageRoute on AppPage {
     if (this == AppPage.loginPage) {
       return (context, state) => bottomToTopPageTransition(
           context: context, state: state, child: const LoginPage());
-    }
-
-    if (this == AppPage.registerPage) {
-      return (context, state) => bottomToTopPageTransition(
-          context: context, state: state, child: const RegisterPage());
     }
 
     return null;
