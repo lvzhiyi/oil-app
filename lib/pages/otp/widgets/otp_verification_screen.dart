@@ -52,7 +52,7 @@ class OtpVerificationScreen extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: AppSizes.setHeight(7)),
                     child: CommonText(
-                      text: '手机号码',
+                      text: extra?["phone"] ?? '',
                       fontSize: AppSizes.setFontSize(15),
                       fontWeight: FontWeight.w600,
                       textColor: CustomAppColor.of(context).txtBlack,
@@ -69,6 +69,7 @@ class OtpVerificationScreen extends StatelessWidget {
                           height: AppSizes.setHeight(60),
                           child: SingleDigitTextField(
                             controller: ctrl.codeController[0],
+                            focusNode: ctrl.focusNode[0],
                           ),
                         ),
                         Padding(
@@ -78,6 +79,7 @@ class OtpVerificationScreen extends StatelessWidget {
                             height: AppSizes.setHeight(60),
                             child: SingleDigitTextField(
                               controller: ctrl.codeController[1],
+                              focusNode: ctrl.focusNode[1],
                             ),
                           ),
                         ),
@@ -88,6 +90,7 @@ class OtpVerificationScreen extends StatelessWidget {
                             height: AppSizes.setHeight(60),
                             child: SingleDigitTextField(
                               controller: ctrl.codeController[2],
+                              focusNode: ctrl.focusNode[2],
                             ),
                           ),
                         ),
@@ -98,6 +101,7 @@ class OtpVerificationScreen extends StatelessWidget {
                             height: AppSizes.setHeight(60),
                             child: SingleDigitTextField(
                               controller: ctrl.codeController[3],
+                              focusNode: ctrl.focusNode[3],
                             ),
                           ),
                         ),

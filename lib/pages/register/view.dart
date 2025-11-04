@@ -13,8 +13,6 @@ class RegisterView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = context.read<RegisterCtrl>();
-
     return const CreateNewAccountScreen();
   }
 }

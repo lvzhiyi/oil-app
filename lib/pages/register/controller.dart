@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
+import 'package:oil_business_app/global/model/auth_req_type.dart';
 import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/pages/register/state.dart';
 import 'package:oil_business_app/utils/log.dart';
@@ -28,41 +29,34 @@ class RegisterCtrl extends Cubit<RegisterState> {
   }
 
   submit() async {
+    print('submit');
     if (!registerPrecheck()) return;
 
+    print('submit1');
     emit(state.copyWith(loading: true, errorMessage: null));
 
     // 获取表单数据
     final formData = formKey.currentState?.value ?? {};
-    final name = formData['name'] ?? '';
-    final phone = formData['phone'] ?? '';
-    final code = formData['code'] ?? '';
-    final password = formData['password'] ?? '';
-
-    l.d('Register', '开始注册: 手机号=$phone');
+    final reqParams = RegisterRequest(
+      name: formData['name'] ?? '',
+      phone: extra?['phone'] ?? '',
+      code: extra?['code'] ?? '',
+      password: formData['password'] ?? '',
+    );
+    l.d('Register', '开始注册: reqParams.toJson(): ${reqParams.toJson()}');
 
     try {
       // 调用注册接口
-      final response = await authService.register(
-        RegisterRequest(
-          name: name,
-          phone: phone,
-          code: code,
-          password: password,
-        ),
-      );
+      final response = await authService.register(reqParams);
 
-      l.d('Register', '注册成功');
+      l.d('Register', '注册成功 response: $response');
       emit(state.copyWith(
         loading: false,
         registerSuccess: true,
       ));
     } catch (e) {
       l.e('Register', '注册失败: $e');
-      emit(state.copyWith(
-        loading: false,
-        errorMessage: '注册失败，请检查网络连接或稍后重试',
-      ));
+      emit(state.copyWith(loading: false));
     }
   }
 

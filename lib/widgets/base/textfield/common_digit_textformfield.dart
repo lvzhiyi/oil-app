@@ -7,34 +7,28 @@ import 'package:oil_business_app/utils/sizer_utils.dart';
 
 class SingleDigitTextField extends StatefulWidget {
   final TextEditingController controller;
-
-  const SingleDigitTextField({super.key, required this.controller});
+  final FocusNode? focusNode;
+  const SingleDigitTextField(
+      {super.key, required this.controller, this.focusNode});
 
   @override
   SingleDigitTextFieldState createState() => SingleDigitTextFieldState();
 }
 
 class SingleDigitTextFieldState extends State<SingleDigitTextField> {
-  final FocusNode _focusNode = FocusNode();
-
   @override
   void initState() {
     super.initState();
-
-    _focusNode.addListener(() {
-      setState(() {});
-    });
   }
 
   @override
   void dispose() {
-    _focusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    Color borderColor = _focusNode.hasFocus
+    Color borderColor = widget.focusNode?.hasFocus ?? false
         ? CustomAppColor.of(context).borderGrey
         : CustomAppColor.of(context).borderGrey;
 
@@ -53,10 +47,10 @@ class SingleDigitTextFieldState extends State<SingleDigitTextField> {
         FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(1),
       ],
-      focusNode: _focusNode,
+      focusNode: widget.focusNode,
       decoration: InputDecoration(
         filled: true,
-        fillColor: _focusNode.hasFocus
+        fillColor: widget.focusNode?.hasFocus ?? false
             ? AppColor.white.withOpacityPercent(0.2)
             : CustomAppColor.of(context).bgScaffold,
         border: OutlineInputBorder(

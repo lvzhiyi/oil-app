@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/utils/utils.dart';
@@ -11,7 +13,7 @@ class CommonTextFormField extends StatefulWidget {
   final Widget? suffixIcon;
   final bool isPasswordField;
   final TextEditingController? controller;
-  final ValueChanged<String>? onChanged;
+  final ValueChanged<String?>? onChanged;
   final bool isPhoneNumberField;
   final Color? fillColor;
   final Color? borderColor;
@@ -27,6 +29,8 @@ class CommonTextFormField extends StatefulWidget {
   final TextAlign? textAlign;
   final TextAlignVertical? textAlignVertical;
   final bool? isCountryLabelVisible;
+  final String? name;
+  final String? Function(String?)? validators;
 
   const CommonTextFormField({
     super.key,
@@ -51,6 +55,8 @@ class CommonTextFormField extends StatefulWidget {
     this.textAlign,
     this.textAlignVertical,
     this.isCountryLabelVisible = false,
+    this.name,
+    this.validators,
   });
 
   @override
@@ -173,11 +179,11 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
         ],
       );
     } else {
-      return TextFormField(
+      return FormBuilderTextField(
+        name: widget.name ?? '',
         textAlign: widget.textAlign ?? TextAlign.start,
         textAlignVertical: widget.textAlignVertical ?? TextAlignVertical.top,
         maxLength: widget.maxLength,
-        onFieldSubmitted: widget.onSubmitField,
         focusNode: _focusNode,
         controller: widget.controller,
         onChanged: widget.onChanged,
@@ -267,6 +273,10 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
                 width: 2),
           ),
         ),
+        validator: widget.validators != null
+            ? FormBuilderValidators.compose([widget.validators!])
+            : FormBuilderValidators.required(
+                errorText: '${widget.name} is required'),
       );
     }
   }

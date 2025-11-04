@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
@@ -16,6 +17,7 @@ class CommonButton extends StatelessWidget {
   final Widget? child;
   final double? fontSize;
   final bool? isButtonShadow;
+  final bool? isLoading;
 
   const CommonButton(
       {super.key,
@@ -30,7 +32,8 @@ class CommonButton extends StatelessWidget {
       this.btnText,
       this.child,
       this.fontSize,
-      this.isButtonShadow = true});
+      this.isButtonShadow = true,
+      this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
@@ -61,12 +64,26 @@ class CommonButton extends StatelessWidget {
           horizontal: pHorizontal,
         ),
         child: child ??
-            CommonText(
-              text: btnText ?? '',
-              fontSize: fontSize ?? AppSizes.setFontSize(15),
-              textColor: CustomAppColor.of(context).white,
-              fontWeight: FontWeight.w500,
-              textAlign: TextAlign.center,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (isLoading == true)
+                  SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CupertinoActivityIndicator(
+                      color: CustomAppColor.of(context).white,
+                    ),
+                  ),
+                if (isLoading == false)
+                  CommonText(
+                    text: btnText ?? '',
+                    fontSize: fontSize ?? AppSizes.setFontSize(15),
+                    textColor: CustomAppColor.of(context).white,
+                    fontWeight: FontWeight.w500,
+                    textAlign: TextAlign.center,
+                  ),
+              ],
             ),
       ),
     );
