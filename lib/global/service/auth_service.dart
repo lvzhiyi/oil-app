@@ -12,7 +12,7 @@ abstract class AuthService {
   factory AuthService(Dio dio, {String baseUrl}) = _AuthService;
 
   /// 用户登录
-  @POST('/auths/login')
+  @POST('/auth/login')
   Future<AuthResponse> login(@Body() LoginRequest request);
 
   // /// 刷新Token
@@ -22,7 +22,7 @@ abstract class AuthService {
 
   /// 用户注册
   @POST('/auth/register')
-  Future register(@Body() RegisterRequest request);
+  Future<AuthResponse> register(@Body() RegisterRequest request);
 
   /// 发送验证码
   @POST('/auth/send-verification')

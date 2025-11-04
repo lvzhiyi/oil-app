@@ -23,7 +23,7 @@ class HttpRespInterceptor extends InterceptorsWrapper {
         Response(
           requestOptions: response.requestOptions,
           statusCode: response.statusCode,
-          data: response.data, // 传递完整的响应数据，而不是只传递data字段
+          data: response.data['data'], // 传递完整的响应数据，而不是只传递data字段
         ),
       );
     }

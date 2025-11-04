@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:oil_business_app/pages/login/controller.dart';
 import 'package:oil_business_app/pages/otp/page.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
@@ -20,6 +23,8 @@ class LoginToYourAccountScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ctrl = context.read<LoginCtrl>();
+
     return SafeArea(
       bottom: true,
       top: false,
@@ -58,36 +63,45 @@ class LoginToYourAccountScreen extends StatelessWidget {
                     fontSize: AppSizes.setFontSize(24),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: AppSizes.setHeight(15)),
-                  child: CommonTextFormField(
-                    borderColor: CustomAppColor.of(context).textFieldBorder,
-                    leadingIcon: Image.asset(
-                      AssetsIcon.IC_ACCOUNT_BALANCE,
-                      width: AppSizes.setHeight(20),
-                      height: AppSizes.setHeight(20),
-                    ),
-                    hintText: '账号',
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: AppSizes.setHeight(16)),
-                  child: CommonTextFormField(
-                    borderColor: CustomAppColor.of(context).textFieldBorder,
-                    leadingIcon: Image.asset(
-                      AssetsIcon.IC_PASSWORD,
-                      width: AppSizes.setHeight(20),
-                      height: AppSizes.setHeight(20),
-                    ),
-                    hintText: '密码',
-                    isPasswordField: true,
+                FormBuilder(
+                  key: ctrl.formKey,
+                  child: Column(
+                    children: [
+                      CommonTextFormField(
+                        name: 'phone',
+                        borderColor: CustomAppColor.of(context).textFieldBorder,
+                        leadingIcon: Image.asset(
+                          AssetsIcon.IC_ACCOUNT_BALANCE,
+                          width: AppSizes.setHeight(20),
+                          height: AppSizes.setHeight(20),
+                        ),
+                        hintText: '账号',
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: AppSizes.setHeight(16)),
+                        child: CommonTextFormField(
+                          name: 'password',
+                          borderColor:
+                              CustomAppColor.of(context).textFieldBorder,
+                          leadingIcon: Image.asset(
+                            AssetsIcon.IC_PASSWORD,
+                            width: AppSizes.setHeight(20),
+                            height: AppSizes.setHeight(20),
+                          ),
+                          hintText: '密码',
+                          isPasswordField: true,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: AppSizes.setHeight(32)),
-                  child: CommonButton(btnText: '登录', onTap: () => {}
-                      // Navigator.push(context, LoginPage.route()),
-                      ),
+                  child: CommonButton(
+                      btnText: '登录',
+                      onTap: () => {
+                            ctrl.submit(),
+                          }),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
