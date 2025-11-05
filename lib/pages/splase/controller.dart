@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/global/app_controller.dart';
 
 import 'package:oil_business_app/pages/splase/state.dart';
 import 'package:oil_business_app/router/router.dart';
@@ -20,7 +22,11 @@ class SplaseCtrl extends Cubit<SplaseState> {
       // await AppVersionUtil.checkVersionShowDialog();
 
       /// 替换当前页面跳转到登录页，避免返回时显示启动页
-      const currentUserToken = '';
+      final currentUserToken = BaseConfig.appContext
+          ?.read<AppController>()
+          .state
+          .authResponse
+          ?.accessToken;
       if (currentUserToken == null) {
         BaseRouter.replace(url: AppPage.loginPage.path);
       } else {

@@ -55,14 +55,14 @@ class _NetManager {
         };
       }
 
+      /** 日志 拦截器 */
+      dio.interceptors.add(HttpLogInterceptor());
+
       /** header 拦截器 */
       dio.interceptors.add(HttpHeaderInterceptor());
 
       /** 返回 responese 拦截器 */
       dio.interceptors.add(HttpRespInterceptor());
-
-      /** 日志 拦截器 */
-      dio.interceptors.add(HttpLogInterceptor());
 
       clientDio = dio;
       _isInitialized = true;
