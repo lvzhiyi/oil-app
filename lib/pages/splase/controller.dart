@@ -19,18 +19,12 @@ class SplaseCtrl extends Cubit<SplaseState> {
 
   initState() async {
     try {
-      // await AppVersionUtil.checkVersionShowDialog();
-
-      /// 替换当前页面跳转到登录页，避免返回时显示启动页
-      final currentUserToken = BaseConfig.appContext
-          ?.read<AppController>()
-          .state
-          .authResponse
-          ?.accessToken;
-      if (currentUserToken == null) {
+      final appController = BaseConfig.appContext?.read<AppController>();
+      final authResponse = appController?.state.authResponse;
+      if (authResponse == null) {
         BaseRouter.replace(url: AppPage.loginPage.path);
       } else {
-        BaseRouter.replace(url: AppPage.loginPage.path);
+        appController?.bindStationProcess();
       }
     } catch (e) {
       l.e('SplaseCtrl', '启动页初始化失败: $e');

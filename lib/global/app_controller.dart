@@ -2,7 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/auth_rep_type.dart';
+import 'package:oil_business_app/global/model/station_req_type.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
+import 'package:oil_business_app/global/service/station_service.dart';
+import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
 
 import 'app_state.dart';
 
@@ -28,6 +34,34 @@ class AppController extends HydratedCubit<AppState>
 
   setAuthResponse(AuthResponse authResponse) {
     emit(state.copyWith(authResponse: authResponse));
+  }
+
+  /// 登录成功后流程
+  loginSucessProcess(AuthResponse authResponse, {AuthReqType? type}) async {
+    setAuthResponse(authResponse);
+    if (type == AuthReqType.register) {
+      BaseRouter.push(url: AppPage.bindStationPage.path);
+      return;
+    }
+    bindStationProcess(isFromLogin: true);
+  }
+
+  /// 绑定加油站流程
+  bindStationProcess({bool isFromLogin = false}) async {
+    final pendingAndActiveStation = await getStationStatus();
+    print('pendingAndActiveStation: ${pendingAndActiveStation.list}');
+    if (pendingAndActiveStation.list.isEmpty) {
+      BaseRouter.push(url: AppPage.bindStationPage.path, extra: {
+        'isFromLogin': isFromLogin,
+      });
+      return;
+    }
+  }
+
+  Future<GetStationResponse> getStationStatus() async {
+    final response = await stationService.getStationStatus(
+        1, 1, [StationStatus.active.name, StationStatus.pending_review.name]);
+    return response;
   }
 
   @override

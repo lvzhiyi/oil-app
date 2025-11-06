@@ -44,8 +44,7 @@ class LoginCtrl extends Cubit<LoginState> {
     try {
       final response = await authService
           .login(LoginRequest(phone: phone, password: password));
-      BaseConfig.appContext?.read<AppController>().setAuthResponse(response);
-      BaseRouter.replace(url: AppPage.mainLayoutPage.path);
+      BaseConfig.appContext?.read<AppController>().loginSucessProcess(response);
       emit(state.copyWith(loginLoading: false));
     } catch (e) {
       emit(state.copyWith(loginLoading: false));

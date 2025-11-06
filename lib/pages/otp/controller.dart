@@ -69,8 +69,7 @@ class OtpCtrl extends Cubit<OtpState> {
           phone: phoneController.text,
           code: codeController.map((e) => e.text).join('')));
       print('response: $response');
-      BaseConfig.appContext?.read<AppController>().setAuthResponse(response);
-      BaseRouter.replace(url: AppPage.mainLayoutPage.path);
+      BaseConfig.appContext?.read<AppController>().loginSucessProcess(response);
       emit(state.copyWith(loading: false));
     } catch (e) {
       emit(state.copyWith(loading: false));

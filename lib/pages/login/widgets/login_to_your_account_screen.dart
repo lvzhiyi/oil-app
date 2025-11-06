@@ -10,6 +10,7 @@ import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/static/img.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
+import 'package:oil_business_app/widgets/base/common_richtext/common_richtext.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dart';
 
@@ -148,8 +149,44 @@ class LoginToYourAccountScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                    )
+                    ),
                   ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: AppSizes.setWidth(160),
+                      bottom: AppSizes.setHeight(15)),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          color: CustomAppColor.of(context).dividerGrey,
+                          thickness: 2,
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          color: CustomAppColor.of(context).dividerGrey,
+                          thickness: 2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(),
+                  child: CommonText(
+                    text: '通过登录，您将同意买油呗的',
+                    fontSize: AppSizes.setFontSize(15),
+                    fontWeight: FontWeight.w600,
+                    textColor: CustomAppColor.of(context).txtGrey,
+                  ),
+                ),
+                SizedBox(height: AppSizes.setHeight(5)),
+                const CommonRichText(
+                  firstText: '条款和条件',
+                  middleText: '和',
+                  lastText: '隐私政策',
                 )
               ],
             ),

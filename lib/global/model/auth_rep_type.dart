@@ -1,7 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'common_response_type.dart';
-
 part 'auth_rep_type.g.dart';
 
 @JsonSerializable()

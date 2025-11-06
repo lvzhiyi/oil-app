@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/models/global.dart';
 import 'package:oil_business_app/net/base_interceptor.dart';
 
@@ -19,10 +21,10 @@ class HttpHeaderInterceptor extends BaseInterceptor {
     // 登录接口不需要携带以下三个header
     final bool isLoginApi =
         options.path == '/auths/login' || options.path.endsWith('auths/login');
+    final authResponse =
+        BaseConfig.appContext?.read<AppController>().state.authResponse;
     // 获取认证信息
-    const _accessToken = '';
-    const _refreshToken = '';
-    const _tenantUuid = '';
+    final _accessToken = authResponse?.accessToken;
 
     DeviceInfo _deviceDetail = deviceInfo ?? BaseConfig.share.deviceInfo;
 
@@ -36,12 +38,6 @@ class HttpHeaderInterceptor extends BaseInterceptor {
     if (!isLoginApi) {
       if (_accessToken != null && _accessToken.isNotEmpty) {
         options.headers['Authorization'] = 'Bearer $_accessToken';
-      }
-      if (_tenantUuid != null && _tenantUuid.isNotEmpty) {
-        options.headers['x-tenant-id'] = _tenantUuid;
-      }
-      if (_refreshToken != null && _refreshToken.isNotEmpty) {
-        options.headers['x-refresh-token'] = _refreshToken;
       }
     }
 

@@ -5,6 +5,8 @@ class AssetsImg {
   static const ACCESS_ERROR_ERTH = 'assets/img/access_error/erth.png';
   static const HOME_HOME_BASKETBALL_ICON = 'assets/img/home/home_basketball_icon.png';
   static const HOME_HOME_BOXING_ICON = 'assets/img/home/home_boxing_icon.png';
+  static const IMG_ACCOUNT_CREATED = 'assets/img/img_account_created.webp';
+  static const IMG_PENDING_REVIEW = 'assets/img/img_pending_review.webp';
   static const LOGO = 'assets/img/logo.webp';
   static const PAGE_EMPTY = 'assets/img/page_empty.png';
   static const PAGE_ERROR = 'assets/img/page_error.png';

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:oil_business_app/pages/bind_station/page.dart';
+import 'package:oil_business_app/pages/bind_station/widgets/bind_station_screen.dart';
 import 'package:oil_business_app/pages/otp/page.dart';
 import 'package:oil_business_app/pages/otp/widgets/otp_verification_screen.dart';
+import 'package:oil_business_app/pages/pending_review/pending_review_screen.dart';
 import 'package:oil_business_app/pages/splase/page.dart';
 import 'package:oil_business_app/pages/login/page.dart';
 import 'package:oil_business_app/pages/register/page.dart';
@@ -12,6 +15,12 @@ import 'package:oil_business_app/router/pageTransition/bottom_to_top_page.dart';
 import 'package:oil_business_app/router/router.dart';
 
 enum AppPage {
+  /// 审核中
+  pendingReviewPage("/pendingReview"),
+
+  /// 绑定加油站
+  bindStationPage("/bindStation"),
+
   /// 启动页
   splasePage("/splase"),
 
@@ -85,6 +94,13 @@ enum AppPage {
 extension PageRoute on AppPage {
   GoRouterWidgetBuilder get builder {
     switch (this) {
+      case AppPage.pendingReviewPage:
+        return (context, state) => const PendingReviewScreen();
+
+      case AppPage.bindStationPage:
+        return (context, state) =>
+            BindStationPage(extra: state.extra as Map<String, dynamic>? ?? {});
+
       case AppPage.splasePage:
         return (context, state) => const SplasePage();
 

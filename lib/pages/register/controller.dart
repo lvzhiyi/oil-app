@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
+import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/auth_req_type.dart';
 import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/pages/register/state.dart';
@@ -52,8 +53,9 @@ class RegisterCtrl extends Cubit<RegisterState> {
     try {
       // 调用注册接口
       final response = await authService.register(reqParams);
-      BaseConfig.appContext?.read<AppController>().setAuthResponse(response);
-      BaseRouter.replace(url: AppPage.mainLayoutPage.path);
+      BaseConfig.appContext
+          ?.read<AppController>()
+          .loginSucessProcess(response, type: AuthReqType.register);
 
       l.d('Register', '注册成功 response: $response');
       emit(state.copyWith(
