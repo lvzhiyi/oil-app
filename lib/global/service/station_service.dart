@@ -18,6 +18,10 @@ abstract class StationService {
     @Query('pageSize') int pageSize,
     @Query('statuses') List<String> statuses,
   );
+
+  /// 新增加油站
+  @POST('/stations')
+  Future bindStation(@Body() BindStationRequest request);
 }
 
 /// 获取StationService实例，确保网络管理器已初始化

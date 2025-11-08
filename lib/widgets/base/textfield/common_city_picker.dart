@@ -134,18 +134,36 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
       confirmText: '确定',
       cancelText: '取消',
       onConfirm: (Picker picker, List value) {
-        final text =
-            '${cityData[value[0]]['name']} ${cityData[value[0]]['children'][value[1]]['name']} ${cityData[value[0]]['children'][value[1]]['children'][value[2]]['name']}';
-        print(text);
+        final provinceCode = cityData[value[0]]['code'];
+        final provinceName = cityData[value[0]]['name'];
+        final cityCode = cityData[value[0]]['children'][value[1]]['code'];
+        final cityName = cityData[value[0]]['children'][value[1]]['name'];
+        final areaCode = cityData[value[0]]['children'][value[1]]['children']
+            [value[2]]['code'];
+        final areaName = cityData[value[0]]['children'][value[1]]['children']
+            [value[2]]['name'];
+        final text = '$provinceName $cityName $areaName';
         widget.controller?.text = text;
-        widget.onChanged?.call(picker.getSelectedValues());
+        widget.onChanged?.call([
+          provinceName,
+          cityName,
+          areaName,
+          provinceCode,
+          cityCode,
+          areaCode
+        ]);
       },
       confirmTextStyle: TextStyle(
         color: CustomAppColor.of(context).txtBlue,
         fontSize: AppSizes.setFontSize(18),
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.normal,
       ),
-      magnification: 1.2,
+      cancelTextStyle: TextStyle(
+        color: CustomAppColor.of(context).txtGrey,
+        fontSize: AppSizes.setFontSize(18),
+        fontWeight: FontWeight.normal,
+      ),
+      magnification: 1.1,
       headerDecoration: BoxDecoration(
         color: CustomAppColor.of(context).bgScaffold,
         borderRadius: const BorderRadius.only(

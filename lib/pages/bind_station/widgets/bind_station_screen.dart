@@ -70,7 +70,7 @@ class BindStationScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                           vertical: AppSizes.setHeight(16)),
                       child: CommonTextFormField(
-                        name: 'name',
+                        name: 'stationName',
                         borderColor: CustomAppColor.of(context).textFieldBorder,
                         leadingIcon: Image.asset(
                           AssetsIcon.IC_PROFILE,
@@ -86,6 +86,14 @@ class BindStationScreen extends StatelessWidget {
                         name: 'city',
                         hintText: '选择城市 省/市/区',
                         controller: ctrl.cityController,
+                        onChanged: (value) {
+                          ctrl.provinceName = value[0];
+                          ctrl.cityName = value[1];
+                          ctrl.areaName = value[2];
+                          ctrl.provinceCode = value[3];
+                          ctrl.cityCode = value[4];
+                          ctrl.areaCode = value[5];
+                        },
                         borderColor: CustomAppColor.of(context).textFieldBorder,
                         leadingIcon: Image.asset(
                           AssetsIcon.IC_PASSWORD,
@@ -105,27 +113,20 @@ class BindStationScreen extends StatelessWidget {
                           height: AppSizes.setHeight(20),
                         ),
                         hintText: '详细地址',
-                        isPasswordField: true,
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
                       child: CommonImgUpload(
+                        name: 'businessLicenseUrl',
                         hintText: '上传营业执照',
                         maxLines: 2,
                         textAlign: TextAlign.start,
                         textAlignVertical: TextAlignVertical.top,
                         radius: 6,
-                        leadingIcon: Padding(
-                          padding: EdgeInsets.only(
-                              left: AppSizes.setWidth(26),
-                              right: AppSizes.setWidth(17)),
-                          child: Image.asset(
-                            AssetsIcon.IC_CAMERA,
-                            height: AppSizes.setHeight(24),
-                            width: AppSizes.setWidth(36),
-                          ),
-                        ),
+                        onChanged: (value) {
+                          ctrl.businessLicenseUrl = value ?? '';
+                        },
                         hintStyle: TextStyle(
                           height: AppSizes.setHeight(6),
                           color: CustomAppColor.of(context).txtGrey,
@@ -134,19 +135,13 @@ class BindStationScreen extends StatelessWidget {
                       ),
                     ),
                     CommonImgUpload(
+                      name: 'fuelRetailPermitUrl',
                       hintText: '上传成品油零售许可',
                       textAlign: TextAlign.start,
                       textAlignVertical: TextAlignVertical.top,
-                      leadingIcon: Padding(
-                        padding: EdgeInsets.only(
-                            left: AppSizes.setWidth(26),
-                            right: AppSizes.setWidth(17)),
-                        child: Image.asset(
-                          AssetsIcon.IC_CAMERA,
-                          height: AppSizes.setHeight(24),
-                          width: AppSizes.setWidth(36),
-                        ),
-                      ),
+                      onChanged: (value) {
+                        ctrl.fuelRetailPermitUrl = value ?? '';
+                      },
                       hintStyle: TextStyle(
                         height: AppSizes.setHeight(6),
                         color: CustomAppColor.of(context).txtGrey,
