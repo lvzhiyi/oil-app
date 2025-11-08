@@ -1,9 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_picker/picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:oil_business_app/static/icon.dart';
-import 'package:oil_business_app/utils/utils.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 
@@ -13,7 +14,7 @@ class CommonCityPickerFormField extends StatefulWidget {
   final Widget? suffixIcon;
   final bool isPasswordField;
   final TextEditingController? controller;
-  final ValueChanged<String?>? onChanged;
+  final ValueChanged<List<dynamic>>? onChanged;
   final bool isPhoneNumberField;
   final Color? fillColor;
   final Color? borderColor;
@@ -67,6 +68,8 @@ class CommonCityPickerFormField extends StatefulWidget {
 class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
   late FocusNode _focusNode;
 
+  List<dynamic> cityData = [];
+
   @override
   void initState() {
     super.initState();
@@ -76,6 +79,23 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
       print('isFocused: $_focusNode');
       setState(() {});
     });
+
+    loadJsonFromAssets().then((value) {
+      setState(() {
+        cityData = value;
+      });
+    });
+  }
+
+  Future<List<dynamic>> loadJsonFromAssets() async {
+    // 读取文件内容为字符串
+    String jsonString =
+        await rootBundle.loadString('assets/json/pca-code.json');
+
+    // 解析为 Map
+    final data = json.decode(jsonString);
+
+    return data;
   }
 
   @override
@@ -84,10 +104,65 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
     super.dispose();
   }
 
+  showPicker(BuildContext context) {
+    List<PickerItem> items = cityData.map<PickerItem>((item) {
+      List<PickerItem> children1 =
+          (item['children'] as List<dynamic>).map<PickerItem>((child) {
+        List<PickerItem> children2 =
+            (child['children'] as List<dynamic>).map<PickerItem>((grandChild) {
+          return PickerItem(
+            text: Text(grandChild['name']),
+            value: grandChild['code'],
+          );
+        }).toList();
+        return PickerItem(
+          text: Text(child['name']),
+          value: child['code'],
+          children: children2,
+        );
+      }).toList();
+      PickerItem pr = PickerItem(
+        text: Text(item['name']),
+        value: item['code'],
+        children: children1,
+      );
+      return pr;
+    }).toList();
+    Picker(
+      height: AppSizes.setHeight(280),
+      itemExtent: AppSizes.setHeight(28),
+      confirmText: '确定',
+      cancelText: '取消',
+      onConfirm: (Picker picker, List value) {
+        final text =
+            '${cityData[value[0]]['name']} ${cityData[value[0]]['children'][value[1]]['name']} ${cityData[value[0]]['children'][value[1]]['children'][value[2]]['name']}';
+        print(text);
+        widget.controller?.text = text;
+        widget.onChanged?.call(picker.getSelectedValues());
+      },
+      confirmTextStyle: TextStyle(
+        color: CustomAppColor.of(context).txtBlue,
+        fontSize: AppSizes.setFontSize(18),
+        fontWeight: FontWeight.bold,
+      ),
+      magnification: 1.2,
+      headerDecoration: BoxDecoration(
+        color: CustomAppColor.of(context).bgScaffold,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
+      ),
+      adapter: PickerDataAdapter(
+        data: items,
+      ),
+      title: const Text("选择地址"),
+    ).showModal(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isFocused = _focusNode.hasFocus;
-    print('isFocused: $isFocused');
     return FormBuilderTextField(
       name: widget.name ?? '',
       textAlign: widget.textAlign ?? TextAlign.start,
@@ -95,9 +170,11 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
       maxLength: widget.maxLength,
       focusNode: _focusNode,
       controller: widget.controller,
-      onChanged: widget.onChanged,
       maxLines: widget.maxLines ?? 1,
       readOnly: true,
+      onTap: () {
+        showPicker(context);
+      },
       style: TextStyle(
         color: CustomAppColor.of(context).txtBlack,
         fontSize: AppSizes.setFontSize(14),

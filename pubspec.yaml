@@ -91,7 +91,8 @@ dependencies:
   json_annotation: ^4.9.0 # 编译 - module
   freezed_annotation: ^3.1.0 # 编译 - module
 
-  flutter_city_picker: ^2.1.1
+  flutter_picker:
+    git: git://github.com/yangyxd/flutter_picker.git
   flutter_spinkit: ^5.2.2
   event_bus: ^2.0.0 # 全局 event
   auto_size_text: ^3.0.0 #自动调整字体大小
@@ -170,6 +171,7 @@ flutter:
     - assets/icon/
     - assets/svg/
     - assets/html/
+    - assets/json/pca-code.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

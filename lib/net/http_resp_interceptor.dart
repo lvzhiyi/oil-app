@@ -1,4 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/net/code.dart';
 import 'package:oil_business_app/net/response.dart';
 import 'package:oil_business_app/utils/log.dart';
@@ -32,6 +35,10 @@ class HttpRespInterceptor extends InterceptorsWrapper {
       "业务请求错误：",
       '\n path:${response.requestOptions.path} \n code:${response.data['code']} \n message:${response.data['message']} \n requestId:${response.data['requestId']} ',
     );
+
+    if (response.data['code'] == HttpCode.logout) {
+      BaseConfig.appContext?.read<AppController>().logout();
+    }
 
     /// 默认弹出错误提示，当noShowToast为true时，不弹出错误提示
     if (response.requestOptions.extra['noShowToast'] != true) {

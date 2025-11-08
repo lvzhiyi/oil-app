@@ -72,7 +72,7 @@ class LoginToYourAccountScreen extends StatelessWidget {
                         name: 'phone',
                         borderColor: CustomAppColor.of(context).textFieldBorder,
                         leadingIcon: Image.asset(
-                          AssetsIcon.IC_ACCOUNT_BALANCE,
+                          AssetsIcon.IC_PROFILE,
                           width: AppSizes.setHeight(20),
                           height: AppSizes.setHeight(20),
                         ),

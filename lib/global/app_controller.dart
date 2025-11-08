@@ -64,6 +64,12 @@ class AppController extends HydratedCubit<AppState>
     return response;
   }
 
+  logout() {
+    setAuthResponse(
+        AuthResponse(accessToken: null, refreshToken: null, account: null));
+    BaseRouter.replace(url: AppPage.loginPage.path);
+  }
+
   @override
   void onError(Object error, StackTrace stackTrace) {
     super.onError(error, stackTrace);

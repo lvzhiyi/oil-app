@@ -6,6 +6,7 @@ import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/static/img.dart';
 import 'package:oil_business_app/widgets/base/textfield/common_city_picker.dart';
+import 'package:oil_business_app/widgets/base/textfield/common_img_upload.dart';
 
 import '../../../resources/colors.dart';
 import '../../../utils/sizer_utils.dart';
@@ -83,7 +84,8 @@ class BindStationScreen extends StatelessWidget {
                       padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
                       child: CommonCityPickerFormField(
                         name: 'city',
-                        hintText: '选择城市',
+                        hintText: '选择城市 省/市/区',
+                        controller: ctrl.cityController,
                         borderColor: CustomAppColor.of(context).textFieldBorder,
                         leadingIcon: Image.asset(
                           AssetsIcon.IC_PASSWORD,
@@ -92,16 +94,64 @@ class BindStationScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    CommonTextFormField(
-                      name: 'password',
-                      borderColor: CustomAppColor.of(context).textFieldBorder,
-                      leadingIcon: Image.asset(
-                        AssetsIcon.IC_PASSWORD,
-                        width: AppSizes.setHeight(20),
-                        height: AppSizes.setHeight(20),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
+                      child: CommonTextFormField(
+                        name: 'addressDetail',
+                        borderColor: CustomAppColor.of(context).textFieldBorder,
+                        leadingIcon: Image.asset(
+                          AssetsIcon.IC_BANK,
+                          width: AppSizes.setHeight(20),
+                          height: AppSizes.setHeight(20),
+                        ),
+                        hintText: '详细地址',
+                        isPasswordField: true,
                       ),
-                      hintText: '密码',
-                      isPasswordField: true,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
+                      child: CommonImgUpload(
+                        hintText: '上传营业执照',
+                        maxLines: 2,
+                        textAlign: TextAlign.start,
+                        textAlignVertical: TextAlignVertical.top,
+                        radius: 6,
+                        leadingIcon: Padding(
+                          padding: EdgeInsets.only(
+                              left: AppSizes.setWidth(26),
+                              right: AppSizes.setWidth(17)),
+                          child: Image.asset(
+                            AssetsIcon.IC_CAMERA,
+                            height: AppSizes.setHeight(24),
+                            width: AppSizes.setWidth(36),
+                          ),
+                        ),
+                        hintStyle: TextStyle(
+                          height: AppSizes.setHeight(6),
+                          color: CustomAppColor.of(context).txtGrey,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    CommonImgUpload(
+                      hintText: '上传成品油零售许可',
+                      textAlign: TextAlign.start,
+                      textAlignVertical: TextAlignVertical.top,
+                      leadingIcon: Padding(
+                        padding: EdgeInsets.only(
+                            left: AppSizes.setWidth(26),
+                            right: AppSizes.setWidth(17)),
+                        child: Image.asset(
+                          AssetsIcon.IC_CAMERA,
+                          height: AppSizes.setHeight(24),
+                          width: AppSizes.setWidth(36),
+                        ),
+                      ),
+                      hintStyle: TextStyle(
+                        height: AppSizes.setHeight(6),
+                        color: CustomAppColor.of(context).txtGrey,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(

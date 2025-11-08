@@ -22,6 +22,8 @@ class BindStationCtrl extends Cubit<BindStationState> {
 
   final formKey = GlobalKey<FormBuilderState>();
 
+  final cityController = TextEditingController();
+
   initState() async {
     print('extra: $extra');
   }

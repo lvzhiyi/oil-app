@@ -526,14 +526,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.4.1"
-  flutter_city_picker:
-    dependency: "direct main"
-    description:
-      name: flutter_city_picker
-      sha256: "393f138d90012ed8bbab0d98e1cd97e3c7577f079b43a9d288cdec7f440b6a7e"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "2.1.1"
   flutter_dotenv:
     dependency: "direct main"
     description:
@@ -659,6 +651,15 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.4.4"
+  flutter_picker:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: b38ec78886fa05068d67b54caf22650ab71205a2
+      url: "git://github.com/yangyxd/flutter_picker.git"
+    source: git
+    version: "2.1.2"
   flutter_picker_plus:
     dependency: "direct main"
     description:
