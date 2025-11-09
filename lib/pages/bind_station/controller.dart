@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/model/auth_req_type.dart';
@@ -69,17 +70,27 @@ class BindStationCtrl extends Cubit<BindStationState> {
     l.d('Register', '开始注册: reqParams.toJson(): ${reqParams.toJson()}');
     emit(state.copyWith(loading: false));
 
+    final uploadBusinessLicenseSignature =
+        await uploadImage(businessLicenseUrl);
+    print('uploadBusinessLicenseSignature: $uploadBusinessLicenseSignature');
+
+    // final uploadFuelRetailPermitSignature =
+    //     await uploadImage(fuelRetailPermitUrl);
+    // print('uploadFuelRetailPermitSignature: $uploadFuelRetailPermitSignature');
+
     // final response = await stationService.bindStation(reqParams);
     // BaseConfig.appContext?.read<AppController>().setAuthResponse(response);
     // BaseRouter.replace(url: AppPage.mainLayoutPage.path);
   }
 
   uploadImage(String url) async {
+    final contenLength = await XFile(url).readAsBytes();
+    final contentType = XFile(url).mimeType ?? 'image/jpeg';
     final response = await commonService.getUploadSignature(
       UploadSignatureRequest(
         bizPrefix: 'stations',
-        contentType: 'image/jpeg',
-        contentLength: url.length,
+        contentType: contentType,
+        contentLength: contenLength.length,
       ),
     );
     return response;
