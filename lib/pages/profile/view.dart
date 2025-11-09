@@ -4,6 +4,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:oil_business_app/pages/profile/controller.dart';
 import 'package:oil_business_app/pages/profile/state.dart';
 
+import 'widgets/account_screen.dart';
+
 class ProfileView extends HookWidget {
   final ProfileState state;
 
@@ -12,8 +14,6 @@ class ProfileView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final ctrl = context.read<ProfileCtrl>();
-    return const Scaffold(
-      body: Text('Profile Page'),
-    );
+    return const AccountScreen();
   }
 }
