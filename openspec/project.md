@@ -1,7 +1,7 @@
 # Project Context
 
 ## Purpose
-买油呗（Oil Business App）是一款面向加油站的石油采购管理移动应用，主要功能是帮助加油站向油库采购石油。项目支持 Android 和 iOS 双平台。
+买油呗（Oil Business App）是一款面向加油站的油气采购管理移动应用，主要功能是帮助加油站向油库采购石油。项目支持 Android 和 iOS 双平台。
 
 ## Tech Stack
 - **框架**: Flutter 3.4+ (跨平台移动应用开发)
@@ -188,28 +188,277 @@ abstract class AuthService {
 
 ### UI Component Standards
 
+#### 设计原则
+- 现代化商业应用界面设计
+- 支持浅色/深色主题切换
+- 响应式布局，支持手机、平板、折叠屏
+- Material Design 3 设计语言
+- 高内聚、低耦合的组件化设计
+
 #### 通用组件库（`widgets/base/`）
 
-**必须使用的基础组件**：
-- **CommonButton** - 统一按钮组件
-  - 支持加载状态（`isLoading`）
-  - 支持自定义颜色、边框、阴影
-  - 默认紫色主题，圆角 8px
-  
-- **CommonText** - 统一文本组件
-  - 默认字体：Urbanist
-  - 支持自动缩放（`isAutoSize`）
-  - 行高固定 1.2
-  
-- **CommonTextFormField** - 表单输入组件
-  - 集成 FormBuilder
-  - 支持密码字段（自动显隐）
-  - 支持国际电话号码
-  - 聚焦时显示浮动标签
-  - 验证失败自动显示错误
+##### **CommonText** - 统一文本组件
 
-- **CommonContainer** - 容器组件
-- **TopBar** - 顶部栏组件（动态配置）
+**属性规范**：
+| 属性 | 类型 | 默认值 | 说明 |
+|-----|------|--------|------|
+| text | String | 必填 | 文本内容 |
+| fontSize | double? | 14 | 字体大小（必须使用 setFontSize） |
+| fontWeight | FontWeight | w400 | 字重 |
+| textColor | Color? | txtBlack | 文字颜色 |
+| textAlign | TextAlign | center | 对齐方式 |
+| fontFamily | String | Urbanist | 字体家族 |
+| maxLines | int? | null | 最大行数 |
+| overflow | TextOverflow? | null | 溢出处理 |
+| letterSpacing | double? | null | 字间距 |
+
+**使用规范**：
+```dart
+CommonText(
+  text: '文本内容',
+  fontSize: AppSizes.setFontSize(14),
+  fontWeight: FontWeight.w600,
+  textColor: CustomAppColor.of(context).txtBlack,
+)
+```
+
+- ✅ 必须使用 `AppSizes.setFontSize()` 设置字号
+- ✅ 必须使用 `CustomAppColor.of(context)` 获取颜色
+- ✅ 固定行高 1.2
+- ✅ 默认字体：Urbanist
+
+##### **CommonButton** - 统一按钮组件
+
+**属性规范**：
+| 属性 | 类型 | 默认值 | 说明 |
+|-----|------|--------|------|
+| btnText | String? | null | 按钮文字 |
+| child | Widget? | null | 自定义子组件 |
+| onTap | Function()? | null | 点击回调 |
+| buttonColor | Color? | btnPurple | 按钮背景色 |
+| borderColor | Color? | transparent | 边框颜色 |
+| height | double? | 52 | 按钮高度 |
+| width | double? | fullWidth | 按钮宽度 |
+| radius | double | 8 | 圆角半径 |
+| fontSize | double? | 15 | 文字大小 |
+| isButtonShadow | bool? | true | 是否显示阴影 |
+| isLoading | bool? | false | 是否显示加载 |
+
+**按钮类型**：
+
+*主要按钮（Primary）*：
+```dart
+CommonButton(
+  btnText: '主要操作',
+  buttonColor: CustomAppColor.of(context).btnPurple,
+  height: AppSizes.buttonHeight,  // 52
+  radius: 8,
+  isButtonShadow: true,
+  isLoading: state.loading,
+)
+```
+- 背景色：紫色 #7165E3
+- 文字颜色：白色
+- 阴影：紫色 40% 透明
+- 高度：52，圆角：8
+
+*次要按钮（Secondary）*：
+```dart
+CommonButton(
+  btnText: '次要操作',
+  buttonColor: CustomAppColor.of(context).btnWhite,
+  borderColor: CustomAppColor.of(context).borderGrey,
+  isButtonShadow: false,
+)
+```
+- 背景色：白色/深色背景
+- 边框：1px 灰色
+- 无阴影
+
+*小按钮*：
+```dart
+CommonButton(
+  btnText: '小按钮',
+  height: AppSizes.setHeight(34),
+  width: AppSizes.setWidth(93),
+  radius: 3,
+)
+```
+- 高度：34，圆角：3
+
+##### **CommonTextFormField** - 表单输入组件
+
+**属性规范**：
+| 属性 | 类型 | 默认值 | 说明 |
+|-----|------|--------|------|
+| name | String? | null | 字段名（FormBuilder） |
+| hintText | String? | null | 占位文字 |
+| labelText | String? | null | 标签文字 |
+| controller | TextEditingController? | null | 输入控制器 |
+| leadingIcon | Widget? | null | 前置图标 |
+| suffixIcon | Widget? | null | 后置图标 |
+| borderColor | Color? | borderGrey | 边框颜色 |
+| radius | double? | 12 | 圆角半径 |
+| isPasswordField | bool | false | 是否密码框 |
+| isPhoneNumberField | bool | false | 是否手机号码框 |
+| validators | Function? | null | 验证器 |
+
+**输入框状态**：
+- 默认状态：灰色边框 1px，圆角 12
+- 聚焦状态：紫色边框 2px，标签浮动显示
+- 密码框：自动显隐密码图标
+- 手机号：国际电话号码输入（IntlPhoneField）
+
+**使用示例**：
+```dart
+CommonTextFormField(
+  name: 'phone',
+  hintText: '手机号',
+  leadingIcon: Image.asset(AssetsIcon.IC_PROFILE),
+  borderColor: CustomAppColor.of(context).textFieldBorder,
+  validators: FormBuilderValidators.compose([
+    FormBuilderValidators.required(errorText: '手机号不能为空'),
+  ]),
+)
+```
+
+##### **TopBar** - 顶部导航栏组件
+
+**属性规范**：
+| 属性 | 类型 | 默认值 | 说明 |
+|-----|------|--------|------|
+| clickListener | TopBarClickListener | 必填 | 点击事件监听器 |
+| title | String? | null | 标题文字 |
+| isShowBack | bool | false | 是否显示返回按钮 |
+| isShowProfile | bool | false | 是否显示头像 |
+| isShowNotification | bool | false | 是否显示通知图标 |
+| isShowSearch | bool | false | 是否显示搜索图标 |
+| isShowCart | bool | false | 是否显示购物车 |
+| topBarColor | Color? | white | 背景颜色 |
+| textColor | Color | txtBlack | 文字颜色 |
+| height | double | 100 | 高度 |
+
+**布局规范**：
+- 固定高度：100（包含 SafeArea）
+- 水平内边距：18
+- 图标尺寸：24x24
+- 元素顺序：返回 → 头像 → 标题 → Spacer → 操作图标
+
+##### **CommonContainer** - 容器组件
+
+**属性规范**：
+| 属性 | 类型 | 默认值 | 说明 |
+|-----|------|--------|------|
+| width | double | 必填 | 容器宽度 |
+| height | double | 必填 | 容器高度 |
+| child | Widget | 必填 | 子组件 |
+| borderColor | Color? | containerBorder | 边框颜色 |
+| borderWidth | double? | 1 | 边框宽度 |
+| borderRadius | double? | 15 | 圆角半径 |
+
+##### **Heading** - 标题组件
+
+**使用示例**：
+```dart
+Heading(
+  title: '主标题',
+  navigationTitle: '查看更多',
+  onTap: () {},
+)
+```
+
+**样式规范**：
+- 主标题：字号 18，字重 800
+- 导航文字：字号 14，字重 700，紫色
+- 水平内边距：20
+
+#### 颜色系统
+
+**品牌色**：
+```dart
+AppColor.btnPurple = #7165E3      // 主品牌色（按钮、强调元素）
+AppColor.txtPurple = #7165E3      // 文本强调色
+AppColor.icPurple = #7165E3       // 图标强调色
+AppColor.borderPurple = #7165E3   // 强调边框
+```
+
+**中性色**：
+```dart
+AppColor.white = #FFFFFF          // 纯白
+AppColor.black = #000000          // 纯黑
+AppColor.txtBlack = #000000       // 黑色文本
+AppColor.txtGrey = #9EA6BE        // 灰色文本
+AppColor.hintGrey = #AFB0B6       // 提示文本灰色
+AppColor.borderGrey = #9EA6BE     // 边框灰色
+```
+
+**功能色**：
+```dart
+AppColor.green = #2AB126          // 成功状态
+AppColor.txtRed = #FF4141         // 错误/危险
+AppColor.txtOrange = #FF9B00      // 橙色提示
+AppColor.txtBlue = #383EAF        // 蓝色链接
+```
+
+**背景色**：
+```dart
+// 浅色主题
+AppColor.white = #FFFFFF          // 主背景
+AppColor.bgTopBar = #F9F9FB       // TopBar背景
+
+// 深色主题
+AppColor.bgScaffold = #181A20     // 深色主背景
+AppColor.containerGrey = #1F222A  // 深色容器背景
+```
+
+**主题适配（必须使用）**：
+```dart
+// ✅ 正确：使用 CustomAppColor 动态主题
+CustomAppColor.of(context).bgScaffold       // 页面背景
+CustomAppColor.of(context).txtBlack         // 黑色文字
+CustomAppColor.of(context).txtPurple        // 紫色强调
+CustomAppColor.of(context).btnPurple        // 紫色按钮
+CustomAppColor.of(context).borderGrey       // 边框
+CustomAppColor.of(context).textFieldBorder  // 输入框边框
+
+// ❌ 错误：硬编码颜色
+backgroundColor: Colors.white
+textColor: Color(0xFF000000)
+```
+
+#### 字体系统
+
+**字体家族**：
+```dart
+Constant.fontFamilyUrbanist = 'Urbanist'    // 主字体
+```
+
+**字重定义**：
+- Light: 300
+- Regular: 400
+- Medium: 500
+- SemiBold: 600
+- Bold: 700
+
+**字号规范**：
+| 用途 | 字号 | 字重 | 使用场景 |
+|-----|------|------|---------|
+| 大标题 | 35 | 800 | 页面主标题（如"账户创建成功"） |
+| 标题 | 24 | 700 | 页面标题（如"登录到您的账户"） |
+| 二级标题 | 18 | 800 | 分类标题、Heading组件 |
+| 按钮文字 | 15 | 500 | 主要按钮文字 |
+| 正文 | 14 | 400-700 | 普通文本、输入框文本 |
+| 副标题 | 12 | 500 | 辅助信息、标签 |
+| 小号文字 | 10 | 500 | 提示信息 |
+
+**行高规范**：
+- 所有文本统一行高：`height: 1.2`
+
+**响应式字体缩放**：
+- 手机：默认缩放 1.0
+- 平板：缩放 0.6
+- 折叠屏：缩放 0.6
+- 用户文字缩放限制：最大 1.2
 
 #### 响应式设计规范（必须严格遵守）
 
@@ -236,6 +485,44 @@ height: 60
 fontSize: 14
 ```
 
+**间距规范**：
+
+*水平间距*：
+| 间距值 | 使用场景 |
+|-------|---------|
+| 8 | 极小间距 |
+| 10 | 小间距 |
+| 12 | 图标间距 |
+| 15 | 标准间距 |
+| 18-20 | 页面左右边距 |
+| 22 | 大间距 |
+| 24 | 特大间距 |
+
+*垂直间距*：
+| 间距值 | 使用场景 |
+|-------|---------|
+| 5 | 极小间距 |
+| 10 | 小间距 |
+| 12 | 标准小间距 |
+| 15 | 标准间距 |
+| 16 | 表单项间距 |
+| 20 | 大间距、分组间距 |
+| 25 | 提示文本上下间距 |
+| 32 | 表单提交按钮上边距 |
+| 58 | 页面标题间距 |
+| 61 | 登录页顶部间距 |
+| 88 | 大节间距 |
+
+**圆角规范**：
+| 圆角值 | 使用场景 |
+|-------|---------|
+| 3 | 小按钮圆角 |
+| 5 | 商品卡片圆角 |
+| 8 | 标准圆角（输入框、按钮、容器） |
+| 12 | 标准容器圆角（输入框） |
+| 15 | 大圆角 |
+| 20 | BottomSheet圆角 |
+
 **颜色主题 - CustomAppColor**：
 ```dart
 // ✅ 正确：使用动态主题（支持亮/暗模式）
@@ -256,6 +543,12 @@ backgroundColor: Colors.white
 textColor: Color(0xFF000000)
 ```
 
+**设备类型判断**：
+```dart
+AppSizes.isTablet(context)         // 平板判断
+AppSizes.isFoldablePhone(size)     // 折叠屏判断
+```
+
 **静态资源引用**：
 ```dart
 // ✅ 正确：通过静态常量类引用
@@ -269,28 +562,201 @@ Image.asset('assets/img/logo.webp')
 
 #### 页面布局规范
 
-**标准页面结构**：
+**基本页面结构**：
 ```dart
 SafeArea(
   bottom: true,
-  top: false,  // 顶部不留白（TopBar 处理）
+  top: false,
   child: Scaffold(
     backgroundColor: CustomAppColor.of(context).bgScaffold,
-    body: Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.setWidth(20)
-      ),
-      child: SingleChildScrollView(  // 防止键盘遮挡
-        child: Column(
-          children: [
-            // 页面内容
-          ],
-        ),
-      ),
-    ),
+    body: ...,
   ),
 )
 ```
+
+**页面类型**：
+
+*1. 标准页面布局*：
+- TopBar（可选）
+- 主内容区域
+- 底部导航栏（可选）
+
+*2. 滚动页面布局*：
+```dart
+SingleChildScrollView(
+  padding: EdgeInsets.symmetric(
+    horizontal: AppSizes.setWidth(20),
+  ),
+  child: Column(
+    children: [
+      // 页面内容
+    ],
+  ),
+)
+```
+
+*3. 列表页面布局*：
+```dart
+ListView.builder(
+  padding: EdgeInsets.symmetric(
+    horizontal: AppSizes.setWidth(20),
+    vertical: AppSizes.setHeight(16),
+  ),
+  itemCount: items.length,
+  itemBuilder: (context, index) => ...,
+)
+```
+
+**页面边距规范**：
+- 标准页面左右边距：20
+- TopBar 左右边距：18
+- 列表项左右边距：18-20
+- 卡片内边距：15-18
+
+**安全区域处理**：
+- 顶部：通常 `top: false`（由 TopBar 处理）
+- 底部：通常 `bottom: true`
+
+#### 图标资源规范
+
+**图标格式**：
+- 格式：WebP
+- 支持暗色主题切换
+
+**图标尺寸规范**：
+| 使用场景 | 尺寸 | 说明 |
+|---------|------|------|
+| TopBar 图标 | 24x24 | 导航栏图标 |
+| 按钮图标 | 18-22 | 按钮内图标 |
+| 列表图标 | 20x20 | 列表项图标 |
+| 输入框图标 | 20x20 | 表单图标 |
+| 小图标 | 10-14 | 标签、角标图标 |
+| 头像 | 35x35 | 用户头像 |
+
+**图标使用规范**：
+```dart
+// ✅ 正确：使用静态资源类
+Image.asset(
+  AssetsIcon.IC_SEARCH,
+  width: AppSizes.setWidth(24),
+  height: AppSizes.setHeight(24),
+  color: CustomAppColor.of(context).icBlack,
+  gaplessPlayback: true,  // 推荐使用，避免图片闪烁
+)
+
+// ❌ 错误：硬编码路径
+Image.asset('assets/icon/ic_search.webp')
+```
+
+#### 阴影规范
+
+**按钮阴影**：
+```dart
+BoxShadow(
+  color: AppColor.btnPurple.withOpacity(0.4),
+  spreadRadius: 1,
+  blurRadius: 4,
+  offset: Offset(0, 2),
+)
+```
+
+**TopBar 阴影**：
+```dart
+BoxShadow(
+  color: CustomAppColor.of(context).txtBlack.withOpacity(0.01),
+  blurRadius: 3,
+  spreadRadius: 2,
+  offset: Offset(0, 4),
+)
+```
+
+**卡片阴影**：
+```dart
+BoxShadow(
+  color: Color(0xff000000).withOpacity(0.10),
+  blurRadius: 8,
+  spreadRadius: 2,
+  offset: Offset(0, 2),
+)
+```
+
+#### 交互规范
+
+**点击反馈**：
+- 使用 `InkWell` 或 `GestureDetector`
+- 禁用状态使用 `IgnorePointer(ignoring: true)`
+
+**页面导航**：
+```dart
+// 使用 BaseRouter 导航
+BaseRouter.push(context, AppPage.home)
+BaseRouter.pop(context)
+```
+
+**弹窗交互**：
+- BottomSheet：`showModalBottomSheet`
+- Dialog：`showDialog`
+- Alert：TDesign Flutter 组件
+
+**输入框焦点管理**：
+- 使用 `FocusNode` 管理焦点
+- 聚焦时显示标签，修改边框颜色
+
+#### 主题切换
+
+**主题配置**：
+```dart
+ThemeData(
+  brightness: isLightTheme ? Brightness.light : Brightness.dark,
+  fontFamily: Constant.fontFamilyUrbanist,
+  useMaterial3: true,
+  scaffoldBackgroundColor: isLightTheme 
+    ? AppColor.white 
+    : AppColor.bgScaffold,
+)
+```
+
+**主题状态管理**：
+```dart
+// 使用全局状态
+Constant.isLightThemeGlobal = true/false
+```
+
+**颜色自适应**：
+- ✅ 必须使用 `CustomAppColor.of(context)` 获取颜色
+- ✅ 自动适配浅色/深色主题
+
+#### 性能优化规范
+
+**图片加载**：
+- 使用 `gaplessPlayback: true` 避免图片闪烁
+- WebP 格式优化文件大小
+- 使用 `CachedNetworkImage` 加载网络图片
+
+**列表优化**：
+- 使用 `ListView.builder` 按需构建
+- `physics: NeverScrollableScrollPhysics()` 当嵌套在滚动容器中
+- `shrinkWrap: true` 当需要自适应高度
+
+**状态管理**：
+- 使用 `setState` 管理局部状态
+- 使用 Cubit 管理页面级状态
+- 使用 HydratedCubit 管理全局持久化状态
+
+**常量优化**：
+- 使用 `const` 构造函数
+- 避免不必要的 Widget 重建
+
+#### 可访问性
+
+**文字缩放**：
+- 最大文字缩放系数限制：1.2
+- 使用 `MediaQuery.textScaler` 获取用户设置
+
+**颜色对比度**：
+- 主要文本对比度：≥ 4.5:1
+- 大号文本对比度：≥ 3:1
+- 品牌色紫色 (#7165E3) 在白色背景上对比度：4.79:1
 
 ### Form Handling Standards
 
