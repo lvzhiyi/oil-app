@@ -60,8 +60,6 @@ enum AppPage {
   /// 统一支付页面
   unifiedPaymentPage('/unifiedPayment'),
 
-  payOrderDetailPage('/payOrderDetail/:uuid'),
-
   /// 修改密码（个人中心）
   changePasswordPage('/changePassword'),
   ;
