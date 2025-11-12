@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oil_business_app/pages/oil_pickup/page.dart';
 import 'package:oil_business_app/pages/profile/page.dart';
 import 'package:oil_business_app/static/icon.dart';
 
@@ -28,7 +29,7 @@ List<BottomNavigationBarData> bottomNavigationBarList = [
   BottomNavigationBarData(
     title: '提油',
     image: AssetsIcon.IC_BAG,
-    screen: Container(),
+    screen: const OilPickupPage(),
   ),
   BottomNavigationBarData(
     title: '我的',

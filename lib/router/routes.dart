@@ -11,6 +11,9 @@ import 'package:oil_business_app/pages/register/page.dart';
 
 import 'package:oil_business_app/pages/profile/page.dart';
 import 'package:oil_business_app/pages/main_layout/page.dart';
+import 'package:oil_business_app/pages/oil_pickup/page.dart';
+import 'package:oil_business_app/pages/station_list/page.dart';
+import 'package:oil_business_app/pages/station_edit/page.dart';
 import 'package:oil_business_app/router/pageTransition/bottom_to_top_page.dart';
 import 'package:oil_business_app/router/router.dart';
 
@@ -62,6 +65,15 @@ enum AppPage {
 
   /// 修改密码（个人中心）
   changePasswordPage('/changePassword'),
+
+  /// 提油页面
+  oilPickupPage('/oilPickup'),
+
+  /// 加油站列表页面
+  stationListPage('/stationList'),
+
+  /// 加油站编辑页面
+  stationEditPage('/stationEdit'),
   ;
 
   const AppPage(this.path);
@@ -116,6 +128,15 @@ extension PageRoute on AppPage {
 
       case AppPage.profilePage:
         return (context, state) => const ProfilePage();
+
+      case AppPage.oilPickupPage:
+        return (context, state) => const OilPickupPage();
+
+      case AppPage.stationListPage:
+        return (context, state) => const StationListPage();
+
+      case AppPage.stationEditPage:
+        return (context, state) => const StationEditPage();
 
       default:
         return (context, state) => const Text('404');

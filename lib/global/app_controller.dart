@@ -7,6 +7,7 @@ import 'package:oil_business_app/global/model/auth_rep_type.dart';
 import 'package:oil_business_app/global/model/station_req_type.dart';
 import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/global/service/station_service.dart';
+import 'package:oil_business_app/models/station_model.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 
@@ -34,6 +35,14 @@ class AppController extends HydratedCubit<AppState>
 
   setAuthResponse(AuthResponse authResponse) {
     emit(state.copyWith(authResponse: authResponse));
+  }
+
+  void setSelectedStation(StationModel station) {
+    emit(state.copyWith(selectedStation: station));
+  }
+
+  void clearSelectedStation() {
+    emit(state.copyWith(selectedStation: null));
   }
 
   /// 登录成功后流程
@@ -82,6 +91,9 @@ class AppController extends HydratedCubit<AppState>
       authResponse: json['authResponse'] != null
           ? AuthResponse.fromJson(json['authResponse'])
           : null,
+      selectedStation: json['selectedStation'] != null
+          ? StationModel.fromJson(json['selectedStation'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -89,6 +101,7 @@ class AppController extends HydratedCubit<AppState>
   Map<String, dynamic>? toJson(AppState state) {
     return {
       'authResponse': state.authResponse?.toJson(),
+      'selectedStation': state.selectedStation?.toJson(),
     };
   }
 }
