@@ -21,7 +21,19 @@ class OilPickupCtrl extends Cubit<OilPickupState> {
   }
 
   void updateOilAmount(String amount) {
-    emit(state.copyWith(oilAmount: amount));
+    emit(state.copyWith(
+      oilAmount: amount,
+      errorMessage: null,
+    ));
+    
+    if (amount.isNotEmpty) {
+      final oilAmountInt = int.tryParse(amount);
+      if (oilAmountInt != null && oilAmountInt <= 0) {
+        emit(state.copyWith(
+          errorMessage: '提油量必须大于0',
+        ));
+      }
+    }
   }
 
   void onVehicleInfoPasted(String text) {
@@ -73,6 +85,21 @@ class OilPickupCtrl extends Cubit<OilPickupState> {
     if (state.oilAmount.isEmpty) {
       emit(state.copyWith(
         errorMessage: '请输入提油量',
+      ));
+      return;
+    }
+
+    final oilAmountInt = int.tryParse(state.oilAmount);
+    if (oilAmountInt == null) {
+      emit(state.copyWith(
+        errorMessage: '提油量必须为数字',
+      ));
+      return;
+    }
+    
+    if (oilAmountInt <= 0) {
+      emit(state.copyWith(
+        errorMessage: '提油量必须大于0',
       ));
       return;
     }

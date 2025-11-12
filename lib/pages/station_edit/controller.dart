@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:oil_business_app/models/station_model.dart';
 import 'package:oil_business_app/pages/station_edit/state.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/utils/log.dart';
 
 class StationEditCtrl extends Cubit<StationEditState> {
-  StationEditCtrl() : super(StationEditState()) {
-    initState();
+  StationEditCtrl({String? stationId}) : super(StationEditState()) {
+    if (stationId != null) {
+      initState(stationId);
+    }
   }
 
   static final List<StationModel> _mockStations = [
@@ -34,29 +35,21 @@ class StationEditCtrl extends Cubit<StationEditState> {
     ),
   ];
 
-  void initState() {
-    final context = BaseRouter.observer.navigator?.context;
-    if (context == null) return;
+  void initState(String stationId) {
+    final station = _mockStations.firstWhere(
+      (s) => s.id == stationId,
+      orElse: () => StationModel(
+        id: stationId,
+        name: '',
+        address: '',
+      ),
+    );
 
-    final extra = GoRouterState.of(context).extra as Map<String, dynamic>?;
-    final stationId = extra?['stationId'] as String?;
-
-    if (stationId != null) {
-      final station = _mockStations.firstWhere(
-        (s) => s.id == stationId,
-        orElse: () => StationModel(
-          id: stationId,
-          name: '',
-          address: '',
-        ),
-      );
-
-      emit(state.copyWith(
-        station: station,
-        name: station.name,
-        address: station.address,
-      ));
-    }
+    emit(state.copyWith(
+      station: station,
+      name: station.name,
+      address: station.address,
+    ));
   }
 
   void updateName(String name) {

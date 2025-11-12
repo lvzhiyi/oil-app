@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -31,6 +32,8 @@ class CommonTextFormField extends StatefulWidget {
   final bool? isCountryLabelVisible;
   final String? name;
   final String? Function(String?)? validators;
+  final TextInputType? keyboardType;
+  final TextInputFormatter? inputFormatter;
 
   const CommonTextFormField({
     super.key,
@@ -57,6 +60,8 @@ class CommonTextFormField extends StatefulWidget {
     this.isCountryLabelVisible = false,
     this.name,
     this.validators,
+    this.keyboardType,
+    this.inputFormatter,
   });
 
   @override
@@ -189,6 +194,8 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
         onChanged: widget.onChanged,
         maxLines: widget.maxLines ?? 1,
         obscureText: _obscureText,
+        keyboardType: widget.keyboardType,
+        inputFormatters: widget.inputFormatter != null ? [widget.inputFormatter!] : null,
         style: TextStyle(
           color: CustomAppColor.of(context).txtBlack,
           fontSize: AppSizes.setFontSize(14),

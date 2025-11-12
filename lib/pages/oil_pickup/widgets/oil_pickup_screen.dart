@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:oil_business_app/pages/oil_pickup/controller.dart';
 import 'package:oil_business_app/pages/oil_pickup/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
@@ -121,6 +122,8 @@ class _OilPickupScreenState extends State<OilPickupScreen> {
         CommonTextFormField(
           controller: _oilAmountController,
           hintText: '请输入本次提油量/吨',
+          keyboardType: TextInputType.number,
+          inputFormatter: FilteringTextInputFormatter.digitsOnly,
           onChanged: (value) => widget.controller.updateOilAmount(value ?? ''),
         ),
       ],

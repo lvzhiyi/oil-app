@@ -84,35 +84,35 @@ class VehicleInfoCard extends StatelessWidget {
             ),
           ),
         ],
-        if (vehicleInfo.isNotEmpty && parseSuccess) ...[
-          SizedBox(height: AppSizes.setHeight(16)),
-          ExpansionTile(
-            title: CommonText(
-              text: '查看完整 JSON',
-              fontSize: AppSizes.setFontSize(14),
-              fontWeight: FontWeight.w500,
-              textColor: CustomAppColor.of(context).txtPurple,
-              textAlign: TextAlign.left,
-            ),
-            children: [
-              Container(
-                padding: EdgeInsets.all(AppSizes.setWidth(12)),
-                decoration: BoxDecoration(
-                  color: CustomAppColor.of(context).bgContainer,
-                  borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
-                ),
-                child: SelectableText(
-                  vehicleInfo,
-                  style: TextStyle(
-                    fontFamily: 'monospace',
-                    fontSize: AppSizes.setFontSize(12),
-                    color: CustomAppColor.of(context).txtBlack,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+        // if (vehicleInfo.isNotEmpty && parseSuccess) ...[
+        //   SizedBox(height: AppSizes.setHeight(16)),
+        //   ExpansionTile(
+        //     title: CommonText(
+        //       text: '查看完整 JSON',
+        //       fontSize: AppSizes.setFontSize(14),
+        //       fontWeight: FontWeight.w500,
+        //       textColor: CustomAppColor.of(context).txtPurple,
+        //       textAlign: TextAlign.left,
+        //     ),
+        //     children: [
+        //       Container(
+        //         padding: EdgeInsets.all(AppSizes.setWidth(12)),
+        //         decoration: BoxDecoration(
+        //           color: CustomAppColor.of(context).bgContainer,
+        //           borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
+        //         ),
+        //         child: SelectableText(
+        //           vehicleInfo,
+        //           style: TextStyle(
+        //             fontFamily: 'monospace',
+        //             fontSize: AppSizes.setFontSize(12),
+        //             color: CustomAppColor.of(context).txtBlack,
+        //           ),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ],
       ],
     );
   }
