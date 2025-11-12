@@ -8,12 +8,14 @@ class StationItem extends StatelessWidget {
   final StationModel station;
   final VoidCallback onTap;
   final VoidCallback onEdit;
+  final bool isSelected;
 
   const StationItem({
     Key? key,
     required this.station,
     required this.onTap,
     required this.onEdit,
+    this.isSelected = false,
   }) : super(key: key);
 
   @override
@@ -23,15 +25,27 @@ class StationItem extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(AppSizes.setWidth(16)),
         decoration: BoxDecoration(
-          color: CustomAppColor.of(context).bgContainer,
+          color: isSelected
+              ? CustomAppColor.of(context).btnPurple.withValues(alpha: 0.05)
+              : CustomAppColor.of(context).bgContainer,
           borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
           border: Border.all(
-            color: CustomAppColor.of(context).containerBorder,
-            width: 1,
+            color: isSelected
+                ? CustomAppColor.of(context).btnPurple
+                : CustomAppColor.of(context).containerBorder,
+            width: isSelected ? 2 : 1,
           ),
         ),
         child: Row(
           children: [
+            if (isSelected) ...[
+              Icon(
+                Icons.check_circle,
+                color: CustomAppColor.of(context).btnPurple,
+                size: AppSizes.setWidth(20),
+              ),
+              SizedBox(width: AppSizes.setWidth(12)),
+            ],
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +54,9 @@ class StationItem extends StatelessWidget {
                     text: station.name,
                     fontSize: AppSizes.setFontSize(16),
                     fontWeight: FontWeight.w600,
-                    textColor: CustomAppColor.of(context).txtBlack,
+                    textColor: isSelected
+                        ? CustomAppColor.of(context).btnPurple
+                        : CustomAppColor.of(context).txtBlack,
                     textAlign: TextAlign.left,
                   ),
                   SizedBox(height: AppSizes.setHeight(8)),

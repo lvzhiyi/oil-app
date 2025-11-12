@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:oil_business_app/models/station_model.dart';
 import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
@@ -29,6 +30,7 @@ class StationSelectorButton extends StatelessWidget {
           ),
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
               Icons.local_gas_station,
@@ -39,6 +41,7 @@ class StationSelectorButton extends StatelessWidget {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CommonText(
                     text: station?.name ?? '选择加油站',
@@ -63,18 +66,24 @@ class StationSelectorButton extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: AppSizes.setWidth(12)),
-            CommonText(
-              text: station != null ? '切换' : '选择',
-              fontSize: AppSizes.setFontSize(14),
-              fontWeight: FontWeight.w500,
-              textColor: CustomAppColor.of(context).btnPurple,
-            ),
-            SizedBox(width: AppSizes.setWidth(4)),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: AppSizes.setWidth(16),
-              color: CustomAppColor.of(context).btnPurple,
+            SizedBox(width: AppSizes.setWidth(6)),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CommonText(
+                  text: station != null ? '切换' : '选择',
+                  fontSize: AppSizes.setFontSize(14),
+                  fontWeight: FontWeight.w500,
+                  textColor: CustomAppColor.of(context).btnPurple,
+                ),
+                Padding(padding: EdgeInsets.only(top: AppSizes.setHeight(3)), child: Image.asset(
+                  AssetsIcon.IC_RIGHT_ARROW,
+                  height: AppSizes.setHeight(16),
+                  width: AppSizes.setWidth(16),
+                  color: CustomAppColor.of(context).btnPurple,
+                ),),
+              ],
             ),
           ],
         ),

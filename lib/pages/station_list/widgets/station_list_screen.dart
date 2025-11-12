@@ -5,6 +5,7 @@ import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
+import 'package:oil_business_app/widgets/common/global_update_ui.dart';
 
 import 'station_item.dart';
 
@@ -99,27 +100,36 @@ class StationListScreen extends StatelessWidget {
       );
     }
 
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.all(AppSizes.setWidth(20)),
-            itemCount: state.stations.length,
-            itemBuilder: (context, index) {
-              final station = state.stations[index];
-              return Padding(
-                padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
-                child: StationItem(
-                  station: station,
-                  onTap: () => controller.selectStation(station, context),
-                  onEdit: () => controller.navigateToEdit(station, context),
-                ),
-              );
-            },
-          ),
-        ),
-        _buildAddButton(context),
-      ],
+    return GlobalUpdateUi(
+      builder: (context, appCtrl) {
+        final selectedStation = appCtrl.state.selectedStation;
+        
+        return Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.all(AppSizes.setWidth(20)),
+                itemCount: state.stations.length,
+                itemBuilder: (context, index) {
+                  final station = state.stations[index];
+                  final isSelected = selectedStation?.id == station.id;
+                  
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
+                    child: StationItem(
+                      station: station,
+                      isSelected: isSelected,
+                      onTap: () => controller.selectStation(station, context),
+                      onEdit: () => controller.navigateToEdit(station, context),
+                    ),
+                  );
+                },
+              ),
+            ),
+            _buildAddButton(context),
+          ],
+        );
+      },
     );
   }
 
