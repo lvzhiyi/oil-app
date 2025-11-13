@@ -48,7 +48,7 @@ class StationEditCtrl extends Cubit<StationEditState> {
     emit(state.copyWith(
       station: station,
       name: station.name,
-      address: station.address,
+      addressDetail: station.address,
     ));
   }
 
@@ -56,11 +56,28 @@ class StationEditCtrl extends Cubit<StationEditState> {
     emit(state.copyWith(name: name));
   }
 
-  void updateAddress(String address) {
-    emit(state.copyWith(address: address));
+  /// 更新省市区信息
+  /// 参数顺序：provinceName, cityName, areaName, provinceCode, cityCode, areaCode
+  /// 遵循 KISS 原则，直接解构数组参数
+  void updateCityData(List<dynamic> cityData) {
+    if (cityData.length >= 6) {
+      emit(state.copyWith(
+        provinceName: cityData[0] as String,
+        cityName: cityData[1] as String,
+        areaName: cityData[2] as String,
+        provinceCode: cityData[3] as String,
+        cityCode: cityData[4] as String,
+        areaCode: cityData[5] as String,
+      ));
+    }
+  }
+
+  void updateAddressDetail(String addressDetail) {
+    emit(state.copyWith(addressDetail: addressDetail));
   }
 
   Future<bool> save(BuildContext context) async {
+    // 验证必填字段（遵循单一职责原则）
     if (state.name.isEmpty) {
       emit(state.copyWith(
         hasError: true,
@@ -69,10 +86,18 @@ class StationEditCtrl extends Cubit<StationEditState> {
       return false;
     }
 
-    if (state.address.isEmpty) {
+    if (state.provinceCode.isEmpty || state.cityCode.isEmpty || state.areaCode.isEmpty) {
       emit(state.copyWith(
         hasError: true,
-        errorMessage: '请输入加油站地址',
+        errorMessage: '请选择省市区',
+      ));
+      return false;
+    }
+
+    if (state.addressDetail.isEmpty) {
+      emit(state.copyWith(
+        hasError: true,
+        errorMessage: '请输入详细地址',
       ));
       return false;
     }
@@ -82,14 +107,17 @@ class StationEditCtrl extends Cubit<StationEditState> {
     try {
       await Future.delayed(const Duration(milliseconds: 500));
 
+      // 构建完整地址（遵循 DRY 原则）
+      final fullAddress = '${state.provinceName}${state.cityName}${state.areaName}${state.addressDetail}';
+
       final updatedStation = state.station?.copyWith(
             name: state.name,
-            address: state.address,
+            address: fullAddress,
           ) ??
           StationModel(
             id: DateTime.now().millisecondsSinceEpoch.toString(),
             name: state.name,
-            address: state.address,
+            address: fullAddress,
           );
 
       final index = _mockStations.indexWhere((s) => s.id == updatedStation.id);
