@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/global/app_controller.dart';
+import 'package:oil_business_app/global/enum/common.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/models/station_model.dart';
 import 'package:oil_business_app/pages/station_list/state.dart';
 import 'package:oil_business_app/router/router.dart';
@@ -8,47 +10,49 @@ import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
 
 class StationListCtrl extends Cubit<StationListState> {
-  StationListCtrl() : super(StationListState(stations: _mockStations)) {
+  StationListCtrl() : super(StationListState(stations: [])) {
     initState();
   }
 
-  static final List<StationModel> _mockStations = [
-    StationModel(
-      id: '1',
-      name: '中石化北京朝阳加油站',
-      address: '北京市朝阳区建国路88号',
-      latitude: 39.9042,
-      longitude: 116.4074,
-    ),
-    StationModel(
-      id: '2',
-      name: '中石油上海浦东加油站',
-      address: '上海市浦东新区世纪大道1000号',
-      latitude: 31.2304,
-      longitude: 121.4737,
-    ),
-    StationModel(
-      id: '3',
-      name: '中海油广州天河加油站',
-      address: '广州市天河区天河路123号',
-      latitude: 23.1291,
-      longitude: 113.2644,
-    ),
-    StationModel(
-      id: '4',
-      name: '中石化深圳南山加油站',
-      address: '深圳市南山区科技园南路2001号',
-      latitude: 22.5431,
-      longitude: 113.9344,
-    ),
-  ];
+  /// 将 Station 转换为 StationModel
+  /// 遵循 KISS 原则，直接映射字段
+  StationModel _convertToStationModel(Station station) {
+    return StationModel(
+      id: station.id?.toString() ?? '',
+      name: station.stationName ?? '',
+      address: _buildFullAddress(station),
+      latitude: null, // API 暂未返回坐标信息
+      longitude: null,
+      isActive: station.status == StationStatus.active,
+    );
+  }
+
+  /// 构建完整地址
+  /// 遵循 DRY 原则，避免地址拼接逻辑重复
+  String _buildFullAddress(Station station) {
+    final parts = [
+      station.provinceName,
+      station.cityName,
+      station.areaName,
+      station.addressDetail,
+    ].where((part) => part != null && part.isNotEmpty);
+    return parts.join('');
+  }
 
   void initState() async {
     emit(state.copyWith(isLoading: true));
     try {
-      await Future.delayed(const Duration(milliseconds: 300));
+      // 调用真实 API 获取加油站数据
+      // 只获取已激活的加油站（YAGNI 原则，仅实现当前需求）
+      final response = await appController.getStationStatus();
+
+      // 转换数据模型
+      final stations = (response.list ?? [])
+          .map((station) => _convertToStationModel(station))
+          .toList();
+
       emit(state.copyWith(
-        stations: _mockStations,
+        stations: stations,
         isLoading: false,
         hasError: false,
       ));
