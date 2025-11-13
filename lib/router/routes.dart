@@ -57,22 +57,8 @@ enum AppPage {
   /// 员工管理
   employeeManagementPage('/employeeManagement'),
 
-  /// 赠送彩票
-  giftLotteryPage('/giftLottery'),
-
-  /// 赠送彩票二维码静态
-  giftLotteryQrStaticPage('/giftLotteryQrStatic'),
-
-  /// 赠送彩票二维码动态
-  giftLotteryQrDynamicPage('/giftLotteryQrDynamic'),
-
-  /// 赠送记录
-  giftRecordsPage('/giftRecords'),
-
   /// 统一支付页面
   unifiedPaymentPage('/unifiedPayment'),
-
-  payOrderDetailPage('/payOrderDetail/:uuid'),
 
   /// 修改密码（个人中心）
   changePasswordPage('/changePassword'),

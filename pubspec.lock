@@ -657,7 +657,7 @@ packages:
       path: "."
       ref: HEAD
       resolved-ref: b38ec78886fa05068d67b54caf22650ab71205a2
-      url: "git://github.com/yangyxd/flutter_picker.git"
+      url: "https://github.com/yangyxd/flutter_picker.git"
     source: git
     version: "2.1.2"
   flutter_picker_plus:
