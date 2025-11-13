@@ -6,7 +6,6 @@ import 'package:oil_business_app/global/model/auth_req_type.dart';
 import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
-import 'package:oil_business_app/utils/log.dart';
 
 import 'state.dart';
 
@@ -44,14 +43,21 @@ class OtpCtrl extends Cubit<OtpState> {
   sendOtp({required String type}) async {
     emit(state.copyWith(phone: phoneController.text, loading: true));
 
-    await authService.sendCode(
-      SendCodeRequest(phone: phoneController.text, type: 'register'),
-    );
-    emit(state.copyWith(loading: false));
-    BaseRouter.push(url: AppPage.otpVerificationPage.path, extra: {
-      "type": type,
-      "phone": phoneController.text,
-    });
+    try {
+      await authService.sendCode(
+        SendCodeRequest(phone: phoneController.text, type: 'register'),
+      );
+      emit(state.copyWith(loading: false));
+      BaseRouter.push(url: AppPage.otpVerificationPage.path, extra: {
+        "type": type,
+        "phone": phoneController.text,
+      });
+    } catch (e) {
+      // 发生错误时重置 loading 状态，避免页面卡住
+      emit(state.copyWith(loading: false));
+      debugPrint('发送验证码失败: $e');
+      // 错误已被捕获，不再向上传播，避免页面崩溃
+    }
   }
 
   submit({required String type}) async {

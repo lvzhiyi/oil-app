@@ -22,11 +22,10 @@ class OtpVerificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => otpCtrl,
-      child: BlocBuilder<OtpCtrl, OtpState>(builder: (context, state) {
-        final ctrl = context.read<OtpCtrl>();
-        return Scaffold(
+    // 直接使用全局 otpCtrl，不再创建新的 BlocProvider
+    // 避免在页面销毁时关闭全局单例
+    final ctrl = otpCtrl;
+    return Scaffold(
           body: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(22)),
@@ -159,7 +158,5 @@ class OtpVerificationScreen extends StatelessWidget {
             ),
           ),
         );
-      }),
-    );
   }
 }
