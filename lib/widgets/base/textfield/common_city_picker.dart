@@ -32,6 +32,7 @@ class CommonCityPickerFormField extends StatefulWidget {
   final bool? isCountryLabelVisible;
   final String? name;
   final String? Function(String?)? validators;
+  final List<String>? initialCityData; // 新增：初始省市区数据 [provinceCode, cityCode, areaCode]
 
   const CommonCityPickerFormField({
     super.key,
@@ -58,6 +59,7 @@ class CommonCityPickerFormField extends StatefulWidget {
     this.isCountryLabelVisible = false,
     this.name,
     this.validators,
+    this.initialCityData,
   });
 
   @override
@@ -69,6 +71,7 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
   late FocusNode _focusNode;
 
   List<dynamic> cityData = [];
+  List<int> selectedIndexes = [0, 0, 0]; // 存储当前选中的索引
 
   @override
   void initState() {
@@ -83,8 +86,50 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
     loadJsonFromAssets().then((value) {
       setState(() {
         cityData = value;
+        // 如果有初始值，计算对应的索引
+        if (widget.initialCityData != null && widget.initialCityData!.length >= 3) {
+          selectedIndexes = _findIndexesByCodes(
+            widget.initialCityData![0],
+            widget.initialCityData![1],
+            widget.initialCityData![2],
+          );
+        }
       });
     });
+  }
+
+  /// 根据省市区代码查找对应的索引
+  /// 遵循 KISS 原则，使用简单的遍历查找
+  List<int> _findIndexesByCodes(String provinceCode, String cityCode, String areaCode) {
+    int provinceIndex = 0;
+    int cityIndex = 0;
+    int areaIndex = 0;
+
+    // 查找省份索引
+    for (int i = 0; i < cityData.length; i++) {
+      if (cityData[i]['code'] == provinceCode) {
+        provinceIndex = i;
+        // 查找城市索引
+        final cities = cityData[i]['children'] as List<dynamic>;
+        for (int j = 0; j < cities.length; j++) {
+          if (cities[j]['code'] == cityCode) {
+            cityIndex = j;
+            // 查找区县索引
+            final areas = cities[j]['children'] as List<dynamic>;
+            for (int k = 0; k < areas.length; k++) {
+              if (areas[k]['code'] == areaCode) {
+                areaIndex = k;
+                break;
+              }
+            }
+            break;
+          }
+        }
+        break;
+      }
+    }
+
+    return [provinceIndex, cityIndex, areaIndex];
   }
 
   Future<List<dynamic>> loadJsonFromAssets() async {
@@ -133,6 +178,7 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
       itemExtent: AppSizes.setHeight(28),
       confirmText: '确定',
       cancelText: '取消',
+      selecteds: selectedIndexes, // 设置默认选中的索引
       onConfirm: (Picker picker, List value) {
         final provinceCode = cityData[value[0]]['code'];
         final provinceName = cityData[value[0]]['name'];
@@ -144,6 +190,12 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
             [value[2]]['name'];
         final text = '$provinceName $cityName $areaName';
         widget.controller?.text = text;
+
+        // 更新当前选中的索引（遵循单一职责原则）
+        setState(() {
+          selectedIndexes = [value[0], value[1], value[2]];
+        });
+
         widget.onChanged?.call([
           provinceName,
           cityName,
