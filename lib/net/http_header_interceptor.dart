@@ -25,7 +25,7 @@ class HttpHeaderInterceptor extends BaseInterceptor {
         BaseConfig.appContext?.read<AppController>().state.authResponse;
     // 获取认证信息
     final _accessToken = authResponse?.accessToken;
-
+    print('authResponse: $_accessToken');
     DeviceInfo _deviceDetail = deviceInfo ?? BaseConfig.share.deviceInfo;
 
     if (options.method == "GET") {

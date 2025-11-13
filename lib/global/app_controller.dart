@@ -49,12 +49,22 @@ class AppController extends HydratedCubit<AppState>
   /// 绑定加油站流程
   bindStationProcess({bool isFromLogin = false}) async {
     final pendingAndActiveStation = await getStationStatus();
-    print('pendingAndActiveStation: ${pendingAndActiveStation.list}');
-    if (pendingAndActiveStation.list.isEmpty) {
+    if (pendingAndActiveStation.list?.isEmpty ?? true) {
       BaseRouter.push(url: AppPage.bindStationPage.path, extra: {
         'isFromLogin': isFromLogin,
       });
-      return;
+    } else {
+      /// 查找有没有审核过的页面
+      final findStationActive = pendingAndActiveStation.list?.firstWhere(
+        (element) => element.status == StationStatus.active,
+        orElse: () => Station(),
+      );
+      if (findStationActive?.id != null) {
+        BaseRouter.replace(url: AppPage.mainLayoutPage.path);
+        return;
+      }
+
+      BaseRouter.replace(url: AppPage.pendingReviewPage.path);
     }
   }
 
