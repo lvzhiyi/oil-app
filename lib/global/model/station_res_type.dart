@@ -1,19 +1,21 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:oil_business_app/global/enum/common.dart';
 
 part 'station_res_type.g.dart';
 
 @JsonSerializable()
 class GetStationResponse {
-  final int page;
-  final int pageSize;
-  final int total;
-  final List<Station> list;
+  final int? page;
+  final int? pageSize;
+  final int? total;
+  final List<Station>? list;
 
-  GetStationResponse(
-      {required this.page,
-      required this.pageSize,
-      required this.total,
-      required this.list});
+  GetStationResponse({
+    this.page,
+    this.pageSize,
+    this.total,
+    this.list,
+  });
 
   factory GetStationResponse.fromJson(Map<String, dynamic> json) =>
       _$GetStationResponseFromJson(json);
@@ -23,16 +25,36 @@ class GetStationResponse {
 
 @JsonSerializable()
 class Station {
-  final int id;
-  final String phone;
-  final String name;
-  final int status;
+  final int? id;
+  final String? stationName;
+  final String? provinceCode;
+  final String? provinceName;
+  final String? cityCode;
+  final String? cityName;
+  final String? areaCode;
+  final String? areaName;
+  final String? addressDetail;
+  final String? businessLicenseUrl;
+  final String? fuelRetailPermitUrl;
+  final StationStatus? status;
+  final String? createdAt;
+  final String? updatedAt;
 
   Station(
-      {required this.id,
-      required this.phone,
-      required this.name,
-      required this.status});
+      {this.id,
+      this.stationName,
+      this.provinceCode,
+      this.provinceName,
+      this.cityCode,
+      this.cityName,
+      this.areaCode,
+      this.areaName,
+      this.addressDetail,
+      this.businessLicenseUrl,
+      this.fuelRetailPermitUrl,
+      this.status,
+      this.createdAt,
+      this.updatedAt});
 
   factory Station.fromJson(Map<String, dynamic> json) =>
       _$StationFromJson(json);

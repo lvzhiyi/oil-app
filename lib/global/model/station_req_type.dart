@@ -54,4 +54,29 @@ class BindStationRequest {
         'businessLicenseUrl': businessLicenseUrl,
         'fuelRetailPermitUrl': fuelRetailPermitUrl,
       };
+
+  BindStationRequest copyWith({
+    String? stationName,
+    String? provinceCode,
+    String? provinceName,
+    String? cityCode,
+    String? cityName,
+    String? areaCode,
+    String? areaName,
+    String? addressDetail,
+    String? businessLicenseUrl,
+    String? fuelRetailPermitUrl,
+  }) =>
+      BindStationRequest(
+        stationName: stationName ?? this.stationName,
+        provinceCode: provinceCode ?? this.provinceCode,
+        provinceName: provinceName ?? this.provinceName,
+        cityCode: cityCode ?? this.cityCode,
+        cityName: cityName ?? this.cityName,
+        areaCode: areaCode ?? this.areaCode,
+        areaName: areaName ?? this.areaName,
+        addressDetail: addressDetail ?? this.addressDetail,
+        businessLicenseUrl: businessLicenseUrl ?? this.businessLicenseUrl,
+        fuelRetailPermitUrl: fuelRetailPermitUrl ?? this.fuelRetailPermitUrl,
+      );
 }

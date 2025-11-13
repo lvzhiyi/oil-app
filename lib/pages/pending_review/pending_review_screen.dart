@@ -30,15 +30,23 @@ class _PendingReviewScreenState extends State<PendingReviewScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: AppSizes.setHeight(61)),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Image.asset(
-                    AssetsIcon.IC_LEFT_ARROW,
-                    width: AppSizes.setWidth(20),
-                    height: AppSizes.setHeight(20),
-                  ),
+              // GestureDetector(
+              //   child: Padding(
+              //     padding: EdgeInsets.only(top: AppSizes.setHeight(61)),
+              //     child: Align(
+              //       alignment: Alignment.topLeft,
+              //       child: Image.asset(
+              //         AssetsIcon.IC_LEFT_ARROW,
+              //         width: AppSizes.setWidth(20),
+              //         height: AppSizes.setHeight(20),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              GestureDetector(
+                child: Padding(
+                  padding: EdgeInsets.only(top: AppSizes.setHeight(61)),
+                  child: Container(),
                 ),
               ),
               Image.asset(
@@ -74,14 +82,14 @@ class _PendingReviewScreenState extends State<PendingReviewScreen> {
                   width: AppSizes.setWidth(200),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(20)),
-                child: CommonButton(
-                  onTap: () =>
-                      BaseRouter.push(url: AppPage.bindStationPage.path),
-                  btnText: '新增加油站',
-                ),
-              ),
+              // Padding(
+              //   padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(20)),
+              //   child: CommonButton(
+              //     onTap: () =>
+              //         BaseRouter.push(url: AppPage.bindStationPage.path),
+              //     btnText: '新增加油站',
+              //   ),
+              // ),
             ],
           ),
         ),
