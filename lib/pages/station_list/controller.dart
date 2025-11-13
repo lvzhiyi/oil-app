@@ -78,6 +78,12 @@ class StationListCtrl extends Cubit<StationListState> {
     );
   }
 
+  /// 跳转到新增加油站页面
+  /// 遵循 KISS 原则，不传递 stationId 即为新增模式
+  void navigateToAdd(BuildContext context) {
+    BaseRouter.push(url: AppPage.stationEditPage.path);
+  }
+
   void updateStation(StationModel station) {
     final updated = state.stations.map((s) {
       return s.id == station.id ? station : s;

@@ -91,9 +91,7 @@ class StationListScreen extends StatelessWidget {
               width: AppSizes.setWidth(150),
               height: AppSizes.setHeight(44),
               fontSize: AppSizes.setFontSize(14),
-              onTap: () {
-                // 预留功能，暂不实现
-              },
+              onTap: () => controller.navigateToAdd(context),
             ),
           ],
         ),
@@ -149,9 +147,7 @@ class StationListScreen extends StatelessWidget {
         btnText: '新增加油站',
         height: AppSizes.setHeight(52),
         fontSize: AppSizes.setFontSize(15),
-        onTap: () {
-          // 预留功能，暂不实现
-        },
+        onTap: () => controller.navigateToAdd(context),
       ),
     );
   }
