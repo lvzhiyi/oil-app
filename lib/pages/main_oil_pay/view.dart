@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:oil_business_app/pages/main_oil_pay/controller.dart';
-import 'package:oil_business_app/pages/main_oil_pay/model/oil_order_res.type.dart';
 import 'package:oil_business_app/resources/colors.dart';
-import 'package:oil_business_app/resources/size.dart';
 import 'package:oil_business_app/resources/style.dart';
+import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/static/img.dart';
 import 'package:oil_business_app/utils/pt.dart';
 import 'package:oil_business_app/widgets/common/empty_card.dart';
 import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
 
 import 'state.dart';
+import 'widgets/depots_item.dart';
 
 class MainOilPayView extends StatefulWidget {
   final MainOilPayState state;
@@ -47,14 +48,16 @@ class _MainOilPayViewState extends State<MainOilPayView> {
     final state = widget.state;
 
     // 加载中且无数据
-    if (state.isLoading && (state.depotList == null || state.depotList!.isEmpty)) {
+    if (state.isLoading &&
+        (state.depotList == null || state.depotList!.isEmpty)) {
       return const Center(
         child: CircularProgressIndicator(),
       );
     }
 
     // 错误状态
-    if (state.errorMessage != null && (state.depotList == null || state.depotList!.isEmpty)) {
+    if (state.errorMessage != null &&
+        (state.depotList == null || state.depotList!.isEmpty)) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -121,167 +124,17 @@ class _MainOilPayViewState extends State<MainOilPayView> {
         itemCount: state.depotList?.length ?? 0,
         itemBuilder: (context, index) {
           final depot = state.depotList![index];
-          return _DepotCard(depot: depot);
+          return DepotsItemWidget(
+            depot: depot,
+            onTap: () {
+              BaseRouter.push(
+                context: context,
+                url: AppPage.oilPurchaseDetailPage.path,
+                extra: {'depot': depot},
+              );
+            },
+          );
         },
-      ),
-    );
-  }
-}
-
-/// 油库卡片组件
-class _DepotCard extends StatelessWidget {
-  final Depot depot;
-
-  const _DepotCard({required this.depot});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: pt(12)),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: AppSize.radius,
-        boxShadow: AppSize.boxShadow,
-      ),
-      child: InkWell(
-        onTap: () {
-          // TODO: 跳转到油库详情或下单页面
-        },
-        borderRadius: AppSize.radius,
-        child: Padding(
-          padding: EdgeInsets.all(pt(16)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 油库名称
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      depot.depotName ?? '未知油库',
-                      style: SportsTextStyle.baseBold.copyWith(
-                        fontSize: pt(18),
-                        color: CustomAppColor.of(context).txtBlack,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Gap(pt(12)),
-              // 地址信息
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.location_on,
-                    size: pt(16),
-                    color: CustomAppColor.of(context).txtGrey,
-                  ),
-                  Gap(pt(6)),
-                  Expanded(
-                    child: Text(
-                      _buildAddress(depot),
-                      style: SportsTextStyle.baseNormal.copyWith(
-                        fontSize: pt(14),
-                        color: CustomAppColor.of(context).txtGrey,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              if (depot.fuels != null && depot.fuels!.isNotEmpty) ...[
-                Gap(pt(16)),
-                const Divider(height: 1),
-                Gap(pt(12)),
-                // 油品列表
-                Text(
-                  '油品信息',
-                  style: SportsTextStyle.baseNormal.copyWith(
-                    fontSize: pt(12),
-                    color: CustomAppColor.of(context).txtGrey,
-                  ),
-                ),
-                Gap(pt(8)),
-                Wrap(
-                  spacing: pt(8),
-                  runSpacing: pt(8),
-                  children: depot.fuels!.map((fuel) {
-                    return _FuelTag(
-                      fuelType: fuel.fuelType ?? '',
-                      price: fuel.priceCny ?? 0,
-                    );
-                  }).toList(),
-                ),
-              ],
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  String _buildAddress(Depot depot) {
-    final parts = <String>[];
-    if (depot.provinceName != null && depot.provinceName!.isNotEmpty) {
-      parts.add(depot.provinceName!);
-    }
-    if (depot.cityName != null && depot.cityName!.isNotEmpty) {
-      parts.add(depot.cityName!);
-    }
-    if (depot.areaName != null && depot.areaName!.isNotEmpty) {
-      parts.add(depot.areaName!);
-    }
-    if (depot.addressDetail != null && depot.addressDetail!.isNotEmpty) {
-      parts.add(depot.addressDetail!);
-    }
-    return parts.isEmpty ? '地址信息暂无' : parts.join(' ');
-  }
-}
-
-/// 油品标签组件
-class _FuelTag extends StatelessWidget {
-  final String fuelType;
-  final double price;
-
-  const _FuelTag({
-    required this.fuelType,
-    required this.price,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: pt(12),
-        vertical: pt(6),
-      ),
-      decoration: BoxDecoration(
-        color: AppColor.cardBlue.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(pt(6)),
-        border: Border.all(
-          color: AppColor.btnPurple.withValues(alpha: 0.3),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            fuelType,
-            style: SportsTextStyle.baseBold.copyWith(
-              fontSize: pt(12),
-              color: CustomAppColor.of(context).txtBlack,
-            ),
-          ),
-          Gap(pt(4)),
-          Text(
-            '¥${price.toStringAsFixed(2)}',
-            style: SportsTextStyle.baseBold.copyWith(
-              fontSize: pt(14),
-              color: AppColor.txtRed,
-            ),
-          ),
-        ],
       ),
     );
   }

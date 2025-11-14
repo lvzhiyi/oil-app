@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oil_business_app/pages/bind_station/page.dart';
-import 'package:oil_business_app/pages/bind_station/widgets/bind_station_screen.dart';
 import 'package:oil_business_app/pages/otp/page.dart';
 import 'package:oil_business_app/pages/otp/widgets/otp_verification_screen.dart';
+import 'package:oil_business_app/pages/pay_order_detail/page.dart';
 import 'package:oil_business_app/pages/pending_review/pending_review_screen.dart';
 import 'package:oil_business_app/pages/splase/page.dart';
 import 'package:oil_business_app/pages/login/page.dart';
@@ -11,6 +11,7 @@ import 'package:oil_business_app/pages/register/page.dart';
 
 import 'package:oil_business_app/pages/profile/page.dart';
 import 'package:oil_business_app/pages/main_layout/page.dart';
+import 'package:oil_business_app/pages/main_oil_pay/oil_purchase_detail/page.dart';
 import 'package:oil_business_app/router/pageTransition/bottom_to_top_page.dart';
 import 'package:oil_business_app/router/router.dart';
 
@@ -62,6 +63,12 @@ enum AppPage {
 
   /// 修改密码（个人中心）
   changePasswordPage('/changePassword'),
+
+  /// 买油详情页面
+  oilPurchaseDetailPage('/oilPurchaseDetail'),
+
+  /// 支付订单详情页面
+  payOrderDetailPage('/payOrderDetail'),
   ;
 
   const AppPage(this.path);
@@ -116,6 +123,15 @@ extension PageRoute on AppPage {
 
       case AppPage.profilePage:
         return (context, state) => const ProfilePage();
+
+      case AppPage.oilPurchaseDetailPage:
+        return (context, state) => OilPurchaseDetailPage(
+              extra: state.extra as Map<String, dynamic>? ?? {},
+            );
+
+      case AppPage.payOrderDetailPage:
+        return (context, state) =>
+            PayOrderDetailPage(uuid: state.extra as String? ?? '');
 
       default:
         return (context, state) => const Text('404');

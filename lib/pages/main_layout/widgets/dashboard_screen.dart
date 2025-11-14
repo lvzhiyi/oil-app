@@ -54,15 +54,15 @@ class _DashboardScreenState extends State<DashboardScreen>
             TopBar(
               this,
               title: selectedBottomIndex == 0
-                  ? '买油111'
+                  ? '买油'
                   : selectedBottomIndex == 1
                       ? '提油'
                       : selectedBottomIndex == 2
                           ? '我的'
                           : "",
               isShowProfile: selectedBottomIndex == 0,
-              isShowNotification: selectedBottomIndex == 0,
-              isShowLike: selectedBottomIndex == 0 || selectedBottomIndex == 1,
+              isShowNotification: false,
+              isShowLike: selectedBottomIndex == 1,
               isShowSearchField: selectedBottomIndex == 1 ? true : false,
               height: 120,
               isShowCart: selectedBottomIndex == 0 ||

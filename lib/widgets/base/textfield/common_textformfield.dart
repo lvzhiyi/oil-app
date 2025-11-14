@@ -276,7 +276,7 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
         validator: widget.validators != null
             ? FormBuilderValidators.compose([widget.validators!])
             : FormBuilderValidators.required(
-                errorText: '${widget.name} is required'),
+                errorText: widget.hintText ?? '${widget.labelText ?? ""} 不能为空'),
       );
     }
   }
