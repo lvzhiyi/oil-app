@@ -42,22 +42,22 @@ enum FileUploadTypeEnum {
   final String value;
 }
 
+/// 订单状态枚举
 enum OrderStatus {
-  Pending('待支付', 'pending'),
-  Canceled('已取消', 'canceled'),
-  Success('支付成功', 'success'),
-  Failed('支付失败', 'failed'),
-  Submitted('已上传凭证', 'submitted');
+  PendingPayment('待支付', 10),
+  PaymentUploaded('已支付', 20),
+  Cancelled('已取消', 30),
+  Completed('已完成', 40);
 
   const OrderStatus(this.displayName, this.value);
 
   final String displayName;
-  final String value;
+  final int value;
 
-  static OrderStatus fromValue(String value) {
+  static OrderStatus fromValue(int value) {
     return OrderStatus.values.firstWhere(
       (e) => e.value == value,
-      orElse: () => OrderStatus.Pending,
+      orElse: () => OrderStatus.PendingPayment,
     );
   }
 }

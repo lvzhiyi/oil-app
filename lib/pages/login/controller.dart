@@ -7,8 +7,6 @@ import 'package:oil_business_app/global/model/auth_req_type.dart';
 import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/pages/login/state.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:oil_business_app/router/router.dart';
-import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
 
 class LoginCtrl extends Cubit<LoginState> {

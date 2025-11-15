@@ -13,7 +13,6 @@ import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/pt.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
-import 'package:oil_business_app/global/enum/common.dart';
 
 import 'state.dart';
 import 'controller.dart';
@@ -188,8 +187,7 @@ class PayOrderDetailView extends HookWidget {
           ),
           SizedBox(height: pt(16)),
           _buildOrderInfoRow('订单编号', orderDetail.uuid ?? '-'),
-          if (orderDetail.isBalanceRecharge)
-            _buildOrderInfoRow('充值金额', '¥${orderDetail.quota}'),
+          _buildOrderInfoRow('充值金额', '¥${orderDetail.quota}'),
           _buildOrderInfoRow('订单状态', 'ordertype'),
           _buildOrderInfoRow('提交时间', _formatDateTime(orderDetail.createTime)),
           if (!orderDetail.isUnPaid)

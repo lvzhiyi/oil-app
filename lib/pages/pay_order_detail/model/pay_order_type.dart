@@ -151,25 +151,17 @@ class PayOrderDetailModel {
     );
   }
 
-  /// 是否为套餐购买
-  bool get isPackagePurchase => type == 'package';
-
-  /// 是否为余额充值
-  bool get isBalanceRecharge => type == 'balance';
-
   /// 是否已取消
-  bool get isCanceled => status == 'canceled';
+  bool get isCanceled => status == OrderStatus.Cancelled.value;
 
   /// 是否为未支付
-  bool get isUnPaid => status == OrderStatus.Pending.value;
+  bool get isUnPaid => status == OrderStatus.PendingPayment.value;
 
   /// 是否已上传凭证
-  bool get isSubmitted => status == OrderStatus.Submitted.value;
+  bool get isSubmitted => status == OrderStatus.PaymentUploaded.value;
 
   /// 是否已完成
-  bool get isCompleted =>
-      status == OrderStatus.Success.value ||
-      status == OrderStatus.Canceled.value;
+  bool get isCompleted => status == OrderStatus.Completed.value;
 }
 
 /// 取消充值请求体：{ "uuid": "..." }

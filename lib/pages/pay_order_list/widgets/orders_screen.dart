@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:oil_business_app/global/enum/common.dart';
+import 'package:oil_business_app/pages/pay_order_list/controller.dart';
+import 'package:oil_business_app/pages/pay_order_list/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/static/img.dart';
@@ -8,26 +13,15 @@ import 'package:oil_business_app/widgets/base/bottom_sheet/bottom_sheet.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/base/topbar/topbar.dart';
+import 'package:oil_business_app/widgets/common/page_loading.dart';
+import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
 
 import '../../../../../../interfaces/top_bar_click_listener.dart';
 import '../model/orders_data.dart';
 
 class OrdersScreen extends StatefulWidget {
-  final bool isForReasonOfCancellationBs;
-  final bool isForOrderCancelBs;
-  const OrdersScreen(
-      {super.key,
-      this.isForOrderCancelBs = false,
-      this.isForReasonOfCancellationBs = false});
-  static Route route(
-      {bool isForReasonOfCancellationBs = false,
-      bool isForOrderCancelBs = false}) {
-    return MaterialPageRoute(
-        builder: (context) => OrdersScreen(
-              isForOrderCancelBs: isForOrderCancelBs,
-              isForReasonOfCancellationBs: isForReasonOfCancellationBs,
-            ));
-  }
+  final PayOrderListState state;
+  const OrdersScreen({super.key, required this.state});
 
   @override
   State<OrdersScreen> createState() => _OrdersScreenState();
@@ -39,20 +33,12 @@ class _OrdersScreenState extends State<OrdersScreen>
   late TabController _tabController;
   List<String> tabList = [];
 
-  List<OrderModel> orders = [];
-
   List<ReasonOfCancellationData> reasons = [];
   bool _isBottomSheetOpen = false;
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-
-    if (widget.isForReasonOfCancellationBs) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        showReasonOrderCancelBS();
-      });
-    }
   }
 
   @override
@@ -63,88 +49,6 @@ class _OrdersScreenState extends State<OrdersScreen>
       '待支付',
       '已支付',
       '已取消',
-    ];
-  }
-
-  void fillData() {
-    orders = [
-      OrderModel(
-        status: '已支付',
-        date: '2025-01-01',
-        orderId: '1234567890',
-        productName: '商品名称',
-        iconUrl: AssetsIcon.IC_CHECK,
-        price: 299.0,
-        paymentMode: "COD",
-        size: "M",
-        quantity: 1,
-        imageUrl: '',
-        actions: ['取消订单'],
-      ),
-      OrderModel(
-        status: '已支付',
-        date: '2025-01-01',
-        orderId: '1234567890',
-        productName: '商品名称',
-        iconUrl: AssetsIcon.IC_CHECK,
-        price: 299.0,
-        paymentMode: "COD",
-        size: "M",
-        quantity: 1,
-        imageUrl: '',
-        actions: ['取消订单'],
-      ),
-      OrderModel(
-        status: '已支付',
-        date: '2025-01-01',
-        orderId: '1234567890',
-        productName: '商品名称',
-        iconUrl: AssetsIcon.IC_CLOSE_SQUARE,
-        price: 299.0,
-        paymentMode: "COD",
-        size: "M",
-        quantity: 1,
-        imageUrl: '',
-        actions: ['取消订单'],
-      ),
-      OrderModel(
-        status: '已支付',
-        date: '2025-01-01',
-        orderId: '1234567890',
-        productName: '商品名称',
-        iconUrl: AssetsIcon.IC_CLOSE_SQUARE,
-        price: 299.0,
-        paymentMode: "COD",
-        size: "M",
-        quantity: 1,
-        imageUrl: '',
-        actions: ['取消订单'],
-      ),
-      OrderModel(
-        status: '已支付',
-        date: '2025-01-01',
-        orderId: '1234567890',
-        productName: '商品名称',
-        iconUrl: AssetsIcon.IC_CLOSE_SQUARE,
-        price: 299.0,
-        paymentMode: "COD",
-        size: "M",
-        quantity: 1,
-        imageUrl: '',
-      ),
-      OrderModel(
-        status: '已支付',
-        date: '2025-01-01',
-        orderId: '1234567890',
-        productName: '商品名称',
-        iconUrl: AssetsIcon.IC_CLOSE_SQUARE,
-        price: 299.0,
-        paymentMode: "COD",
-        size: "M",
-        quantity: 1,
-        imageUrl: '',
-        actions: ['取消订单'],
-      ),
     ];
   }
 
@@ -257,116 +161,55 @@ class _OrdersScreenState extends State<OrdersScreen>
 
   @override
   Widget build(BuildContext context) {
-    fillData();
-    return PopScope(
-      canPop: !_isBottomSheetOpen,
-      onPopInvokedWithResult: (didPop, result) {
-        if (!didPop && _isBottomSheetOpen) {
-          Navigator.pop(context);
-          setState(() {
-            _isBottomSheetOpen = false;
-          });
-          Navigator.pop(context);
-        }
-      },
-      child: Scaffold(
-        backgroundColor: CustomAppColor.of(context).bgTopBar,
-        body: Column(
-          children: [
-            TopBar(
-              this,
-              title: '买油订单',
-              isShowProfile: false,
-              isShowNotification: false,
-              isShowLike: false,
-              isShowSearchField: false,
-              height: 120,
-              isShowCart: false,
-              topBarColor: CustomAppColor(context).bgTopBar,
-              isShowShadow: false,
-              textColor: CustomAppColor.of(context).txtAppBar,
-              isShowCartCount: false,
+    return Scaffold(
+      backgroundColor: CustomAppColor.of(context).bgTopBar,
+      body: Column(
+        children: [
+          TopBar(
+            this,
+            title: '买油订单',
+            isShowProfile: false,
+            isShowNotification: false,
+            isShowLike: false,
+            isShowSearchField: false,
+            height: 120,
+            isShowCart: false,
+            topBarColor: CustomAppColor(context).bgTopBar,
+            isShowShadow: false,
+            textColor: CustomAppColor.of(context).txtAppBar,
+            isShowCartCount: false,
+          ),
+          _tabBar(),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: tabList.map((tab) {
+                return OilPageLoading(
+                  status: widget.state.pageStatus,
+                  child: PullOrRefreshEasy(
+                    onRefresh: () async {
+                      context.read<PayOrderListCtrl>().onRefresh();
+                    },
+                    onLoading: () async {
+                      context.read<PayOrderListCtrl>().onLoading();
+                    },
+                    refreshController:
+                        context.read<PayOrderListCtrl>().refreshController,
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      itemCount: widget.state.orderList?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        final order =
+                            widget.state.orderList?[index] ?? OrderModel();
+                        return _buildOrderCard(order, context);
+                      },
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
-            _tabBar(),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: tabList.map((tab) {
-                  if (tab == '全部') {
-                    return ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: orders.length,
-                      itemBuilder: (context, index) {
-                        final order = orders[index];
-                        return _buildOrderCard(order, context);
-                      },
-                    );
-                  } else if (tab == '待支付') {
-                    final pendingOrders =
-                        orders.where((order) => order.status == '待支付').toList();
-
-                    if (pendingOrders.isEmpty) {
-                      return Center(
-                        child: _emptyHistory(context),
-                      );
-                    }
-
-                    return ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: pendingOrders.length,
-                      itemBuilder: (context, index) {
-                        final order = pendingOrders[index];
-                        return _buildOrderCard(order, context);
-                      },
-                    );
-                  } else if (tab == '已支付') {
-                    final pendingOrders =
-                        orders.where((order) => order.status == '已支付').toList();
-
-                    if (pendingOrders.isEmpty) {
-                      return Center(
-                        child: _emptyHistory(context),
-                      );
-                    }
-
-                    return ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: pendingOrders.length,
-                      itemBuilder: (context, index) {
-                        final order = pendingOrders[index];
-                        return _buildOrderCard(order, context);
-                      },
-                    );
-                  } else if (tab == '已取消') {
-                    final deliveredOrder =
-                        orders.where((order) => order.status == '已取消').toList();
-
-                    if (deliveredOrder.isNotEmpty) {
-                      return Center(
-                        child: _emptyHistory(context),
-                      );
-                    }
-
-                    return ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: deliveredOrder.length,
-                      itemBuilder: (context, index) {
-                        final order = deliveredOrder[index];
-                        return _buildOrderCard(order, context);
-                      },
-                    );
-                  } else {
-                    return Center(
-                      child: SingleChildScrollView(
-                        child: _emptyHistory(context),
-                      ),
-                    );
-                  }
-                }).toList(),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -377,9 +220,8 @@ class _OrdersScreenState extends State<OrdersScreen>
       child: TabBar(
         padding: EdgeInsets.zero,
         controller: _tabController,
-        tabAlignment: TabAlignment.start,
         labelPadding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(14)),
-        isScrollable: true,
+        isScrollable: false,
         unselectedLabelColor: AppColor.txtGrey,
         labelStyle: TextStyle(
           fontFamily: Constant.fontFamilyUrbanist,
@@ -402,6 +244,12 @@ class _OrdersScreenState extends State<OrdersScreen>
   }
 
   Widget _buildOrderCard(OrderModel order, BuildContext context) {
+    final mapOrderIcon = {
+      OrderStatus.PendingPayment: AssetsIcon.IC_PENDING,
+      OrderStatus.PaymentUploaded: AssetsIcon.IC_PROCESSING,
+      OrderStatus.Cancelled: AssetsIcon.IC_CANCELLED,
+      OrderStatus.Completed: AssetsIcon.IC_CHECK,
+    };
     return Padding(
       padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
       child: Container(
@@ -418,7 +266,7 @@ class _OrdersScreenState extends State<OrdersScreen>
                   padding:
                       EdgeInsets.symmetric(horizontal: AppSizes.setWidth(38)),
                   child: Image.asset(
-                    order.iconUrl,
+                    mapOrderIcon[order.status] ?? '',
                     height: AppSizes.setHeight(32),
                     width: AppSizes.setWidth(32),
                   ),
@@ -428,14 +276,16 @@ class _OrdersScreenState extends State<OrdersScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CommonText(
-                      text: order.status,
+                      text: order.status?.displayName ?? '',
                       fontWeight: FontWeight.w700,
                       fontSize: AppSizes.setFontSize(15),
-                      textColor: _getStatusColor(order.status),
+                      textColor:
+                          _getStatusColor(order.status?.displayName ?? ''),
                     ),
                     SizedBox(height: AppSizes.setWidth(4)),
                     CommonText(
-                      text: order.date,
+                      text: DateFormat('yyyy-MM-dd HH:mm:ss')
+                          .format(DateTime.parse(order.updatedAt ?? '')),
                       fontWeight: FontWeight.w500,
                       fontSize: AppSizes.setFontSize(15),
                       textColor: CustomAppColor.of(context).txtGrey,
@@ -451,7 +301,7 @@ class _OrdersScreenState extends State<OrdersScreen>
                         ),
                         SizedBox(width: AppSizes.setWidth(6)),
                         CommonText(
-                          text: order.orderId,
+                          text: order.depotId?.toString() ?? '',
                           fontWeight: FontWeight.w500,
                           fontSize: AppSizes.setFontSize(15),
                           textColor: CustomAppColor.of(context).txtGrey,
@@ -476,7 +326,7 @@ class _OrdersScreenState extends State<OrdersScreen>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             CommonText(
-                              text: '商品名称',
+                              text: order.fuelType ?? '',
                               fontSize: AppSizes.setFontSize(15),
                               fontWeight: FontWeight.w500,
                             ),
@@ -492,7 +342,9 @@ class _OrdersScreenState extends State<OrdersScreen>
                                 ),
                                 SizedBox(width: AppSizes.setWidth(8)),
                                 CommonText(
-                                  text: "${order.price}",
+                                  text:
+                                      order.fuelPriceCny?.toStringAsFixed(0) ??
+                                          '0',
                                   fontSize: AppSizes.setFontSize(17),
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -511,7 +363,7 @@ class _OrdersScreenState extends State<OrdersScreen>
                             ),
                             SizedBox(width: AppSizes.setWidth(8)),
                             CommonText(
-                              text: order.paymentMode,
+                              text: '对公转账',
                               fontSize: AppSizes.setFontSize(15),
                               fontWeight: FontWeight.w600,
                             ),
@@ -528,7 +380,8 @@ class _OrdersScreenState extends State<OrdersScreen>
                             ),
                             SizedBox(width: AppSizes.setWidth(8)),
                             CommonText(
-                              text: order.quantity.toString(),
+                              text:
+                                  order.purchaseTon?.toStringAsFixed(0) ?? '0',
                               fontSize: AppSizes.setFontSize(15),
                               fontWeight: FontWeight.w600,
                             ),
@@ -541,42 +394,34 @@ class _OrdersScreenState extends State<OrdersScreen>
               ),
             ),
             SizedBox(height: AppSizes.setHeight(10)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: (order.actions ?? []).isNotEmpty
-                  ? order.actions!
-                      .map((action) => Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: AppSizes.setWidth(15),
-                                  vertical: AppSizes.setHeight(10)),
-                              child: IgnorePointer(
-                                ignoring: true,
-                                child: CommonButton(
-                                    height: AppSizes.setHeight(30),
-                                    width: AppSizes.setWidth(158),
-                                    radius: 2,
-                                    borderColor:
-                                        CustomAppColor.of(context).btnPurple,
-                                    buttonColor:
-                                        CustomAppColor.of(context).btnPurple,
-                                    isButtonShadow: true,
-                                    child: CommonText(
-                                      text: action.toUpperCase(),
-                                      textColor:
-                                          CustomAppColor.of(context).white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: AppSizes.setFontSize(12),
-                                    ),
-                                    onTap: () => {}
-                                    // : Navigator.push(context, TrackOrderScreen.route()),
-                                    ),
-                              ),
-                            ),
-                          ))
-                      .toList()
-                  : [],
-            ),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: AppSizes.setWidth(15),
+                      vertical: AppSizes.setHeight(10)),
+                  child: IgnorePointer(
+                    ignoring: true,
+                    child: CommonButton(
+                        height: AppSizes.setHeight(30),
+                        width: AppSizes.setWidth(158),
+                        radius: 2,
+                        borderColor: CustomAppColor.of(context).btnPurple,
+                        buttonColor: CustomAppColor.of(context).btnPurple,
+                        isButtonShadow: true,
+                        child: CommonText(
+                          text: '取消订单',
+                          textColor: CustomAppColor.of(context).white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: AppSizes.setFontSize(12),
+                        ),
+                        onTap: () => {}
+                        // : Navigator.push(context, TrackOrderScreen.route()),
+                        ),
+                  ),
+                ),
+              ),
+            ]),
           ],
         ),
       ),
@@ -585,56 +430,18 @@ class _OrdersScreenState extends State<OrdersScreen>
 
   Color _getStatusColor(String status) {
     switch (status) {
-      case "Order Confirmed":
-        return CustomAppColor.of(context).green;
-      case "Order Cancelled":
+      case '待支付':
+        return CustomAppColor.of(context).txtPurple;
+      case '已取消':
         return CustomAppColor.of(context).red;
-      case "Order Processing":
+      case '已支付':
         return AppColor.containerLightBlue;
-      case "Order Delivered":
+      case '已完成':
         return CustomAppColor.of(context).green;
-      case "Order Pending":
-        return AppColor.orange;
-      case "Order Dispatched":
-        return AppColor.txtDarkBlue;
+
       default:
         return Colors.black;
     }
-  }
-
-  Widget _emptyHistory(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset(
-          AssetsImg.IMG_EMPTY_ORDER,
-          height: AppSizes.setHeight(208),
-          width: AppSizes.setWidth(250),
-        ),
-        SizedBox(height: AppSizes.setHeight(24)),
-        CommonText(
-          text: '订单历史为空',
-          fontWeight: FontWeight.w700,
-          fontSize: AppSizes.setFontSize(15),
-        ),
-        SizedBox(height: AppSizes.setHeight(10)),
-        CommonText(
-          text: '添加商品到购物车',
-          fontWeight: FontWeight.w500,
-          fontSize: AppSizes.setFontSize(12),
-          textColor: CustomAppColor.of(context).txtGrey,
-        ),
-        SizedBox(height: AppSizes.setHeight(24)),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(22)),
-          child: CommonButton(
-            radius: 3,
-            height: AppSizes.setHeight(44),
-            btnText: '去买油',
-          ),
-        )
-      ],
-    );
   }
 
   @override

@@ -11,8 +11,6 @@ class PayOrderListView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OrdersScreen(
-      isForOrderCancelBs: true,
-    );
+    return OrdersScreen(state: state);
   }
 }

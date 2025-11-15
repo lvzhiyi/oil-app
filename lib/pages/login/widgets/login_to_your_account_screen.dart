@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:oil_business_app/pages/login/controller.dart';
-import 'package:oil_business_app/pages/otp/page.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
@@ -174,7 +173,7 @@ class LoginToYourAccountScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(),
+                  padding: const EdgeInsets.only(),
                   child: CommonText(
                     text: '通过登录，您将同意买油呗的',
                     fontSize: AppSizes.setFontSize(15),
