@@ -4,6 +4,7 @@ import 'package:oil_business_app/pages/bind_station/page.dart';
 import 'package:oil_business_app/pages/otp/page.dart';
 import 'package:oil_business_app/pages/otp/widgets/otp_verification_screen.dart';
 import 'package:oil_business_app/pages/pay_order_detail/page.dart';
+import 'package:oil_business_app/pages/pay_order_list/page.dart';
 import 'package:oil_business_app/pages/pending_review/pending_review_screen.dart';
 import 'package:oil_business_app/pages/splase/page.dart';
 import 'package:oil_business_app/pages/login/page.dart';
@@ -16,6 +17,9 @@ import 'package:oil_business_app/router/pageTransition/bottom_to_top_page.dart';
 import 'package:oil_business_app/router/router.dart';
 
 enum AppPage {
+  /// 支付订单列表
+  payOrderListPage("/payOrderList"),
+
   /// 审核中
   pendingReviewPage("/pendingReview"),
 
@@ -87,6 +91,9 @@ enum AppPage {
 extension PageRoute on AppPage {
   GoRouterWidgetBuilder get builder {
     switch (this) {
+      case AppPage.payOrderListPage:
+        return (context, state) => const PayOrderListPage();
+
       case AppPage.pendingReviewPage:
         return (context, state) => const PendingReviewScreen();
 

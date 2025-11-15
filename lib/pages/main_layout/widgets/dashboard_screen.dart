@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:oil_business_app/interfaces/top_bar_click_listener.dart';
 import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/topbar/topbar.dart';
 
@@ -65,9 +67,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               isShowLike: selectedBottomIndex == 1,
               isShowSearchField: selectedBottomIndex == 1 ? true : false,
               height: 120,
-              isShowCart: selectedBottomIndex == 0 ||
-                  selectedBottomIndex == 1 ||
-                  selectedBottomIndex == 3,
+              isShowCart: selectedBottomIndex == 0 || selectedBottomIndex == 1,
               topBarColor: selectedBottomIndex == 0
                   ? CustomAppColor(context).bgTopBar
                   : selectedBottomIndex == 1
@@ -81,7 +81,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               textColor: selectedBottomIndex == 0
                   ? CustomAppColor.of(context).txtAppBar
                   : CustomAppColor.of(context).txtBlack,
-              isShowCartCount: selectedBottomIndex == 0 ? true : false,
+              isShowCartCount: false,
             ),
             Expanded(
               child: TabBarView(
@@ -146,6 +146,8 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   @override
   void onTopBarClick(String name, {String value = ""}) {
-    print('name: $name');
+    if (name == 'pay_order_list') {
+      BaseRouter.push(url: AppPage.payOrderListPage.path);
+    }
   }
 }
