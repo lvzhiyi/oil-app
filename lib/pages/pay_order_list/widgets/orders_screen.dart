@@ -12,6 +12,7 @@ import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/bottom_sheet/bottom_sheet.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
+import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dart';
 import 'package:oil_business_app/widgets/base/topbar/topbar.dart';
 import 'package:oil_business_app/widgets/common/page_loading.dart';
 import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
@@ -52,71 +53,42 @@ class _OrdersScreenState extends State<OrdersScreen>
     ];
   }
 
-  void showReasonOrderCancelBS() {
-    setState(() {
-      _isBottomSheetOpen = true;
-    });
-    String? selectedReason;
-
+  void reasonOfCancellation(BuildContext context) {
     customBottomSheet(
       isPaddingRequired: false,
       isDone: false,
       context: context,
-      title: '取消原因'.toUpperCase(),
+      maxHeightRatio: 0.5,
+      title: '取消订单',
       content: StatefulBuilder(
         builder: (context, setState) {
           return ListView(
             physics: const AlwaysScrollableScrollPhysics(),
             children: [
+              // Padding(
+              //   padding:
+              //       EdgeInsets.symmetric(horizontal: AppSizes.setWidth(22)),
+              //   child: CommonText(
+              //     text: '请选择取消订单的原因',
+              //     textColor: CustomAppColor.of(context).txtGrey,
+              //     fontSize: AppSizes.setFontSize(15),
+              //     fontWeight: FontWeight.w500,
+              //     textAlign: TextAlign.start,
+              //   ),
+              // ),
+              SizedBox(height: AppSizes.setHeight(10)),
               Padding(
                 padding:
-                    EdgeInsets.symmetric(horizontal: AppSizes.setWidth(22)),
-                child: const CommonText(
-                  text: '请告诉我们正确的取消原因',
-                  textColor: Colors.grey,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: AppSizes.setHeight(10)),
-              Theme(
-                data: Theme.of(context).copyWith(
-                  unselectedWidgetColor: Colors.grey,
-                  radioTheme: RadioThemeData(
-                    fillColor: WidgetStateProperty.resolveWith<Color>(
-                      (Set<WidgetState> states) {
-                        return states.contains(WidgetState.selected)
-                            ? CustomAppColor.of(context).txtPurple
-                            : CustomAppColor.of(context).txtGrey;
-                      },
-                    ),
+                    EdgeInsets.symmetric(horizontal: AppSizes.setWidth(24)),
+                child: CommonTextFormField(
+                  radius: 6,
+                  hintText: '请输入取消订单的原因',
+                  hintStyle: TextStyle(
+                    color: CustomAppColor.of(context).txtGrey,
+                    fontSize: AppSizes.setFontSize(15),
+                    fontWeight: FontWeight.w500,
                   ),
-                ),
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
-                  child: Column(
-                    children: reasons.map((reason) {
-                      return RadioListTile<String>(
-                        title: CommonText(
-                          text: reason.reason,
-                          textColor: CustomAppColor.of(context).txtGrey,
-                          textAlign: TextAlign.start,
-                        ),
-                        value: reason.reason,
-                        groupValue: selectedReason,
-                        onChanged: (String? value) {
-                          setState(() {
-                            // This updates the state inside the bottom sheet
-                            selectedReason = value;
-                          });
-                        },
-                        dense: true,
-                        visualDensity: VisualDensity.compact,
-                        contentPadding: EdgeInsets.zero,
-                      );
-                    }).toList(),
-                  ),
+                  maxLines: 4,
                 ),
               ),
               SizedBox(height: AppSizes.setHeight(10)),
@@ -133,30 +105,20 @@ class _OrdersScreenState extends State<OrdersScreen>
                 padding: EdgeInsets.symmetric(
                     horizontal: AppSizes.setWidth(22),
                     vertical: AppSizes.setHeight(18)),
-                child: IgnorePointer(
-                  ignoring: true,
-                  child: CommonButton(
-                    height: AppSizes.setHeight(44),
-                    radius: 3,
-                    btnText: '取消',
-                    onTap: () {
-                      // Navigator.pop(context);
-                    },
-                  ),
+                child: CommonButton(
+                  height: AppSizes.setHeight(44),
+                  radius: 3,
+                  btnText: '取消订单',
+                  onTap: () {
+                    // Navigator.pop(context);
+                  },
                 ),
               ),
             ],
           );
         },
       ),
-    ).whenComplete(() {
-      if (_isBottomSheetOpen) {
-        setState(() {
-          _isBottomSheetOpen = false;
-        });
-        Navigator.pop(context);
-      }
-    });
+    );
   }
 
   @override
@@ -394,34 +356,64 @@ class _OrdersScreenState extends State<OrdersScreen>
               ),
             ),
             SizedBox(height: AppSizes.setHeight(10)),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.setWidth(15),
-                      vertical: AppSizes.setHeight(10)),
-                  child: IgnorePointer(
-                    ignoring: true,
-                    child: CommonButton(
+            if (order.status?.value != OrderStatus.Completed.value)
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.setWidth(15),
+                        vertical: AppSizes.setHeight(10)),
+                    child: IgnorePointer(
+                      ignoring: false,
+                      child: CommonButton(
                         height: AppSizes.setHeight(30),
                         width: AppSizes.setWidth(158),
                         radius: 2,
                         borderColor: CustomAppColor.of(context).btnPurple,
-                        buttonColor: CustomAppColor.of(context).btnPurple,
+                        buttonColor:
+                            CustomAppColor.of(context).bgBlackWhiteScaffold,
                         isButtonShadow: true,
                         child: CommonText(
                           text: '取消订单',
-                          textColor: CustomAppColor.of(context).white,
+                          textColor: CustomAppColor.of(context).txtPurple,
                           fontWeight: FontWeight.w600,
                           fontSize: AppSizes.setFontSize(12),
                         ),
-                        onTap: () => {}
-                        // : Navigator.push(context, TrackOrderScreen.route()),
-                        ),
+                        onTap: () => {
+                          reasonOfCancellation(context),
+                        },
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ]),
+                if (order.status?.value == OrderStatus.PendingPayment.value)
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: AppSizes.setWidth(15),
+                          vertical: AppSizes.setHeight(10)),
+                      child: IgnorePointer(
+                        ignoring: true,
+                        child: CommonButton(
+                            height: AppSizes.setHeight(30),
+                            width: AppSizes.setWidth(158),
+                            radius: 2,
+                            borderColor: CustomAppColor.of(context).btnPurple,
+                            buttonColor: CustomAppColor.of(context).btnPurple,
+                            isButtonShadow: true,
+                            child: CommonText(
+                              text: '去支付',
+                              textColor: CustomAppColor.of(context).white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: AppSizes.setFontSize(12),
+                            ),
+                            onTap: () => {}
+                            // : Navigator.push(context, TrackOrderScreen.route()),
+                            ),
+                      ),
+                    ),
+                  ),
+              ]),
           ],
         ),
       ),

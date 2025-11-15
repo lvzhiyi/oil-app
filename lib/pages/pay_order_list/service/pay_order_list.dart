@@ -16,6 +16,13 @@ abstract class PayOrderListService {
     @Query('page') required int page,
     @Query('pageSize') required int pageSize,
   });
+
+  /// 取消订单
+  @POST('/oil-orders/{id}/cancel')
+  Future<void> cancelOrder(
+    @Path('id') String id,
+    @Field('reason') String reason,
+  );
 }
 
 PayOrderListService get payOrderListService =>
