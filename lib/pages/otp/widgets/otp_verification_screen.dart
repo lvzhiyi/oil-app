@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/pages/otp/controller.dart';
-import 'package:oil_business_app/pages/otp/state.dart';
 
 import '../../../resources/colors.dart';
 import '../../../utils/sizer_utils.dart';
