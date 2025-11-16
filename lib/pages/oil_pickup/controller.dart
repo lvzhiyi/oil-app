@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
+import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
+import 'package:oil_business_app/pages/oil_pickup/service/oil_pickup_service.dart';
 import 'package:oil_business_app/pages/oil_pickup/state.dart';
+import 'package:oil_business_app/pages/pay_order_list/service/pay_order_list.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
@@ -13,10 +16,55 @@ class OilPickupCtrl extends Cubit<OilPickupState> {
     initState();
   }
 
-  void initState() {
+  void initState() async {
     final selectedStation = appController.state.selectedStation;
     if (selectedStation != null) {
       emit(state.copyWith(selectedStation: selectedStation));
+    }
+
+    // 加载待完成的买油订单
+    await _loadPendingOilOrder();
+  }
+
+  /// 加载待完成的买油订单
+  Future<void> _loadPendingOilOrder() async {
+    emit(state.copyWith(isLoadingOrder: true, orderError: null));
+
+    try {
+      final orderResponse = await payOrderListService.getOrderList(
+        status: 20, // 已支付状态
+        page: 1,
+        pageSize: 1,
+      );
+
+      if (orderResponse.list != null && orderResponse.list!.isNotEmpty) {
+        final orderId = orderResponse.list!.first.id;
+        if (orderId != null) {
+          l.i('OilPickup', '获取到待完成买油订单ID: $orderId');
+          emit(state.copyWith(
+            pendingOilOrderId: orderId,
+            isLoadingOrder: false,
+          ));
+        } else {
+          l.w('OilPickup', '订单ID为空');
+          emit(state.copyWith(
+            isLoadingOrder: false,
+            orderError: '订单信息异常',
+          ));
+        }
+      } else {
+        l.i('OilPickup', '暂无待完成的买油订单');
+        emit(state.copyWith(
+          isLoadingOrder: false,
+          orderError: '暂无待完成的买油订单',
+        ));
+      }
+    } catch (e) {
+      l.e('OilPickup', '查询待完成买油订单失败: $e');
+      emit(state.copyWith(
+        isLoadingOrder: false,
+        orderError: '加载订单信息失败,请重试',
+      ));
     }
   }
 
@@ -75,6 +123,14 @@ class OilPickupCtrl extends Cubit<OilPickupState> {
   }
 
   Future<void> generateCertificate(BuildContext context) async {
+    // 检查是否有待完成的买油订单
+    if (state.pendingOilOrderId == null) {
+      emit(state.copyWith(
+        errorMessage: '暂无待完成的买油订单',
+      ));
+      return;
+    }
+
     if (state.selectedStation == null) {
       emit(state.copyWith(
         errorMessage: '请先选择加油站',
@@ -96,7 +152,7 @@ class OilPickupCtrl extends Cubit<OilPickupState> {
       ));
       return;
     }
-    
+
     if (oilAmountInt <= 0) {
       emit(state.copyWith(
         errorMessage: '提油量必须大于0',
@@ -114,20 +170,47 @@ class OilPickupCtrl extends Cubit<OilPickupState> {
       return;
     }
 
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(isLoading: true, errorMessage: null));
 
     try {
-      await Future.delayed(const Duration(milliseconds: 500));
-      l.i('OilPickup', '生成提油凭证成功');
+      // 构建提油请求参数
+      final stationId = int.tryParse(state.selectedStation!.id);
+      if (stationId == null) {
+        l.e('OilPickup', '加油站ID格式错误: ${state.selectedStation!.id}');
+        emit(state.copyWith(
+          isLoading: false,
+          errorMessage: '加油站ID格式错误',
+        ));
+        return;
+      }
+
+      final request = WithdrawRequest(
+        withdrawTon: oilAmountInt,
+        stationId: stationId,
+        vehicleInfo: state.vehicleInfo,
+      );
+
+      // 调用提油接口
+      final response = await oilPickupService.submitWithdraw(
+        state.pendingOilOrderId!,
+        request,
+      );
+
+      l.i('OilPickup', '提油申请提交成功: ${response.id}');
+
       emit(state.copyWith(
         isLoading: false,
         errorMessage: null,
       ));
+
+      // TODO: 显示成功提示并导航到其他页面
+      // 可以在这里添加成功后的处理逻辑,比如显示Toast、导航等
+
     } catch (e) {
-      l.e('OilPickup', '生成提油凭证失败: $e');
+      l.e('OilPickup', '提油申请提交失败: $e');
       emit(state.copyWith(
         isLoading: false,
-        errorMessage: '生成失败,请重试',
+        errorMessage: '提交失败,请重试',
       ));
     }
   }

@@ -6,7 +6,6 @@ import 'package:oil_business_app/pages/pay_order_list/controller.dart';
 import 'package:oil_business_app/pages/pay_order_list/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/static/icon.dart';
-import 'package:oil_business_app/static/img.dart';
 import 'package:oil_business_app/utils/constant.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/bottom_sheet/bottom_sheet.dart';

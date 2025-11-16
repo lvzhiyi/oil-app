@@ -11,6 +11,11 @@ class OilPickupState {
   final String? errorMessage;
   final bool isLoading;
 
+  // 订单相关字段
+  final int? pendingOilOrderId; // 待完成的买油订单ID
+  final bool isLoadingOrder; // 是否正在加载订单
+  final String? orderError; // 订单加载错误信息
+
   OilPickupState({
     this.selectedStation,
     this.oilAmount = '',
@@ -20,6 +25,9 @@ class OilPickupState {
     this.parseSuccess = false,
     this.errorMessage,
     this.isLoading = false,
+    this.pendingOilOrderId,
+    this.isLoadingOrder = false,
+    this.orderError,
   });
 
   OilPickupState copyWith({
@@ -31,6 +39,9 @@ class OilPickupState {
     bool? parseSuccess,
     String? errorMessage,
     bool? isLoading,
+    int? pendingOilOrderId,
+    bool? isLoadingOrder,
+    String? orderError,
   }) {
     return OilPickupState(
       selectedStation: selectedStation ?? this.selectedStation,
@@ -39,8 +50,11 @@ class OilPickupState {
       vehicleModel: vehicleModel ?? this.vehicleModel,
       missingFields: missingFields ?? this.missingFields,
       parseSuccess: parseSuccess ?? this.parseSuccess,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: errorMessage,
       isLoading: isLoading ?? this.isLoading,
+      pendingOilOrderId: pendingOilOrderId ?? this.pendingOilOrderId,
+      isLoadingOrder: isLoadingOrder ?? this.isLoadingOrder,
+      orderError: orderError,
     );
   }
 }

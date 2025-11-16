@@ -13,6 +13,7 @@ abstract class PayOrderListService {
   /// 获取买油订单列表
   @GET('/oil-orders')
   Future<OrderListResponse> getOrderList({
+    @Query('status') int? status,
     @Query('page') required int page,
     @Query('pageSize') required int pageSize,
   });
