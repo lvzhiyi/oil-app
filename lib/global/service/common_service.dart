@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:oil_business_app/config/address.dart';
-import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/model/common_req_type.dart';
 import 'package:oil_business_app/global/model/common_response_type.dart';
 import 'package:oil_business_app/net/net_manager.dart';

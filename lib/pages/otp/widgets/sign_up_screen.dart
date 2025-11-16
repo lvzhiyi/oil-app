@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/pages/otp/controller.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
-import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/static/icon.dart';
 
 import '../../../utils/sizer_utils.dart';

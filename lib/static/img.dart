@@ -6,6 +6,9 @@ class AssetsImg {
   static const HOME_HOME_BASKETBALL_ICON = 'assets/img/home/home_basketball_icon.png';
   static const HOME_HOME_BOXING_ICON = 'assets/img/home/home_boxing_icon.png';
   static const IMG_ACCOUNT_CREATED = 'assets/img/img_account_created.webp';
+  static const IMG_EMPTY_ORDER = 'assets/img/img_empty_order.webp';
+  static const IMG_EMPTY_SEARCH = 'assets/img/img_empty_search.webp';
+  static const IMG_FORGOT_PASSWORD = 'assets/img/img_forgot_password.webp';
   static const IMG_PENDING_REVIEW = 'assets/img/img_pending_review.webp';
   static const LOGO = 'assets/img/logo.webp';
   static const PAGE_EMPTY = 'assets/img/page_empty.png';

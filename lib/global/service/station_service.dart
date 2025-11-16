@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/station_req_type.dart';
 import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/net/net_manager.dart';

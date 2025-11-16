@@ -55,3 +55,13 @@ Map<String, dynamic> _$UploadSignatureResponseToJson(
       'host': instance.host,
       'expireAt': instance.expireAt,
     };
+
+Fuel _$FuelFromJson(Map<String, dynamic> json) => Fuel(
+      fuelType: json['fuelType'] as String?,
+      priceCny: (json['priceCny'] as num?)?.toDouble(),
+    );
+
+Map<String, dynamic> _$FuelToJson(Fuel instance) => <String, dynamic>{
+      'fuelType': instance.fuelType,
+      'priceCny': instance.priceCny,
+    };

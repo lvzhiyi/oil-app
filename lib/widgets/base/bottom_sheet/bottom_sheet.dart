@@ -5,7 +5,7 @@ import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
-void customBottomSheet({
+Future<T?> customBottomSheet<T>({
   required BuildContext context,
   required String title,
   required Widget content,
@@ -16,7 +16,7 @@ void customBottomSheet({
   bool? isPaddingRequired = true,
   String? catalogCount,
 }) {
-  showModalBottomSheet(
+  return showModalBottomSheet<T>(
     scrollControlDisabledMaxHeightRatio: maxHeightRatio ?? 0.6,
     context: context,
     backgroundColor: CustomAppColor.of(context).bgScaffold,

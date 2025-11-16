@@ -189,7 +189,7 @@ class TopBar extends StatelessWidget {
                 padding: EdgeInsets.only(left: AppSizes.setWidth(12)),
                 child: InkWell(
                   onTap: () {
-                    clickListener.onTopBarClick('cart');
+                    clickListener.onTopBarClick('pay_order_list');
                   },
                   child: Stack(
                     clipBehavior: Clip.none,

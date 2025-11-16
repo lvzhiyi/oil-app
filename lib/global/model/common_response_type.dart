@@ -51,3 +51,15 @@ class UploadSignatureResponse {
       _$UploadSignatureResponseFromJson(json);
   Map<String, dynamic> toJson() => _$UploadSignatureResponseToJson(this);
 }
+
+@JsonSerializable()
+class Fuel {
+  final String? fuelType;
+  final double? priceCny;
+
+  Fuel({this.fuelType, this.priceCny});
+
+  factory Fuel.fromJson(Map<String, dynamic> json) => _$FuelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FuelToJson(this);
+}
