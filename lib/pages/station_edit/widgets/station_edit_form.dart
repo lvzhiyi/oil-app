@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:oil_business_app/pages/station_edit/controller.dart';
 import 'package:oil_business_app/pages/station_edit/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
@@ -87,47 +88,64 @@ class _StationEditFormState extends State<StationEditForm> {
     return SingleChildScrollView(
       padding: EdgeInsets.all(AppSizes.setWidth(20)),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _buildFieldLabel('加油站名称'),
-          SizedBox(height: AppSizes.setHeight(8)),
-          CommonTextFormField(
-            controller: _nameController,
-            hintText: '请输入加油站名称',
-            onChanged: (value) => widget.controller.updateName(value ?? ''),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
+            child: CommonTextFormField(
+              controller: _nameController,
+              borderColor: CustomAppColor.of(context).textFieldBorder,
+              leadingIcon: Image.asset(
+                AssetsIcon.IC_PROFILE,
+                width: AppSizes.setHeight(20),
+                height: AppSizes.setHeight(20),
+              ),
+              hintText: '加油站名称',
+              onChanged: (value) => widget.controller.updateName(value ?? ''),
+            ),
           ),
-          SizedBox(height: AppSizes.setHeight(20)),
-          _buildFieldLabel('所在地区'),
-          SizedBox(height: AppSizes.setHeight(8)),
-          CommonCityPickerFormField(
-            controller: _cityController,
-            hintText: '请选择省市区',
-            name: 'city',
-            initialCityData: widget.state.provinceCode.isNotEmpty
-                ? [
-                    widget.state.provinceCode,
-                    widget.state.cityCode,
-                    widget.state.areaCode,
-                  ]
-                : null,
-            onChanged: (cityData) {
-              widget.controller.updateCityData(cityData);
-              // 更新显示文本
-              setState(() {
-                _cityController.text = _buildCityText();
-              });
-            },
+          Padding(
+            padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
+            child: CommonCityPickerFormField(
+              controller: _cityController,
+              name: 'city',
+              hintText: '选择城市 省/市/区',
+              initialCityData: widget.state.provinceCode.isNotEmpty
+                  ? [
+                      widget.state.provinceCode,
+                      widget.state.cityCode,
+                      widget.state.areaCode,
+                    ]
+                  : null,
+              onChanged: (cityData) {
+                widget.controller.updateCityData(cityData);
+                setState(() {
+                  _cityController.text = _buildCityText();
+                });
+              },
+              borderColor: CustomAppColor.of(context).textFieldBorder,
+              leadingIcon: Image.asset(
+                AssetsIcon.IC_PASSWORD,
+                width: AppSizes.setHeight(20),
+                height: AppSizes.setHeight(20),
+              ),
+            ),
           ),
-          SizedBox(height: AppSizes.setHeight(20)),
-          _buildFieldLabel('详细地址'),
-          SizedBox(height: AppSizes.setHeight(8)),
-          CommonTextFormField(
-            controller: _addressDetailController,
-            hintText: '请输入详细地址（街道、门牌号等）',
-            maxLines: 3,
-            onChanged: (value) => widget.controller.updateAddressDetail(value ?? ''),
+          Padding(
+            padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
+            child: CommonTextFormField(
+              controller: _addressDetailController,
+              borderColor: CustomAppColor.of(context).textFieldBorder,
+              leadingIcon: Image.asset(
+                AssetsIcon.IC_BANK,
+                width: AppSizes.setHeight(20),
+                height: AppSizes.setHeight(20),
+              ),
+              hintText: '详细地址',
+              maxLines: 3,
+              onChanged: (value) => widget.controller.updateAddressDetail(value ?? ''),
+            ),
           ),
-          SizedBox(height: AppSizes.setHeight(32)),
           if (widget.state.hasError && widget.state.errorMessage != null)
             Container(
               padding: EdgeInsets.all(AppSizes.setWidth(12)),
@@ -143,28 +161,20 @@ class _StationEditFormState extends State<StationEditForm> {
                 textAlign: TextAlign.left,
               ),
             ),
-          CommonButton(
-            btnText: '保存',
-            height: AppSizes.setHeight(52),
-            fontSize: AppSizes.setFontSize(15),
-            isLoading: widget.state.isLoading,
-            onTap: () => widget.controller.save(context),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(20)),
+            child: CommonButton(
+              isLoading: widget.state.isLoading,
+              btnText: '保存',
+              onTap: () {
+                widget.controller.save(context);
+              },
+            ),
           ),
         ],
       ),
     );
   }
 
-  /// 构建字段标签
-  /// 遵循 DRY 原则，统一标签样式
-  Widget _buildFieldLabel(String text) {
-    return CommonText(
-      text: text,
-      fontSize: AppSizes.setFontSize(14),
-      fontWeight: FontWeight.w500,
-      textColor: CustomAppColor.of(context).txtBlack,
-      textAlign: TextAlign.left,
-    );
-  }
 }
 
