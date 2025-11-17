@@ -5,6 +5,7 @@ import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/pages/pay_order_list/controller.dart';
 import 'package:oil_business_app/pages/pay_order_list/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/static/img.dart';
 import 'package:oil_business_app/utils/constant.dart';
@@ -18,6 +19,7 @@ import 'package:oil_business_app/widgets/common/page_loading.dart';
 import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
 
 import '../../../../../../interfaces/top_bar_click_listener.dart';
+import '../../../router/router.dart';
 import '../model/orders_data.dart';
 
 class OrdersScreen extends StatefulWidget {
@@ -393,7 +395,7 @@ class _OrdersScreenState extends State<OrdersScreen>
                           horizontal: AppSizes.setWidth(15),
                           vertical: AppSizes.setHeight(10)),
                       child: IgnorePointer(
-                        ignoring: true,
+                        ignoring: false,
                         child: CommonButton(
                             height: AppSizes.setHeight(30),
                             width: AppSizes.setWidth(158),
@@ -407,7 +409,12 @@ class _OrdersScreenState extends State<OrdersScreen>
                               fontWeight: FontWeight.w600,
                               fontSize: AppSizes.setFontSize(12),
                             ),
-                            onTap: () => {}
+                            onTap: () => {
+                                  BaseRouter.push(
+                                    url: AppPage.payOrderDetailPage.path,
+                                    extra: {'order': order},
+                                  ),
+                                }
                             // : Navigator.push(context, TrackOrderScreen.route()),
                             ),
                       ),

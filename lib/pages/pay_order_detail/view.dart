@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:intl/intl.dart';
+import 'package:oil_business_app/global/enum/common.dart';
+import 'package:oil_business_app/pages/pay_order_list/model/orders_data.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/utils/date_util.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
@@ -16,13 +19,12 @@ import 'package:oil_business_app/widgets/popup/toast.dart';
 
 import 'state.dart';
 import 'controller.dart';
-import 'model/pay_order_type.dart';
 
 class PayOrderDetailView extends HookWidget {
   final PayOrderDetailState state;
-  final String uuid;
+  final OrderModel order;
 
-  const PayOrderDetailView({Key? key, required this.state, required this.uuid})
+  const PayOrderDetailView({Key? key, required this.state, required this.order})
       : super(key: key);
 
   @override
@@ -43,57 +45,7 @@ class PayOrderDetailView extends HookWidget {
       );
     }
 
-    if (state.errorMessage != null) {
-      return Scaffold(
-        backgroundColor: Colors.grey[50],
-        appBar: const BaseAppBar(
-          title: '支付订单详情',
-          backgroundColor: Colors.transparent,
-          centerTitle: true,
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline,
-                size: pt(64),
-                color: Colors.grey[400],
-              ),
-              SizedBox(height: pt(16)),
-              Text(
-                state.errorMessage!,
-                style: TextStyle(
-                  fontSize: pt(16, isFontSize: true),
-                  color: Colors.grey[600],
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: pt(24)),
-              ElevatedButton(
-                onPressed: () => controller.loadOrderDetail(),
-                child: const Text('重试'),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    final orderDetail = state.orderDetail;
-    if (orderDetail == null) {
-      return Scaffold(
-        backgroundColor: Colors.grey[50],
-        appBar: const BaseAppBar(
-          title: '支付订单详情',
-          backgroundColor: Colors.transparent,
-          centerTitle: true,
-        ),
-        body: const Center(
-          child: Text('订单信息不存在'),
-        ),
-      );
-    }
+    final orderDetail = state.order;
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -115,9 +67,11 @@ class PayOrderDetailView extends HookWidget {
                   children: [
                     _buildOrderInfoCard(orderDetail, context),
                     SizedBox(height: pt(16)),
-                    if (!orderDetail.isCompleted) // 只有未完成的订单才显示转账信息
+                    if (orderDetail?.status !=
+                        OrderStatus.Completed) // 只有未完成的订单才显示转账信息
                       _buildTransferInfoCard(orderDetail, context),
-                    if (!orderDetail.isCompleted) SizedBox(height: pt(16)),
+                    if (orderDetail?.status != OrderStatus.Completed)
+                      SizedBox(height: pt(16)),
                     if (state.uploadedImageUrls.isNotEmpty) ...[
                       _buildUploadedImages(state.uploadedImageUrls, context),
                     ],
@@ -128,7 +82,7 @@ class PayOrderDetailView extends HookWidget {
             ),
           ),
           // 只有未支付的订单才显示操作按钮
-          if (!orderDetail.isCompleted)
+          if (orderDetail?.status != OrderStatus.Completed)
             _buildBottomActions(context, controller),
         ],
       ),
@@ -136,8 +90,9 @@ class PayOrderDetailView extends HookWidget {
   }
 
   /// 构建订单信息卡片
-  Widget _buildOrderInfoCard(
-      PayOrderDetailModel orderDetail, BuildContext context) {
+  Widget _buildOrderInfoCard(OrderModel? orderDetail, BuildContext context) {
+    if (orderDetail == null) return const SizedBox.shrink();
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(pt(16)),
@@ -163,10 +118,10 @@ class PayOrderDetailView extends HookWidget {
                 decoration: BoxDecoration(
                   color:
                       CustomAppColor.of(context).white.withValues(alpha: 0.1),
-                  borderRadius: AppSizes.setWidth(4),
+                  borderRadius: BorderRadius.circular(pt(4)),
                 ),
                 child: Text(
-                  orderDetail.type ?? '',
+                  orderDetail.status?.displayName ?? '',
                   style: TextStyle(
                     color: CustomAppColor.of(context).btnPurple,
                     fontSize: pt(12, isFontSize: true),
@@ -176,7 +131,7 @@ class PayOrderDetailView extends HookWidget {
               ),
               const Spacer(),
               Text(
-                '¥${orderDetail.payAmount}',
+                '¥${orderDetail.totalAmount}',
                 style: TextStyle(
                   fontSize: pt(20, isFontSize: true),
                   fontWeight: FontWeight.bold,
@@ -186,14 +141,19 @@ class PayOrderDetailView extends HookWidget {
             ],
           ),
           SizedBox(height: pt(16)),
-          _buildOrderInfoRow('订单编号', orderDetail.uuid ?? '-'),
-          _buildOrderInfoRow('充值金额', '¥${orderDetail.quota}'),
-          _buildOrderInfoRow('订单状态', 'ordertype'),
-          _buildOrderInfoRow('提交时间', _formatDateTime(orderDetail.createTime)),
-          if (!orderDetail.isUnPaid)
-            _buildOrderInfoRow(orderDetail.isCompleted ? '完成时间' : '更新时间',
-                _formatDateTime(orderDetail.updateTime)),
-          _buildOrderInfoRow('备注', orderDetail.remark ?? '-'),
+          _buildOrderInfoRow('订单编号', orderDetail.orderNo ?? '-'),
+          _buildOrderInfoRow('充值金额', '¥${orderDetail.totalAmount}'),
+          _buildOrderInfoRow('订单状态', orderDetail.status?.displayName ?? ''),
+          _buildOrderInfoRow(
+              '提交时间',
+              DateFormat('yyyy-MM-dd HH:mm:ss')
+                  .format(DateTime.parse(orderDetail.createdAt ?? ''))),
+          if (orderDetail.status != OrderStatus.Completed)
+            _buildOrderInfoRow(
+                orderDetail.status == OrderStatus.Completed ? '完成时间' : '更新时间',
+                DateFormat('yyyy-MM-dd HH:mm:ss')
+                    .format(DateTime.parse(orderDetail.updatedAt ?? ''))),
+          _buildOrderInfoRow('备注', orderDetail.remark ?? ''),
         ],
       ),
     );
@@ -231,8 +191,9 @@ class PayOrderDetailView extends HookWidget {
     );
   }
 
-  Widget _buildTransferInfoCard(
-      PayOrderDetailModel orderDetail, BuildContext context) {
+  Widget _buildTransferInfoCard(OrderModel? orderDetail, BuildContext context) {
+    if (orderDetail == null) return const SizedBox.shrink();
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(pt(16)),
@@ -518,6 +479,7 @@ class PayOrderDetailView extends HookWidget {
             Expanded(
               flex: 2,
               child: CommonButton(
+                height: pt(48),
                 btnText: state.hasUploaded ? '修改凭证' : '上传转账凭证',
                 onTap: () {
                   _showUploadDialog(context, controller, state.hasUploaded);

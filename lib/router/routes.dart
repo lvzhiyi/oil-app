@@ -56,17 +56,11 @@ enum AppPage {
   /// 用户信息页
   basicInfo('/basicInfo'),
 
-  /// 仪表盘
-  dashboardPage('/dashboard'),
-
   /// 个人中心
   profilePage('/profile'),
 
   /// 员工管理
   employeeManagementPage('/employeeManagement'),
-
-  /// 统一支付页面
-  unifiedPaymentPage('/unifiedPayment'),
 
   /// 修改密码（个人中心）
   changePasswordPage('/changePassword'),
@@ -79,6 +73,7 @@ enum AppPage {
 
   /// 加油站编辑页面
   stationEditPage('/stationEdit'),
+
   /// 买油详情页面
   oilPurchaseDetailPage('/oilPurchaseDetail'),
 
@@ -156,8 +151,8 @@ extension PageRoute on AppPage {
             );
 
       case AppPage.payOrderDetailPage:
-        return (context, state) =>
-            PayOrderDetailPage(uuid: state.extra as String? ?? '');
+        return (context, state) => PayOrderDetailPage(
+            extra: state.extra as Map<String, dynamic>? ?? {});
 
       default:
         return (context, state) => const Text('404');

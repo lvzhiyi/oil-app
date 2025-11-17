@@ -7,9 +7,9 @@ import 'controller.dart';
 import 'state.dart';
 
 class PayOrderDetailPage extends BasePage {
-  const PayOrderDetailPage({Key? key, required this.uuid}) : super(key: key);
+  const PayOrderDetailPage({Key? key, required this.extra}) : super(key: key);
 
-  final String uuid;
+  final Map<String, dynamic>? extra;
 
   @override
   State<PayOrderDetailPage> createState() => _PayOrderDetailPage();
@@ -20,10 +20,11 @@ class _PayOrderDetailPage extends BaseState<PayOrderDetailPage>
   @override
   Widget body(context) {
     return BlocProvider(
-      create: (BuildContext context) => PayOrderDetailCtrl(widget.uuid),
+      create: (BuildContext context) =>
+          PayOrderDetailCtrl(widget.extra?['order']),
       child: BlocBuilder<PayOrderDetailCtrl, PayOrderDetailState>(
           builder: (context, state) {
-        return PayOrderDetailView(state: state, uuid: widget.uuid);
+        return PayOrderDetailView(state: state, order: widget.extra?['order']);
       }),
     );
   }

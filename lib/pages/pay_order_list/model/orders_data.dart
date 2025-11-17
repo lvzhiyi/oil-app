@@ -1,7 +1,9 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 
 part 'orders_data.g.dart';
+part 'orders_data.freezed.dart';
 
 @JsonSerializable()
 class OrderListResponse {
@@ -23,40 +25,29 @@ class OrderListResponse {
   Map<String, dynamic> toJson() => _$OrderListResponseToJson(this);
 }
 
-@JsonSerializable()
-class OrderModel {
-  final int? id;
-  final String? orderNo;
-
-  @JsonKey(fromJson: OrderStatus.fromValue)
-  final OrderStatus? status;
-  final int? depotId;
-  final String? depotName;
-  final String? fuelType;
-  final double? fuelPriceCny;
-  final double? purchaseTon;
-  final double? totalAmount;
-  final String? createdAt;
-  final String? updatedAt;
-
-  OrderModel({
-    this.id,
-    this.orderNo,
-    this.status,
-    this.depotId,
-    this.depotName,
-    this.fuelType,
-    this.fuelPriceCny,
-    this.purchaseTon,
-    this.totalAmount,
-    this.createdAt,
-    this.updatedAt,
-  });
+@unfreezed
+abstract class OrderModel with _$OrderModel {
+  factory OrderModel({
+    int? id,
+    String? orderNo,
+    @JsonKey(fromJson: OrderStatus.fromValue) OrderStatus? status,
+    int? depotId,
+    String? depotName,
+    String? fuelType,
+    double? fuelPriceCny,
+    double? purchaseTon,
+    double? totalAmount,
+    String? createdAt,
+    String? updatedAt,
+    String? accountName,
+    String? bankAccount,
+    String? bankName,
+    String? bankBranchNumber,
+    String? remark,
+  }) = _OrderModel;
 
   factory OrderModel.fromJson(Map<String, dynamic> json) =>
       _$OrderModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$OrderModelToJson(this);
 }
 
 class ReasonOfCancellationData {
