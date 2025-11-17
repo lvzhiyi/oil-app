@@ -11,6 +11,7 @@ import 'package:oil_business_app/global/service/common_service.dart';
 import 'package:oil_business_app/global/service/station_service.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
+import 'package:oil_business_app/utils/file_util.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
@@ -94,34 +95,45 @@ class BindStationCtrl extends Cubit<BindStationState> {
   }
 
   Future<String?> uploadImage(String url) async {
-    final contenLength = await XFile(url).readAsBytes();
-    final contentType = XFile(url).mimeType ?? 'image/jpeg';
+    final file = XFile(url);
+    final fileBytes = await file.readAsBytes();
+    final filename = file.name;
+    final contentType = FileUtil.getContentType(file.mimeType, filename);
+    
     final response = await commonService.getUploadSignature(
       UploadSignatureRequest(
         bizPrefix: 'stations',
         contentType: contentType,
-        contentLength: contenLength.length,
+        contentLength: fileBytes.length,
       ),
     );
 
+    final key = '${response.dir}$filename';
+
     final formData = FormData.fromMap({
-      'file': await MultipartFile.fromFile(url),
+      'name': filename,
       'policy': response.policy,
-      'x-oss-signature-version': response.signatureVersion,
-      'x-oss-credential': response.credential,
-      'x-oss-date': response.date,
+      'OSSAccessKeyId': response.accessKeyId,
       'success_action_status': '200',
-      'key': response.path,
-      'x-oss-signature': response.signature,
-      'x-oss-security-token': response.securityToken,
+      'signature': response.signature,
+      'key': key,
+      'file': await MultipartFile.fromFile(url),
     });
 
-    final uploadResponse = await Dio(BaseOptions(baseUrl: response.host ?? ''))
-        .post(response.host ?? '', data: formData);
+    Response<dynamic> uploadResponse;
 
-    if (uploadResponse.statusCode != 200) {
+    try {
+      uploadResponse = await Dio(BaseOptions(baseUrl: response.host ?? ''))
+          .post(response.host ?? '', data: formData);
+    } catch (e) {
+      l.e('BindStationCtrl', '图片上传失败: $e');
       return null;
     }
-    return '${response.host}${response.path}';
+
+    if (uploadResponse.statusCode != 200) {
+      l.e('BindStationCtrl', '图片上传失败，状态码: ${uploadResponse.statusCode}');
+      return null;
+    }
+    return '${response.host}$key';
   }
 }

@@ -8,6 +8,7 @@ import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dart';
 import 'package:oil_business_app/widgets/base/textfield/common_city_picker.dart';
+import 'package:oil_business_app/widgets/base/textfield/common_img_upload.dart';
 
 class StationEditForm extends StatefulWidget {
   final StationEditState state;
@@ -85,93 +86,131 @@ class _StationEditFormState extends State<StationEditForm> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(AppSizes.setWidth(20)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-            child: CommonTextFormField(
-              controller: _nameController,
-              borderColor: CustomAppColor.of(context).textFieldBorder,
-              leadingIcon: Image.asset(
-                AssetsIcon.IC_PROFILE,
-                width: AppSizes.setHeight(20),
-                height: AppSizes.setHeight(20),
+    return SafeArea(
+      bottom: true,
+      top: false,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(20)),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
+                child: CommonTextFormField(
+                  controller: _nameController,
+                  borderColor: CustomAppColor.of(context).textFieldBorder,
+                  leadingIcon: Image.asset(
+                    AssetsIcon.IC_PROFILE,
+                    width: AppSizes.setHeight(20),
+                    height: AppSizes.setHeight(20),
+                  ),
+                  hintText: '加油站名称',
+                  onChanged: (value) => widget.controller.updateName(value ?? ''),
+                ),
               ),
-              hintText: '加油站名称',
-              onChanged: (value) => widget.controller.updateName(value ?? ''),
-            ),
+              Padding(
+                padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
+                child: CommonCityPickerFormField(
+                  controller: _cityController,
+                  name: 'city',
+                  hintText: '选择城市 省/市/区',
+                  initialCityData: widget.state.provinceCode.isNotEmpty
+                      ? [
+                          widget.state.provinceCode,
+                          widget.state.cityCode,
+                          widget.state.areaCode,
+                        ]
+                      : null,
+                  onChanged: (cityData) {
+                    widget.controller.updateCityData(cityData);
+                    setState(() {
+                      _cityController.text = _buildCityText();
+                    });
+                  },
+                  borderColor: CustomAppColor.of(context).textFieldBorder,
+                  leadingIcon: Image.asset(
+                    AssetsIcon.IC_PASSWORD,
+                    width: AppSizes.setHeight(20),
+                    height: AppSizes.setHeight(20),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
+                child: CommonTextFormField(
+                  controller: _addressDetailController,
+                  borderColor: CustomAppColor.of(context).textFieldBorder,
+                  leadingIcon: Image.asset(
+                    AssetsIcon.IC_BANK,
+                    width: AppSizes.setHeight(20),
+                    height: AppSizes.setHeight(20),
+                  ),
+                  hintText: '详细地址',
+                  onChanged: (value) => widget.controller.updateAddressDetail(value ?? ''),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
+                child: CommonImgUpload(
+                  name: 'businessLicenseUrl',
+                  hintText: '上传营业执照',
+                  maxLines: 2,
+                  textAlign: TextAlign.start,
+                  textAlignVertical: TextAlignVertical.top,
+                  radius: 6,
+                  onChanged: (value) {
+                    widget.controller.updateBusinessLicenseUrl(value ?? '');
+                  },
+                  hintStyle: TextStyle(
+                    height: AppSizes.setHeight(6),
+                    color: CustomAppColor.of(context).txtGrey,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              CommonImgUpload(
+                name: 'fuelRetailPermitUrl',
+                hintText: '上传成品油零售许可',
+                textAlign: TextAlign.start,
+                textAlignVertical: TextAlignVertical.top,
+                onChanged: (value) {
+                  widget.controller.updateFuelRetailPermitUrl(value ?? '');
+                },
+                hintStyle: TextStyle(
+                  height: AppSizes.setHeight(6),
+                  color: CustomAppColor.of(context).txtGrey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              if (widget.state.hasError && widget.state.errorMessage != null)
+                Container(
+                  padding: EdgeInsets.all(AppSizes.setWidth(12)),
+                  margin: EdgeInsets.only(top: AppSizes.setHeight(16)),
+                  decoration: BoxDecoration(
+                    color: CustomAppColor.of(context).red.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
+                  ),
+                  child: CommonText(
+                    text: widget.state.errorMessage!,
+                    fontSize: AppSizes.setFontSize(14),
+                    textColor: CustomAppColor.of(context).red,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(20)),
+                child: CommonButton(
+                  isLoading: widget.state.isLoading,
+                  btnText: '保存',
+                  onTap: () {
+                    widget.controller.save(context);
+                  },
+                ),
+              ),
+            ],
           ),
-          Padding(
-            padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
-            child: CommonCityPickerFormField(
-              controller: _cityController,
-              name: 'city',
-              hintText: '选择城市 省/市/区',
-              initialCityData: widget.state.provinceCode.isNotEmpty
-                  ? [
-                      widget.state.provinceCode,
-                      widget.state.cityCode,
-                      widget.state.areaCode,
-                    ]
-                  : null,
-              onChanged: (cityData) {
-                widget.controller.updateCityData(cityData);
-                setState(() {
-                  _cityController.text = _buildCityText();
-                });
-              },
-              borderColor: CustomAppColor.of(context).textFieldBorder,
-              leadingIcon: Image.asset(
-                AssetsIcon.IC_PASSWORD,
-                width: AppSizes.setHeight(20),
-                height: AppSizes.setHeight(20),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
-            child: CommonTextFormField(
-              controller: _addressDetailController,
-              borderColor: CustomAppColor.of(context).textFieldBorder,
-              leadingIcon: Image.asset(
-                AssetsIcon.IC_BANK,
-                width: AppSizes.setHeight(20),
-                height: AppSizes.setHeight(20),
-              ),
-              hintText: '详细地址',
-              maxLines: 3,
-              onChanged: (value) => widget.controller.updateAddressDetail(value ?? ''),
-            ),
-          ),
-          if (widget.state.hasError && widget.state.errorMessage != null)
-            Container(
-              padding: EdgeInsets.all(AppSizes.setWidth(12)),
-              margin: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
-              decoration: BoxDecoration(
-                color: CustomAppColor.of(context).red.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
-              ),
-              child: CommonText(
-                text: widget.state.errorMessage!,
-                fontSize: AppSizes.setFontSize(14),
-                textColor: CustomAppColor.of(context).red,
-                textAlign: TextAlign.left,
-              ),
-            ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(20)),
-            child: CommonButton(
-              isLoading: widget.state.isLoading,
-              btnText: '保存',
-              onTap: () {
-                widget.controller.save(context);
-              },
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

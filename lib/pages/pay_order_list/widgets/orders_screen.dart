@@ -34,7 +34,7 @@ class _OrdersScreenState extends State<OrdersScreen>
   List<String> tabList = [];
 
   List<ReasonOfCancellationData> reasons = [];
-  bool _isBottomSheetOpen = false;
+  // bool _isBottomSheetOpen = false;
   @override
   void initState() {
     super.initState();
@@ -158,10 +158,9 @@ class _OrdersScreenState extends State<OrdersScreen>
                         context.read<PayOrderListCtrl>().refreshController,
                     child: ListView.builder(
                       padding: EdgeInsets.zero,
-                      itemCount: widget.state.orderList?.length ?? 0,
+                      itemCount: widget.state.orderList.length,
                       itemBuilder: (context, index) {
-                        final order =
-                            widget.state.orderList?[index] ?? OrderModel();
+                        final order = widget.state.orderList[index];
                         return _buildOrderCard(order, context);
                       },
                     ),
