@@ -1,4 +1,5 @@
 import 'package:easy_refresh/easy_refresh.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/pages/pay_order_list/service/pay_order_list.dart';
 import 'package:oil_business_app/pages/pay_order_list/state.dart';
@@ -18,6 +19,8 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
     controlFinishLoad: true,
     controlFinishRefresh: true,
   );
+
+  TextEditingController cancelOrderReasonController = TextEditingController();
 
   int pageNum = 1;
   int total = 0;
@@ -89,5 +92,12 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
       pageNum = 1;
       return OrderListResponse(list: [], total: 0);
     }
+  }
+
+  /// 取消订单
+  Future<void> cancelOrder(String id) async {
+    await payOrderListService.cancelOrder(id, cancelOrderReasonController.text);
+    cancelOrderReasonController.clear();
+    onRefresh();
   }
 }
