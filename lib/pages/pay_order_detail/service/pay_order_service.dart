@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:oil_business_app/net/net_manager.dart';
+import 'package:oil_business_app/pages/pay_order_detail/model/payment_proof_request.dart';
 import 'package:oil_business_app/pages/pay_order_list/model/orders_data.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -14,6 +15,13 @@ abstract class PayOrderService {
   @GET('/oil-orders/{id}')
   Future<OrderModel> getOrderDetail(
     @Path('id') String id,
+  );
+
+  /// 保存支付凭证
+  @POST('/oil-orders/{id}/payment-proof')
+  Future<void> savePaymentProof(
+    @Path('id') String id,
+    @Body() PaymentProofRequest request,
   );
 }
 

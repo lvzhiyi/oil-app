@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -6,18 +7,27 @@ import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
 import '../pay_order_list/model/orders_data.dart';
+import 'model/payment_proof_request.dart';
 import 'service/pay_order_service.dart';
 import 'state.dart';
 
 class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
   final OrderModel? order;
   final int? orderId;
+  Timer? _saveProofDebounceTimer;
+  Future<void>? _pendingSaveOperation;
 
   PayOrderDetailCtrl(this.order, {this.orderId})
       : super(
           PayOrderDetailState(),
         ) {
     initState();
+  }
+
+  @override
+  Future<void> close() {
+    _saveProofDebounceTimer?.cancel();
+    return super.close();
   }
 
   initState() async {
@@ -52,6 +62,7 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
         order: orderDetail,
         isLoading: false,
         hasUploaded: orderDetail.status == OrderStatus.PaymentUploaded,
+        lastSavedProofUrls: const [], // 初始化时清空上次保存的凭证列表
       ));
 
       // 如果已有凭证路径，获取可访问的URL
@@ -85,8 +96,8 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
         return;
       }
 
-      // 限制最多上传20张图片
-      const maxImages = 20;
+      // 限制最多上传5张图片（后端要求1-5张之间）
+      const maxImages = 5;
       final totalImages =
           state.selectedImagePaths.length + state.uploadedImageUrls.length;
 
@@ -140,29 +151,15 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
         return;
       }
 
-      // final attachments = orderDetail.attachments!;
-      // if (index >= attachments.length) {
-      //   SportsToast.showError('附件索引错误');
-      //   return;
-      // }
-
-      // 创建新的附件列表，移除指定索引的附件
-      // final updatedAttachments = List<FileAttachment>.from(attachments);
-      // updatedAttachments.removeAt(index);
-
-      // 更新订单凭证
-      // await updateOrderVouchers(updatedAttachments);
-
       // 更新本地状态
       final updatedUploadedUrls = List<String>.from(uploadedUrls);
       updatedUploadedUrls.removeAt(index);
 
-      // // 更新orderDetail
-      // final updatedOrderDetail = orderDetail.copyWith(
-      //   attachments: updatedAttachments,
-      //   voucherUrl:
-      //       updatedUploadedUrls.isNotEmpty ? updatedUploadedUrls.first : null,
-      // );
+      // 如果删除后凭证数量为0，提示用户至少需要1张凭证
+      if (updatedUploadedUrls.isEmpty) {
+        SportsToast.showWarning('至少需要保留1张凭证');
+        return;
+      }
 
       emit(state.copyWith(
         order: orderDetail,
@@ -171,6 +168,9 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
       ));
 
       SportsToast.showSuccess('图片删除成功');
+
+      // 删除后立即保存凭证列表
+      _savePaymentProofDebounced(updatedUploadedUrls);
     } catch (e) {
       SportsToast.showError('删除图片失败: ${e.toString()}');
     }
@@ -234,9 +234,15 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
 
       if (failedIndices.isEmpty) {
         SportsToast.showSuccess('所有图片上传成功');
+        // 上传成功后立即保存凭证列表
+        _savePaymentProofDebounced(updatedUploadedUrls);
       } else {
         SportsToast.showWarning(
             '${newImageUrls.length}张图片上传成功，${failedIndices.length}张图片上传失败');
+        // 即使有部分失败，也保存已成功上传的凭证
+        if (newImageUrls.isNotEmpty) {
+          _savePaymentProofDebounced(updatedUploadedUrls);
+        }
       }
     } catch (e) {
       emit(state.copyWith(uploadingImageIndices: []));
@@ -306,6 +312,10 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
       ));
 
       SportsToast.showSuccess('图片上传成功');
+
+      // 上传成功后立即保存凭证列表
+      _savePaymentProofDebounced(updatedUploadedUrls);
+
       return true;
     } catch (e) {
       // 上传异常，从上传中列表移除当前索引
@@ -315,6 +325,92 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
       SportsToast.showError('图片上传失败: ${e.toString()}');
       return false;
     }
+  }
+
+  /// 保存支付凭证（带防抖）
+  void _savePaymentProofDebounced(List<String> proofUrls) {
+    _saveProofDebounceTimer?.cancel();
+    _saveProofDebounceTimer = Timer(const Duration(milliseconds: 500), () {
+      savePaymentProof(proofUrls);
+    });
+  }
+
+  /// 保存支付凭证
+  Future<void> savePaymentProof(List<String> proofUrls) async {
+    final id = order?.id ?? orderId;
+    if (id == null) {
+      SportsToast.showError('订单ID不能为空');
+      return;
+    }
+
+    // 验证凭证数量：后端要求1-5张之间
+    if (proofUrls.isEmpty) {
+      // 如果凭证数量为0，不调用保存接口（删除所有凭证的情况）
+      // 更新上次保存的凭证列表为空，避免重复保存
+      emit(state.copyWith(lastSavedProofUrls: []));
+      return;
+    }
+
+    if (proofUrls.length > 5) {
+      SportsToast.showError('凭证数量不能超过5张，请删除多余的凭证');
+      return;
+    }
+
+    // 如果凭证列表与上次保存的一致，则不需要保存
+    if (_isProofUrlsEqual(proofUrls, state.lastSavedProofUrls)) {
+      return;
+    }
+
+    // 如果正在保存，等待上一次操作完成
+    if (_pendingSaveOperation != null) {
+      try {
+        await _pendingSaveOperation;
+      } catch (e) {
+        // 忽略错误，继续执行新的保存操作
+      }
+    }
+
+    // 创建新的保存操作
+    _pendingSaveOperation = _performSavePaymentProof(id, proofUrls);
+    await _pendingSaveOperation;
+  }
+
+  /// 执行保存支付凭证操作
+  Future<void> _performSavePaymentProof(int id, List<String> proofUrls) async {
+    emit(state.copyWith(isSavingProof: true));
+
+    try {
+      final request = PaymentProofRequest(proof: proofUrls);
+      await payOrderService.savePaymentProof(id.toString(), request);
+
+      // 保存成功，更新上次保存的凭证列表
+      emit(state.copyWith(
+        isSavingProof: false,
+        lastSavedProofUrls: List<String>.from(proofUrls),
+      ));
+
+      // 刷新订单详情，更新订单状态
+      await loadOrderDetail();
+    } catch (e) {
+      emit(state.copyWith(isSavingProof: false));
+      SportsToast.showError('保存支付凭证失败: ${e.toString()}');
+      rethrow;
+    } finally {
+      _pendingSaveOperation = null;
+    }
+  }
+
+  /// 判断两个凭证URL列表是否相等
+  bool _isProofUrlsEqual(List<String> urls1, List<String> urls2) {
+    if (urls1.length != urls2.length) {
+      return false;
+    }
+    for (int i = 0; i < urls1.length; i++) {
+      if (urls1[i] != urls2[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /// 更新订单的支付凭证（支持多张图片）
@@ -390,3 +486,4 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
     // }
   }
 }
+

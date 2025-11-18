@@ -1,36 +1,36 @@
 # 实现任务清单
 
 ## 1. 数据模型
-- [ ] 1.1 创建支付凭证请求模型 (PaymentProofRequest)，包含 proof 字段（List<String>）
+- [x] 1.1 创建支付凭证请求模型 (PaymentProofRequest)，包含 proof 字段（List<String>）
 
 ## 2. API 服务层
-- [ ] 2.1 在 PayOrderService 中添加保存支付凭证接口方法 `POST /oil-orders/{id}/payment-proof`
-- [ ] 2.2 接口参数应包含订单ID（路径参数）和支付凭证请求体（proof数组）
-- [ ] 2.3 运行代码生成命令生成 Retrofit 代码
+- [x] 2.1 在 PayOrderService 中添加保存支付凭证接口方法 `POST /oil-orders/{id}/payment-proof`
+- [x] 2.2 接口参数应包含订单ID（路径参数）和支付凭证请求体（proof数组）
+- [x] 2.3 运行代码生成命令生成 Retrofit 代码
 
 ## 3. 控制器层
-- [ ] 3.1 在 PayOrderDetailCtrl 中添加保存支付凭证方法 (savePaymentProof)
-- [ ] 3.2 方法应接收凭证URL列表作为参数
-- [ ] 3.3 调用保存支付凭证接口，传递订单ID和凭证URL列表
-- [ ] 3.4 添加保存状态的加载指示（isSavingProof）
-- [ ] 3.5 添加错误处理和成功提示
-- [ ] 3.6 保存成功后刷新订单详情，更新订单状态
-- [ ] 3.7 实现防抖机制，避免频繁调用保存接口（使用 Timer 或 debounce）
-- [ ] 3.8 在上传凭证成功后（uploadSingleImage、uploadAllImages）调用保存接口
-- [ ] 3.9 在删除凭证成功后（removeUploadedImage）调用保存接口
-- [ ] 3.10 跟踪上次保存的凭证列表，判断是否有未保存的变更
+- [x] 3.1 在 PayOrderDetailCtrl 中添加保存支付凭证方法 (savePaymentProof)
+- [x] 3.2 方法应接收凭证URL列表作为参数
+- [x] 3.3 调用保存支付凭证接口，传递订单ID和凭证URL列表
+- [x] 3.4 添加保存状态的加载指示（isSavingProof）
+- [x] 3.5 添加错误处理和成功提示
+- [x] 3.6 保存成功后刷新订单详情，更新订单状态
+- [x] 3.7 实现防抖机制，避免频繁调用保存接口（使用 Timer 或 debounce）
+- [x] 3.8 在上传凭证成功后（uploadSingleImage、uploadAllImages）调用保存接口
+- [x] 3.9 在删除凭证成功后（removeUploadedImage）调用保存接口
+- [x] 3.10 跟踪上次保存的凭证列表，判断是否有未保存的变更
 
 ## 4. 视图层
-- [ ] 4.1 修改上传凭证对话框的关闭逻辑
-- [ ] 4.2 在关闭对话框时，检查是否有未保存的凭证变更
-- [ ] 4.3 如果有未保存的变更，调用保存支付凭证方法
-- [ ] 4.4 在保存过程中显示加载状态，防止重复操作
-- [ ] 4.5 保存成功后关闭对话框，保存失败时显示错误提示
+- [x] 4.1 修改上传凭证对话框的关闭逻辑
+- [x] 4.2 在关闭对话框时，检查是否有未保存的凭证变更
+- [x] 4.3 如果有未保存的变更，调用保存支付凭证方法
+- [x] 4.4 在保存过程中显示加载状态，防止重复操作
+- [x] 4.5 保存成功后关闭对话框，保存失败时显示错误提示
 
 ## 5. 状态管理
-- [ ] 5.1 在 PayOrderDetailState 中添加保存凭证的加载状态字段（isSavingProof）
-- [ ] 5.2 在 PayOrderDetailState 中添加上次保存的凭证列表字段（lastSavedProofUrls），用于判断是否有未保存的变更
-- [ ] 5.3 更新 copyWith 方法以支持新字段
+- [x] 5.1 在 PayOrderDetailState 中添加保存凭证的加载状态字段（isSavingProof）
+- [x] 5.2 在 PayOrderDetailState 中添加上次保存的凭证列表字段（lastSavedProofUrls），用于判断是否有未保存的变更
+- [x] 5.3 更新 copyWith 方法以支持新字段
 
 ## 6. 测试和验证
 - [ ] 6.1 测试上传凭证成功后立即调用保存接口

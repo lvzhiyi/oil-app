@@ -18,7 +18,7 @@ class UploadVoucherDialog extends StatefulWidget {
 
   const UploadVoucherDialog({
     Key? key,
-    this.maxUploadCount = 20,
+    this.maxUploadCount = 5,
     required this.onPickImage,
     required this.onRemoveImage,
     required this.onUploadImage,
