@@ -44,6 +44,7 @@ abstract class OrderModel with _$OrderModel {
     String? bankName,
     String? bankBranchNumber,
     String? remark,
+    double? availableInventory,
   }) = _OrderModel;
 
   factory OrderModel.fromJson(Map<String, dynamic> json) =>

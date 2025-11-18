@@ -22,9 +22,9 @@ import 'controller.dart';
 
 class PayOrderDetailView extends HookWidget {
   final PayOrderDetailState state;
-  final OrderModel order;
+  final OrderModel? order;
 
-  const PayOrderDetailView({Key? key, required this.state, required this.order})
+  const PayOrderDetailView({Key? key, required this.state, this.order})
       : super(key: key);
 
   @override
@@ -522,7 +522,7 @@ class PayOrderDetailView extends HookWidget {
             // final hasImages = dialogState.selectedImagePaths.isNotEmpty;
 
             return PopScope(
-              canPop: !dialogState.isUploading,
+              canPop: !dialogState.isUploading && !dialogState.isSavingProof,
               child: AlertDialog(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -562,7 +562,7 @@ class PayOrderDetailView extends HookWidget {
                             dialogState.uploadingImageIndices,
                         selectedImagePaths: dialogState.selectedImagePaths,
                         uploadedImageUrls: dialogState.uploadedImageUrls,
-                        maxUploadCount: 20,
+                        maxUploadCount: 5,
                       ),
                     ),
                   ),
@@ -570,19 +570,45 @@ class PayOrderDetailView extends HookWidget {
                 actions: [
                   SizedBox(width: pt(12)),
                   CommonButton(
-                    btnText: dialogState.selectedImagePaths.isEmpty &&
-                            dialogState.uploadedImageUrls.isNotEmpty
-                        ? '完成'
-                        : '取消',
-                    onTap: () {
-                      if (dialogState.selectedImagePaths.isEmpty &&
-                          dialogState.uploadedImageUrls.isNotEmpty) {
-                        controller.uploadAllImages();
-                      } else {
-                        controller.clearSelectedImages();
-                      }
-                      Navigator.of(dialogContext).pop();
-                    },
+                    btnText: dialogState.isSavingProof
+                        ? '保存中...'
+                        : (dialogState.selectedImagePaths.isEmpty &&
+                                dialogState.uploadedImageUrls.isNotEmpty
+                            ? '完成'
+                            : '取消'),
+                    onTap: dialogState.isSavingProof
+                        ? null
+                        : () async {
+                            // 如果有待上传的图片，先上传
+                            if (dialogState.selectedImagePaths.isNotEmpty) {
+                              await controller.uploadAllImages();
+                            } else {
+                              controller.clearSelectedImages();
+                            }
+
+                            // 检查是否有未保存的凭证变更
+                            final hasUnsavedChanges = !_isProofUrlsEqual(
+                              dialogState.uploadedImageUrls,
+                              dialogState.lastSavedProofUrls,
+                            );
+
+                            if (hasUnsavedChanges &&
+                                dialogState.uploadedImageUrls.isNotEmpty) {
+                              // 有未保存的变更，先保存再关闭
+                              try {
+                                await controller.savePaymentProof(
+                                    dialogState.uploadedImageUrls);
+                                if (dialogContext.mounted) {
+                                  Navigator.of(dialogContext).pop();
+                                }
+                              } catch (e) {
+                                // 保存失败，不关闭对话框，错误提示已在控制器中显示
+                              }
+                            } else {
+                              // 没有未保存的变更，直接关闭
+                              Navigator.of(dialogContext).pop();
+                            }
+                          },
                   ),
                 ],
               ),
@@ -596,5 +622,18 @@ class PayOrderDetailView extends HookWidget {
   /// 格式化日期时间
   String _formatDateTime(int? timestamp) {
     return formatDateFromMilliSecond(timestamp!, format: 'yyyy-MM-dd HH:mm:ss');
+  }
+
+  /// 判断两个凭证URL列表是否相等
+  bool _isProofUrlsEqual(List<String> urls1, List<String> urls2) {
+    if (urls1.length != urls2.length) {
+      return false;
+    }
+    for (int i = 0; i < urls1.length; i++) {
+      if (urls1[i] != urls2[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 }

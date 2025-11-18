@@ -21,6 +21,13 @@ abstract class StationService {
   /// 新增加油站
   @POST('/stations')
   Future bindStation(@Body() BindStationRequest request);
+
+  /// 编辑加油站
+  @PUT('/stations/{id}')
+  Future updateStation(
+    @Path('id') String id,
+    @Body() BindStationRequest request,
+  );
 }
 
 /// 获取StationService实例，确保网络管理器已初始化

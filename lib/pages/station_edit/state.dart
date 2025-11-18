@@ -10,6 +10,8 @@ class StationEditState {
   final String cityCode;
   final String areaCode;
   final String addressDetail;
+  final String businessLicenseUrl;
+  final String fuelRetailPermitUrl;
   final bool isLoading;
   final bool hasError;
   final String? errorMessage;
@@ -24,6 +26,8 @@ class StationEditState {
     this.cityCode = '',
     this.areaCode = '',
     this.addressDetail = '',
+    this.businessLicenseUrl = '',
+    this.fuelRetailPermitUrl = '',
     this.isLoading = false,
     this.hasError = false,
     this.errorMessage,
@@ -39,6 +43,8 @@ class StationEditState {
     String? cityCode,
     String? areaCode,
     String? addressDetail,
+    String? businessLicenseUrl,
+    String? fuelRetailPermitUrl,
     bool? isLoading,
     bool? hasError,
     String? errorMessage,
@@ -53,6 +59,8 @@ class StationEditState {
       cityCode: cityCode ?? this.cityCode,
       areaCode: areaCode ?? this.areaCode,
       addressDetail: addressDetail ?? this.addressDetail,
+      businessLicenseUrl: businessLicenseUrl ?? this.businessLicenseUrl,
+      fuelRetailPermitUrl: fuelRetailPermitUrl ?? this.fuelRetailPermitUrl,
       isLoading: isLoading ?? this.isLoading,
       hasError: hasError ?? this.hasError,
       errorMessage: errorMessage ?? this.errorMessage,

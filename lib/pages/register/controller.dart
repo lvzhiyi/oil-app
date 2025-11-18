@@ -8,8 +8,6 @@ import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/auth_req_type.dart';
 import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/pages/register/state.dart';
-import 'package:oil_business_app/router/router.dart';
-import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
 
 class RegisterCtrl extends Cubit<RegisterState> {

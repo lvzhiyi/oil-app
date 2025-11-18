@@ -1,55 +1,31 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oil_business_app/models/station_model.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:oil_business_app/global/commom/upload.dart';
+import 'package:oil_business_app/global/model/common_req_type.dart';
+import 'package:oil_business_app/global/model/station_req_type.dart';
+import 'package:oil_business_app/global/service/common_service.dart';
+import 'package:oil_business_app/global/service/station_service.dart';
 import 'package:oil_business_app/pages/station_edit/state.dart';
 import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/utils/file_util.dart';
 import 'package:oil_business_app/utils/log.dart';
+import 'package:oil_business_app/widgets/popup/toast.dart';
 
 class StationEditCtrl extends Cubit<StationEditState> {
   StationEditCtrl({String? stationId}) : super(StationEditState()) {
+    _stationId = stationId;
     if (stationId != null) {
       initState(stationId);
     }
   }
 
-  static final List<StationModel> _mockStations = [
-    StationModel(
-      id: '1',
-      name: '中石化北京朝阳加油站',
-      address: '北京市朝阳区建国路88号',
-    ),
-    StationModel(
-      id: '2',
-      name: '中石油上海浦东加油站',
-      address: '上海市浦东新区世纪大道1000号',
-    ),
-    StationModel(
-      id: '3',
-      name: '中海油广州天河加油站',
-      address: '广州市天河区天河路123号',
-    ),
-    StationModel(
-      id: '4',
-      name: '中石化深圳南山加油站',
-      address: '深圳市南山区科技园南路2001号',
-    ),
-  ];
+  String? _stationId;
 
   void initState(String stationId) {
-    final station = _mockStations.firstWhere(
-      (s) => s.id == stationId,
-      orElse: () => StationModel(
-        id: stationId,
-        name: '',
-        address: '',
-      ),
-    );
-
-    emit(state.copyWith(
-      station: station,
-      name: station.name,
-      addressDetail: station.address,
-    ));
+    // TODO: 从API加载加油站信息
+    // 目前保持空状态，等待后续实现
   }
 
   void updateName(String name) {
@@ -76,8 +52,15 @@ class StationEditCtrl extends Cubit<StationEditState> {
     emit(state.copyWith(addressDetail: addressDetail));
   }
 
+  void updateBusinessLicenseUrl(String url) {
+    emit(state.copyWith(businessLicenseUrl: url));
+  }
+
+  void updateFuelRetailPermitUrl(String url) {
+    emit(state.copyWith(fuelRetailPermitUrl: url));
+  }
+
   Future<bool> save(BuildContext context) async {
-    // 验证必填字段（遵循单一职责原则）
     if (state.name.isEmpty) {
       emit(state.copyWith(
         hasError: true,
@@ -86,7 +69,9 @@ class StationEditCtrl extends Cubit<StationEditState> {
       return false;
     }
 
-    if (state.provinceCode.isEmpty || state.cityCode.isEmpty || state.areaCode.isEmpty) {
+    if (state.provinceCode.isEmpty ||
+        state.cityCode.isEmpty ||
+        state.areaCode.isEmpty) {
       emit(state.copyWith(
         hasError: true,
         errorMessage: '请选择省市区',
@@ -102,37 +87,61 @@ class StationEditCtrl extends Cubit<StationEditState> {
       return false;
     }
 
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(isLoading: true, hasError: false, errorMessage: null));
 
     try {
-      await Future.delayed(const Duration(milliseconds: 500));
+      String businessLicenseUrl = state.businessLicenseUrl;
+      String fuelRetailPermitUrl = state.fuelRetailPermitUrl;
 
-      // 构建完整地址（遵循 DRY 原则）
-      final fullAddress = '${state.provinceName}${state.cityName}${state.areaName}${state.addressDetail}';
+      if (businessLicenseUrl.isNotEmpty &&
+          !businessLicenseUrl.startsWith('http')) {
+        final uploadedUrl = await uploadImage(businessLicenseUrl);
+        if (uploadedUrl == null) {
+          SportsToast.showWarning('上传营业执照失败，请稍后重试');
+          emit(state.copyWith(isLoading: false));
+          return false;
+        }
+        businessLicenseUrl = uploadedUrl;
+      }
 
-      final updatedStation = state.station?.copyWith(
-            name: state.name,
-            address: fullAddress,
-          ) ??
-          StationModel(
-            id: DateTime.now().millisecondsSinceEpoch.toString(),
-            name: state.name,
-            address: fullAddress,
-          );
+      if (fuelRetailPermitUrl.isNotEmpty &&
+          !fuelRetailPermitUrl.startsWith('http')) {
+        final uploadedUrl = await uploadImage(fuelRetailPermitUrl);
+        if (uploadedUrl == null) {
+          SportsToast.showWarning('上传成品油零售许可失败，请稍后重试');
+          emit(state.copyWith(isLoading: false));
+          return false;
+        }
+        fuelRetailPermitUrl = uploadedUrl;
+      }
 
-      final index = _mockStations.indexWhere((s) => s.id == updatedStation.id);
-      if (index != -1) {
-        _mockStations[index] = updatedStation;
+      final reqParams = BindStationRequest(
+        stationName: state.name,
+        provinceCode: state.provinceCode,
+        provinceName: state.provinceName,
+        cityCode: state.cityCode,
+        cityName: state.cityName,
+        areaCode: state.areaCode,
+        areaName: state.areaName,
+        addressDetail: state.addressDetail,
+        businessLicenseUrl: businessLicenseUrl,
+        fuelRetailPermitUrl: fuelRetailPermitUrl,
+      );
+
+      if (_stationId == null) {
+        await stationService.bindStation(reqParams);
+        l.d('StationEditCtrl', '新增加油站成功');
       } else {
-        _mockStations.add(updatedStation);
+        await stationService.updateStation(_stationId!, reqParams);
+        l.d('StationEditCtrl', '编辑加油站成功: $_stationId');
       }
 
       emit(state.copyWith(
         isLoading: false,
         hasError: false,
-        station: updatedStation,
       ));
 
+      SportsToast.showSuccess('保存成功');
       BaseRouter.pop();
       return true;
     } catch (e) {
@@ -142,8 +151,8 @@ class StationEditCtrl extends Cubit<StationEditState> {
         hasError: true,
         errorMessage: e.toString(),
       ));
+      SportsToast.showError('保存失败，请稍后重试');
       return false;
     }
   }
 }
-

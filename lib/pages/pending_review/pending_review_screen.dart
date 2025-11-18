@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:oil_business_app/resources/colors.dart';
-import 'package:oil_business_app/router/router.dart';
-import 'package:oil_business_app/router/routes.dart';
-import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/static/img.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
-import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
 class PendingReviewScreen extends StatefulWidget {

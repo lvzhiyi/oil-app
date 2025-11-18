@@ -10,6 +10,8 @@ class PayOrderDetailState {
   final List<int> uploadingImageIndices; // 正在上传的图片索引列表
   final bool isLoadingImageUrl; // 是否正在加载图片URL
   final String? errorMessage; // 错误信息
+  final bool isSavingProof; // 是否正在保存支付凭证
+  final List<String> lastSavedProofUrls; // 上次保存的凭证URL列表
 
   PayOrderDetailState({
     this.order,
@@ -21,6 +23,8 @@ class PayOrderDetailState {
     this.uploadingImageIndices = const [],
     this.isLoadingImageUrl = false,
     this.errorMessage,
+    this.isSavingProof = false,
+    this.lastSavedProofUrls = const [],
   });
 
   PayOrderDetailState copyWith({
@@ -34,6 +38,8 @@ class PayOrderDetailState {
     List<int>? uploadingImageIndices,
     bool? isLoadingImageUrl,
     String? errorMessage,
+    bool? isSavingProof,
+    List<String>? lastSavedProofUrls,
   }) {
     return PayOrderDetailState(
       order: order ?? this.order,
@@ -48,6 +54,8 @@ class PayOrderDetailState {
           uploadingImageIndices ?? this.uploadingImageIndices,
       isLoadingImageUrl: isLoadingImageUrl ?? this.isLoadingImageUrl,
       errorMessage: errorMessage ?? this.errorMessage,
+      isSavingProof: isSavingProof ?? this.isSavingProof,
+      lastSavedProofUrls: lastSavedProofUrls ?? this.lastSavedProofUrls,
     );
   }
 }

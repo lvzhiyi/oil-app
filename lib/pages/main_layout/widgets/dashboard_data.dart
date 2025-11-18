@@ -35,6 +35,6 @@ List<BottomNavigationBarData> bottomNavigationBarList = [
   BottomNavigationBarData(
     title: '我的',
     image: AssetsIcon.IC_PROFILE,
-    screen: ProfilePage(),
+    screen: const ProfilePage(),
   ),
 ];
