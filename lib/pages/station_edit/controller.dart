@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:oil_business_app/global/commom/upload.dart';
 import 'package:oil_business_app/global/model/common_req_type.dart';
 import 'package:oil_business_app/global/model/station_req_type.dart';
 import 'package:oil_business_app/global/service/common_service.dart';
@@ -68,7 +69,9 @@ class StationEditCtrl extends Cubit<StationEditState> {
       return false;
     }
 
-    if (state.provinceCode.isEmpty || state.cityCode.isEmpty || state.areaCode.isEmpty) {
+    if (state.provinceCode.isEmpty ||
+        state.cityCode.isEmpty ||
+        state.areaCode.isEmpty) {
       emit(state.copyWith(
         hasError: true,
         errorMessage: '请选择省市区',
@@ -90,7 +93,8 @@ class StationEditCtrl extends Cubit<StationEditState> {
       String businessLicenseUrl = state.businessLicenseUrl;
       String fuelRetailPermitUrl = state.fuelRetailPermitUrl;
 
-      if (businessLicenseUrl.isNotEmpty && !businessLicenseUrl.startsWith('http')) {
+      if (businessLicenseUrl.isNotEmpty &&
+          !businessLicenseUrl.startsWith('http')) {
         final uploadedUrl = await uploadImage(businessLicenseUrl);
         if (uploadedUrl == null) {
           SportsToast.showWarning('上传营业执照失败，请稍后重试');
@@ -100,7 +104,8 @@ class StationEditCtrl extends Cubit<StationEditState> {
         businessLicenseUrl = uploadedUrl;
       }
 
-      if (fuelRetailPermitUrl.isNotEmpty && !fuelRetailPermitUrl.startsWith('http')) {
+      if (fuelRetailPermitUrl.isNotEmpty &&
+          !fuelRetailPermitUrl.startsWith('http')) {
         final uploadedUrl = await uploadImage(fuelRetailPermitUrl);
         if (uploadedUrl == null) {
           SportsToast.showWarning('上传成品油零售许可失败，请稍后重试');
@@ -150,48 +155,4 @@ class StationEditCtrl extends Cubit<StationEditState> {
       return false;
     }
   }
-
-  Future<String?> uploadImage(String url) async {
-    final file = XFile(url);
-    final fileBytes = await file.readAsBytes();
-    final filename = file.name;
-    final contentType = FileUtil.getContentType(file.mimeType, filename);
-    
-    final response = await commonService.getUploadSignature(
-      UploadSignatureRequest(
-        bizPrefix: 'stations',
-        contentType: contentType,
-        contentLength: fileBytes.length,
-      ),
-    );
-
-    final key = response.path ?? (response.dir != null ? '${response.dir}$filename' : filename);
-
-    final formData = FormData.fromMap({
-      'name': filename,
-      'policy': response.policy,
-      'OSSAccessKeyId': response.accessKeyId,
-      'success_action_status': '200',
-      'signature': response.signature,
-      'key': key,
-      'file': await MultipartFile.fromFile(url),
-    });
-
-    Response<dynamic> uploadResponse;
-
-    try {
-      uploadResponse = await Dio(BaseOptions(baseUrl: response.host ?? ''))
-          .post(response.host ?? '', data: formData);
-    } catch (e) {
-      l.e('StationEditCtrl', '图片上传失败: $e');
-      return null;
-    }
-
-    if (uploadResponse.statusCode != 200) {
-      l.e('StationEditCtrl', '图片上传失败，状态码: ${uploadResponse.statusCode}');
-      return null;
-    }
-    return '${response.host}$key';
-  }
 }
-

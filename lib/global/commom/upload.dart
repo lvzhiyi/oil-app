@@ -2,36 +2,61 @@ import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:oil_business_app/global/model/common_req_type.dart';
 import 'package:oil_business_app/global/service/common_service.dart';
+import 'package:oil_business_app/utils/file_util.dart';
+import 'package:oil_business_app/utils/log.dart';
 
 Future<String?> uploadImage(String url) async {
-  final contenLength = await XFile(url).readAsBytes();
-  final contentType = XFile(url).mimeType ?? url.split('.').last;
+  final xFile = XFile(url);
+  final contentBytes = await xFile.readAsBytes();
+  final contentType = FileUtil.getContentType(xFile.mimeType, url);
 
   final response = await commonService.getUploadSignature(
     UploadSignatureRequest(
       bizPrefix: 'stations',
       contentType: contentType,
-      contentLength: contenLength.length,
+      contentLength: contentBytes.length,
     ),
   );
 
+  if (response.host == null || response.host!.isEmpty) {
+    l.e('uploadImage', '上传签名返回的host为空');
+    return null;
+  }
+
+  if (response.path == null || response.path!.isEmpty) {
+    l.e('uploadImage', '上传签名返回的path为空');
+    return null;
+  }
+
   final formData = FormData.fromMap({
-    'file': await MultipartFile.fromFile(url),
     'policy': response.policy,
     'x-oss-signature-version': response.signatureVersion,
     'x-oss-credential': response.credential,
     'x-oss-date': response.date,
+    // 'x-oss-access-key-id': response.accessKeyId,
     'success_action_status': '200',
     'key': response.path,
     'x-oss-signature': response.signature,
     'x-oss-security-token': response.securityToken,
+    'file': await MultipartFile.fromFile(
+      url,
+      filename: url.split('/').last,
+    ),
   });
 
-  final uploadResponse = await Dio(BaseOptions(baseUrl: response.host ?? ''))
-      .post(response.host ?? '', data: formData);
+  try {
+    final uploadResponse = await Dio().post(
+      response.host!,
+      data: formData,
+    );
 
-  if (uploadResponse.statusCode != 200) {
+    if (uploadResponse.statusCode != 200) {
+      l.e('uploadImage', '上传失败，状态码: ${uploadResponse.statusCode}, 响应: ${uploadResponse.data}');
+      return null;
+    }
+    return '${response.host}/${response.path}';
+  } catch (e) {
+    l.e('uploadImage', '上传异常: $e');
     return null;
   }
-  return '${response.host}/${response.path}';
 }
