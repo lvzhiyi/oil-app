@@ -2,7 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
+import 'package:oil_business_app/global/model/auth_req_type.dart';
+import 'package:oil_business_app/global/model/auth_rep_type.dart';
 import 'package:oil_business_app/net/code.dart';
+import 'package:oil_business_app/net/net_manager.dart';
 import 'package:oil_business_app/net/response.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
@@ -11,7 +14,9 @@ import 'dart:async';
 /// 响应拦截器=>返回数据转换
 class HttpRespInterceptor extends InterceptorsWrapper {
   /// 用于控制并发刷新，确保同时只有一个刷新请求
-  // static Completer<bool>? _refreshCompleter;
+  static Completer<bool>? _refreshCompleter;
+  /// 标记是否正在刷新token
+  static bool _isRefreshing = false;
 
   HttpRespInterceptor() : super();
 
@@ -54,11 +59,118 @@ class HttpRespInterceptor extends InterceptorsWrapper {
 
   @override
   onError(err, ErrorInterceptorHandler handler) async {
+    final statusCode = err.response?.statusCode;
+
     // 检查是否是401错误，如果是则尝试token刷新
-    if ([401, 403].contains(err.response?.statusCode)) {
-      l.i('HttpRespInterceptor', '检测到401错误，尝试token刷新');
+    if (statusCode == 401) {
+      final requestOptions = err.requestOptions;
+
+      // 如果是刷新token的请求本身返回401，说明refreshToken也过期了，需要重新登录
+      if (requestOptions.path == '/auth/refresh-token') {
+        l.e('HttpRespInterceptor', 'refreshToken已过期，需要重新登录');
+        BaseConfig.appContext?.read<AppController>().logout();
+        if (err.response?.data is String) {
+          SportsToast.showWarning(err.response?.data as String);
+        } else if (err.response?.data['message'] != null) {
+          SportsToast.showWarning(err.response?.data['message']);
+        } else {
+          SportsToast.showWarning('登录已过期，请重新登录');
+        }
+        return handler.reject(err);
+      }
+
+      // 如果正在刷新token，等待刷新完成
+      if (_isRefreshing && _refreshCompleter != null) {
+        l.i('HttpRespInterceptor', '正在刷新token，等待刷新完成');
+        try {
+          final refreshSuccess = await _refreshCompleter!.future;
+          if (refreshSuccess) {
+            // 刷新成功，重新发送原始请求
+            return _retryRequest(requestOptions, handler);
+          } else {
+            // 刷新失败，直接拒绝请求
+            return handler.reject(err);
+          }
+        } catch (e) {
+          l.e('HttpRespInterceptor', '等待token刷新时出错: $e');
+          return handler.reject(err);
+        }
+      }
+
+      // 开始刷新token
+      _isRefreshing = true;
+      _refreshCompleter = Completer<bool>();
+
+      try {
+        final appController = BaseConfig.appContext?.read<AppController>();
+        final refreshToken = appController?.state.authResponse?.refreshToken;
+
+        if (refreshToken == null || refreshToken.isEmpty) {
+          l.e('HttpRespInterceptor', 'refreshToken为空，无法刷新');
+          _isRefreshing = false;
+          _refreshCompleter?.complete(false);
+          _refreshCompleter = null;
+          BaseConfig.appContext?.read<AppController>().logout();
+          SportsToast.showWarning('登录已过期，请重新登录');
+          return handler.reject(err);
+        }
+
+        l.i('HttpRespInterceptor', '开始刷新token');
+
+        // 创建一个新的Dio实例用于刷新token，避免触发拦截器循环
+        final refreshDio = Dio(BaseOptions(
+          baseUrl: requestOptions.baseUrl,
+          connectTimeout: requestOptions.connectTimeout,
+          receiveTimeout: requestOptions.receiveTimeout,
+          sendTimeout: requestOptions.sendTimeout,
+        ));
+
+        // 调用刷新token接口
+        final refreshRequest = RefreshTokenRequest(refreshToken: refreshToken);
+        final response = await refreshDio.post<Map<String, dynamic>>(
+          '/auth/refresh-token',
+          data: refreshRequest.toJson(),
+        );
+
+        // 手动处理响应格式，因为刷新token的请求不经过响应拦截器
+        BaseResponse baseResponse = BaseResponse.fromJson(response.data!);
+        if (baseResponse.code != HttpCode.success) {
+          throw DioException(
+            requestOptions: response.requestOptions,
+            response: response,
+            error: '刷新token失败: ${baseResponse.message}',
+          );
+        }
+
+        // 从data字段解析AuthResponse
+        final authResponse = AuthResponse.fromJson(
+          baseResponse.data as Map<String, dynamic>,
+        );
+
+        // 更新AppController中的token
+        appController?.setAuthResponse(authResponse);
+
+        l.i('HttpRespInterceptor', 'token刷新成功');
+        _isRefreshing = false;
+        _refreshCompleter?.complete(true);
+        _refreshCompleter = null;
+
+        // 刷新成功，重新发送原始请求
+        return _retryRequest(requestOptions, handler);
+      } catch (e) {
+        l.e('HttpRespInterceptor', '刷新token失败: $e');
+        _isRefreshing = false;
+        _refreshCompleter?.complete(false);
+        _refreshCompleter = null;
+
+        // 刷新失败，清除认证信息并跳转到登录页
+        BaseConfig.appContext?.read<AppController>().logout();
+        SportsToast.showWarning('登录已过期，请重新登录');
+        return handler.reject(err);
+      }
     }
 
+    // 处理其他错误
     if (err.response?.data is String) {
       SportsToast.showWarning(err.response?.data as String);
       return handler.reject(err);
@@ -71,5 +183,57 @@ class HttpRespInterceptor extends InterceptorsWrapper {
     }
 
     return handler.reject(err);
+  }
+
+  /// 重新发送原始请求
+  Future<void> _retryRequest(
+    RequestOptions requestOptions,
+    ErrorInterceptorHandler handler,
+  ) async {
+    try {
+      // 获取Dio实例
+      final dio = netManager.clientDio;
+      if (dio == null) {
+        l.e('HttpRespInterceptor', 'Dio实例为空，无法重新发送请求');
+        return handler.reject(DioException(
+          requestOptions: requestOptions,
+          error: 'Dio实例为空',
+        ));
+      }
+
+      // 更新请求头中的Authorization
+      final appController = BaseConfig.appContext?.read<AppController>();
+      final newAccessToken = appController?.state.authResponse?.accessToken;
+
+      if (newAccessToken != null && newAccessToken.isNotEmpty) {
+        requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
+      }
+
+      // 重新发送请求
+      final options = Options(
+        method: requestOptions.method,
+        headers: requestOptions.headers,
+        extra: requestOptions.extra,
+      );
+
+      final response = await dio.request<dynamic>(
+        requestOptions.path,
+        data: requestOptions.data,
+        queryParameters: requestOptions.queryParameters,
+        options: options,
+        cancelToken: requestOptions.cancelToken,
+        onReceiveProgress: requestOptions.onReceiveProgress,
+        onSendProgress: requestOptions.onSendProgress,
+      );
+
+      // 返回成功响应，需要再次经过onResponse处理
+      return handler.resolve(response);
+    } catch (e) {
+      l.e('HttpRespInterceptor', '重新发送请求失败: $e');
+      return handler.reject(DioException(
+        requestOptions: requestOptions,
+        error: e,
+      ));
+    }
   }
 }

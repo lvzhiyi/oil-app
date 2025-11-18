@@ -54,3 +54,15 @@ class LoginRequest {
         'code': code,
       };
 }
+
+/// 刷新Token请求
+/// [refreshToken] 刷新令牌
+class RefreshTokenRequest {
+  final String refreshToken;
+
+  RefreshTokenRequest({required this.refreshToken});
+
+  Map<String, dynamic> toJson() => {
+        'refreshToken': refreshToken,
+      };
+}

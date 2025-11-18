@@ -15,10 +15,9 @@ abstract class AuthService {
   @POST('/auth/login')
   Future<AuthResponse> login(@Body() LoginRequest request);
 
-  // /// 刷新Token
-  // @POST('/auths/refresh')
-  // Future<RefreshTokenResponse> refreshToken(
-  //     @Body() RefreshTokenRequest request);
+  /// 刷新Token
+  @POST('/auth/refresh-token')
+  Future<AuthResponse> refreshToken(@Body() RefreshTokenRequest request);
 
   /// 用户注册
   @POST('/auth/register')
