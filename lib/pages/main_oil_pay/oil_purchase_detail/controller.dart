@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:oil_business_app/pages/main_oil_pay/model/oil_order_req_type.dart';
 import 'package:oil_business_app/pages/main_oil_pay/model/oil_order_res.type.dart';
 import 'package:oil_business_app/pages/main_oil_pay/service/oil_order_service.dart';
+import 'package:oil_business_app/pages/pay_order_list/service/pay_order_list.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
@@ -59,7 +60,28 @@ class OilPurchaseDetailCtrl extends Cubit<OilPurchaseDetailState> {
 
       // 延迟一下再返回，让用户看到成功提示
       await Future.delayed(const Duration(milliseconds: 500));
-      BaseRouter.push(url: AppPage.payOrderDetailPage.path);
+
+      // 获取最新订单列表，找到刚创建的订单
+      try {
+        final orderListResponse =
+            await payOrderListService.getOrderList(page: 1, pageSize: 1);
+        final latestOrder = orderListResponse.list?.isNotEmpty == true
+            ? orderListResponse.list!.first
+            : null;
+
+        if (latestOrder != null) {
+          BaseRouter.push(
+            url: AppPage.payOrderDetailPage.path,
+            extra: {'order': latestOrder},
+          );
+        } else {
+          // 如果获取不到最新订单，跳转到订单列表页
+          BaseRouter.push(url: AppPage.payOrderListPage.path);
+        }
+      } catch (e) {
+        // 如果获取订单列表失败，跳转到订单列表页
+        BaseRouter.push(url: AppPage.payOrderListPage.path);
+      }
     } catch (e) {
       emit(state.copyWith(isLoading: false));
       // 错误提示由拦截器统一处理，这里不需要再次提示

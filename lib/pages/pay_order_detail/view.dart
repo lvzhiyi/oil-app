@@ -22,9 +22,9 @@ import 'controller.dart';
 
 class PayOrderDetailView extends HookWidget {
   final PayOrderDetailState state;
-  final OrderModel order;
+  final OrderModel? order;
 
-  const PayOrderDetailView({Key? key, required this.state, required this.order})
+  const PayOrderDetailView({Key? key, required this.state, this.order})
       : super(key: key);
 
   @override
