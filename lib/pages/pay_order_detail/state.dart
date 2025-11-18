@@ -1,7 +1,7 @@
-import 'package:oil_business_app/pages/pay_order_detail/model/pay_order_type.dart';
+import '../pay_order_list/model/orders_data.dart';
 
 class PayOrderDetailState {
-  final PayOrderDetailModel? orderDetail;
+  final OrderModel? order;
   final bool isLoading; // 是否正在加载订单详情
   final bool isUploading;
   final bool hasUploaded;
@@ -12,7 +12,7 @@ class PayOrderDetailState {
   final String? errorMessage; // 错误信息
 
   PayOrderDetailState({
-    this.orderDetail,
+    this.order,
     this.isLoading = false,
     this.isUploading = false,
     this.hasUploaded = false,
@@ -24,7 +24,7 @@ class PayOrderDetailState {
   });
 
   PayOrderDetailState copyWith({
-    PayOrderDetailModel? orderDetail,
+    OrderModel? order,
     bool? isLoading,
     bool? isUploading,
     bool? hasUploaded,
@@ -36,7 +36,7 @@ class PayOrderDetailState {
     String? errorMessage,
   }) {
     return PayOrderDetailState(
-      orderDetail: orderDetail ?? this.orderDetail,
+      order: order ?? this.order,
       isLoading: isLoading ?? this.isLoading,
       isUploading: isUploading ?? this.isUploading,
       hasUploaded: hasUploaded ?? this.hasUploaded,

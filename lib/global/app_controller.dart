@@ -101,7 +101,8 @@ class AppController extends HydratedCubit<AppState>
           ? AuthResponse.fromJson(json['authResponse'])
           : null,
       selectedStation: json['selectedStation'] != null
-          ? StationModel.fromJson(json['selectedStation'] as Map<String, dynamic>)
+          ? StationModel.fromJson(
+              json['selectedStation'] as Map<String, dynamic>)
           : null,
     );
   }

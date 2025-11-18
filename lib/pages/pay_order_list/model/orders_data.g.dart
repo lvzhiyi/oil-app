@@ -24,7 +24,7 @@ Map<String, dynamic> _$OrderListResponseToJson(OrderListResponse instance) =>
       'pageSize': instance.pageSize,
     };
 
-OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
+_OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => _OrderModel(
       id: (json['id'] as num?)?.toInt(),
       orderNo: json['orderNo'] as String?,
       status: OrderStatus.fromValue((json['status'] as num).toInt()),
@@ -36,9 +36,14 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
       totalAmount: (json['totalAmount'] as num?)?.toDouble(),
       createdAt: json['createdAt'] as String?,
       updatedAt: json['updatedAt'] as String?,
+      accountName: json['accountName'] as String?,
+      bankAccount: json['bankAccount'] as String?,
+      bankName: json['bankName'] as String?,
+      bankBranchNumber: json['bankBranchNumber'] as String?,
+      remark: json['remark'] as String?,
     );
 
-Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
+Map<String, dynamic> _$OrderModelToJson(_OrderModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'orderNo': instance.orderNo,
@@ -51,6 +56,11 @@ Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
       'totalAmount': instance.totalAmount,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
+      'accountName': instance.accountName,
+      'bankAccount': instance.bankAccount,
+      'bankName': instance.bankName,
+      'bankBranchNumber': instance.bankBranchNumber,
+      'remark': instance.remark,
     };
 
 const _$OrderStatusEnumMap = {

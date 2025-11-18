@@ -18,141 +18,25 @@ class _PayOrderService implements PayOrderService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<OrderDetailResponse> cancelRecharge(
-    String uuid,
-    CancelRechargeRequest request,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(request.toJson());
-    final _options = _setStreamType<OrderDetailResponse>(
-      Options(method: 'PATCH', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/recharges/${uuid}',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late OrderDetailResponse _value;
-    try {
-      _value = OrderDetailResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<OrderDetailResponse> updateOrderVoucher(
-    String uuid,
-    UpdateOrderVoucherRequest request,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(request.toJson());
-    final _options = _setStreamType<OrderDetailResponse>(
-      Options(method: 'PATCH', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/recharges/${uuid}',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late OrderDetailResponse _value;
-    try {
-      _value = OrderDetailResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<FileUploadResponse> uploadFile(FormData formData) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = formData;
-    final _options = _setStreamType<FileUploadResponse>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/files/upload',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late FileUploadResponse _value;
-    try {
-      _value = FileUploadResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<FileSignUrlResponse> getFileSignUrl(String filePath) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'filePath': filePath};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<FileSignUrlResponse>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/files/sign-url',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late FileSignUrlResponse _value;
-    try {
-      _value = FileSignUrlResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<OrderDetailResponse> getOrderDetail(String uuid) async {
+  Future<OrderModel> getOrderDetail(String id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<OrderDetailResponse>(
+    final _options = _setStreamType<OrderModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/recharges/${uuid}',
+            '/oil-orders/${id}',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late OrderDetailResponse _value;
+    late OrderModel _value;
     try {
-      _value = OrderDetailResponse.fromJson(_result.data!);
+      _value = OrderModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

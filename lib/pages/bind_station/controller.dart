@@ -5,6 +5,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
+import 'package:oil_business_app/global/commom/upload.dart';
 import 'package:oil_business_app/global/model/common_req_type.dart';
 import 'package:oil_business_app/global/model/station_req_type.dart';
 import 'package:oil_business_app/global/service/common_service.dart';
@@ -92,48 +93,5 @@ class BindStationCtrl extends Cubit<BindStationState> {
     } catch (e) {
       emit(state.copyWith(loading: false));
     }
-  }
-
-  Future<String?> uploadImage(String url) async {
-    final file = XFile(url);
-    final fileBytes = await file.readAsBytes();
-    final filename = file.name;
-    final contentType = FileUtil.getContentType(file.mimeType, filename);
-    
-    final response = await commonService.getUploadSignature(
-      UploadSignatureRequest(
-        bizPrefix: 'stations',
-        contentType: contentType,
-        contentLength: fileBytes.length,
-      ),
-    );
-
-    final key = '${response.dir}$filename';
-
-    final formData = FormData.fromMap({
-      'name': filename,
-      'policy': response.policy,
-      'OSSAccessKeyId': response.accessKeyId,
-      'success_action_status': '200',
-      'signature': response.signature,
-      'key': key,
-      'file': await MultipartFile.fromFile(url),
-    });
-
-    Response<dynamic> uploadResponse;
-
-    try {
-      uploadResponse = await Dio(BaseOptions(baseUrl: response.host ?? ''))
-          .post(response.host ?? '', data: formData);
-    } catch (e) {
-      l.e('BindStationCtrl', '图片上传失败: $e');
-      return null;
-    }
-
-    if (uploadResponse.statusCode != 200) {
-      l.e('BindStationCtrl', '图片上传失败，状态码: ${uploadResponse.statusCode}');
-      return null;
-    }
-    return '${response.host}$key';
   }
 }

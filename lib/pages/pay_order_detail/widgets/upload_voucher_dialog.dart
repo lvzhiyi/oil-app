@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'image_viewer.dart';
 
 class UploadVoucherDialog extends StatefulWidget {
@@ -264,7 +266,7 @@ class _UploadVoucherDialogState extends State<UploadVoucherDialog> {
                 child: Container(
                   height: pt(28),
                   decoration: BoxDecoration(
-                    color: isUploading ? Colors.grey[600] : Colors.blue[600],
+                    color: isUploading ? Colors.grey[600] : AppColor.btnPurple,
                     borderRadius: BorderRadius.circular(pt(14)),
                     boxShadow: [
                       BoxShadow(
@@ -336,7 +338,7 @@ class _UploadVoucherDialogState extends State<UploadVoucherDialog> {
         decoration: BoxDecoration(
           color: (!hasSelectedImages || hasUploadingImages)
               ? Colors.grey[300]
-              : Colors.blue[600],
+              : AppColor.btnPurple,
           borderRadius: BorderRadius.circular(pt(16)),
         ),
         child: Row(
@@ -518,25 +520,12 @@ class _UploadVoucherDialogState extends State<UploadVoucherDialog> {
                   children: [
                     // 取消按钮
                     Expanded(
-                      child: TextButton(
-                        onPressed: () {
+                      child: CommonButton(
+                        height: pt(48),
+                        btnText: '取消',
+                        onTap: () {
                           Navigator.of(dialogContext).pop();
                         },
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: pt(12)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(pt(8)),
-                            side: BorderSide(color: Colors.grey[300]!),
-                          ),
-                        ),
-                        child: Text(
-                          '取消',
-                          style: TextStyle(
-                            fontSize: pt(16, isFontSize: true),
-                            color: Colors.grey[600],
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
                       ),
                     ),
                     SizedBox(width: pt(12)),

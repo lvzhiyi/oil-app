@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:oil_business_app/net/net_manager.dart';
+import 'package:oil_business_app/pages/pay_order_list/model/orders_data.dart';
 import 'package:retrofit/retrofit.dart';
-
-import '../model/pay_order_type.dart';
 
 part 'pay_order_service.g.dart';
 
@@ -11,36 +10,10 @@ part 'pay_order_service.g.dart';
 abstract class PayOrderService {
   factory PayOrderService(Dio dio, {String baseUrl}) = _PayOrderService;
 
-  /// 取消订单
-  @PATCH('/recharges/{uuid}')
-  Future<OrderDetailResponse> cancelRecharge(
-    @Path('uuid') String uuid,
-    @Body() CancelRechargeRequest request,
-  );
-
-  /// 更新订单的支付凭证
-  @PATCH('/recharges/{uuid}')
-  Future<OrderDetailResponse> updateOrderVoucher(
-    @Path('uuid') String uuid,
-    @Body() UpdateOrderVoucherRequest request,
-  );
-
-  /// 上传凭证文件
-  @POST('/files/upload')
-  Future<FileUploadResponse> uploadFile(
-    @Body() FormData formData,
-  );
-
-  /// 获取文件签名URL
-  @GET('/files/sign-url')
-  Future<FileSignUrlResponse> getFileSignUrl(
-    @Query('filePath') String filePath,
-  );
-
   /// 获取订单详情
-  @GET('/recharges/{uuid}')
-  Future<OrderDetailResponse> getOrderDetail(
-    @Path('uuid') String uuid,
+  @GET('/oil-orders/{id}')
+  Future<OrderModel> getOrderDetail(
+    @Path('id') String id,
   );
 }
 
