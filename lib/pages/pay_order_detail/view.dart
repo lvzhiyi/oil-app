@@ -6,8 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/pages/pay_order_list/model/orders_data.dart';
 import 'package:oil_business_app/router/router.dart';
-import 'package:oil_business_app/utils/date_util.dart';
-import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/common/base_appbar.dart';
 import 'package:oil_business_app/widgets/popup/dialog.dart';
 import 'widgets/upload_voucher_dialog.dart';
@@ -72,8 +70,9 @@ class PayOrderDetailView extends HookWidget {
                       _buildTransferInfoCard(orderDetail, context),
                     if (orderDetail?.status != OrderStatus.Completed)
                       SizedBox(height: pt(16)),
-                    if (state.uploadedImageUrls.isNotEmpty) ...[
-                      _buildUploadedImages(state.uploadedImageUrls, context),
+                    if (orderDetail?.paymentProofUrls?.isNotEmpty ?? false) ...[
+                      _buildUploadedImages(
+                          orderDetail?.paymentProofUrls ?? [], context),
                     ],
                     SizedBox(height: pt(100)), // 为底部按钮留出空间
                   ],
@@ -522,7 +521,9 @@ class PayOrderDetailView extends HookWidget {
             // final hasImages = dialogState.selectedImagePaths.isNotEmpty;
 
             return PopScope(
-              canPop: !dialogState.isUploading && !dialogState.isSavingProof,
+              canPop: !dialogState.isUploading &&
+                  !dialogState.isSavingProof &&
+                  dialogState.selectedImagePaths.isEmpty,
               child: AlertDialog(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -549,19 +550,7 @@ class PayOrderDetailView extends HookWidget {
                         onRemoveImage: (index) {
                           controller.removeSelectedImage(index);
                         },
-                        onUploadImage: (index) {
-                          controller.uploadSingleImage(index);
-                        },
-                        onUploadAllImages: () {
-                          controller.uploadAllImages();
-                        },
-                        onRemoveUploadedImage: (index) {
-                          controller.removeUploadedImage(index);
-                        },
-                        uploadingImageIndices:
-                            dialogState.uploadingImageIndices,
                         selectedImagePaths: dialogState.selectedImagePaths,
-                        uploadedImageUrls: dialogState.uploadedImageUrls,
                         maxUploadCount: 5,
                       ),
                     ),
@@ -570,45 +559,29 @@ class PayOrderDetailView extends HookWidget {
                 actions: [
                   SizedBox(width: pt(12)),
                   CommonButton(
-                    btnText: dialogState.isSavingProof
-                        ? '保存中...'
-                        : (dialogState.selectedImagePaths.isEmpty &&
-                                dialogState.uploadedImageUrls.isNotEmpty
-                            ? '完成'
-                            : '取消'),
-                    onTap: dialogState.isSavingProof
-                        ? null
-                        : () async {
-                            // 如果有待上传的图片，先上传
-                            if (dialogState.selectedImagePaths.isNotEmpty) {
-                              await controller.uploadAllImages();
-                            } else {
-                              controller.clearSelectedImages();
-                            }
-
-                            // 检查是否有未保存的凭证变更
-                            final hasUnsavedChanges = !_isProofUrlsEqual(
-                              dialogState.uploadedImageUrls,
-                              dialogState.lastSavedProofUrls,
-                            );
-
-                            if (hasUnsavedChanges &&
-                                dialogState.uploadedImageUrls.isNotEmpty) {
-                              // 有未保存的变更，先保存再关闭
-                              try {
-                                await controller.savePaymentProof(
-                                    dialogState.uploadedImageUrls);
-                                if (dialogContext.mounted) {
+                    btnText:
+                        (dialogState.isUploading || dialogState.isSavingProof)
+                            ? '上传中...'
+                            : (dialogState.selectedImagePaths.isEmpty
+                                ? '取消'
+                                : '确认上传'),
+                    onTap:
+                        (dialogState.isUploading || dialogState.isSavingProof)
+                            ? null
+                            : () async {
+                                if (dialogState.selectedImagePaths.isEmpty) {
+                                  // 没有选择图片，直接关闭
+                                  controller.clearSelectedImages();
                                   Navigator.of(dialogContext).pop();
+                                } else {
+                                  // 有选择的图片，统一上传并保存
+                                  final success =
+                                      await controller.uploadAndSaveProof();
+                                  if (success && dialogContext.mounted) {
+                                    Navigator.of(dialogContext).pop();
+                                  }
                                 }
-                              } catch (e) {
-                                // 保存失败，不关闭对话框，错误提示已在控制器中显示
-                              }
-                            } else {
-                              // 没有未保存的变更，直接关闭
-                              Navigator.of(dialogContext).pop();
-                            }
-                          },
+                              },
                   ),
                 ],
               ),
@@ -617,23 +590,5 @@ class PayOrderDetailView extends HookWidget {
         );
       },
     );
-  }
-
-  /// 格式化日期时间
-  String _formatDateTime(int? timestamp) {
-    return formatDateFromMilliSecond(timestamp!, format: 'yyyy-MM-dd HH:mm:ss');
-  }
-
-  /// 判断两个凭证URL列表是否相等
-  bool _isProofUrlsEqual(List<String> urls1, List<String> urls2) {
-    if (urls1.length != urls2.length) {
-      return false;
-    }
-    for (int i = 0; i < urls1.length; i++) {
-      if (urls1[i] != urls2[i]) {
-        return false;
-      }
-    }
-    return true;
   }
 }

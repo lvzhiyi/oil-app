@@ -50,6 +50,8 @@ mixin _$OrderModel {
   set remark(String? value);
   double? get availableInventory;
   set availableInventory(double? value);
+  List<String>? get paymentProofUrls;
+  set paymentProofUrls(List<String>? value);
 
   /// Create a copy of OrderModel
   /// with the given fields replaced by the non-null parameter values.
@@ -63,7 +65,7 @@ mixin _$OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(id: $id, orderNo: $orderNo, status: $status, depotId: $depotId, depotName: $depotName, fuelType: $fuelType, fuelPriceCny: $fuelPriceCny, purchaseTon: $purchaseTon, totalAmount: $totalAmount, createdAt: $createdAt, updatedAt: $updatedAt, accountName: $accountName, bankAccount: $bankAccount, bankName: $bankName, bankBranchNumber: $bankBranchNumber, remark: $remark, availableInventory: $availableInventory)';
+    return 'OrderModel(id: $id, orderNo: $orderNo, status: $status, depotId: $depotId, depotName: $depotName, fuelType: $fuelType, fuelPriceCny: $fuelPriceCny, purchaseTon: $purchaseTon, totalAmount: $totalAmount, createdAt: $createdAt, updatedAt: $updatedAt, accountName: $accountName, bankAccount: $bankAccount, bankName: $bankName, bankBranchNumber: $bankBranchNumber, remark: $remark, availableInventory: $availableInventory, paymentProofUrls: $paymentProofUrls)';
   }
 }
 
@@ -90,7 +92,8 @@ abstract mixin class $OrderModelCopyWith<$Res> {
       String? bankName,
       String? bankBranchNumber,
       String? remark,
-      double? availableInventory});
+      double? availableInventory,
+      List<String>? paymentProofUrls});
 }
 
 /// @nodoc
@@ -122,6 +125,7 @@ class _$OrderModelCopyWithImpl<$Res> implements $OrderModelCopyWith<$Res> {
     Object? bankBranchNumber = freezed,
     Object? remark = freezed,
     Object? availableInventory = freezed,
+    Object? paymentProofUrls = freezed,
   }) {
     return _then(_self.copyWith(
       id: freezed == id
@@ -192,6 +196,10 @@ class _$OrderModelCopyWithImpl<$Res> implements $OrderModelCopyWith<$Res> {
           ? _self.availableInventory
           : availableInventory // ignore: cast_nullable_to_non_nullable
               as double?,
+      paymentProofUrls: freezed == paymentProofUrls
+          ? _self.paymentProofUrls
+          : paymentProofUrls // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -306,7 +314,8 @@ extension OrderModelPatterns on OrderModel {
             String? bankName,
             String? bankBranchNumber,
             String? remark,
-            double? availableInventory)?
+            double? availableInventory,
+            List<String>? paymentProofUrls)?
         $default, {
     required TResult orElse(),
   }) {
@@ -330,7 +339,8 @@ extension OrderModelPatterns on OrderModel {
             _that.bankName,
             _that.bankBranchNumber,
             _that.remark,
-            _that.availableInventory);
+            _that.availableInventory,
+            _that.paymentProofUrls);
       case _:
         return orElse();
     }
@@ -368,7 +378,8 @@ extension OrderModelPatterns on OrderModel {
             String? bankName,
             String? bankBranchNumber,
             String? remark,
-            double? availableInventory)
+            double? availableInventory,
+            List<String>? paymentProofUrls)
         $default,
   ) {
     final _that = this;
@@ -391,7 +402,8 @@ extension OrderModelPatterns on OrderModel {
             _that.bankName,
             _that.bankBranchNumber,
             _that.remark,
-            _that.availableInventory);
+            _that.availableInventory,
+            _that.paymentProofUrls);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -428,7 +440,8 @@ extension OrderModelPatterns on OrderModel {
             String? bankName,
             String? bankBranchNumber,
             String? remark,
-            double? availableInventory)?
+            double? availableInventory,
+            List<String>? paymentProofUrls)?
         $default,
   ) {
     final _that = this;
@@ -451,7 +464,8 @@ extension OrderModelPatterns on OrderModel {
             _that.bankName,
             _that.bankBranchNumber,
             _that.remark,
-            _that.availableInventory);
+            _that.availableInventory,
+            _that.paymentProofUrls);
       case _:
         return null;
     }
@@ -478,7 +492,8 @@ class _OrderModel implements OrderModel {
       this.bankName,
       this.bankBranchNumber,
       this.remark,
-      this.availableInventory});
+      this.availableInventory,
+      this.paymentProofUrls});
   factory _OrderModel.fromJson(Map<String, dynamic> json) =>
       _$OrderModelFromJson(json);
 
@@ -517,6 +532,8 @@ class _OrderModel implements OrderModel {
   String? remark;
   @override
   double? availableInventory;
+  @override
+  List<String>? paymentProofUrls;
 
   /// Create a copy of OrderModel
   /// with the given fields replaced by the non-null parameter values.
@@ -535,7 +552,7 @@ class _OrderModel implements OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(id: $id, orderNo: $orderNo, status: $status, depotId: $depotId, depotName: $depotName, fuelType: $fuelType, fuelPriceCny: $fuelPriceCny, purchaseTon: $purchaseTon, totalAmount: $totalAmount, createdAt: $createdAt, updatedAt: $updatedAt, accountName: $accountName, bankAccount: $bankAccount, bankName: $bankName, bankBranchNumber: $bankBranchNumber, remark: $remark, availableInventory: $availableInventory)';
+    return 'OrderModel(id: $id, orderNo: $orderNo, status: $status, depotId: $depotId, depotName: $depotName, fuelType: $fuelType, fuelPriceCny: $fuelPriceCny, purchaseTon: $purchaseTon, totalAmount: $totalAmount, createdAt: $createdAt, updatedAt: $updatedAt, accountName: $accountName, bankAccount: $bankAccount, bankName: $bankName, bankBranchNumber: $bankBranchNumber, remark: $remark, availableInventory: $availableInventory, paymentProofUrls: $paymentProofUrls)';
   }
 }
 
@@ -564,7 +581,8 @@ abstract mixin class _$OrderModelCopyWith<$Res>
       String? bankName,
       String? bankBranchNumber,
       String? remark,
-      double? availableInventory});
+      double? availableInventory,
+      List<String>? paymentProofUrls});
 }
 
 /// @nodoc
@@ -596,6 +614,7 @@ class __$OrderModelCopyWithImpl<$Res> implements _$OrderModelCopyWith<$Res> {
     Object? bankBranchNumber = freezed,
     Object? remark = freezed,
     Object? availableInventory = freezed,
+    Object? paymentProofUrls = freezed,
   }) {
     return _then(_OrderModel(
       id: freezed == id
@@ -666,6 +685,10 @@ class __$OrderModelCopyWithImpl<$Res> implements _$OrderModelCopyWith<$Res> {
           ? _self.availableInventory
           : availableInventory // ignore: cast_nullable_to_non_nullable
               as double?,
+      paymentProofUrls: freezed == paymentProofUrls
+          ? _self.paymentProofUrls
+          : paymentProofUrls // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }

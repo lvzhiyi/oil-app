@@ -418,6 +418,38 @@ class _OrdersScreenState extends State<OrdersScreen>
                       ),
                     ),
                   ),
+                if (order.status?.value == OrderStatus.PaymentUploaded.value)
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: AppSizes.setWidth(15),
+                          vertical: AppSizes.setHeight(10)),
+                      child: IgnorePointer(
+                        ignoring: false,
+                        child: CommonButton(
+                            height: AppSizes.setHeight(30),
+                            width: AppSizes.setWidth(158),
+                            radius: 2,
+                            borderColor: CustomAppColor.of(context).btnPurple,
+                            buttonColor: CustomAppColor.of(context).btnPurple,
+                            isButtonShadow: true,
+                            child: CommonText(
+                              text: '去查看',
+                              textColor: CustomAppColor.of(context).white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: AppSizes.setFontSize(12),
+                            ),
+                            onTap: () => {
+                                  BaseRouter.push(
+                                    url: AppPage.payOrderDetailPage.path,
+                                    extra: {'order': order},
+                                  ),
+                                }
+                            // : Navigator.push(context, TrackOrderScreen.route()),
+                            ),
+                      ),
+                    ),
+                  ),
               ]),
           ],
         ),

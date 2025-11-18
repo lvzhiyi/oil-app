@@ -14,7 +14,6 @@ import 'state.dart';
 class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
   final OrderModel? order;
   final int? orderId;
-  Timer? _saveProofDebounceTimer;
   Future<void>? _pendingSaveOperation;
 
   PayOrderDetailCtrl(this.order, {this.orderId})
@@ -22,12 +21,6 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
           PayOrderDetailState(),
         ) {
     initState();
-  }
-
-  @override
-  Future<void> close() {
-    _saveProofDebounceTimer?.cancel();
-    return super.close();
   }
 
   initState() async {
@@ -62,6 +55,7 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
         order: orderDetail,
         isLoading: false,
         hasUploaded: orderDetail.status == OrderStatus.PaymentUploaded,
+        selectedImagePaths: const [], // 初始化时清空选中的图片
         lastSavedProofUrls: const [], // 初始化时清空上次保存的凭证列表
       ));
 
@@ -98,8 +92,7 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
 
       // 限制最多上传5张图片（后端要求1-5张之间）
       const maxImages = 5;
-      final totalImages =
-          state.selectedImagePaths.length + state.uploadedImageUrls.length;
+      final totalImages = state.selectedImagePaths.length;
 
       if (totalImages >= maxImages) {
         SportsToast.showWarning('最多只能上传$maxImages张图片');
@@ -119,15 +112,8 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
     if (index >= 0 && index < currentImages.length) {
       currentImages.removeAt(index);
 
-      // 调整上传中的索引列表
-      final updatedUploadingIndices = state.uploadingImageIndices
-          .where((i) => i != index) // 移除被删除图片的索引
-          .map((i) => i > index ? i - 1 : i) // 调整后续索引
-          .toList();
-
       emit(state.copyWith(
         selectedImagePaths: currentImages,
-        uploadingImageIndices: updatedUploadingIndices,
       ));
     }
   }
@@ -136,203 +122,90 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
   void clearSelectedImages() {
     emit(state.copyWith(
       clearSelectedImagePaths: true,
-      uploadingImageIndices: [], // 同时清空上传中的索引列表
     ));
   }
 
-  /// 删除已上传的图片
-  Future<void> removeUploadedImage(int index) async {
+  /// 统一上传并保存凭证（在确认按钮点击时调用）
+  Future<bool> uploadAndSaveProof() async {
+    final imagePaths = state.selectedImagePaths;
+
+    // 验证至少需要1张凭证
+    if (imagePaths.isEmpty) {
+      SportsToast.showWarning('请至少选择1张转账凭证');
+      return false;
+    }
+
+    // 验证凭证数量：后端要求1-5张之间
+    if (imagePaths.length > 5) {
+      SportsToast.showError('凭证数量不能超过5张，请删除多余的凭证');
+      return false;
+    }
+
     try {
-      final uploadedUrls = state.uploadedImageUrls;
-      final orderDetail = state.order;
-
-      if (index < 0 || index >= uploadedUrls.length || orderDetail == null) {
-        SportsToast.showError('图片索引错误');
-        return;
-      }
-
-      // 更新本地状态
-      final updatedUploadedUrls = List<String>.from(uploadedUrls);
-      updatedUploadedUrls.removeAt(index);
-
-      // 如果删除后凭证数量为0，提示用户至少需要1张凭证
-      if (updatedUploadedUrls.isEmpty) {
-        SportsToast.showWarning('至少需要保留1张凭证');
-        return;
-      }
-
       emit(state.copyWith(
-        order: orderDetail,
-        uploadedImageUrls: updatedUploadedUrls,
-        hasUploaded: updatedUploadedUrls.isNotEmpty,
+        isUploading: true,
+        uploadingImageIndices:
+            List.generate(imagePaths.length, (index) => index),
       ));
 
-      SportsToast.showSuccess('图片删除成功');
+      final List<String> uploadedUrls = [];
 
-      // 删除后立即保存凭证列表
-      _savePaymentProofDebounced(updatedUploadedUrls);
-    } catch (e) {
-      SportsToast.showError('删除图片失败: ${e.toString()}');
-    }
-  }
-
-  /// 一键上传所有待上传图片
-  Future<void> uploadAllImages() async {
-    final imagePaths = state.selectedImagePaths;
-    if (imagePaths.isEmpty) {
-      return;
-    }
-
-    // 检查是否有图片正在上传
-    if (state.uploadingImageIndices.isNotEmpty) {
-      SportsToast.showWarning('请等待当前图片上传完成');
-      return;
-    }
-
-    try {
-      // 将所有图片索引添加到上传中列表
-      final allIndices = List.generate(imagePaths.length, (index) => index);
-      emit(state.copyWith(uploadingImageIndices: allIndices));
-
-      final List<String> newImageUrls = [];
-      final List<int> failedIndices = [];
-
-      // 顺序上传所有图片（避免并发过多）
+      // 顺序上传所有图片
       for (int index = 0; index < imagePaths.length; index++) {
         final imagePath = imagePaths[index];
         try {
           final file = File(imagePath);
           if (!await file.exists()) {
-            failedIndices.add(index);
             continue;
           }
 
           final uploadUrl = await uploadImage(imagePath);
           if (uploadUrl != null && uploadUrl.isNotEmpty) {
-            newImageUrls.add(uploadUrl);
-          } else {
-            failedIndices.add(index);
+            uploadedUrls.add(uploadUrl);
           }
         } catch (e) {
-          failedIndices.add(index);
+          // 单个图片上传失败，继续上传其他图片
         }
       }
 
-      // 更新状态
-      final updatedSelectedPaths = <String>[];
-      final updatedUploadedUrls = [
-        ...state.uploadedImageUrls,
-        ...newImageUrls
-      ];
-
-      emit(state.copyWith(
-        selectedImagePaths: updatedSelectedPaths,
-        uploadedImageUrls: updatedUploadedUrls,
-        uploadingImageIndices: [],
-        hasUploaded: updatedUploadedUrls.isNotEmpty,
-      ));
-
-      if (failedIndices.isEmpty) {
-        SportsToast.showSuccess('所有图片上传成功');
-        // 上传成功后立即保存凭证列表
-        _savePaymentProofDebounced(updatedUploadedUrls);
-      } else {
-        SportsToast.showWarning(
-            '${newImageUrls.length}张图片上传成功，${failedIndices.length}张图片上传失败');
-        // 即使有部分失败，也保存已成功上传的凭证
-        if (newImageUrls.isNotEmpty) {
-          _savePaymentProofDebounced(updatedUploadedUrls);
-        }
-      }
-    } catch (e) {
-      emit(state.copyWith(uploadingImageIndices: []));
-      SportsToast.showError('批量上传失败: ${e.toString()}');
-    }
-  }
-
-  /// 上传单张图片
-  Future uploadSingleImage(int imageIndex) async {
-    final imagePaths = state.selectedImagePaths;
-    if (imageIndex >= imagePaths.length) {
-      SportsToast.showError('图片索引错误');
-      return false;
-    }
-
-    final imagePath = imagePaths[imageIndex];
-
-    // 添加当前图片索引到上传中列表
-    final updatedUploadingIndices = [
-      ...state.uploadingImageIndices,
-      imageIndex
-    ];
-    emit(state.copyWith(uploadingImageIndices: updatedUploadingIndices));
-
-    // 读取文件
-    final file = File(imagePath);
-    if (!await file.exists()) {
-      // 从上传中列表移除当前索引
-      final updatedUploadingIndices =
-          state.uploadingImageIndices.where((i) => i != imageIndex).toList();
-      emit(state.copyWith(uploadingImageIndices: updatedUploadingIndices));
-      SportsToast.showError('图片文件不存在');
-      return false;
-    }
-
-    try {
-      // 调用上传接口
-      final uploadUrl = await uploadImage(imagePath);
-      
-      if (uploadUrl == null || uploadUrl.isEmpty) {
-        // 上传失败，从上传中列表移除当前索引
-        final updatedUploadingIndices =
-            state.uploadingImageIndices.where((i) => i != imageIndex).toList();
-        emit(state.copyWith(uploadingImageIndices: updatedUploadingIndices));
-        SportsToast.showError('图片上传失败，请重试');
+      // 检查是否至少上传成功1张
+      if (uploadedUrls.isEmpty) {
+        emit(state.copyWith(
+          isUploading: false,
+          uploadingImageIndices: [],
+        ));
+        SportsToast.showError('上传失败，请重试');
         return false;
       }
 
-      // 上传成功，更新状态
-      final updatedSelectedPaths = List<String>.from(state.selectedImagePaths);
-      updatedSelectedPaths.removeAt(imageIndex);
-
-      final updatedUploadedUrls = List<String>.from(state.uploadedImageUrls);
-      updatedUploadedUrls.add(uploadUrl);
-
-      // 从上传中列表移除当前索引，并调整其他索引
-      final finalUploadingIndices = state.uploadingImageIndices
-          .where((i) => i != imageIndex)
-          .map((i) => i > imageIndex ? i - 1 : i) // 调整索引，因为删除了一个元素
-          .toList();
-
+      // 更新状态
       emit(state.copyWith(
-        selectedImagePaths: updatedSelectedPaths,
-        uploadedImageUrls: updatedUploadedUrls,
-        uploadingImageIndices: finalUploadingIndices,
+        selectedImagePaths: [],
+        uploadedImageUrls: uploadedUrls,
+        uploadingImageIndices: [],
+        isUploading: false,
         hasUploaded: true,
       ));
 
-      SportsToast.showSuccess('图片上传成功');
+      // 保存凭证列表
+      await savePaymentProof(uploadedUrls);
 
-      // 上传成功后立即保存凭证列表
-      _savePaymentProofDebounced(updatedUploadedUrls);
+      if (uploadedUrls.length < imagePaths.length) {
+        SportsToast.showWarning(
+            '${uploadedUrls.length}张图片上传成功，${imagePaths.length - uploadedUrls.length}张图片上传失败');
+      } else {
+        SportsToast.showSuccess('凭证上传成功');
+      }
 
       return true;
     } catch (e) {
-      // 上传异常，从上传中列表移除当前索引
-      final updatedUploadingIndices =
-          state.uploadingImageIndices.where((i) => i != imageIndex).toList();
-      emit(state.copyWith(uploadingImageIndices: updatedUploadingIndices));
-      SportsToast.showError('图片上传失败: ${e.toString()}');
+      emit(state.copyWith(
+        isUploading: false,
+        uploadingImageIndices: [],
+      ));
+      SportsToast.showError('上传失败: ${e.toString()}');
       return false;
     }
-  }
-
-  /// 保存支付凭证（带防抖）
-  void _savePaymentProofDebounced(List<String> proofUrls) {
-    _saveProofDebounceTimer?.cancel();
-    _saveProofDebounceTimer = Timer(const Duration(milliseconds: 500), () {
-      savePaymentProof(proofUrls);
-    });
   }
 
   /// 保存支付凭证
@@ -353,11 +226,6 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
 
     if (proofUrls.length > 5) {
       SportsToast.showError('凭证数量不能超过5张，请删除多余的凭证');
-      return;
-    }
-
-    // 如果凭证列表与上次保存的一致，则不需要保存
-    if (_isProofUrlsEqual(proofUrls, state.lastSavedProofUrls)) {
       return;
     }
 
@@ -383,7 +251,7 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
       final request = PaymentProofRequest(proof: proofUrls);
       await payOrderService.savePaymentProof(id.toString(), request);
 
-      // 保存成功，更新上次保存的凭证列表
+      // 保存成功
       emit(state.copyWith(
         isSavingProof: false,
         lastSavedProofUrls: List<String>.from(proofUrls),
@@ -398,19 +266,6 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
     } finally {
       _pendingSaveOperation = null;
     }
-  }
-
-  /// 判断两个凭证URL列表是否相等
-  bool _isProofUrlsEqual(List<String> urls1, List<String> urls2) {
-    if (urls1.length != urls2.length) {
-      return false;
-    }
-    for (int i = 0; i < urls1.length; i++) {
-      if (urls1[i] != urls2[i]) {
-        return false;
-      }
-    }
-    return true;
   }
 
   /// 更新订单的支付凭证（支持多张图片）
@@ -429,49 +284,6 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
     // }
   }
 
-  /// 加载多张凭证图片URL
-  Future<void> _loadVoucherImageUrls(List<String> attachments) async {
-    // try {
-    //   emit(state.copyWith(isLoadingImageUrl: true));
-
-    //   final List<String> imageUrls = [];
-
-    //   for (final attachment in attachments) {
-    //     if (attachment.path != null) {
-    //       final signUrlResponse =
-    //           await payOrderService.getFileSignUrl(attachment.path!);
-    //       if (signUrlResponse.code == HttpCode.success &&
-    //           signUrlResponse.data != null) {
-    //         imageUrls.add(signUrlResponse.data!);
-    //       }
-    //     }
-    //   }
-
-    //   // 更新第一张图片的URL到voucherUrl字段（保持兼容性）
-    //   // final currentOrderDetail = state.orderDetail;
-    //   // if (currentOrderDetail != null) {
-    //   //   final updatedOrderDetail = currentOrderDetail.copyWith(
-    //   //     voucherUrl: imageUrls.isNotEmpty ? imageUrls.first : null,
-    //   //   );
-
-    //   //   emit(state.copyWith(
-    //   //     orderDetail: updatedOrderDetail,
-    //   //     uploadedImageUrls: imageUrls,
-    //   //     isLoadingImageUrl: false,
-    //   //     hasUploaded: imageUrls.isNotEmpty,
-    //   //   ));
-    //   // } else {
-    //   //   emit(state.copyWith(
-    //   //     uploadedImageUrls: imageUrls,
-    //   //     isLoadingImageUrl: false,
-    //   //     hasUploaded: imageUrls.isNotEmpty,
-    //   //   ));
-    //   // }
-    // } catch (e) {
-    //   emit(state.copyWith(isLoadingImageUrl: false));
-    // }
-  }
-
   /// 取消订单
   Future<void> cancelOrder() async {
     // final request = CancelRechargeRequest(status: 'Canceled');
@@ -486,4 +298,3 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
     // }
   }
 }
-

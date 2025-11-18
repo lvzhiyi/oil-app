@@ -42,6 +42,9 @@ _OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => _OrderModel(
       bankBranchNumber: json['bankBranchNumber'] as String?,
       remark: json['remark'] as String?,
       availableInventory: (json['availableInventory'] as num?)?.toDouble(),
+      paymentProofUrls: (json['paymentProofUrls'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$OrderModelToJson(_OrderModel instance) =>
@@ -63,6 +66,7 @@ Map<String, dynamic> _$OrderModelToJson(_OrderModel instance) =>
       'bankBranchNumber': instance.bankBranchNumber,
       'remark': instance.remark,
       'availableInventory': instance.availableInventory,
+      'paymentProofUrls': instance.paymentProofUrls,
     };
 
 const _$OrderStatusEnumMap = {
