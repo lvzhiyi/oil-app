@@ -47,13 +47,10 @@ class PayOrderDetailView extends HookWidget {
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      appBar: BaseAppBar(
+      appBar: const BaseAppBar(
         title: '支付订单详情',
         backgroundColor: Colors.transparent,
         centerTitle: true,
-        leadingOnClick: () {
-          BaseRouter.popToRoot();
-        },
       ),
       body: Column(
         children: [

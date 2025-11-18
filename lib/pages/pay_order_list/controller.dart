@@ -53,15 +53,19 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
 
   /// 加载记录列表
   Future<OrderListResponse> getOrderList(
-      {bool loadMore = false, bool onRefresh = false}) async {
+      {bool loadMore = false, bool onRefresh = false, int? status}) async {
     try {
       if (!onRefresh && !loadMore) {
         emit(state.copyWith(pageStatus: PageStatus.loading));
       }
+
+      if (status != null) {
+        pageNum = 1;
+      }
       OrderListResponse? response;
 
       response = await payOrderListService.getOrderList(
-          page: pageNum, pageSize: pageSize);
+          page: pageNum, pageSize: pageSize, status: status);
 
       final List<OrderModel> newRecords = response.list ?? [];
       total = response.total ?? 0;

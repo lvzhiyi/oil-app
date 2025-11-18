@@ -41,6 +41,24 @@ class _OrdersScreenState extends State<OrdersScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _tabController.addListener(() {
+      print('tabController: ${_tabController.index}');
+      final statusArr = [
+        null,
+        OrderStatus.PendingPayment.value,
+        OrderStatus.PaymentUploaded.value,
+        OrderStatus.Cancelled.value
+      ];
+      context
+          .read<PayOrderListCtrl>()
+          .getOrderList(status: statusArr[_tabController.index]);
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -434,7 +452,7 @@ class _OrdersScreenState extends State<OrdersScreen>
                             buttonColor: CustomAppColor.of(context).btnPurple,
                             isButtonShadow: true,
                             child: CommonText(
-                              text: '去查看',
+                              text: '查看详情',
                               textColor: CustomAppColor.of(context).white,
                               fontWeight: FontWeight.w600,
                               fontSize: AppSizes.setFontSize(12),
@@ -475,6 +493,6 @@ class _OrdersScreenState extends State<OrdersScreen>
 
   @override
   void onTopBarClick(String name, {String value = ""}) {
-    // TODO: implement onTopBarClick
+    print('onTopBarClick: $name');
   }
 }
