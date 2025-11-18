@@ -33,7 +33,6 @@ Future<String?> uploadImage(String url) async {
     'x-oss-signature-version': response.signatureVersion,
     'x-oss-credential': response.credential,
     'x-oss-date': response.date,
-    // 'x-oss-access-key-id': response.accessKeyId,
     'success_action_status': '200',
     'key': response.path,
     'x-oss-signature': response.signature,
