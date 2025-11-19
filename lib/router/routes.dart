@@ -16,6 +16,7 @@ import 'package:oil_business_app/pages/main_layout/page.dart';
 import 'package:oil_business_app/pages/oil_pickup/page.dart';
 import 'package:oil_business_app/pages/station_list/page.dart';
 import 'package:oil_business_app/pages/station_edit/page.dart';
+import 'package:oil_business_app/pages/station_management_list/page.dart';
 import 'package:oil_business_app/pages/main_oil_pay/oil_purchase_detail/page.dart';
 import 'package:oil_business_app/router/pageTransition/bottom_to_top_page.dart';
 import 'package:oil_business_app/router/router.dart';
@@ -74,6 +75,9 @@ enum AppPage {
 
   /// 加油站编辑页面
   stationEditPage('/stationEdit'),
+
+  /// 加油站管理列表页面
+  stationManagementListPage('/stationManagementList'),
 
   /// 买油详情页面
   oilPurchaseDetailPage('/oilPurchaseDetail'),
@@ -148,6 +152,10 @@ extension PageRoute on AppPage {
 
       case AppPage.stationEditPage:
         return (context, state) => const StationEditPage();
+
+      case AppPage.stationManagementListPage:
+        return (context, state) => const StationManagementListPage();
+
       case AppPage.oilPurchaseDetailPage:
         return (context, state) => OilPurchaseDetailPage(
               extra: state.extra as Map<String, dynamic>? ?? {},

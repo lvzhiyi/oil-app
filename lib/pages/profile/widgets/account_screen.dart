@@ -142,6 +142,7 @@ class _AccountScreenState extends State<AccountScreen>
                         url: AppPage.otpPage.path,
                         extra: {'type': 'password_change'});
                   } else if (accountData.label == '加油站管理') {
+                    BaseRouter.push(url: AppPage.stationManagementListPage.path);
                   } else if (accountData.label == '买油订单') {
                     BaseRouter.push(url: AppPage.payOrderListPage.path);
                   } else if (accountData.label == '提油订单') {
