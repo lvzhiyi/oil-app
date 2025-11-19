@@ -72,74 +72,6 @@ class _OrdersScreenState extends State<OrdersScreen>
     ];
   }
 
-  void reasonOfCancellation(BuildContext context, OrderModel order) {
-    customBottomSheet(
-      isPaddingRequired: false,
-      isDone: false,
-      context: context,
-      maxHeightRatio: 0.5,
-      title: '取消订单',
-      content: ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        children: [
-          // Padding(
-          //   padding:
-          //       EdgeInsets.symmetric(horizontal: AppSizes.setWidth(22)),
-          //   child: CommonText(
-          //     text: '请选择取消订单的原因',
-          //     textColor: CustomAppColor.of(context).txtGrey,
-          //     fontSize: AppSizes.setFontSize(15),
-          //     fontWeight: FontWeight.w500,
-          //     textAlign: TextAlign.start,
-          //   ),
-          // ),
-          SizedBox(height: AppSizes.setHeight(10)),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(24)),
-            child: CommonTextFormField(
-              controller:
-                  context.read<PayOrderListCtrl>().cancelOrderReasonController,
-              radius: 6,
-              hintText: '请输入取消订单的原因',
-              hintStyle: TextStyle(
-                color: CustomAppColor.of(context).txtGrey,
-                fontSize: AppSizes.setFontSize(15),
-                fontWeight: FontWeight.w500,
-              ),
-              maxLines: 4,
-            ),
-          ),
-          SizedBox(height: AppSizes.setHeight(10)),
-          Container(
-            decoration: BoxDecoration(
-              color: CustomAppColor.of(context).bgBlackWhiteScaffold,
-              border: Border(
-                top: BorderSide(
-                    color: CustomAppColor.of(context)
-                        .txtGrey
-                        .withValues(alpha: 0.5)),
-              ),
-            ),
-            padding: EdgeInsets.symmetric(
-                horizontal: AppSizes.setWidth(22),
-                vertical: AppSizes.setHeight(18)),
-            child: CommonButton(
-              height: AppSizes.setHeight(44),
-              radius: 3,
-              btnText: '取消订单',
-              onTap: () {
-                context
-                    .read<PayOrderListCtrl>()
-                    .cancelOrder(order.id?.toString() ?? '');
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -153,6 +85,7 @@ class _OrdersScreenState extends State<OrdersScreen>
             isShowNotification: false,
             isShowLike: false,
             isShowSearchField: false,
+            isShowBack: true,
             height: 120,
             isShowCart: false,
             topBarColor: CustomAppColor(context).bgTopBar,
@@ -374,7 +307,8 @@ class _OrdersScreenState extends State<OrdersScreen>
               ),
             ),
             SizedBox(height: AppSizes.setHeight(10)),
-            if (order.status?.value != OrderStatus.Completed.value)
+            if (order.status?.value != OrderStatus.Completed.value &&
+                order.status?.value != OrderStatus.Cancelled.value)
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Expanded(
                   child: Padding(
@@ -398,7 +332,9 @@ class _OrdersScreenState extends State<OrdersScreen>
                           fontSize: AppSizes.setFontSize(12),
                         ),
                         onTap: () => {
-                          reasonOfCancellation(context, order),
+                          context
+                              .read<PayOrderListCtrl>()
+                              .reasonOfCancellation(context, order),
                         },
                       ),
                     ),
@@ -493,6 +429,8 @@ class _OrdersScreenState extends State<OrdersScreen>
 
   @override
   void onTopBarClick(String name, {String value = ""}) {
-    print('onTopBarClick: $name');
+    if (name == 'back') {
+      BaseRouter.pop();
+    }
   }
 }
