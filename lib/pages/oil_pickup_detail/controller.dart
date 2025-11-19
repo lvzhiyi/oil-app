@@ -9,6 +9,7 @@ import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/utils/vehicle_info_parser.dart';
+import 'package:oil_business_app/widgets/popup/toast.dart';
 
 class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
   OilPickupDetailCtrl(InventoryModel inventory)
@@ -161,11 +162,11 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
         errorMessage: null,
       ));
 
-      // TODO: 成功后处理，例如返回或显示成功页
-       if (context.mounted) {
-         // For now just pop
-         BaseRouter.pop(context: context);
-       }
+      if (context.mounted) {
+        SportsToast.showSuccess('提油凭证生成成功');
+        await Future.delayed(const Duration(milliseconds: 500));
+        BaseRouter.pop(context: context, result: true);
+      }
 
     } catch (e) {
       l.e('OilPickupDetail', '提油申请提交失败: $e');
