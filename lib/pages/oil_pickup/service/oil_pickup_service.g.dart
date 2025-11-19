@@ -85,16 +85,19 @@ class _OilPickupService implements OilPickupService {
   }
 
   @override
-  Future<InventoryListResponse> getInventories(
-    InventoryQueryRequest request,
-  ) async {
+  Future<InventoryListResponse> getInventories({
+    required int page,
+    required int pageSize,
+  }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'page': page,
+      r'pageSize': pageSize,
+    };
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(request.toJson());
+    const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<InventoryListResponse>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
+      Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
             '/inventories',

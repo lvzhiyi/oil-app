@@ -80,39 +80,23 @@ Map<String, dynamic> _$WithdrawResponseToJson(WithdrawResponse instance) =>
       'message': instance.message,
     };
 
-InventoryQueryRequest _$InventoryQueryRequestFromJson(
-        Map<String, dynamic> json) =>
-    InventoryQueryRequest(
-      page: (json['page'] as num).toInt(),
-      pageSize: (json['pageSize'] as num).toInt(),
-    );
-
-Map<String, dynamic> _$InventoryQueryRequestToJson(
-        InventoryQueryRequest instance) =>
-    <String, dynamic>{
-      'page': instance.page,
-      'pageSize': instance.pageSize,
-    };
-
 InventoryModel _$InventoryModelFromJson(Map<String, dynamic> json) =>
     InventoryModel(
-      id: (json['id'] as num?)?.toInt(),
-      oilOrderId: (json['oilOrderId'] as num?)?.toInt(),
+      inventoryId: (json['inventoryId'] as num?)?.toInt(),
+      depotId: (json['depotId'] as num?)?.toInt(),
       depotName: json['depotName'] as String?,
       fuelType: json['fuelType'] as String?,
-      purchaseTon: (json['purchaseTon'] as num?)?.toDouble(),
-      createdAt: json['createdAt'] as String?,
+      availableTon: (json['availableTon'] as num?)?.toDouble(),
       updatedAt: json['updatedAt'] as String?,
     );
 
 Map<String, dynamic> _$InventoryModelToJson(InventoryModel instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'oilOrderId': instance.oilOrderId,
+      'inventoryId': instance.inventoryId,
+      'depotId': instance.depotId,
       'depotName': instance.depotName,
       'fuelType': instance.fuelType,
-      'purchaseTon': instance.purchaseTon,
-      'createdAt': instance.createdAt,
+      'availableTon': instance.availableTon,
       'updatedAt': instance.updatedAt,
     };
 

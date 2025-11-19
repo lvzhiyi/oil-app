@@ -92,41 +92,34 @@ class WithdrawResponse {
   Map<String, dynamic> toJson() => _$WithdrawResponseToJson(this);
 }
 
-/// 库存油查询请求
-@JsonSerializable()
-class InventoryQueryRequest {
-  final int page;
-  final int pageSize;
-
-  InventoryQueryRequest({
-    required this.page,
-    required this.pageSize,
-  });
-
-  factory InventoryQueryRequest.fromJson(Map<String, dynamic> json) =>
-      _$InventoryQueryRequestFromJson(json);
-
-  Map<String, dynamic> toJson() => _$InventoryQueryRequestToJson(this);
-}
 
 /// 库存油模型
 @JsonSerializable()
 class InventoryModel {
-  final int? id;
-  final int? oilOrderId;
+  @JsonKey(name: 'inventoryId')
+  final int? inventoryId;
+
+  @JsonKey(name: 'depotId')
+  final int? depotId;
+
+  @JsonKey(name: 'depotName')
   final String? depotName;
+
+  @JsonKey(name: 'fuelType')
   final String? fuelType;
-  final double? purchaseTon;
-  final String? createdAt;
+
+  @JsonKey(name: 'availableTon')
+  final double? availableTon;
+
+  @JsonKey(name: 'updatedAt')
   final String? updatedAt;
 
   InventoryModel({
-    this.id,
-    this.oilOrderId,
+    this.inventoryId,
+    this.depotId,
     this.depotName,
     this.fuelType,
-    this.purchaseTon,
-    this.createdAt,
+    this.availableTon,
     this.updatedAt,
   });
 

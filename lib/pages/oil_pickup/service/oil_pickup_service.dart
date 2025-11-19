@@ -26,10 +26,11 @@ abstract class OilPickupService {
   );
 
   /// 查询用户可用库存油
-  @POST('/inventories')
-  Future<InventoryListResponse> getInventories(
-    @Body() InventoryQueryRequest request,
-  );
+  @GET('/inventories')
+  Future<InventoryListResponse> getInventories({
+    @Query('page') required int page,
+    @Query('pageSize') required int pageSize,
+  });
 }
 
 OilPickupService get oilPickupService =>
