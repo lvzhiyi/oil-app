@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/pages/otp/controller.dart';
+import 'package:oil_business_app/pages/otp/state.dart';
 
 import '../../../resources/colors.dart';
 import '../../../utils/sizer_utils.dart';
@@ -7,13 +9,28 @@ import '../../../widgets/base/button/common_button.dart';
 import '../../../widgets/base/text/common_text.dart';
 import '../../../widgets/base/textfield/common_digit_textformfield.dart';
 
-class OtpVerificationScreen extends StatelessWidget {
+class OtpVerificationScreen extends StatefulWidget {
   const OtpVerificationScreen({super.key, this.extra});
   final Map<String, dynamic>? extra;
 
   static Route route() {
     return MaterialPageRoute(
         builder: (context) => const OtpVerificationScreen());
+  }
+
+  @override
+  State<OtpVerificationScreen> createState() => _OtpVerificationScreenState();
+}
+
+class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // 如果倒计时未启动，则启动倒计时
+    final ctrl = otpCtrl;
+    if (ctrl.state.countdownSeconds == null) {
+      ctrl.startCountdown();
+    }
   }
 
   @override
@@ -47,7 +64,7 @@ class OtpVerificationScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(top: AppSizes.setHeight(7)),
                 child: CommonText(
-                  text: extra?["phone"] ?? '',
+                  text: widget.extra?["phone"] ?? '',
                   fontSize: AppSizes.setFontSize(15),
                   fontWeight: FontWeight.w600,
                   textColor: CustomAppColor.of(context).txtBlack,
@@ -111,22 +128,47 @@ class OtpVerificationScreen extends StatelessWidget {
                   textColor: CustomAppColor.of(context).txtGrey,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: AppSizes.setHeight(7)),
-                child: CommonText(
-                  text: '重新发送验证码',
-                  fontSize: AppSizes.setFontSize(15),
-                  fontWeight: FontWeight.w600,
-                  textColor: CustomAppColor.of(context).txtPurple,
-                  textDecoration: TextDecoration.underline,
-                ),
+              BlocBuilder<OtpCtrl, OtpState>(
+                bloc: ctrl,
+                builder: (context, state) {
+                  final countdownSeconds = state.countdownSeconds ?? 0;
+                  final canResend = countdownSeconds == 0;
+
+                  return GestureDetector(
+                    onTap: canResend
+                        ? () {
+                            final phone = widget.extra?["phone"] ?? '';
+                            final type = widget.extra?["type"] ?? '';
+                            if (phone.isNotEmpty && type.isNotEmpty) {
+                              ctrl.resendOtp(type: type, phone: phone);
+                            }
+                          }
+                        : null,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: AppSizes.setHeight(7)),
+                      child: CommonText(
+                        text: canResend
+                            ? '重新发送验证码'
+                            : '${countdownSeconds}s 后重新发送',
+                        fontSize: AppSizes.setFontSize(15),
+                        fontWeight: FontWeight.w600,
+                        textColor: canResend
+                            ? CustomAppColor.of(context).txtPurple
+                            : CustomAppColor.of(context).txtGrey,
+                        textDecoration: canResend
+                            ? TextDecoration.underline
+                            : TextDecoration.none,
+                      ),
+                    ),
+                  );
+                },
               ),
               Padding(
                 padding: EdgeInsets.only(top: AppSizes.setHeight(143)),
                 child: CommonButton(
                   btnText: '继续',
                   onTap: () => {
-                    ctrl.submit(type: extra?["type"]),
+                    ctrl.submit(type: widget.extra?["type"] ?? ''),
                   },
                 ),
               ),
@@ -136,7 +178,7 @@ class OtpVerificationScreen extends StatelessWidget {
                     left: AppSizes.setWidth(41),
                     right: AppSizes.setWidth(30)),
                 child: CommonText(
-                  text: '通过继续，您同意Gozzy的',
+                  text: '通过继续，您同意买油呗的',
                   fontSize: AppSizes.setFontSize(15),
                   fontWeight: FontWeight.w600,
                   textColor: CustomAppColor.of(context).txtGrey,
