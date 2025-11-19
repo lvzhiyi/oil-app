@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/interfaces/top_bar_click_listener.dart';
 import 'package:oil_business_app/resources/colors.dart';
@@ -269,7 +270,9 @@ class _AccountScreenState extends State<AccountScreen>
                   child: CommonButton(
                     height: AppSizes.setHeight(44),
                     btnText: '取消',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                     buttonColor: CustomAppColor.of(context).btnWhite,
                     isButtonShadow: false,
                     borderColor: CustomAppColor.of(context).borderPurple,
@@ -291,6 +294,7 @@ class _AccountScreenState extends State<AccountScreen>
                       height: AppSizes.setHeight(44),
                       btnText: '退出登录',
                       onTap: () {
+                        BaseConfig.appContext?.read<AppController>().logout();
                         Navigator.pop(context);
                       }),
                 ),
