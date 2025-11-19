@@ -1,9 +1,17 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:oil_business_app/global/commom/upload.dart';
 import 'package:oil_business_app/global/enum/common.dart';
+import 'package:oil_business_app/pages/pay_order_list/service/pay_order_list.dart';
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/utils/sizer_utils.dart';
+import 'package:oil_business_app/widgets/base/bottom_sheet/bottom_sheet.dart';
+import 'package:oil_business_app/widgets/base/button/common_button.dart';
+import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
 import '../pay_order_list/model/orders_data.dart';
@@ -26,6 +34,8 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
   initState() async {
     await loadOrderDetail();
   }
+
+  TextEditingController cancelOrderReasonController = TextEditingController();
 
   /// 加载订单详情
   Future<void> loadOrderDetail() async {
@@ -284,17 +294,75 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
     // }
   }
 
-  /// 取消订单
-  Future<void> cancelOrder() async {
-    // final request = CancelRechargeRequest(status: 'Canceled');
-    // final res =
-    //     await payOrderService.cancelRecharge(order.id.toString(), request);
+  Future<void> cancelOrder(String id) async {
+    await payOrderListService.cancelOrder(id, cancelOrderReasonController.text);
+    cancelOrderReasonController.clear();
+  }
 
-    // if (res.code == HttpCode.success) {
-    //   SportsToast.showSuccess('订单已取消');
-    //   await loadOrderDetail(); // 重新加载页面数据
-    // } else {
-    //   SportsToast.showError(res.message ?? '');
-    // }
+  void reasonOfCancellation(BuildContext context, OrderModel order) {
+    customBottomSheet(
+      isPaddingRequired: false,
+      isDone: false,
+      context: context,
+      maxHeightRatio: 0.5,
+      title: '取消订单',
+      content: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          // Padding(
+          //   padding:
+          //       EdgeInsets.symmetric(horizontal: AppSizes.setWidth(22)),
+          //   child: CommonText(
+          //     text: '请选择取消订单的原因',
+          //     textColor: CustomAppColor.of(context).txtGrey,
+          //     fontSize: AppSizes.setFontSize(15),
+          //     fontWeight: FontWeight.w500,
+          //     textAlign: TextAlign.start,
+          //   ),
+          // ),
+          SizedBox(height: AppSizes.setHeight(10)),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(24)),
+            child: CommonTextFormField(
+              controller: cancelOrderReasonController,
+              radius: 6,
+              hintText: '请输入取消订单的原因',
+              hintStyle: TextStyle(
+                color: CustomAppColor.of(context).txtGrey,
+                fontSize: AppSizes.setFontSize(15),
+                fontWeight: FontWeight.w500,
+              ),
+              maxLines: 4,
+            ),
+          ),
+          SizedBox(height: AppSizes.setHeight(10)),
+          Container(
+            decoration: BoxDecoration(
+              color: CustomAppColor.of(context).bgBlackWhiteScaffold,
+              border: Border(
+                top: BorderSide(
+                    color: CustomAppColor.of(context)
+                        .txtGrey
+                        .withValues(alpha: 0.5)),
+              ),
+            ),
+            padding: EdgeInsets.symmetric(
+                horizontal: AppSizes.setWidth(22),
+                vertical: AppSizes.setHeight(18)),
+            child: CommonButton(
+              height: AppSizes.setHeight(44),
+              radius: 3,
+              btnText: '取消订单',
+              onTap: () async {
+                await cancelOrder(order.id?.toString() ?? '');
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ],
+      ),
+    ).whenComplete(() {
+      BaseRouter.popToRoot();
+    });
   }
 }

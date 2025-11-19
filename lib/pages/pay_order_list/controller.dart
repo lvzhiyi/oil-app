@@ -3,6 +3,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/pages/pay_order_list/service/pay_order_list.dart';
 import 'package:oil_business_app/pages/pay_order_list/state.dart';
+import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/utils/sizer_utils.dart';
+import 'package:oil_business_app/widgets/base/bottom_sheet/bottom_sheet.dart';
+import 'package:oil_business_app/widgets/base/button/common_button.dart';
+import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dart';
 import 'package:oil_business_app/widgets/common/page_loading.dart';
 
 import 'model/orders_data.dart';
@@ -98,6 +103,72 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
   Future<void> cancelOrder(String id) async {
     await payOrderListService.cancelOrder(id, cancelOrderReasonController.text);
     cancelOrderReasonController.clear();
-    onRefresh();
+  }
+
+  void reasonOfCancellation(BuildContext context, OrderModel order) {
+    customBottomSheet(
+      isPaddingRequired: false,
+      isDone: false,
+      context: context,
+      maxHeightRatio: 0.5,
+      title: '取消订单',
+      content: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          // Padding(
+          //   padding:
+          //       EdgeInsets.symmetric(horizontal: AppSizes.setWidth(22)),
+          //   child: CommonText(
+          //     text: '请选择取消订单的原因',
+          //     textColor: CustomAppColor.of(context).txtGrey,
+          //     fontSize: AppSizes.setFontSize(15),
+          //     fontWeight: FontWeight.w500,
+          //     textAlign: TextAlign.start,
+          //   ),
+          // ),
+          SizedBox(height: AppSizes.setHeight(10)),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(24)),
+            child: CommonTextFormField(
+              controller: cancelOrderReasonController,
+              radius: 6,
+              hintText: '请输入取消订单的原因',
+              hintStyle: TextStyle(
+                color: CustomAppColor.of(context).txtGrey,
+                fontSize: AppSizes.setFontSize(15),
+                fontWeight: FontWeight.w500,
+              ),
+              maxLines: 4,
+            ),
+          ),
+          SizedBox(height: AppSizes.setHeight(10)),
+          Container(
+            decoration: BoxDecoration(
+              color: CustomAppColor.of(context).bgBlackWhiteScaffold,
+              border: Border(
+                top: BorderSide(
+                    color: CustomAppColor.of(context)
+                        .txtGrey
+                        .withValues(alpha: 0.5)),
+              ),
+            ),
+            padding: EdgeInsets.symmetric(
+                horizontal: AppSizes.setWidth(22),
+                vertical: AppSizes.setHeight(18)),
+            child: CommonButton(
+              height: AppSizes.setHeight(44),
+              radius: 3,
+              btnText: '取消订单',
+              onTap: () async {
+                await cancelOrder(order.id?.toString() ?? '');
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ],
+      ),
+    ).whenComplete(() {
+      onRefresh();
+    });
   }
 }
