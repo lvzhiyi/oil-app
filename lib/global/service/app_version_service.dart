@@ -10,7 +10,7 @@ abstract class AppVersionService {
   factory AppVersionService(Dio dio, {String baseUrl}) = _AppVersionService;
 
   /// 获取版本信息
-  @GET('/app-version')
+  @GET('/version/latest')
   Future<AppVersionInfoResponse> appVersion();
 }
 

@@ -24,9 +24,9 @@ class SplaseCtrl extends Cubit<SplaseState> {
       if (authResponse == null) {
         BaseRouter.replace(url: AppPage.loginPage.path);
       } else {
-        BaseRouter.replace(url: AppPage.mainLayoutPage.path);
+        // BaseRouter.replace(url: AppPage.mainLayoutPage.path);
 
-        // appController?.bindStationProcess();
+        appController?.bindStationProcess();
       }
     } catch (e) {
       l.e('SplaseCtrl', '启动页初始化失败: $e');

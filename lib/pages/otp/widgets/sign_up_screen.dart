@@ -22,6 +22,16 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctrl = context.read<OtpCtrl>();
 
+    const mapTitle = {
+      'register': '注册',
+      'password_change': '修改密码',
+      'login': '登录',
+    };
+
+    if (extra?["type"] == "password_change") {
+      ctrl.initPhone();
+    }
+
     return Scaffold(
       backgroundColor: CustomAppColor.of(context).bgScaffold,
       body: SingleChildScrollView(
@@ -49,7 +59,7 @@ class SignUpScreen extends StatelessWidget {
                   bottom: AppSizes.setHeight(25),
                 ),
                 child: CommonText(
-                  text: extra?["type"] == "register" ? '注册' : '登录',
+                  text: mapTitle[extra?["type"]] ?? '登录',
                   fontWeight: FontWeight.w800,
                   fontSize: AppSizes.setFontSize(35),
                 ),
@@ -71,6 +81,7 @@ class SignUpScreen extends StatelessWidget {
                 child: CommonTextFormField(
                   controller: ctrl.phoneController,
                   isPhoneNumberField: true,
+                  enabled: extra?["type"] != 'password_change',
                   borderColor: CustomAppColor.of(context).textFieldBorder,
                   hintText: '手机号码',
                 ),

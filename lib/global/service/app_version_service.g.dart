@@ -27,7 +27,7 @@ class _AppVersionService implements AppVersionService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/app-version',
+            '/version/latest',
             queryParameters: queryParameters,
             data: _data,
           )

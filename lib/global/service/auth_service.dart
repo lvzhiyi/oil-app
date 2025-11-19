@@ -27,6 +27,10 @@ abstract class AuthService {
   @POST('/auth/send-verification')
   Future sendCode(@Body() SendCodeRequest request);
 
+  /// 修改密码
+  @POST('/auth/change-password')
+  Future<AuthResponse> changePassword(@Body() ChangePasswordRequest request);
+
   // /// 退出登录
   // @POST('/auth/logout')
   // Future<LogoutResponse> logout();

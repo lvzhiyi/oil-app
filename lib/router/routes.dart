@@ -9,6 +9,7 @@ import 'package:oil_business_app/pages/pending_review/pending_review_screen.dart
 import 'package:oil_business_app/pages/splase/page.dart';
 import 'package:oil_business_app/pages/login/page.dart';
 import 'package:oil_business_app/pages/register/page.dart';
+import 'package:oil_business_app/pages/change_password/page.dart';
 
 import 'package:oil_business_app/pages/profile/page.dart';
 import 'package:oil_business_app/pages/main_layout/page.dart';
@@ -129,7 +130,9 @@ extension PageRoute on AppPage {
         };
 
       case AppPage.changePasswordPage:
-        return (context, state) => const Text('Change Password');
+        return (context, state) => ChangePasswordPage(
+              extra: state.extra as Map<String, dynamic>? ?? {},
+            );
 
       case AppPage.mainLayoutPage:
         return (context, state) => const MainLayoutPage();

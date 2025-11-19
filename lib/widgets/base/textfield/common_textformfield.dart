@@ -34,7 +34,7 @@ class CommonTextFormField extends StatefulWidget {
   final String? Function(String?)? validators;
   final TextInputType? keyboardType;
   final TextInputFormatter? inputFormatter;
-
+  final bool? enabled;
   const CommonTextFormField({
     super.key,
     this.hintText,
@@ -62,6 +62,7 @@ class CommonTextFormField extends StatefulWidget {
     this.validators,
     this.keyboardType,
     this.inputFormatter,
+    this.enabled = true,
   });
 
   @override
@@ -97,6 +98,7 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
         clipBehavior: Clip.none,
         children: [
           IntlPhoneField(
+            enabled: widget.enabled ?? true,
             disableLengthCheck: true,
             showCursor: false,
             keyboardType: TextInputType.none,
@@ -185,6 +187,7 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
       );
     } else {
       return FormBuilderTextField(
+        enabled: widget.enabled ?? true,
         name: widget.name ?? '',
         textAlign: widget.textAlign ?? TextAlign.start,
         textAlignVertical: widget.textAlignVertical ?? TextAlignVertical.top,
@@ -195,7 +198,8 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
         maxLines: widget.maxLines ?? 1,
         obscureText: _obscureText,
         keyboardType: widget.keyboardType,
-        inputFormatters: widget.inputFormatter != null ? [widget.inputFormatter!] : null,
+        inputFormatters:
+            widget.inputFormatter != null ? [widget.inputFormatter!] : null,
         style: TextStyle(
           color: CustomAppColor.of(context).txtBlack,
           fontSize: AppSizes.setFontSize(14),

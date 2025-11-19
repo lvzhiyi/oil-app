@@ -10,10 +10,7 @@ import 'package:oil_business_app/router/routes.dart';
 import 'state.dart';
 
 class OtpCtrl extends Cubit<OtpState> {
-  OtpCtrl()
-      : super(
-          OtpState(),
-        ) {
+  OtpCtrl() : super(OtpState()) {
     initState();
   }
 
@@ -40,12 +37,23 @@ class OtpCtrl extends Cubit<OtpState> {
     }
   }
 
+  initPhone() {
+    phoneController.text = BaseConfig.appContext
+            ?.read<AppController>()
+            .state
+            .authResponse
+            ?.account
+            ?.phone ??
+        '';
+    emit(state.copyWith(phone: phoneController.text));
+  }
+
   sendOtp({required String type}) async {
     emit(state.copyWith(phone: phoneController.text, loading: true));
 
     try {
       await authService.sendCode(
-        SendCodeRequest(phone: phoneController.text, type: 'register'),
+        SendCodeRequest(phone: phoneController.text, type: type),
       );
       emit(state.copyWith(loading: false));
       BaseRouter.push(url: AppPage.otpVerificationPage.path, extra: {
@@ -69,6 +77,16 @@ class OtpCtrl extends Cubit<OtpState> {
       });
       return;
     }
+
+    if (type == "password_change") {
+      print('submit password_change');
+      BaseRouter.push(url: AppPage.changePasswordPage.path, extra: {
+        "phone": phoneController.text,
+        "code": codeController.map((e) => e.text).join(''),
+      });
+      return;
+    }
+
     emit(state.copyWith(loading: true));
     try {
       final response = await authService.login(LoginRequest(

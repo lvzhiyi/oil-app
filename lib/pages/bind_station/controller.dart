@@ -1,18 +1,13 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/commom/upload.dart';
-import 'package:oil_business_app/global/model/common_req_type.dart';
 import 'package:oil_business_app/global/model/station_req_type.dart';
-import 'package:oil_business_app/global/service/common_service.dart';
 import 'package:oil_business_app/global/service/station_service.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
-import 'package:oil_business_app/utils/file_util.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
@@ -87,8 +82,9 @@ class BindStationCtrl extends Cubit<BindStationState> {
         fuelRetailPermitUrl: uploadResult[1],
       );
 
-      final response = await stationService.bindStation(reqParams);
-      BaseConfig.appContext?.read<AppController>().setAuthResponse(response);
+      await stationService.bindStation(reqParams);
+      SportsToast.showSuccess('绑定成功');
+      await Future.delayed(const Duration(seconds: 1));
       BaseRouter.replace(url: AppPage.pendingReviewPage.path);
     } catch (e) {
       emit(state.copyWith(loading: false));

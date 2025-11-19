@@ -66,3 +66,25 @@ class RefreshTokenRequest {
         'refreshToken': refreshToken,
       };
 }
+
+/// 修改密码请求
+/// [phone] 手机号
+/// [code] 验证码
+/// [newPassword] 新密码
+class ChangePasswordRequest {
+  final String phone;
+  final String code;
+  final String newPassword;
+
+  ChangePasswordRequest({
+    required this.phone,
+    required this.code,
+    required this.newPassword,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'phone': phone,
+        'code': code,
+        'newPassword': newPassword,
+      };
+}

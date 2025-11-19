@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/interfaces/top_bar_click_listener.dart';
 import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/bottom_sheet/bottom_sheet.dart';
@@ -69,17 +73,23 @@ class _AccountScreenState extends State<AccountScreen>
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               CommonText(
-                text: '手机号码',
+                text: context
+                        .read<AppController>()
+                        .state
+                        .authResponse
+                        ?.account
+                        ?.phone ??
+                    '',
                 fontWeight: FontWeight.w700,
                 textColor: CustomAppColor.of(context).txtBlack,
                 fontSize: AppSizes.setFontSize(18),
               ),
-              CommonText(
-                text: '查看并更新您的资料',
-                fontWeight: FontWeight.w600,
-                textColor: CustomAppColor.of(context).txtGrey,
-                fontSize: AppSizes.setFontSize(12),
-              ),
+              // CommonText(
+              //   text: '查看并更新您的资料',
+              //   fontWeight: FontWeight.w600,
+              //   textColor: CustomAppColor.of(context).txtGrey,
+              //   fontSize: AppSizes.setFontSize(12),
+              // ),
             ],
           ),
           const SizedBox(width: 10),
@@ -128,8 +138,12 @@ class _AccountScreenState extends State<AccountScreen>
                   if (accountData.label == '退出登录') {
                     logoutBottomSheet(context);
                   } else if (accountData.label == '修改密码') {
+                    BaseRouter.push(
+                        url: AppPage.otpPage.path,
+                        extra: {'type': 'password_change'});
                   } else if (accountData.label == '加油站管理') {
                   } else if (accountData.label == '买油订单') {
+                    BaseRouter.push(url: AppPage.payOrderListPage.path);
                   } else if (accountData.label == '提油订单') {
                   } else if (accountData.label == '隐私政策') {
                   } else {}
