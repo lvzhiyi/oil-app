@@ -1,15 +1,10 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:oil_business_app/pages/main_oil_pay/controller.dart';
-import 'package:oil_business_app/resources/colors.dart';
-import 'package:oil_business_app/resources/style.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
-import 'package:oil_business_app/static/img.dart';
 import 'package:oil_business_app/utils/pt.dart';
-import 'package:oil_business_app/widgets/common/empty_card.dart';
 import 'package:oil_business_app/widgets/common/page_loading.dart';
 import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
 

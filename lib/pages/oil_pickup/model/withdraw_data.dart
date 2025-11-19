@@ -91,3 +91,61 @@ class WithdrawResponse {
 
   Map<String, dynamic> toJson() => _$WithdrawResponseToJson(this);
 }
+
+
+/// 库存油模型
+@JsonSerializable()
+class InventoryModel {
+  @JsonKey(name: 'inventoryId')
+  final int? inventoryId;
+
+  @JsonKey(name: 'depotId')
+  final int? depotId;
+
+  @JsonKey(name: 'depotName')
+  final String? depotName;
+
+  @JsonKey(name: 'fuelType')
+  final String? fuelType;
+
+  @JsonKey(name: 'availableTon')
+  final double? availableTon;
+
+  @JsonKey(name: 'updatedAt')
+  final String? updatedAt;
+
+  InventoryModel({
+    this.inventoryId,
+    this.depotId,
+    this.depotName,
+    this.fuelType,
+    this.availableTon,
+    this.updatedAt,
+  });
+
+  factory InventoryModel.fromJson(Map<String, dynamic> json) =>
+      _$InventoryModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$InventoryModelToJson(this);
+}
+
+/// 库存油列表响应
+@JsonSerializable()
+class InventoryListResponse {
+  final List<InventoryModel>? list;
+  final int? total;
+  final int? page;
+  final int? pageSize;
+
+  InventoryListResponse({
+    this.list,
+    this.total,
+    this.page,
+    this.pageSize,
+  });
+
+  factory InventoryListResponse.fromJson(Map<String, dynamic> json) =>
+      _$InventoryListResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$InventoryListResponseToJson(this);
+}

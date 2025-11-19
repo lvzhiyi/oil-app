@@ -22,17 +22,18 @@ class OrderInfoCard extends StatelessWidget {
 
     final depotName = order!.depotName ?? '';
     final fuelType = order!.fuelType ?? '';
-    final availableInventory = order!.availableInventory ?? 0.0;
+    final availableInventory = order!.purchaseTon ?? 0.0;
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.setWidth(18),
-        vertical: AppSizes.setHeight(16),
-      ),
+      padding: EdgeInsets.all(AppSizes.setWidth(16)),
       decoration: BoxDecoration(
-        color: const Color(0xFF2A2D35),
-        borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
+        color: CustomAppColor.of(context).bgContainer,
+        borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
+        border: Border.all(
+          color: CustomAppColor.of(context).containerBorder,
+          width: 1,
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -44,7 +45,7 @@ class OrderInfoCard extends StatelessWidget {
               text: depotName,
               fontSize: AppSizes.setFontSize(14),
               fontWeight: FontWeight.w500,
-              textColor: CustomAppColor.of(context).txtWhite,
+              textColor: CustomAppColor.of(context).txtBlack,
               textAlign: TextAlign.left,
             ),
           ),
@@ -54,7 +55,7 @@ class OrderInfoCard extends StatelessWidget {
               text: fuelType,
               fontSize: AppSizes.setFontSize(14),
               fontWeight: FontWeight.w500,
-              textColor: CustomAppColor.of(context).txtWhite,
+              textColor: CustomAppColor.of(context).txtBlack,
               textAlign: TextAlign.center,
             ),
           ),
@@ -68,7 +69,7 @@ class OrderInfoCard extends StatelessWidget {
                   text: '库存',
                   fontSize: AppSizes.setFontSize(12),
                   fontWeight: FontWeight.w400,
-                  textColor: CustomAppColor.of(context).txtWhite.withValues(alpha: 0.7),
+                  textColor: CustomAppColor.of(context).txtGrey,
                   textAlign: TextAlign.right,
                 ),
                 SizedBox(height: AppSizes.setHeight(4)),
@@ -76,7 +77,7 @@ class OrderInfoCard extends StatelessWidget {
                   text: '${availableInventory.toInt()}吨',
                   fontSize: AppSizes.setFontSize(14),
                   fontWeight: FontWeight.w500,
-                  textColor: CustomAppColor.of(context).txtWhite,
+                  textColor: CustomAppColor.of(context).txtBlack,
                   textAlign: TextAlign.right,
                 ),
               ],
