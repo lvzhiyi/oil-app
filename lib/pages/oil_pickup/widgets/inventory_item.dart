@@ -39,25 +39,25 @@ class InventoryItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      depotName,
-                      style: SportsTextStyle.baseBold.copyWith(
-                        fontSize: pt(16),
-                        color: CustomAppColor.of(context).txtBlack,
-                      ),
-                    ),
-                    Gap(pt(8)),
-                    Text(
-                      '油品: $fuelType',
-                      style: SportsTextStyle.baseNormal.copyWith(
-                        fontSize: pt(14),
-                        color: CustomAppColor.of(context).txtGrey,
-                      ),
-                    ),
-                  ],
+                flex: 3,
+                child: Text(
+                  depotName,
+                  style: SportsTextStyle.baseBold.copyWith(
+                    fontSize: pt(16),
+                    color: CustomAppColor.of(context).txtBlack,
+                  ),
+                ),
+              ),
+              Gap(pt(12)),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  fuelType,
+                  textAlign: TextAlign.center,
+                  style: SportsTextStyle.baseNormal.copyWith(
+                    fontSize: pt(14),
+                    color: CustomAppColor.of(context).txtGrey,
+                  ),
                 ),
               ),
               Gap(pt(12)),
@@ -66,16 +66,16 @@ class InventoryItem extends StatelessWidget {
                 children: [
                   Text(
                     '剩余库存',
-                    style: SportsTextStyle.baseNormal.copyWith(
-                      fontSize: pt(12),
-                      color: CustomAppColor.of(context).txtGrey,
+                    style: SportsTextStyle.baseBold.copyWith(
+                      fontSize: pt(16),
+                      color: CustomAppColor.of(context).txtBlack,
                     ),
                   ),
                   Gap(pt(4)),
                   Text(
                     '${availableInventory.toInt()}吨',
-                    style: SportsTextStyle.baseBold.copyWith(
-                      fontSize: pt(18),
+                    style: SportsTextStyle.baseNormal.copyWith(
+                      fontSize: pt(14),
                       color: CustomAppColor.of(context).txtBlack,
                     ),
                   ),
