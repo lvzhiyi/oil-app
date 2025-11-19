@@ -4,6 +4,7 @@ import 'package:oil_business_app/pages/oil_pickup/state.dart';
 import 'package:oil_business_app/pages/oil_pickup/widgets/inventory_item.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/static/img.dart';
+import 'package:oil_business_app/utils/pt.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
@@ -75,14 +76,13 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
       return _buildEmptyState(context);
     }
 
-    return ListView.separated(
+    return ListView.builder(
       controller: _scrollController,
       padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.setWidth(12),
-        vertical: AppSizes.setWidth(12),
+        horizontal: pt(12),
+        vertical: pt(12),
       ),
       itemCount: widget.state.inventories.length + 1,
-      separatorBuilder: (context, index) => SizedBox(height: AppSizes.setHeight(12)),
       itemBuilder: (context, index) {
         if (index == widget.state.inventories.length) {
           return _buildLoadingMoreIndicator(context);

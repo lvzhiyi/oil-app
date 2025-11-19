@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 import 'package:oil_business_app/resources/colors.dart';
-import 'package:oil_business_app/utils/sizer_utils.dart';
-import 'package:oil_business_app/widgets/base/text/common_text.dart';
+import 'package:oil_business_app/resources/size.dart';
+import 'package:oil_business_app/resources/style.dart';
+import 'package:oil_business_app/utils/pt.dart';
 
 class InventoryItem extends StatelessWidget {
   final InventoryModel inventory;
@@ -20,71 +22,67 @@ class InventoryItem extends StatelessWidget {
     final fuelType = inventory.fuelType ?? '';
     final availableInventory = inventory.availableTon ?? 0.0;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(AppSizes.setWidth(16)),
-        decoration: BoxDecoration(
-          color: CustomAppColor.of(context).bgContainer,
-          borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
-          border: Border.all(
-            color: CustomAppColor.of(context).containerBorder,
-            width: 1,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CommonText(
-                    text: depotName,
-                    fontSize: AppSizes.setFontSize(16),
-                    fontWeight: FontWeight.w600,
-                    textColor: CustomAppColor.of(context).txtBlack,
-                    textAlign: TextAlign.left,
-                  ),
-                  SizedBox(height: AppSizes.setHeight(8)),
-                  CommonText(
-                    text: '油品: $fuelType',
-                    fontSize: AppSizes.setFontSize(14),
-                    fontWeight: FontWeight.w400,
-                    textColor: CustomAppColor.of(context).txtGrey,
-                    textAlign: TextAlign.left,
-                  ),
-                ],
+    return Container(
+      margin: EdgeInsets.only(bottom: pt(12)),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: AppSize.radius,
+        boxShadow: AppSize.boxShadow,
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: AppSize.radius,
+        child: Padding(
+          padding: EdgeInsets.all(pt(16)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      depotName,
+                      style: SportsTextStyle.baseBold.copyWith(
+                        fontSize: pt(16),
+                        color: CustomAppColor.of(context).txtBlack,
+                      ),
+                    ),
+                    Gap(pt(8)),
+                    Text(
+                      '油品: $fuelType',
+                      style: SportsTextStyle.baseNormal.copyWith(
+                        fontSize: pt(14),
+                        color: CustomAppColor.of(context).txtGrey,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Column(
+              Gap(pt(12)),
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CommonText(
-                    text: '剩余库存',
-                    fontSize: AppSizes.setFontSize(12),
-                    fontWeight: FontWeight.w400,
-                    textColor: CustomAppColor.of(context).txtGrey,
-                    textAlign: TextAlign.right,
+                  Text(
+                    '剩余库存',
+                    style: SportsTextStyle.baseNormal.copyWith(
+                      fontSize: pt(12),
+                      color: CustomAppColor.of(context).txtGrey,
+                    ),
                   ),
-                  SizedBox(height: AppSizes.setHeight(4)),
-                  CommonText(
-                    text: '${availableInventory.toInt()}吨',
-                    fontSize: AppSizes.setFontSize(18),
-                    fontWeight: FontWeight.w600,
-                    textColor: CustomAppColor.of(context).txtBlack,
-                    textAlign: TextAlign.right,
+                  Gap(pt(4)),
+                  Text(
+                    '${availableInventory.toInt()}吨',
+                    style: SportsTextStyle.baseBold.copyWith(
+                      fontSize: pt(18),
+                      color: CustomAppColor.of(context).txtBlack,
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
