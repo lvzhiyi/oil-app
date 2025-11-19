@@ -22,7 +22,7 @@ class OrderInfoCard extends StatelessWidget {
 
     final depotName = order!.depotName ?? '';
     final fuelType = order!.fuelType ?? '';
-    final availableInventory = order!.availableInventory ?? 0.0;
+    final availableInventory = order!.purchaseTon ?? 0.0;
 
     return Container(
       width: double.infinity,

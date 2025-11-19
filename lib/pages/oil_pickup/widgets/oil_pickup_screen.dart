@@ -81,7 +81,7 @@ class _OilPickupScreenState extends State<OilPickupScreen> {
     }
 
     final order = currentState.pendingOilOrder!;
-    final availableInventory = order.availableInventory ?? 0.0;
+    final availableInventory = order.purchaseTon ?? 0.0;
     final hasInventory = availableInventory > 0;
 
     // 有订单但无库存：显示订单信息卡片 + 空态标志

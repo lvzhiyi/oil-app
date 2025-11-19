@@ -91,3 +91,68 @@ class WithdrawResponse {
 
   Map<String, dynamic> toJson() => _$WithdrawResponseToJson(this);
 }
+
+/// 库存油查询请求
+@JsonSerializable()
+class InventoryQueryRequest {
+  final int page;
+  final int pageSize;
+
+  InventoryQueryRequest({
+    required this.page,
+    required this.pageSize,
+  });
+
+  factory InventoryQueryRequest.fromJson(Map<String, dynamic> json) =>
+      _$InventoryQueryRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$InventoryQueryRequestToJson(this);
+}
+
+/// 库存油模型
+@JsonSerializable()
+class InventoryModel {
+  final int? id;
+  final int? oilOrderId;
+  final String? depotName;
+  final String? fuelType;
+  final double? purchaseTon;
+  final String? createdAt;
+  final String? updatedAt;
+
+  InventoryModel({
+    this.id,
+    this.oilOrderId,
+    this.depotName,
+    this.fuelType,
+    this.purchaseTon,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  factory InventoryModel.fromJson(Map<String, dynamic> json) =>
+      _$InventoryModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$InventoryModelToJson(this);
+}
+
+/// 库存油列表响应
+@JsonSerializable()
+class InventoryListResponse {
+  final List<InventoryModel>? list;
+  final int? total;
+  final int? page;
+  final int? pageSize;
+
+  InventoryListResponse({
+    this.list,
+    this.total,
+    this.page,
+    this.pageSize,
+  });
+
+  factory InventoryListResponse.fromJson(Map<String, dynamic> json) =>
+      _$InventoryListResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$InventoryListResponseToJson(this);
+}

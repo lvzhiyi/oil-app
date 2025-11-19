@@ -79,3 +79,59 @@ Map<String, dynamic> _$WithdrawResponseToJson(WithdrawResponse instance) =>
       'status': instance.status,
       'message': instance.message,
     };
+
+InventoryQueryRequest _$InventoryQueryRequestFromJson(
+        Map<String, dynamic> json) =>
+    InventoryQueryRequest(
+      page: (json['page'] as num).toInt(),
+      pageSize: (json['pageSize'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$InventoryQueryRequestToJson(
+        InventoryQueryRequest instance) =>
+    <String, dynamic>{
+      'page': instance.page,
+      'pageSize': instance.pageSize,
+    };
+
+InventoryModel _$InventoryModelFromJson(Map<String, dynamic> json) =>
+    InventoryModel(
+      id: (json['id'] as num?)?.toInt(),
+      oilOrderId: (json['oilOrderId'] as num?)?.toInt(),
+      depotName: json['depotName'] as String?,
+      fuelType: json['fuelType'] as String?,
+      purchaseTon: (json['purchaseTon'] as num?)?.toDouble(),
+      createdAt: json['createdAt'] as String?,
+      updatedAt: json['updatedAt'] as String?,
+    );
+
+Map<String, dynamic> _$InventoryModelToJson(InventoryModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'oilOrderId': instance.oilOrderId,
+      'depotName': instance.depotName,
+      'fuelType': instance.fuelType,
+      'purchaseTon': instance.purchaseTon,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
+    };
+
+InventoryListResponse _$InventoryListResponseFromJson(
+        Map<String, dynamic> json) =>
+    InventoryListResponse(
+      list: (json['list'] as List<dynamic>?)
+          ?.map((e) => InventoryModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      total: (json['total'] as num?)?.toInt(),
+      page: (json['page'] as num?)?.toInt(),
+      pageSize: (json['pageSize'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$InventoryListResponseToJson(
+        InventoryListResponse instance) =>
+    <String, dynamic>{
+      'list': instance.list,
+      'total': instance.total,
+      'page': instance.page,
+      'pageSize': instance.pageSize,
+    };

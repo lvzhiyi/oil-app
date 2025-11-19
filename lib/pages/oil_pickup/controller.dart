@@ -5,8 +5,7 @@ import 'package:oil_business_app/models/vehicle_model.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 import 'package:oil_business_app/pages/oil_pickup/service/oil_pickup_service.dart';
 import 'package:oil_business_app/pages/oil_pickup/state.dart';
-import 'package:oil_business_app/pages/pay_order_detail/service/pay_order_service.dart';
-import 'package:oil_business_app/pages/pay_order_list/service/pay_order_list.dart';
+import 'package:oil_business_app/pages/pay_order_list/model/orders_data.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
@@ -23,46 +22,37 @@ class OilPickupCtrl extends Cubit<OilPickupState> {
       emit(state.copyWith(selectedStation: selectedStation));
     }
 
-    // 加载待完成的买油订单
+    // 加载可用库存油
     await _loadPendingOilOrder();
   }
 
-  /// 加载待完成的买油订单
+  /// 加载可用库存油
   Future<void> _loadPendingOilOrder() async {
     emit(state.copyWith(isLoadingOrder: true, orderError: null));
 
     try {
-      final orderResponse = await payOrderListService.getOrderList(
-        status: 20, // 已支付状态
-        page: 1,
-        pageSize: 1,
+      final inventoryResponse = await oilPickupService.getInventories(
+        InventoryQueryRequest(
+          page: 1,
+          pageSize: 1,
+        ),
       );
 
-      if (orderResponse.list != null && orderResponse.list!.isNotEmpty) {
-        final order = orderResponse.list!.first;
-        final orderId = order.id;
+      if (inventoryResponse.list != null && inventoryResponse.list!.isNotEmpty) {
+        final inventory = inventoryResponse.list!.first;
+        final orderId = inventory.oilOrderId;
+        
         if (orderId != null) {
-          l.i('OilPickup', '获取到待完成买油订单ID: $orderId');
+          l.i('OilPickup', '获取到库存油，订单ID: $orderId，库存: ${inventory.purchaseTon}');
           
-          // 获取订单详情（包含库存信息）
-          try {
-            final orderDetail = await payOrderService.getOrderDetail(orderId.toString());
-            l.i('OilPickup', '获取到订单详情，库存: ${orderDetail.availableInventory}');
-            
-            emit(state.copyWith(
-              pendingOilOrderId: orderId,
-              pendingOilOrder: orderDetail,
-              isLoadingOrder: false,
-            ));
-          } catch (e) {
-            l.w('OilPickup', '获取订单详情失败，使用列表数据: $e');
-            // 如果获取详情失败，使用列表中的数据
-            emit(state.copyWith(
-              pendingOilOrderId: orderId,
-              pendingOilOrder: order,
-              isLoadingOrder: false,
-            ));
-          }
+          // 将 InventoryModel 转换为 OrderModel
+          final orderModel = _convertInventoryToOrder(inventory);
+          
+          emit(state.copyWith(
+            pendingOilOrderId: orderId,
+            pendingOilOrder: orderModel,
+            isLoadingOrder: false,
+          ));
         } else {
           l.w('OilPickup', '订单ID为空');
           emit(state.copyWith(
@@ -71,7 +61,7 @@ class OilPickupCtrl extends Cubit<OilPickupState> {
           ));
         }
       } else {
-        l.i('OilPickup', '暂无待完成的买油订单');
+        l.i('OilPickup', '暂无可用库存油');
         emit(state.copyWith(
           isLoadingOrder: false,
           orderError: null,
@@ -79,13 +69,25 @@ class OilPickupCtrl extends Cubit<OilPickupState> {
         ));
       }
     } catch (e) {
-      l.e('OilPickup', '查询待完成买油订单失败: $e');
+      l.e('OilPickup', '查询可用库存油失败: $e');
       emit(state.copyWith(
         isLoadingOrder: false,
-        orderError: '加载订单信息失败,请重试',
+        orderError: '加载库存信息失败,请重试',
         pendingOilOrder: null,
       ));
     }
+  }
+
+  /// 将 InventoryModel 转换为 OrderModel
+  OrderModel _convertInventoryToOrder(InventoryModel inventory) {
+    return OrderModel(
+      id: inventory.oilOrderId,
+      depotName: inventory.depotName,
+      fuelType: inventory.fuelType,
+      purchaseTon: inventory.purchaseTon,
+      createdAt: inventory.createdAt,
+      updatedAt: inventory.updatedAt,
+    );
   }
 
   void updateOilAmount(String amount) {
@@ -143,10 +145,10 @@ class OilPickupCtrl extends Cubit<OilPickupState> {
   }
 
   Future<void> generateCertificate(BuildContext context) async {
-    // 检查是否有待完成的买油订单
+    // 检查是否有可用库存油
     if (state.pendingOilOrderId == null) {
       emit(state.copyWith(
-        errorMessage: '暂无待完成的买油订单',
+        errorMessage: '暂无可用库存油',
       ));
       return;
     }

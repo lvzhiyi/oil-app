@@ -24,6 +24,12 @@ abstract class OilPickupService {
     @Path('orderId') int orderId,
     @Body() WithdrawRequest request,
   );
+
+  /// 查询用户可用库存油
+  @POST('/inventories')
+  Future<InventoryListResponse> getInventories(
+    @Body() InventoryQueryRequest request,
+  );
 }
 
 OilPickupService get oilPickupService =>
