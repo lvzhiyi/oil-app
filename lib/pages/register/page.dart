@@ -23,14 +23,7 @@ class _RegisterPage extends BaseState<RegisterPage> with BasicInitPage {
       ),
       child: BlocListener<RegisterCtrl, RegisterState>(
         listener: (context, state) {
-          if (state.registerSuccess) {
-            // 使用WidgetsBinding.instance.addPostFrameCallback避免在构建期间导航
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted) {
-                context.read<RegisterCtrl>().navigateToHome(context);
-              }
-            });
-          }
+          if (state.registerSuccess) {}
         },
         child: BlocBuilder<RegisterCtrl, RegisterState>(
           builder: (context, state) {
