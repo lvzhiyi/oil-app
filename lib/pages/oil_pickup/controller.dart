@@ -70,11 +70,14 @@ class OilPickupCtrl extends Cubit<OilPickupState> {
     }
   }
 
-  void navigateToDetail(BuildContext context, InventoryModel inventory) {
-    BaseRouter.push(
+  Future<void> navigateToDetail(BuildContext context, InventoryModel inventory) async {
+    final result = await BaseRouter.push(
       context: context,
       url: AppPage.oilPickupDetailPage.path,
       extra: inventory,
     );
+    if (result == true) {
+      loadInventories();
+    }
   }
 }
