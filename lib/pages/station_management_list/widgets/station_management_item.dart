@@ -83,6 +83,7 @@ class StationManagementItem extends StatelessWidget {
                   textColor: colors.txtGrey,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.left,
                 ),
               ),
             ],

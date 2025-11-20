@@ -23,13 +23,17 @@ class StationManagementListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CustomAppColor.of(context).bgTopBar,
-      body: Column(
-        children: [
-          _buildTopBar(context),
-          Expanded(
-            child: _buildBody(context),
-          ),
-        ],
+      body: SafeArea(
+        bottom: true,
+        top: false,
+        child: Column(
+          children: [
+            _buildTopBar(context),
+            Expanded(
+              child: _buildBody(context),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -48,7 +52,10 @@ class StationManagementListScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _buildNavBar(context),
+          SafeArea(
+            bottom: false,
+            child: _buildNavBar(context),
+          ),
           _buildFilterBar(context),
         ],
       ),
@@ -80,7 +87,7 @@ class StationManagementListScreen extends StatelessWidget {
               child: Icon(
                 Icons.arrow_back,
                 size: AppSizes.setFontSize(18),
-                color: CustomAppColor.of(context).txtGrey,
+                color: CustomAppColor.of(context).txtBlack,
               ),
             ),
           ),
