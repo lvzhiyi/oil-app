@@ -204,7 +204,7 @@ class StationManagementListScreen extends StatelessWidget {
           children: [
             CommonText(
               text: label,
-              fontSize: AppSizes.setFontSize(18),
+              fontSize: AppSizes.setFontSize(16),
               fontWeight: FontWeight.w500,
               textColor: isSelected ? colors.btnPurple : colors.txtGrey,
             ),
