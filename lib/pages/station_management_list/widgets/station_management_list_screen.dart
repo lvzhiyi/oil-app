@@ -138,56 +138,55 @@ class StationManagementListScreen extends StatelessWidget {
     final isDisabledSelected = state.selectedStatus == StationStatus.disabled;
 
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.setWidth(16),
-        vertical: AppSizes.setHeight(12),
-      ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        physics: const ClampingScrollPhysics(),
-        child: Row(
-          children: [
-            _buildFilterChip(
+      color: CustomAppColor.of(context).bgContainer,
+      child: Row(
+        children: [
+          Expanded(
+            child: _buildFilterTab(
               context: context,
               label: '全部',
               isSelected: isAllSelected,
               onTap: () => controller.filterByStatus(null),
             ),
-            SizedBox(width: AppSizes.setWidth(12)),
-            _buildFilterChip(
+          ),
+          Expanded(
+            child: _buildFilterTab(
               context: context,
               label: '正常',
               isSelected: isActiveSelected,
               onTap: () => controller.filterByStatus(StationStatus.active),
             ),
-            SizedBox(width: AppSizes.setWidth(12)),
-            _buildFilterChip(
+          ),
+          Expanded(
+            child: _buildFilterTab(
               context: context,
               label: '待审核',
               isSelected: isPendingSelected,
               onTap: () => controller.filterByStatus(StationStatus.pending_review),
             ),
-            SizedBox(width: AppSizes.setWidth(12)),
-            _buildFilterChip(
+          ),
+          Expanded(
+            child: _buildFilterTab(
               context: context,
               label: '已驳回',
               isSelected: isRejectedSelected,
               onTap: () => controller.filterByStatus(StationStatus.rejected),
             ),
-            SizedBox(width: AppSizes.setWidth(12)),
-            _buildFilterChip(
+          ),
+          Expanded(
+            child: _buildFilterTab(
               context: context,
               label: '禁用',
               isSelected: isDisabledSelected,
               onTap: () => controller.filterByStatus(StationStatus.disabled),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildFilterChip({
+  Widget _buildFilterTab({
     required BuildContext context,
     required String label,
     required bool isSelected,
@@ -198,27 +197,30 @@ class StationManagementListScreen extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: AppSizes.setWidth(20),
-          vertical: AppSizes.setHeight(6),
+          vertical: AppSizes.setHeight(12),
         ),
-        decoration: BoxDecoration(
-          color: isSelected ? colors.btnPurple : colors.containerBorder,
-          borderRadius: BorderRadius.circular(AppSizes.setWidth(999)),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: colors.btnPurple.withValues(alpha: 0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : null,
-        ),
-        child: CommonText(
-          text: label,
-          fontSize: AppSizes.setFontSize(14),
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-          textColor: isSelected ? colors.white : colors.txtGrey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CommonText(
+              text: label,
+              fontSize: AppSizes.setFontSize(18),
+              fontWeight: FontWeight.w500,
+              textColor: isSelected ? colors.btnPurple : colors.txtGrey,
+            ),
+            SizedBox(height: AppSizes.setHeight(8)),
+            if (isSelected)
+              Container(
+                width: AppSizes.setWidth(26),
+                height: AppSizes.setWidth(3),
+                decoration: BoxDecoration(
+                  color: colors.btnPurple,
+                  borderRadius: BorderRadius.circular(AppSizes.setWidth(1.5)),
+                ),
+              )
+            else
+              SizedBox(height: AppSizes.setWidth(3)),
+          ],
         ),
       ),
     );
