@@ -9,7 +9,6 @@ import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/utils/vehicle_info_parser.dart';
-import 'package:oil_business_app/widgets/popup/toast.dart';
 
 class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
   OilPickupDetailCtrl(InventoryModel inventory)
@@ -68,10 +67,21 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
     }
   }
 
+  void resetVehicleInfo() {
+    emit(state.copyWith(
+      vehicleInfo: '',
+      vehicleModel: null,
+      missingFields: const [],
+      parseSuccess: false,
+      errorMessage: null,
+    ));
+  }
+
   void selectStation(BuildContext context) async {
     final result = await BaseRouter.push(
       context: context,
       url: AppPage.stationListPage.path,
+      extra: {'allowEdit': false},
     );
 
     if (result != null) {
@@ -82,7 +92,14 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
     }
   }
 
-  Future<void> generateCertificate(BuildContext context) async {
+  Future<void> generateCertificate(BuildContext context, {String? currentOilAmount}) async {
+    if (currentOilAmount != '' && currentOilAmount != state.oilAmount) {
+      emit(state.copyWith(
+        oilAmount: currentOilAmount,
+        errorMessage: null,
+      ));
+    }
+    
     if (state.inventory == null || state.inventory!.inventoryId == null) {
       emit(state.copyWith(
         errorMessage: '库存信息异常',
@@ -97,27 +114,30 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
       return;
     }
 
-    if (state.oilAmount.isEmpty) {
+    final finalOilAmount = currentOilAmount ?? state.oilAmount;
+    if (finalOilAmount.isEmpty || finalOilAmount.trim().isEmpty) {
       emit(state.copyWith(
         errorMessage: '请输入提油量',
       ));
       return;
     }
 
-    final oilAmountInt = int.tryParse(state.oilAmount);
-    if (oilAmountInt == null) {
+    final oilAmountDouble = double.tryParse(finalOilAmount);
+    if (oilAmountDouble == null) {
       emit(state.copyWith(
         errorMessage: '提油量必须为数字',
       ));
       return;
     }
 
-    if (oilAmountInt <= 0) {
+    if (oilAmountDouble <= 0) {
       emit(state.copyWith(
         errorMessage: '提油量必须大于0',
       ));
       return;
     }
+
+    final oilAmountInt = oilAmountDouble.toInt();
 
     final missing = VehicleInfoParser.validateRequired(
       state.vehicleModel ?? VehicleModel(),
@@ -155,7 +175,7 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
         request,
       );
 
-      l.i('OilPickupDetail', '提油申请提交成功: ${response.id}');
+      l.i('OilPickupDetail', '提油申请提交成功: ${response.withdrawNo ?? response.withdrawId ?? '-'}');
 
       emit(state.copyWith(
         isLoading: false,
@@ -163,9 +183,24 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
       ));
 
       if (context.mounted) {
-        SportsToast.showSuccess('提油凭证生成成功');
-        await Future.delayed(const Duration(milliseconds: 500));
-        BaseRouter.pop(context: context, result: true);
+        if (state.inventory == null || state.selectedStation == null || state.vehicleModel == null) {
+          emit(state.copyWith(
+            errorMessage: '数据异常，无法跳转',
+          ));
+          return;
+        }
+
+        BaseRouter.push(
+          context: context,
+          url: AppPage.oilPickupSuccessPage.path,
+          extra: {
+            'response': response,
+            'inventory': state.inventory!,
+            'station': state.selectedStation!,
+            'oilAmount': finalOilAmount,
+            'vehicleModel': state.vehicleModel!,
+          },
+        );
       }
 
     } catch (e) {

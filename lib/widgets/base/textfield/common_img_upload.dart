@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
+import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
 class CommonImgUpload extends StatefulWidget {
   final String? hintText;
@@ -70,6 +72,24 @@ class CommonImgUploadState extends State<CommonImgUpload> {
   late TextEditingController _controller;
 
   XFile? _image;
+  String? _imageUrl;
+
+  void _updateImageState() {
+    final text = _controller.text;
+    if (text.isNotEmpty && text.startsWith('http')) {
+      _imageUrl = text;
+      _image = null;
+    } else if (text.isNotEmpty && !text.startsWith('http')) {
+      _image = XFile(text);
+      _imageUrl = null;
+    } else {
+      _image = null;
+      _imageUrl = null;
+    }
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   void initState() {
@@ -81,33 +101,49 @@ class CommonImgUploadState extends State<CommonImgUpload> {
       setState(() {});
     });
     _controller = widget.controller ?? TextEditingController();
+    
+    _controller.addListener(_updateImageState);
+    _updateImageState();
+  }
+
+  @override
+  void didUpdateWidget(CommonImgUpload oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller?.removeListener(_updateImageState);
+      _controller = widget.controller ?? TextEditingController();
+      _controller.addListener(_updateImageState);
+      _updateImageState();
+    }
   }
 
   @override
   void dispose() {
+    _controller.removeListener(_updateImageState);
     _focusNode.dispose();
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
     super.dispose();
   }
 
-  imagePicker() async {
+  Future<void> imagePicker() async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image != null) {
       widget.onChanged?.call(image.path);
+      setState(() {
+        _image = image;
+        _imageUrl = null;
+      });
     }
-    setState(() {
-      _image = image;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     bool isFocused = _focusNode.hasFocus;
+    final hasImage = _image != null || _imageUrl != null;
 
-    return InkWell(
-      onTap: () {
-        imagePicker();
-      },
-      child: FormBuilderTextField(
+    final textField = FormBuilderTextField(
         name: widget.name ?? '',
         textAlign: widget.textAlign ?? TextAlign.start,
         textAlignVertical: widget.textAlignVertical ?? TextAlignVertical.top,
@@ -118,9 +154,11 @@ class CommonImgUploadState extends State<CommonImgUpload> {
         maxLines: widget.maxLines ?? 1,
         obscureText: _obscureText,
         readOnly: true,
-        enabled: false,
+        enabled: true,
         style: TextStyle(
-          color: CustomAppColor.of(context).txtBlack,
+          color: (_image != null || _imageUrl != null)
+              ? Colors.transparent
+              : CustomAppColor.of(context).txtBlack,
           fontSize: AppSizes.setFontSize(14),
           fontWeight: FontWeight.bold,
         ),
@@ -137,8 +175,8 @@ class CommonImgUploadState extends State<CommonImgUpload> {
               fontWeight: FontWeight.w600),
           fillColor: widget.fillColor ?? CustomAppColor.of(context).bgContainer,
           filled: true,
-          hintText: _image != null
-              ? '点击可重新上传'
+          hintText: hasImage
+              ? ''
               : "${widget.hintText ?? ""}${widget.isRequiredHint ?? false ? " *" : ""}",
           hintStyle: widget.hintStyle ??
               TextStyle(
@@ -156,16 +194,46 @@ class CommonImgUploadState extends State<CommonImgUpload> {
                       width: AppSizes.setWidth(126),
                       height: AppSizes.setHeight(126)),
                 )
-              : Padding(
-                  padding: EdgeInsets.only(
-                      left: AppSizes.setWidth(56),
-                      right: AppSizes.setWidth(17)),
-                  child: Image.asset(
-                    AssetsIcon.IC_CAMERA,
-                    height: AppSizes.setHeight(24),
-                    width: AppSizes.setWidth(36),
-                  ),
-                ),
+              : _imageUrl != null
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                          left: AppSizes.setWidth(10),
+                          top: AppSizes.setHeight(5),
+                          bottom: AppSizes.setHeight(5),
+                          right: AppSizes.setWidth(17)),
+                      child: CachedNetworkImage(
+                        imageUrl: _imageUrl!,
+                        width: AppSizes.setWidth(126),
+                        height: AppSizes.setHeight(126),
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          width: AppSizes.setWidth(126),
+                          height: AppSizes.setHeight(126),
+                          color: Colors.grey[200],
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          width: AppSizes.setWidth(126),
+                          height: AppSizes.setHeight(126),
+                          color: Colors.grey[200],
+                          child: Icon(Icons.error),
+                        ),
+                      ),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.only(
+                          left: AppSizes.setWidth(56),
+                          right: AppSizes.setWidth(17)),
+                      child: Image.asset(
+                        AssetsIcon.IC_CAMERA,
+                        height: AppSizes.setHeight(24),
+                        width: AppSizes.setWidth(36),
+                      ),
+                    ),
           suffixIcon: widget.isPasswordField
               ? _obscureText
                   ? IconButton(
@@ -191,7 +259,36 @@ class CommonImgUploadState extends State<CommonImgUpload> {
                         });
                       },
                     )
-              : widget.suffixIcon,
+              : hasImage
+                  ? GestureDetector(
+                      onTap: () {
+                        imagePicker();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSizes.setWidth(8),
+                          vertical: AppSizes.setHeight(8),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.edit,
+                              color: CustomAppColor.of(context).borderPurple,
+                              size: AppSizes.setFontSize(20),
+                            ),
+                            SizedBox(width: AppSizes.setWidth(4)),
+                            CommonText(
+                              text: '编辑',
+                              fontSize: AppSizes.setFontSize(14),
+                              fontWeight: FontWeight.w500,
+                              textColor: CustomAppColor.of(context).borderPurple,
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : widget.suffixIcon,
           border: OutlineInputBorder(
             borderRadius: widget.radius != null
                 ? BorderRadius.circular(widget.radius ?? 0)
@@ -217,7 +314,15 @@ class CommonImgUploadState extends State<CommonImgUpload> {
                 width: 2),
           ),
         ),
-      ),
-    );
+      );
+
+    if (hasImage) {
+      return textField;
+    } else {
+      return InkWell(
+        onTap: imagePicker,
+        child: textField,
+      );
+    }
   }
 }

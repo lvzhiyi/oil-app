@@ -12,11 +12,13 @@ import 'station_item.dart';
 class StationListScreen extends StatelessWidget {
   final StationListState state;
   final StationListCtrl controller;
+  final bool allowEdit;
 
   const StationListScreen({
     Key? key,
     required this.state,
     required this.controller,
+    this.allowEdit = true,
   }) : super(key: key);
 
   @override
@@ -118,13 +120,13 @@ class StationListScreen extends StatelessWidget {
                       station: station,
                       isSelected: isSelected,
                       onTap: () => controller.selectStation(station, context),
-                      onEdit: () => controller.navigateToEdit(station, context),
+                      onEdit: allowEdit ? () => controller.navigateToEdit(station, context) : null,
                     ),
                   );
                 },
               ),
             ),
-            _buildAddButton(context),
+            if (allowEdit) _buildAddButton(context),
           ],
         );
       },

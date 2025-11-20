@@ -3,8 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:oil_business_app/pages/bind_station/page.dart';
 import 'package:oil_business_app/pages/otp/page.dart';
 import 'package:oil_business_app/pages/otp/widgets/otp_verification_screen.dart';
+import 'package:oil_business_app/models/station_model.dart';
+import 'package:oil_business_app/models/vehicle_model.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 import 'package:oil_business_app/pages/oil_pickup_detail/page.dart';
+import 'package:oil_business_app/pages/oil_pickup_success/page.dart';
 import 'package:oil_business_app/pages/pay_order_detail/page.dart';
 import 'package:oil_business_app/pages/pay_order_list/page.dart';
 import 'package:oil_business_app/pages/pending_review/pending_review_screen.dart';
@@ -89,6 +92,9 @@ enum AppPage {
 
   /// 提油详情页面
   oilPickupDetailPage('/oilPickupDetail'),
+
+  /// 提油成功页面
+  oilPickupSuccessPage('/oilPickupSuccess'),
   ;
 
   const AppPage(this.path);
@@ -153,7 +159,12 @@ extension PageRoute on AppPage {
         return (context, state) => const OilPickupPage();
 
       case AppPage.stationListPage:
-        return (context, state) => const StationListPage();
+        return (context, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final allowEditValue = extra['allowEdit'];
+          final allowEdit = allowEditValue is bool ? allowEditValue : true;
+          return StationListPage(allowEdit: allowEdit);
+        };
 
       case AppPage.stationEditPage:
         return (context, state) => const StationEditPage();
@@ -173,6 +184,18 @@ extension PageRoute on AppPage {
       case AppPage.oilPickupDetailPage:
         return (context, state) => OilPickupDetailPage(
             inventory: state.extra as InventoryModel);
+
+      case AppPage.oilPickupSuccessPage:
+        return (context, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          return OilPickupSuccessPage(
+            response: extra['response'] as WithdrawResponse,
+            inventory: extra['inventory'] as InventoryModel,
+            station: extra['station'] as StationModel,
+            oilAmount: extra['oilAmount'] as String,
+            vehicleModel: extra['vehicleModel'] as VehicleModel,
+          );
+        };
 
       default:
         return (context, state) => const Text('404');

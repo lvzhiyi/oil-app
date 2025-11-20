@@ -7,7 +7,9 @@ import 'package:oil_business_app/widgets/common/base_page.dart';
 import 'controller.dart';
 
 class StationListPage extends BasePage {
-  const StationListPage({Key? key}) : super(key: key);
+  final bool allowEdit;
+
+  StationListPage({Key? key, this.allowEdit = true}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _StationListPage();
@@ -20,7 +22,7 @@ class _StationListPage extends BaseState<StationListPage> with BasicInitPage {
       create: (BuildContext context) => StationListCtrl(),
       child: BlocBuilder<StationListCtrl, StationListState>(
         builder: (context, state) {
-          return StationListView(state: state);
+          return StationListView(state: state, allowEdit: widget.allowEdit);
         },
       ),
     );

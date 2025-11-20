@@ -7,14 +7,14 @@ import 'package:oil_business_app/widgets/base/text/common_text.dart';
 class StationItem extends StatelessWidget {
   final StationModel station;
   final VoidCallback onTap;
-  final VoidCallback onEdit;
+  final VoidCallback? onEdit;
   final bool isSelected;
 
   const StationItem({
     Key? key,
     required this.station,
     required this.onTap,
-    required this.onEdit,
+    this.onEdit,
     this.isSelected = false,
   }) : super(key: key);
 
@@ -71,26 +71,28 @@ class StationItem extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: AppSizes.setWidth(12)),
-            GestureDetector(
-              onTap: onEdit,
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSizes.setWidth(12),
-                  vertical: AppSizes.setHeight(6),
-                ),
-                decoration: BoxDecoration(
-                  color: CustomAppColor.of(context).btnPurple.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(AppSizes.setWidth(6)),
-                ),
-                child: CommonText(
-                  text: '修改',
-                  fontSize: AppSizes.setFontSize(12),
-                  fontWeight: FontWeight.w500,
-                  textColor: CustomAppColor.of(context).btnPurple,
+            if (onEdit != null) ...[
+              SizedBox(width: AppSizes.setWidth(12)),
+              GestureDetector(
+                onTap: onEdit,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSizes.setWidth(12),
+                    vertical: AppSizes.setHeight(6),
+                  ),
+                  decoration: BoxDecoration(
+                    color: CustomAppColor.of(context).btnPurple.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(AppSizes.setWidth(6)),
+                  ),
+                  child: CommonText(
+                    text: '修改',
+                    fontSize: AppSizes.setFontSize(12),
+                    fontWeight: FontWeight.w500,
+                    textColor: CustomAppColor.of(context).btnPurple,
+                  ),
                 ),
               ),
-            ),
+            ],
           ],
         ),
       ),

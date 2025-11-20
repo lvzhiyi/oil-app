@@ -61,3 +61,22 @@ enum OrderStatus {
     );
   }
 }
+
+/// 提油状态枚举
+enum WithdrawStatus {
+  pendingPickup('待提油', 'pending_pickup'),
+  completed('完成提油', 'completed');
+
+  const WithdrawStatus(this.displayName, this.value);
+
+  final String displayName;
+  final String value;
+
+  static WithdrawStatus? fromString(String? value) {
+    if (value == null) return null;
+    return WithdrawStatus.values.firstWhere(
+      (e) => e.value == value,
+      orElse: () => WithdrawStatus.pendingPickup,
+    );
+  }
+}
