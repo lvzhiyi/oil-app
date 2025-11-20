@@ -133,6 +133,7 @@ dependencies:
   intl_phone_field: ^3.2.0
   shared_preferences: ^2.5.3
   get_it: ^8.2.0
+  rename_app: ^1.6.5
 dev_dependencies:
   flutter_flavorizr: ^2.2.3
   flutter_lints: ^6.0.0
