@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
+import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
 class CommonImgUpload extends StatefulWidget {
   final String? hintText;
@@ -264,11 +265,26 @@ class CommonImgUploadState extends State<CommonImgUpload> {
                         imagePicker();
                       },
                       child: Container(
-                        padding: EdgeInsets.all(AppSizes.setWidth(8)),
-                        child: Icon(
-                          Icons.edit,
-                          color: CustomAppColor.of(context).borderPurple,
-                          size: AppSizes.setFontSize(20),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSizes.setWidth(8),
+                          vertical: AppSizes.setHeight(8),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.edit,
+                              color: CustomAppColor.of(context).borderPurple,
+                              size: AppSizes.setFontSize(20),
+                            ),
+                            SizedBox(width: AppSizes.setWidth(4)),
+                            CommonText(
+                              text: '编辑',
+                              fontSize: AppSizes.setFontSize(14),
+                              fontWeight: FontWeight.w500,
+                              textColor: CustomAppColor.of(context).borderPurple,
+                            ),
+                          ],
                         ),
                       ),
                     )
