@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/commom/upload.dart';
 import 'package:oil_business_app/global/model/station_req_type.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/global/service/station_service.dart';
+import 'package:oil_business_app/models/station_model.dart';
 import 'package:oil_business_app/pages/station_edit/state.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/utils/log.dart';
@@ -18,9 +21,60 @@ class StationEditCtrl extends Cubit<StationEditState> {
 
   String? _stationId;
 
-  void initState(String stationId) {
-    // TODO: 从API加载加油站信息
-    // 目前保持空状态，等待后续实现
+  void initState(String stationId) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      final response = await appController.getStationStatus();
+      
+      final station = (response.list ?? []).firstWhere(
+        (s) => s.id?.toString() == stationId,
+        orElse: () => throw Exception('未找到加油站信息'),
+      );
+
+      final stationModel = StationModel(
+        id: station.id?.toString() ?? '',
+        name: station.stationName ?? '',
+        address: _buildFullAddress(station),
+        isActive: station.status?.name == 'active',
+      );
+
+      final businessLicenseUrl = station.businessLicenseUrl ?? '';
+      final fuelRetailPermitUrl = station.fuelRetailPermitUrl ?? '';
+      
+      emit(state.copyWith(
+        station: stationModel,
+        name: station.stationName ?? '',
+        provinceName: station.provinceName ?? '',
+        cityName: station.cityName ?? '',
+        areaName: station.areaName ?? '',
+        provinceCode: station.provinceCode ?? '',
+        cityCode: station.cityCode ?? '',
+        areaCode: station.areaCode ?? '',
+        addressDetail: station.addressDetail ?? '',
+        businessLicenseUrl: businessLicenseUrl,
+        fuelRetailPermitUrl: fuelRetailPermitUrl,
+        originalBusinessLicenseUrl: businessLicenseUrl,
+        originalFuelRetailPermitUrl: fuelRetailPermitUrl,
+        isLoading: false,
+      ));
+    } catch (e) {
+      l.e('StationEditCtrl', '加载加油站信息失败: $e');
+      emit(state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: '加载加油站信息失败: ${e.toString()}',
+      ));
+    }
+  }
+
+  String _buildFullAddress(Station station) {
+    final parts = [
+      station.provinceName,
+      station.cityName,
+      station.areaName,
+      station.addressDetail,
+    ].where((part) => part != null && part.isNotEmpty);
+    return parts.join('');
   }
 
   void updateName(String name) {
@@ -88,26 +142,38 @@ class StationEditCtrl extends Cubit<StationEditState> {
       String businessLicenseUrl = state.businessLicenseUrl;
       String fuelRetailPermitUrl = state.fuelRetailPermitUrl;
 
-      if (businessLicenseUrl.isNotEmpty &&
-          !businessLicenseUrl.startsWith('http')) {
-        final uploadedUrl = await uploadImage(businessLicenseUrl);
-        if (uploadedUrl == null) {
-          SportsToast.showWarning('上传营业执照失败，请稍后重试');
-          emit(state.copyWith(isLoading: false));
-          return false;
+      if (businessLicenseUrl.isNotEmpty) {
+        if (businessLicenseUrl == state.originalBusinessLicenseUrl) {
+          final queryIndex = businessLicenseUrl.indexOf('?');
+          if (queryIndex != -1) {
+            businessLicenseUrl = businessLicenseUrl.substring(0, queryIndex);
+          }
+        } else if (!businessLicenseUrl.startsWith('http')) {
+          final uploadedUrl = await uploadImage(businessLicenseUrl);
+          if (uploadedUrl == null) {
+            SportsToast.showWarning('上传营业执照失败，请稍后重试');
+            emit(state.copyWith(isLoading: false));
+            return false;
+          }
+          businessLicenseUrl = uploadedUrl;
         }
-        businessLicenseUrl = uploadedUrl;
       }
 
-      if (fuelRetailPermitUrl.isNotEmpty &&
-          !fuelRetailPermitUrl.startsWith('http')) {
-        final uploadedUrl = await uploadImage(fuelRetailPermitUrl);
-        if (uploadedUrl == null) {
-          SportsToast.showWarning('上传成品油零售许可失败，请稍后重试');
-          emit(state.copyWith(isLoading: false));
-          return false;
+      if (fuelRetailPermitUrl.isNotEmpty) {
+        if (fuelRetailPermitUrl == state.originalFuelRetailPermitUrl) {
+          final queryIndex = fuelRetailPermitUrl.indexOf('?');
+          if (queryIndex != -1) {
+            fuelRetailPermitUrl = fuelRetailPermitUrl.substring(0, queryIndex);
+          }
+        } else if (!fuelRetailPermitUrl.startsWith('http')) {
+          final uploadedUrl = await uploadImage(fuelRetailPermitUrl);
+          if (uploadedUrl == null) {
+            SportsToast.showWarning('上传成品油零售许可失败，请稍后重试');
+            emit(state.copyWith(isLoading: false));
+            return false;
+          }
+          fuelRetailPermitUrl = uploadedUrl;
         }
-        fuelRetailPermitUrl = uploadedUrl;
       }
 
       final reqParams = BindStationRequest(

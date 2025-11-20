@@ -12,6 +12,8 @@ class StationEditState {
   final String addressDetail;
   final String businessLicenseUrl;
   final String fuelRetailPermitUrl;
+  final String originalBusinessLicenseUrl;
+  final String originalFuelRetailPermitUrl;
   final bool isLoading;
   final bool hasError;
   final String? errorMessage;
@@ -28,6 +30,8 @@ class StationEditState {
     this.addressDetail = '',
     this.businessLicenseUrl = '',
     this.fuelRetailPermitUrl = '',
+    this.originalBusinessLicenseUrl = '',
+    this.originalFuelRetailPermitUrl = '',
     this.isLoading = false,
     this.hasError = false,
     this.errorMessage,
@@ -45,6 +49,8 @@ class StationEditState {
     String? addressDetail,
     String? businessLicenseUrl,
     String? fuelRetailPermitUrl,
+    String? originalBusinessLicenseUrl,
+    String? originalFuelRetailPermitUrl,
     bool? isLoading,
     bool? hasError,
     String? errorMessage,
@@ -61,6 +67,8 @@ class StationEditState {
       addressDetail: addressDetail ?? this.addressDetail,
       businessLicenseUrl: businessLicenseUrl ?? this.businessLicenseUrl,
       fuelRetailPermitUrl: fuelRetailPermitUrl ?? this.fuelRetailPermitUrl,
+      originalBusinessLicenseUrl: originalBusinessLicenseUrl ?? this.originalBusinessLicenseUrl,
+      originalFuelRetailPermitUrl: originalFuelRetailPermitUrl ?? this.originalFuelRetailPermitUrl,
       isLoading: isLoading ?? this.isLoading,
       hasError: hasError ?? this.hasError,
       errorMessage: errorMessage ?? this.errorMessage,

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/pages/station_management_list/controller.dart';
 import 'package:oil_business_app/pages/station_management_list/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
+import 'package:oil_business_app/widgets/base/option_chip/filter_option_chip.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
 import 'station_management_item.dart';
@@ -99,6 +101,7 @@ class StationManagementListScreen extends StatelessWidget {
 
     return Column(
       children: [
+        _buildFilterBar(context),
         Expanded(
           child: ListView.builder(
             padding: EdgeInsets.all(AppSizes.setWidth(20)),
@@ -119,6 +122,100 @@ class StationManagementListScreen extends StatelessWidget {
         ),
         _buildAddButton(context),
       ],
+    );
+  }
+
+  Widget _buildFilterBar(BuildContext context) {
+    final isAllSelected = state.selectedStatuses.isEmpty;
+    final isActiveSelected = state.selectedStatuses.contains(StationStatus.active);
+    final isPendingSelected = state.selectedStatuses.contains(StationStatus.pending_review);
+    final isRejectedSelected = state.selectedStatuses.contains(StationStatus.rejected);
+    final isDisabledSelected = state.selectedStatuses.contains(StationStatus.disabled);
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.setWidth(20),
+        vertical: AppSizes.setHeight(12),
+      ),
+      decoration: BoxDecoration(
+        color: CustomAppColor.of(context).bgScaffold,
+        border: Border(
+          bottom: BorderSide(
+            color: CustomAppColor.of(context).containerBorder,
+            width: 1,
+          ),
+        ),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            FilterOptionChip(
+              label: '全部',
+              isSelected: isAllSelected,
+              onTap: () {
+                controller.filterByStatus([]);
+              },
+            ),
+            SizedBox(width: AppSizes.setWidth(8)),
+            FilterOptionChip(
+              label: '正常',
+              isSelected: isActiveSelected,
+              onTap: () {
+                final currentStatuses = List<StationStatus>.from(state.selectedStatuses);
+                if (isActiveSelected) {
+                  currentStatuses.remove(StationStatus.active);
+                } else {
+                  currentStatuses.add(StationStatus.active);
+                }
+                controller.filterByStatus(currentStatuses);
+              },
+            ),
+            SizedBox(width: AppSizes.setWidth(8)),
+            FilterOptionChip(
+              label: '待审核',
+              isSelected: isPendingSelected,
+              onTap: () {
+                final currentStatuses = List<StationStatus>.from(state.selectedStatuses);
+                if (isPendingSelected) {
+                  currentStatuses.remove(StationStatus.pending_review);
+                } else {
+                  currentStatuses.add(StationStatus.pending_review);
+                }
+                controller.filterByStatus(currentStatuses);
+              },
+            ),
+            SizedBox(width: AppSizes.setWidth(8)),
+            FilterOptionChip(
+              label: '已驳回',
+              isSelected: isRejectedSelected,
+              onTap: () {
+                final currentStatuses = List<StationStatus>.from(state.selectedStatuses);
+                if (isRejectedSelected) {
+                  currentStatuses.remove(StationStatus.rejected);
+                } else {
+                  currentStatuses.add(StationStatus.rejected);
+                }
+                controller.filterByStatus(currentStatuses);
+              },
+            ),
+            SizedBox(width: AppSizes.setWidth(8)),
+            FilterOptionChip(
+              label: '禁用',
+              isSelected: isDisabledSelected,
+              onTap: () {
+                final currentStatuses = List<StationStatus>.from(state.selectedStatuses);
+                if (isDisabledSelected) {
+                  currentStatuses.remove(StationStatus.disabled);
+                } else {
+                  currentStatuses.add(StationStatus.disabled);
+                }
+                controller.filterByStatus(currentStatuses);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 

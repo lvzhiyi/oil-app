@@ -28,6 +28,8 @@ class _StationEditFormState extends State<StationEditForm> {
   late TextEditingController _nameController;
   late TextEditingController _cityController;
   late TextEditingController _addressDetailController;
+  late TextEditingController _businessLicenseController;
+  late TextEditingController _fuelRetailPermitController;
 
   @override
   void initState() {
@@ -37,6 +39,30 @@ class _StationEditFormState extends State<StationEditForm> {
       text: _buildCityText(),
     );
     _addressDetailController = TextEditingController(text: widget.state.addressDetail);
+    _businessLicenseController = TextEditingController(text: widget.state.businessLicenseUrl);
+    _fuelRetailPermitController = TextEditingController(text: widget.state.fuelRetailPermitUrl);
+  }
+
+  @override
+  void didUpdateWidget(StationEditForm oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.state.name != widget.state.name) {
+      _nameController.text = widget.state.name;
+    }
+    if (oldWidget.state.provinceName != widget.state.provinceName ||
+        oldWidget.state.cityName != widget.state.cityName ||
+        oldWidget.state.areaName != widget.state.areaName) {
+      _cityController.text = _buildCityText();
+    }
+    if (oldWidget.state.addressDetail != widget.state.addressDetail) {
+      _addressDetailController.text = widget.state.addressDetail;
+    }
+    if (oldWidget.state.businessLicenseUrl != widget.state.businessLicenseUrl) {
+      _businessLicenseController.text = widget.state.businessLicenseUrl;
+    }
+    if (oldWidget.state.fuelRetailPermitUrl != widget.state.fuelRetailPermitUrl) {
+      _fuelRetailPermitController.text = widget.state.fuelRetailPermitUrl;
+    }
   }
 
   /// 构建省市区显示文本
@@ -56,6 +82,8 @@ class _StationEditFormState extends State<StationEditForm> {
     _nameController.dispose();
     _cityController.dispose();
     _addressDetailController.dispose();
+    _businessLicenseController.dispose();
+    _fuelRetailPermitController.dispose();
     super.dispose();
   }
 
@@ -154,6 +182,7 @@ class _StationEditFormState extends State<StationEditForm> {
                 padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
                 child: CommonImgUpload(
                   name: 'businessLicenseUrl',
+                  controller: _businessLicenseController,
                   hintText: '上传营业执照',
                   maxLines: 2,
                   textAlign: TextAlign.start,
@@ -171,6 +200,7 @@ class _StationEditFormState extends State<StationEditForm> {
               ),
               CommonImgUpload(
                 name: 'fuelRetailPermitUrl',
+                controller: _fuelRetailPermitController,
                 hintText: '上传成品油零售许可',
                 textAlign: TextAlign.start,
                 textAlignVertical: TextAlignVertical.top,

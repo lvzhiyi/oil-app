@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/station_res_type.dart';
+import 'package:oil_business_app/global/service/station_service.dart';
 import 'package:oil_business_app/models/station_model.dart';
 import 'package:oil_business_app/pages/station_management_list/state.dart';
 import 'package:oil_business_app/router/router.dart';
@@ -36,9 +36,17 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
   }
 
   void initState() async {
+    await loadStations();
+  }
+
+  Future<void> loadStations() async {
     emit(state.copyWith(isLoading: true));
     try {
-      final response = await appController.getStationStatus();
+      final statuses = state.selectedStatuses.isEmpty
+          ? StationStatus.values.map((e) => e.name).toList()
+          : state.selectedStatuses.map((e) => e.name).toList();
+
+      final response = await stationService.getStationStatus(1, 100, statuses);
 
       final stations = (response.list ?? [])
           .map((station) => _convertToStationModel(station))
@@ -57,6 +65,11 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
         errorMessage: e.toString(),
       ));
     }
+  }
+
+  void filterByStatus(List<StationStatus> statuses) {
+    emit(state.copyWith(selectedStatuses: statuses));
+    loadStations();
   }
 
   void navigateToEdit(StationModel station, BuildContext context) {
