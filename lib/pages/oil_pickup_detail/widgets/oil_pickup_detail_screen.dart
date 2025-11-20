@@ -6,6 +6,7 @@ import 'package:oil_business_app/pages/oil_pickup/widgets/station_selector_butto
 import 'package:oil_business_app/pages/oil_pickup_detail/controller.dart';
 import 'package:oil_business_app/pages/oil_pickup_detail/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/utils/fuel_type_helper.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
@@ -96,22 +97,6 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
                             ),
                             SizedBox(height: AppSizes.setHeight(24)),
                             _buildVehicleInfoInput(context, currentState),
-                            SizedBox(height: AppSizes.setHeight(24)),
-                            if (currentState.errorMessage != null)
-                              Container(
-                                padding: EdgeInsets.all(AppSizes.setWidth(12)),
-                                margin: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
-                                decoration: BoxDecoration(
-                                  color: CustomAppColor.of(context).red.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
-                                ),
-                                child: CommonText(
-                                  text: currentState.errorMessage!,
-                                  fontSize: AppSizes.setFontSize(14),
-                                  textColor: CustomAppColor.of(context).red,
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
                             SizedBox(height: AppSizes.setHeight(20)),
                           ],
                         ),
@@ -139,12 +124,36 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
                 ),
                 child: SafeArea(
                   top: false,
-                  child: CommonButton(
-                    btnText: '生成提油凭证',
-                    height: AppSizes.setHeight(52),
-                    fontSize: AppSizes.setFontSize(15),
-                    isLoading: currentState.isLoading,
-                    onTap: () => widget.controller.generateCertificate(context),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (currentState.errorMessage != null)
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(AppSizes.setWidth(12)),
+                          margin: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
+                          decoration: BoxDecoration(
+                            color: CustomAppColor.of(context).red.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
+                          ),
+                          child: CommonText(
+                            text: currentState.errorMessage!,
+                            fontSize: AppSizes.setFontSize(14),
+                            textColor: CustomAppColor.of(context).red,
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                      CommonButton(
+                        btnText: '生成提油凭证',
+                        height: AppSizes.setHeight(52),
+                        fontSize: AppSizes.setFontSize(15),
+                        isLoading: currentState.isLoading,
+                        onTap: () {
+                          final currentOilAmount = _oilAmountController.text.trim();
+                          widget.controller.generateCertificate(context, currentOilAmount: currentOilAmount);
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -204,12 +213,12 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
                           textAlign: TextAlign.left,
                         ),
                         SizedBox(height: AppSizes.setHeight(4)),
-                        CommonText(
-                          text: '四川省广安市前锋区xxxxx',
-                          fontSize: AppSizes.setFontSize(12),
-                          textColor: CustomAppColor.of(context).txtGrey,
-                          textAlign: TextAlign.left,
-                        ),
+                        // CommonText(
+                        //   text: '四川省广安市前锋区xxxxx',
+                        //   fontSize: AppSizes.setFontSize(12),
+                        //   textColor: CustomAppColor.of(context).txtGrey,
+                        //   textAlign: TextAlign.left,
+                        // ),
                       ],
                     ),
                   ),
@@ -223,7 +232,7 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
                       borderRadius: BorderRadius.circular(AppSizes.setWidth(4)),
                     ),
                     child: CommonText(
-                      text: inventory.fuelType ?? '',
+                      text: FuelTypeHelper.getDisplayName(inventory.fuelType),
                       fontSize: AppSizes.setFontSize(14),
                       fontWeight: FontWeight.w700,
                       textColor: CustomAppColor.of(context).txtBlue,
@@ -359,6 +368,8 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
   }
 
   Widget _buildVehicleInfoInput(BuildContext context, OilPickupDetailState state) {
+    final showInput = !state.parseSuccess || state.vehicleModel == null;
+    
     return Container(
       padding: EdgeInsets.all(AppSizes.setWidth(16)),
       decoration: BoxDecoration(
@@ -389,85 +400,113 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
                 textColor: CustomAppColor.of(context).txtBlack,
                 textAlign: TextAlign.left,
               ),
-              Row(
+              if (showInput)
+                Row(
+                  children: [
+                    Icon(
+                      Icons.copy_all,
+                      size: AppSizes.setWidth(14),
+                      color: CustomAppColor.of(context).txtGrey,
+                    ),
+                    SizedBox(width: AppSizes.setWidth(4)),
+                    CommonText(
+                      text: '支持智能识别',
+                      fontSize: AppSizes.setFontSize(12),
+                      textColor: CustomAppColor.of(context).txtGrey,
+                      textAlign: TextAlign.left,
+                    ),
+                  ],
+                ),
+            ],
+          ),
+          if (showInput) ...[
+            SizedBox(height: AppSizes.setHeight(12)),
+            Container(
+              padding: EdgeInsets.all(AppSizes.setWidth(16)),
+              decoration: BoxDecoration(
+                color: CustomAppColor.of(context).bgScaffold,
+                borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
+                border: Border.all(
+                  color: CustomAppColor.of(context).containerBorder,
+                  width: 1,
+                  style: BorderStyle.solid,
+                ),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.copy_all,
-                    size: AppSizes.setWidth(14),
-                    color: CustomAppColor.of(context).txtGrey,
+                  Expanded(
+                    child: TextField(
+                      controller: _vehicleInfoController,
+                      maxLines: 8,
+                      style: TextStyle(
+                        fontSize: AppSizes.setFontSize(16),
+                        color: CustomAppColor.of(context).txtBlack,
+                        height: 1.5,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: '2025年8月23日\n油品：XXX油库：92与95\n重型罐式挂车\n驾驶员姓名：张三\n驾驶员身份证：510123199001011234。\n驾驶员电话：13800138000。\n\n驾驶证编码：510100123456\n车型：重型罐式挂车\n车号：川X88888\n核定载重（公斤）：33.400\n行驶证编号：A00000000001\n单双仓：双仓\n一仓：16.5吨。\n二仓：16.5吨。\n是否带泵：否\n提油吨位：33吨。',
+                        hintStyle: TextStyle(
+                          fontSize: AppSizes.setFontSize(14),
+                          color: CustomAppColor.of(context).txtGrey.withValues(alpha: 0.6),
+                          height: 1.5,
+                        ),
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      onChanged: (text) => widget.controller.onVehicleInfoPasted(text),
+                    ),
                   ),
-                  SizedBox(width: AppSizes.setWidth(4)),
-                  CommonText(
-                    text: '支持智能粘贴',
-                    fontSize: AppSizes.setFontSize(12),
-                    textColor: CustomAppColor.of(context).txtGrey,
-                    textAlign: TextAlign.left,
+                  SizedBox(width: AppSizes.setWidth(8)),
+                  GestureDetector(
+                    onTap: () async {
+                      final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+                      if (clipboardData != null && clipboardData.text != null) {
+                        _vehicleInfoController.text = clipboardData.text!;
+                        widget.controller.onVehicleInfoPasted(clipboardData.text!);
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(AppSizes.setWidth(8)),
+                      child: Icon(
+                        Icons.paste,
+                        size: AppSizes.setWidth(20),
+                        color: CustomAppColor.of(context).txtBlue,
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ],
-          ),
-          SizedBox(height: AppSizes.setHeight(12)),
-          Container(
-            padding: EdgeInsets.all(AppSizes.setWidth(16)),
-            decoration: BoxDecoration(
-              color: CustomAppColor.of(context).bgScaffold,
-              borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
-              border: Border.all(
-                color: CustomAppColor.of(context).containerBorder,
-                width: 1,
-                style: BorderStyle.solid,
-              ),
             ),
-            child: TextField(
-              controller: _vehicleInfoController,
-              maxLines: 8,
-              style: TextStyle(
-                fontSize: AppSizes.setFontSize(16),
-                color: CustomAppColor.of(context).txtBlack,
-                height: 1.5,
-              ),
-              decoration: InputDecoration(
-                hintText: '2025年8月23日\n油品：XXX油库：92与95\n重型罐式挂车\n驾驶员姓名：张三\n驾驶员身份证：510123199001011234。\n驾驶员电话：13800138000。\n\n驾驶证编码：510100123456\n车型：重型罐式挂车\n车号：川X88888\n核定载重（公斤）：33.400\n行驶证编号：A00000000001\n单双仓：双仓\n一仓：16.5吨。\n二仓：16.5吨。\n是否带泵：否\n提油吨位：33吨。',
-                hintStyle: TextStyle(
-                  fontSize: AppSizes.setFontSize(14),
-                  color: CustomAppColor.of(context).txtGrey.withValues(alpha: 0.6),
-                  height: 1.5,
-                ),
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
-              ),
-              onChanged: (text) => widget.controller.onVehicleInfoPasted(text),
-            ),
-          ),
-          if (state.parseSuccess && state.vehicleModel != null) ...[
-            SizedBox(height: AppSizes.setHeight(16)),
-            _buildParsedVehicleInfo(context, state.vehicleModel!),
           ],
-          if (state.missingFields.isNotEmpty) ...[
-            SizedBox(height: AppSizes.setHeight(12)),
-            Container(
-              padding: EdgeInsets.all(AppSizes.setWidth(12)),
-              decoration: BoxDecoration(
-                color: CustomAppColor.of(context).txtOrange.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
+          if (!showInput && state.parseSuccess && state.vehicleModel != null) ...[
+            SizedBox(height: AppSizes.setHeight(16)),
+            _buildParsedVehicleInfo(context, state.vehicleModel!, state.missingFields),
+            if (state.missingFields.isNotEmpty) ...[
+              SizedBox(height: AppSizes.setHeight(12)),
+              Container(
+                padding: EdgeInsets.all(AppSizes.setWidth(12)),
+                decoration: BoxDecoration(
+                  color: CustomAppColor.of(context).txtOrange.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
+                ),
+                child: CommonText(
+                  text: '缺少必填字段: ${state.missingFields.join(', ')}',
+                  fontSize: AppSizes.setFontSize(12),
+                  textColor: CustomAppColor.of(context).txtOrange,
+                  textAlign: TextAlign.left,
+                ),
               ),
-              child: CommonText(
-                text: '缺少必填字段: ${state.missingFields.join(', ')}',
-                fontSize: AppSizes.setFontSize(12),
-                textColor: CustomAppColor.of(context).txtOrange,
-                textAlign: TextAlign.left,
-              ),
-            ),
+            ],
           ],
         ],
       ),
     );
   }
 
-  Widget _buildParsedVehicleInfo(BuildContext context, VehicleModel model) {
+  Widget _buildParsedVehicleInfo(BuildContext context, VehicleModel model, List<String> missingFields) {
     return Container(
       padding: EdgeInsets.all(AppSizes.setWidth(16)),
       decoration: BoxDecoration(
@@ -481,12 +520,39 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CommonText(
-            text: '识别结果',
-            fontSize: AppSizes.setFontSize(14),
-            fontWeight: FontWeight.w600,
-            textColor: CustomAppColor.of(context).txtBlack,
-            textAlign: TextAlign.left,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CommonText(
+                text: '识别结果',
+                fontSize: AppSizes.setFontSize(14),
+                fontWeight: FontWeight.w600,
+                textColor: CustomAppColor.of(context).txtBlack,
+                textAlign: TextAlign.left,
+              ),
+              GestureDetector(
+                onTap: () {
+                  _vehicleInfoController.clear();
+                  widget.controller.resetVehicleInfo();
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSizes.setWidth(12),
+                    vertical: AppSizes.setHeight(6),
+                  ),
+                  decoration: BoxDecoration(
+                    color: CustomAppColor.of(context).txtBlue,
+                    borderRadius: BorderRadius.circular(AppSizes.setWidth(6)),
+                  ),
+                  child: CommonText(
+                    text: '重新输入识别',
+                    fontSize: AppSizes.setFontSize(12),
+                    textColor: CustomAppColor.of(context).white,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: AppSizes.setHeight(12)),
           if (model.driverName != null)
@@ -502,7 +568,11 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
           if (model.date != null)
             _buildInfoRow(context, '日期', model.date!),
           if (model.oilType != null)
-            _buildInfoRow(context, '油品', model.oilType!),
+            _buildInfoRow(
+              context,
+              '油品',
+              FuelTypeHelper.getDisplayName(model.oilType),
+            ),
           if (model.oilSource != null)
             _buildInfoRow(context, '油库', model.oilSource!),
         ],

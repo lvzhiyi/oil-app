@@ -76,12 +76,23 @@ class WithdrawRequest {
 /// 提油响应
 @JsonSerializable()
 class WithdrawResponse {
-  final int? id;
+  @JsonKey(name: 'withdrawId')
+  final int? withdrawId;
+  
+  @JsonKey(name: 'withdrawNo')
+  final String? withdrawNo;
+  
+  @JsonKey(name: 'remainingTon')
+  final double? remainingTon;
+  
   final String? status;
+  
   final String? message;
 
   WithdrawResponse({
-    this.id,
+    this.withdrawId,
+    this.withdrawNo,
+    this.remainingTon,
     this.status,
     this.message,
   });

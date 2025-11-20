@@ -68,14 +68,18 @@ Map<String, dynamic> _$WithdrawRequestToJson(WithdrawRequest instance) =>
 
 WithdrawResponse _$WithdrawResponseFromJson(Map<String, dynamic> json) =>
     WithdrawResponse(
-      id: (json['id'] as num?)?.toInt(),
+      withdrawId: (json['withdrawId'] as num?)?.toInt(),
+      withdrawNo: json['withdrawNo'] as String?,
+      remainingTon: (json['remainingTon'] as num?)?.toDouble(),
       status: json['status'] as String?,
       message: json['message'] as String?,
     );
 
 Map<String, dynamic> _$WithdrawResponseToJson(WithdrawResponse instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      'withdrawId': instance.withdrawId,
+      'withdrawNo': instance.withdrawNo,
+      'remainingTon': instance.remainingTon,
       'status': instance.status,
       'message': instance.message,
     };
