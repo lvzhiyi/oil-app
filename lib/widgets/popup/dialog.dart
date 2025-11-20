@@ -43,7 +43,7 @@ class SportsDialog {
               style: TextStyle(
                 fontSize: pt(18, isFontSize: true),
                 fontWeight: FontWeight.w500,
-                color: AppColor.txtDarkBlue,
+                color: AppColor.btnPurple,
               ),
               overflow: TextOverflow.ellipsis,
             ),
@@ -61,7 +61,7 @@ class SportsDialog {
             Text(
               textAlign: TextAlign.center,
               bodyText ?? "",
-              style: SportsTextStyle.grayNormal,
+              style: SportsTextStyle.grayNormal.copyWith(color: AppColor.black),
             ),
       ),
     );
@@ -115,7 +115,7 @@ class SportsDialog {
           child: CommonButton(
             onTap: () => _handleOk(onOk),
             btnText: okText ?? '',
-            height: pt(48),
+            height: pt(42),
           ),
         ));
       }

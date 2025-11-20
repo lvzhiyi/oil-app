@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:oil_business_app/global/enum/common.dart';
+import 'package:oil_business_app/pages/pay_order_list/controller.dart';
 import 'package:oil_business_app/pages/pay_order_list/model/orders_data.dart';
 import 'package:oil_business_app/widgets/common/base_appbar.dart';
 import 'package:oil_business_app/widgets/popup/dialog.dart';
@@ -137,7 +138,7 @@ class PayOrderDetailView extends HookWidget {
           ),
           SizedBox(height: pt(16)),
           _buildOrderInfoRow('订单编号', orderDetail.orderNo ?? '-'),
-          _buildOrderInfoRow('充值金额', '¥${orderDetail.totalAmount}'),
+          _buildOrderInfoRow('购买金额', '¥${orderDetail.totalAmount}'),
           _buildOrderInfoRow('订单状态', orderDetail.status?.displayName ?? ''),
           _buildOrderInfoRow(
               '提交时间',
@@ -451,7 +452,9 @@ class PayOrderDetailView extends HookWidget {
               flex: 1,
               child: TextButton(
                 onPressed: () {
-                  _showCancelDialog(context, controller);
+                  context
+                      .read<PayOrderDetailCtrl>()
+                      .reasonOfCancellation(context, order ?? OrderModel());
                 },
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: pt(12)),
@@ -484,24 +487,6 @@ class PayOrderDetailView extends HookWidget {
           ],
         ),
       ),
-    );
-  }
-
-  /// 显示取消订单确认对话框
-  void _showCancelDialog(BuildContext context, PayOrderDetailCtrl controller) {
-    SportsDialog.show(
-      showClose: false,
-      title: '取消充值',
-      bodyText: '确定要取消这笔充值订单吗？取消后将无法恢复',
-      onOk: () {
-        controller.cancelOrder();
-        SportsDialog.dismiss();
-      },
-      okText: '确定取消',
-      cancelText: '我再想想',
-      onCancel: () {
-        SportsDialog.dismiss();
-      },
     );
   }
 
