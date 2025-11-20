@@ -22,6 +22,8 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
       latitude: null,
       longitude: null,
       isActive: station.status == StationStatus.active,
+      status: station.status,
+      rejectReason: station.rejectReason,
     );
   }
 
@@ -42,9 +44,9 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
   Future<void> loadStations() async {
     emit(state.copyWith(isLoading: true));
     try {
-      final statuses = state.selectedStatuses.isEmpty
+      final statuses = state.selectedStatus == null
           ? StationStatus.values.map((e) => e.name).toList()
-          : state.selectedStatuses.map((e) => e.name).toList();
+          : [state.selectedStatus!.name];
 
       final response = await stationService.getStationStatus(1, 100, statuses);
 
@@ -67,8 +69,12 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
     }
   }
 
-  void filterByStatus(List<StationStatus> statuses) {
-    emit(state.copyWith(selectedStatuses: statuses));
+  void filterByStatus(StationStatus? status) {
+    if (status == null) {
+      emit(state.copyWith(clearSelectedStatus: true));
+    } else {
+      emit(state.copyWith(selectedStatus: status));
+    }
     loadStations();
   }
 

@@ -5,7 +5,6 @@ import 'package:oil_business_app/pages/station_management_list/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
-import 'package:oil_business_app/widgets/base/option_chip/filter_option_chip.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
 import 'station_management_item.dart';
@@ -23,26 +22,198 @@ class StationManagementListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomAppColor.of(context).bgScaffold,
-      appBar: AppBar(
-        backgroundColor: CustomAppColor.of(context).bgScaffold,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: CustomAppColor.of(context).txtBlack,
+      backgroundColor: CustomAppColor.of(context).bgTopBar,
+      body: Column(
+        children: [
+          _buildTopBar(context),
+          Expanded(
+            child: _buildBody(context),
           ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: CommonText(
-          text: '加油站管理',
-          fontSize: AppSizes.setFontSize(18),
-          fontWeight: FontWeight.w600,
-          textColor: CustomAppColor.of(context).txtBlack,
-        ),
-        centerTitle: true,
+        ],
       ),
-      body: _buildBody(context),
+    );
+  }
+
+  Widget _buildTopBar(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: CustomAppColor.of(context).bgContainer,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 15,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          _buildNavBar(context),
+          _buildFilterBar(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNavBar(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.setWidth(16),
+        vertical: AppSizes.setHeight(12),
+      ),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: CustomAppColor.of(context).containerBorder,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Container(
+              width: AppSizes.setWidth(32),
+              height: AppSizes.setHeight(32),
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.arrow_back,
+                size: AppSizes.setFontSize(18),
+                color: CustomAppColor.of(context).txtGrey,
+              ),
+            ),
+          ),
+          Expanded(
+            child: CommonText(
+              text: '加油站管理',
+              fontSize: AppSizes.setFontSize(18),
+              fontWeight: FontWeight.bold,
+              textColor: CustomAppColor.of(context).txtBlack,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          GestureDetector(
+            onTap: () => controller.navigateToAdd(context),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSizes.setWidth(8),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.add,
+                    size: AppSizes.setFontSize(14),
+                    color: CustomAppColor.of(context).btnPurple,
+                  ),
+                  SizedBox(width: AppSizes.setWidth(4)),
+                  CommonText(
+                    text: '新增',
+                    fontSize: AppSizes.setFontSize(14),
+                    fontWeight: FontWeight.bold,
+                    textColor: CustomAppColor.of(context).btnPurple,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilterBar(BuildContext context) {
+    final isAllSelected = state.selectedStatus == null;
+    final isActiveSelected = state.selectedStatus == StationStatus.active;
+    final isPendingSelected = state.selectedStatus == StationStatus.pending_review;
+    final isRejectedSelected = state.selectedStatus == StationStatus.rejected;
+    final isDisabledSelected = state.selectedStatus == StationStatus.disabled;
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.setWidth(16),
+        vertical: AppSizes.setHeight(12),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const ClampingScrollPhysics(),
+        child: Row(
+          children: [
+            _buildFilterChip(
+              context: context,
+              label: '全部',
+              isSelected: isAllSelected,
+              onTap: () => controller.filterByStatus(null),
+            ),
+            SizedBox(width: AppSizes.setWidth(12)),
+            _buildFilterChip(
+              context: context,
+              label: '正常',
+              isSelected: isActiveSelected,
+              onTap: () => controller.filterByStatus(StationStatus.active),
+            ),
+            SizedBox(width: AppSizes.setWidth(12)),
+            _buildFilterChip(
+              context: context,
+              label: '待审核',
+              isSelected: isPendingSelected,
+              onTap: () => controller.filterByStatus(StationStatus.pending_review),
+            ),
+            SizedBox(width: AppSizes.setWidth(12)),
+            _buildFilterChip(
+              context: context,
+              label: '已驳回',
+              isSelected: isRejectedSelected,
+              onTap: () => controller.filterByStatus(StationStatus.rejected),
+            ),
+            SizedBox(width: AppSizes.setWidth(12)),
+            _buildFilterChip(
+              context: context,
+              label: '禁用',
+              isSelected: isDisabledSelected,
+              onTap: () => controller.filterByStatus(StationStatus.disabled),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterChip({
+    required BuildContext context,
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    final colors = CustomAppColor.of(context);
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.setWidth(20),
+          vertical: AppSizes.setHeight(6),
+        ),
+        decoration: BoxDecoration(
+          color: isSelected ? colors.btnPurple : colors.containerBorder,
+          borderRadius: BorderRadius.circular(AppSizes.setWidth(999)),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: colors.btnPurple.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
+        ),
+        child: CommonText(
+          text: label,
+          fontSize: AppSizes.setFontSize(14),
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+          textColor: isSelected ? colors.white : colors.txtGrey,
+        ),
+      ),
     );
   }
 
@@ -99,145 +270,19 @@ class StationManagementListScreen extends StatelessWidget {
       );
     }
 
-    return Column(
-      children: [
-        _buildFilterBar(context),
-        Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.all(AppSizes.setWidth(20)),
-            itemCount: state.stations.length,
-            itemBuilder: (context, index) {
-              final station = state.stations[index];
-
-              return Padding(
-                padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
-                child: StationManagementItem(
-                  station: station,
-                  onTap: () => controller.navigateToEdit(station, context),
-                  onEdit: () => controller.navigateToEdit(station, context),
-                ),
-              );
-            },
+    return ListView.builder(
+      padding: EdgeInsets.all(AppSizes.setWidth(16)),
+      itemCount: state.stations.length,
+      itemBuilder: (context, index) {
+        final station = state.stations[index];
+        return Padding(
+          padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
+          child: StationManagementItem(
+            station: station,
+            onEdit: () => controller.navigateToEdit(station, context),
           ),
-        ),
-        _buildAddButton(context),
-      ],
-    );
-  }
-
-  Widget _buildFilterBar(BuildContext context) {
-    final isAllSelected = state.selectedStatuses.isEmpty;
-    final isActiveSelected = state.selectedStatuses.contains(StationStatus.active);
-    final isPendingSelected = state.selectedStatuses.contains(StationStatus.pending_review);
-    final isRejectedSelected = state.selectedStatuses.contains(StationStatus.rejected);
-    final isDisabledSelected = state.selectedStatuses.contains(StationStatus.disabled);
-
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.setWidth(20),
-        vertical: AppSizes.setHeight(12),
-      ),
-      decoration: BoxDecoration(
-        color: CustomAppColor.of(context).bgScaffold,
-        border: Border(
-          bottom: BorderSide(
-            color: CustomAppColor.of(context).containerBorder,
-            width: 1,
-          ),
-        ),
-      ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            FilterOptionChip(
-              label: '全部',
-              isSelected: isAllSelected,
-              onTap: () {
-                controller.filterByStatus([]);
-              },
-            ),
-            SizedBox(width: AppSizes.setWidth(8)),
-            FilterOptionChip(
-              label: '正常',
-              isSelected: isActiveSelected,
-              onTap: () {
-                final currentStatuses = List<StationStatus>.from(state.selectedStatuses);
-                if (isActiveSelected) {
-                  currentStatuses.remove(StationStatus.active);
-                } else {
-                  currentStatuses.add(StationStatus.active);
-                }
-                controller.filterByStatus(currentStatuses);
-              },
-            ),
-            SizedBox(width: AppSizes.setWidth(8)),
-            FilterOptionChip(
-              label: '待审核',
-              isSelected: isPendingSelected,
-              onTap: () {
-                final currentStatuses = List<StationStatus>.from(state.selectedStatuses);
-                if (isPendingSelected) {
-                  currentStatuses.remove(StationStatus.pending_review);
-                } else {
-                  currentStatuses.add(StationStatus.pending_review);
-                }
-                controller.filterByStatus(currentStatuses);
-              },
-            ),
-            SizedBox(width: AppSizes.setWidth(8)),
-            FilterOptionChip(
-              label: '已驳回',
-              isSelected: isRejectedSelected,
-              onTap: () {
-                final currentStatuses = List<StationStatus>.from(state.selectedStatuses);
-                if (isRejectedSelected) {
-                  currentStatuses.remove(StationStatus.rejected);
-                } else {
-                  currentStatuses.add(StationStatus.rejected);
-                }
-                controller.filterByStatus(currentStatuses);
-              },
-            ),
-            SizedBox(width: AppSizes.setWidth(8)),
-            FilterOptionChip(
-              label: '禁用',
-              isSelected: isDisabledSelected,
-              onTap: () {
-                final currentStatuses = List<StationStatus>.from(state.selectedStatuses);
-                if (isDisabledSelected) {
-                  currentStatuses.remove(StationStatus.disabled);
-                } else {
-                  currentStatuses.add(StationStatus.disabled);
-                }
-                controller.filterByStatus(currentStatuses);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAddButton(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(AppSizes.setWidth(20)),
-      decoration: BoxDecoration(
-        color: CustomAppColor.of(context).bgScaffold,
-        border: Border(
-          top: BorderSide(
-            color: CustomAppColor.of(context).containerBorder,
-            width: 1,
-          ),
-        ),
-      ),
-      child: CommonButton(
-        btnText: '新增加油站',
-        height: AppSizes.setHeight(52),
-        fontSize: AppSizes.setFontSize(15),
-        onTap: () => controller.navigateToAdd(context),
-      ),
+        );
+      },
     );
   }
 }
-

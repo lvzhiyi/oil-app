@@ -37,6 +37,7 @@ Station _$StationFromJson(Map<String, dynamic> json) => Station(
       businessLicenseUrl: json['businessLicenseUrl'] as String?,
       fuelRetailPermitUrl: json['fuelRetailPermitUrl'] as String?,
       status: $enumDecodeNullable(_$StationStatusEnumMap, json['status']),
+      rejectReason: json['rejectReason'] as String?,
       createdAt: json['createdAt'] as String?,
       updatedAt: json['updatedAt'] as String?,
     );
@@ -54,6 +55,7 @@ Map<String, dynamic> _$StationToJson(Station instance) => <String, dynamic>{
       'businessLicenseUrl': instance.businessLicenseUrl,
       'fuelRetailPermitUrl': instance.fuelRetailPermitUrl,
       'status': _$StationStatusEnumMap[instance.status],
+      'rejectReason': instance.rejectReason,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
     };

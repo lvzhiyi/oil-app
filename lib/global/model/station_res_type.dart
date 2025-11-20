@@ -37,6 +37,7 @@ class Station {
   final String? businessLicenseUrl;
   final String? fuelRetailPermitUrl;
   final StationStatus? status;
+  final String? rejectReason;
   final String? createdAt;
   final String? updatedAt;
 
@@ -53,6 +54,7 @@ class Station {
       this.businessLicenseUrl,
       this.fuelRetailPermitUrl,
       this.status,
+      this.rejectReason,
       this.createdAt,
       this.updatedAt});
 

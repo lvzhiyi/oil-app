@@ -6,14 +6,14 @@ class StationManagementListState {
   final bool isLoading;
   final bool hasError;
   final String? errorMessage;
-  final List<StationStatus> selectedStatuses;
+  final StationStatus? selectedStatus;
 
   StationManagementListState({
     required this.stations,
     this.isLoading = false,
     this.hasError = false,
     this.errorMessage,
-    this.selectedStatuses = const [],
+    this.selectedStatus,
   });
 
   StationManagementListState copyWith({
@@ -21,14 +21,15 @@ class StationManagementListState {
     bool? isLoading,
     bool? hasError,
     String? errorMessage,
-    List<StationStatus>? selectedStatuses,
+    StationStatus? selectedStatus,
+    bool clearSelectedStatus = false,
   }) {
     return StationManagementListState(
       stations: stations ?? this.stations,
       isLoading: isLoading ?? this.isLoading,
       hasError: hasError ?? this.hasError,
       errorMessage: errorMessage ?? this.errorMessage,
-      selectedStatuses: selectedStatuses ?? this.selectedStatuses,
+      selectedStatus: clearSelectedStatus ? null : (selectedStatus ?? this.selectedStatus),
     );
   }
 }
