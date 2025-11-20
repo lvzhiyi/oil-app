@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 
 part 'orders_data.g.dart';
