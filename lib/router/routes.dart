@@ -11,6 +11,7 @@ import 'package:oil_business_app/pages/oil_pickup_success/page.dart';
 import 'package:oil_business_app/pages/pay_order_detail/page.dart';
 import 'package:oil_business_app/pages/pay_order_list/page.dart';
 import 'package:oil_business_app/pages/pending_review/pending_review_screen.dart';
+import 'package:oil_business_app/pages/pickup_list/page.dart';
 import 'package:oil_business_app/pages/splase/page.dart';
 import 'package:oil_business_app/pages/login/page.dart';
 import 'package:oil_business_app/pages/register/page.dart';
@@ -74,6 +75,9 @@ enum AppPage {
 
   /// 提油页面
   oilPickupPage('/oilPickup'),
+
+  /// 提油列表页面
+  pickupListPage('/pickupList'),
 
   /// 加油站列表页面
   stationListPage('/stationList'),
@@ -157,6 +161,9 @@ extension PageRoute on AppPage {
 
       case AppPage.oilPickupPage:
         return (context, state) => const OilPickupPage();
+      
+      case AppPage.pickupListPage:
+        return (context, state) => const PickupListPage();
 
       case AppPage.stationListPage:
         return (context, state) {
