@@ -147,6 +147,7 @@ class _AccountScreenState extends State<AccountScreen>
                   } else if (accountData.label == '买油订单') {
                     BaseRouter.push(url: AppPage.payOrderListPage.path);
                   } else if (accountData.label == '提油订单') {
+                    BaseRouter.push(url: AppPage.pickupListPage.path);
                   } else if (accountData.label == '隐私政策') {
                   } else {}
                 },
