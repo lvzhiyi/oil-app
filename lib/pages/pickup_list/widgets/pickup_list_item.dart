@@ -29,7 +29,7 @@ class PickupListItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CommonText(
-                    text: '单号: ${item.id ?? ""}',
+                    text: '单号: ${item.withdrawNo ?? item.id ?? ""}',
                     fontSize: AppSizes.setFontSize(14),
                     textColor: CustomAppColor.of(context).txtGrey,
                   ),

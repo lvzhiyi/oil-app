@@ -116,13 +116,12 @@ class _PickupListViewState extends State<PickupListView>
                         final item = widget.state.orderList[index];
                         return GestureDetector(
                           onTap: () {
-                            if (item.id != null) {
+                            if (item.withdrawId != null || item.id != null) {
                               BaseRouter.push(
                                 context: context,
-                                url: AppPage.oilPickupDetailPage.path,
+                                url: AppPage.pickupOrderDetailPage.path,
                                 extra: {
-                                  'orderId': item.id!,
-                                  'from': 'pickup_list',
+                                  'order': item,
                                 },
                               );
                             } else {

@@ -26,17 +26,54 @@ class WithdrawOrderListResponse {
 /// 提油订单模型
 @JsonSerializable()
 class WithdrawOrderModel {
+  /// 提油订单ID
+  @JsonKey(name: 'withdrawId')
+  final int? withdrawId;
+
+  /// 提油订单编号
+  @JsonKey(name: 'withdrawNo')
+  final String? withdrawNo;
+
+  /// 库存ID
+  @JsonKey(name: 'inventoryId')
+  final int? inventoryId;
+
+  /// 订单ID（向后兼容字段，映射到withdrawId）
   final int? id;
+
+  /// 油品订单ID
   final int? oilOrderId;
+
+  /// 订单状态
   final String? status;
+
+  /// 加油站ID
+  @JsonKey(name: 'stationId')
   final int? stationId;
+
+  /// 加油站名称
+  @JsonKey(name: 'stationName')
   final String? stationName;
+
+  /// 提油吨数
+  @JsonKey(name: 'withdrawTon')
   final double? withdrawTon;
+
+  /// 车辆信息（JSON字符串）
+  @JsonKey(name: 'vehicleInfo')
   final String? vehicleInfo;
+
+  /// 创建时间
+  @JsonKey(name: 'createdAt')
   final String? createdAt;
+
+  /// 更新时间
   final String? updatedAt;
 
   WithdrawOrderModel({
+    this.withdrawId,
+    this.withdrawNo,
+    this.inventoryId,
     this.id,
     this.oilOrderId,
     this.status,

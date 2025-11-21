@@ -12,6 +12,7 @@ import 'package:oil_business_app/pages/pay_order_detail/page.dart';
 import 'package:oil_business_app/pages/pay_order_list/page.dart';
 import 'package:oil_business_app/pages/pending_review/pending_review_screen.dart';
 import 'package:oil_business_app/pages/pickup_list/page.dart';
+import 'package:oil_business_app/pages/pickup_order_detail/page.dart';
 import 'package:oil_business_app/pages/splase/page.dart';
 import 'package:oil_business_app/pages/login/page.dart';
 import 'package:oil_business_app/pages/register/page.dart';
@@ -99,6 +100,9 @@ enum AppPage {
 
   /// 提油成功页面
   oilPickupSuccessPage('/oilPickupSuccess'),
+
+  /// 提油订单详情页面
+  pickupOrderDetailPage('/pickupOrderDetail'),
   ;
 
   const AppPage(this.path);
@@ -202,6 +206,13 @@ extension PageRoute on AppPage {
             oilAmount: extra['oilAmount'] as String,
             vehicleModel: extra['vehicleModel'] as VehicleModel,
           );
+        };
+
+      case AppPage.pickupOrderDetailPage:
+        return (context, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final order = extra['order'] as WithdrawOrderModel?;
+          return PickupOrderDetailPage(order: order);
         };
 
       default:
