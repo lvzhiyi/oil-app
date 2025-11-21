@@ -100,8 +100,8 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
           IntlPhoneField(
             enabled: widget.enabled ?? true,
             disableLengthCheck: true,
-            showCursor: false,
-            keyboardType: TextInputType.none,
+            showCursor: true,
+            keyboardType: TextInputType.phone,
             controller: widget.controller,
             style: TextStyle(
               color: AppColor.black,
