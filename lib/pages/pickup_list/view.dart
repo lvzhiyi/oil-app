@@ -8,9 +8,12 @@ import 'package:oil_business_app/pages/pickup_list/state.dart';
 import 'package:oil_business_app/pages/pickup_list/widgets/pickup_list_item.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
+import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/common/empty_card.dart';
+import 'package:oil_business_app/widgets/popup/toast.dart';
 import 'package:oil_business_app/static/icon.dart';
 
 class PickupListView extends StatefulWidget {
@@ -111,7 +114,24 @@ class _PickupListViewState extends State<PickupListView>
                       itemCount: widget.state.orderList.length,
                       itemBuilder: (context, index) {
                         final item = widget.state.orderList[index];
-                        return PickupListItem(item: item);
+                        return GestureDetector(
+                          onTap: () {
+                            if (item.id != null) {
+                              BaseRouter.push(
+                                context: context,
+                                url: AppPage.oilPickupDetailPage.path,
+                                extra: {
+                                  'orderId': item.id!,
+                                  'from': 'pickup_list',
+                                },
+                              );
+                            } else {
+                              l.w('PickupListView', '订单ID为空，无法跳转到详情页');
+                              SportsToast.showError('订单信息异常，无法查看详情');
+                            }
+                          },
+                          child: PickupListItem(item: item),
+                        );
                       },
                     ),
               ),
