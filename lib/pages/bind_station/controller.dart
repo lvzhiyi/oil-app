@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/commom/upload.dart';
 import 'package:oil_business_app/global/model/station_req_type.dart';
 import 'package:oil_business_app/global/service/station_service.dart';
@@ -82,8 +84,8 @@ class BindStationCtrl extends Cubit<BindStationState> {
 
       await stationService.bindStation(reqParams);
       SportsToast.showSuccess('绑定成功');
-      await Future.delayed(const Duration(seconds: 1));
-      BaseRouter.replace(url: AppPage.pendingReviewPage.path);
+      await Future.delayed(const Duration(milliseconds: 300));
+      BaseConfig.appContext?.read<AppController>().bindStationProcess();
     } catch (e) {
       emit(state.copyWith(loading: false));
     }

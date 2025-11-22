@@ -7,6 +7,7 @@ import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/static/icon.dart';
+import 'package:oil_business_app/utils/app_version_util.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/bottom_sheet/bottom_sheet.dart';
 import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dart';
@@ -143,7 +144,8 @@ class _AccountScreenState extends State<AccountScreen>
                         url: AppPage.otpPage.path,
                         extra: {'type': 'password_change'});
                   } else if (accountData.label == '加油站管理') {
-                    BaseRouter.push(url: AppPage.stationManagementListPage.path);
+                    BaseRouter.push(
+                        url: AppPage.stationManagementListPage.path);
                   } else if (accountData.label == '买油订单') {
                     BaseRouter.push(url: AppPage.payOrderListPage.path);
                   } else if (accountData.label == '提油订单') {
@@ -199,7 +201,7 @@ class _AccountScreenState extends State<AccountScreen>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CommonText(
-                text: "V1.0",
+                text: AppVersionUtil.appVersionText,
                 fontWeight: FontWeight.w500,
                 fontSize: AppSizes.setFontSize(15),
                 textColor: CustomAppColor.of(context).txtGrey,
@@ -207,23 +209,29 @@ class _AccountScreenState extends State<AccountScreen>
               SizedBox(width: AppSizes.setWidth(10)),
             ],
           ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(3)),
-            width: AppSizes.setWidth(70),
-            height: AppSizes.setHeight(23),
-            decoration: BoxDecoration(
-              color: CustomAppColor.of(context)
-                  .bgContainerRed
-                  .withValues(alpha: 0.8),
-              borderRadius: BorderRadius.circular(15),
+          if (AppVersionUtil.hasNewVersionUpdate() == true)
+            GestureDetector(
+              onTap: () {
+                AppVersionUtil.showUpdateDialog();
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(4)),
+                width: AppSizes.setWidth(70),
+                height: AppSizes.setHeight(23),
+                decoration: BoxDecoration(
+                  color: CustomAppColor.of(context)
+                      .bgContainerRed
+                      .withValues(alpha: 0.8),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: CommonText(
+                  text: '更新版本',
+                  fontWeight: FontWeight.w600,
+                  fontSize: AppSizes.setFontSize(12),
+                  textColor: CustomAppColor.of(context).white,
+                ),
+              ),
             ),
-            child: CommonText(
-              text: '更新版本',
-              fontWeight: FontWeight.w600,
-              fontSize: AppSizes.setFontSize(12),
-              textColor: CustomAppColor.of(context).white,
-            ),
-          ),
         ],
       ),
     );

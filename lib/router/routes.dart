@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/pages/bind_station/page.dart';
 import 'package:oil_business_app/pages/otp/page.dart';
 import 'package:oil_business_app/pages/otp/widgets/otp_verification_screen.dart';
-import 'package:oil_business_app/models/station_model.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 import 'package:oil_business_app/pages/oil_pickup_detail/page.dart';
@@ -129,7 +129,11 @@ extension PageRoute on AppPage {
         return (context, state) => const PayOrderListPage();
 
       case AppPage.pendingReviewPage:
-        return (context, state) => const PendingReviewScreen();
+        return (context, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final station = extra['station'] as Station?;
+          return PendingReviewScreen(station: station);
+        };
 
       case AppPage.bindStationPage:
         return (context, state) =>
@@ -169,7 +173,7 @@ extension PageRoute on AppPage {
 
       case AppPage.oilPickupPage:
         return (context, state) => const OilPickupPage();
-      
+
       case AppPage.pickupListPage:
         return (context, state) => const PickupListPage();
 
@@ -197,8 +201,8 @@ extension PageRoute on AppPage {
             extra: state.extra as Map<String, dynamic>? ?? {});
 
       case AppPage.oilPickupDetailPage:
-        return (context, state) => OilPickupDetailPage(
-            inventory: state.extra as InventoryModel);
+        return (context, state) =>
+            OilPickupDetailPage(inventory: state.extra as InventoryModel);
 
       case AppPage.oilPickupSuccessPage:
         return (context, state) {
@@ -206,7 +210,7 @@ extension PageRoute on AppPage {
           return OilPickupSuccessPage(
             response: extra['response'] as WithdrawResponse,
             inventory: extra['inventory'] as InventoryModel,
-            station: extra['station'] as StationModel,
+            station: extra['station'] as Station,
             oilAmount: extra['oilAmount'] as String,
             vehicleModel: extra['vehicleModel'] as VehicleModel,
           );

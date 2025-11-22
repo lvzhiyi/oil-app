@@ -40,6 +40,7 @@ class Station {
   final String? rejectReason;
   final String? createdAt;
   final String? updatedAt;
+  final String? rejectionReason;
 
   Station(
       {this.id,
@@ -56,10 +57,47 @@ class Station {
       this.status,
       this.rejectReason,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.rejectionReason});
 
   factory Station.fromJson(Map<String, dynamic> json) =>
       _$StationFromJson(json);
 
   Map<String, dynamic> toJson() => _$StationToJson(this);
+
+  Station copyWith({
+    String? rejectionReason,
+    String? stationName,
+    String? provinceCode,
+    String? provinceName,
+    String? cityCode,
+    String? cityName,
+    String? areaCode,
+    String? areaName,
+    String? addressDetail,
+    String? businessLicenseUrl,
+    String? fuelRetailPermitUrl,
+    StationStatus? status,
+    String? rejectReason,
+    String? createdAt,
+    String? updatedAt,
+  }) {
+    return Station(
+      id: id,
+      stationName: stationName ?? this.stationName,
+      provinceCode: provinceCode ?? this.provinceCode,
+      provinceName: provinceName ?? this.provinceName,
+      cityCode: cityCode ?? this.cityCode,
+      cityName: cityName ?? this.cityName,
+      areaCode: areaCode ?? this.areaCode,
+      areaName: areaName ?? this.areaName,
+      addressDetail: addressDetail ?? this.addressDetail,
+      businessLicenseUrl: businessLicenseUrl,
+      fuelRetailPermitUrl: fuelRetailPermitUrl ?? this.fuelRetailPermitUrl,
+      status: status ?? this.status,
+      rejectReason: rejectReason ?? this.rejectReason,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 }

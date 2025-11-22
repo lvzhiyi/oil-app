@@ -1,7 +1,7 @@
-import 'package:oil_business_app/models/station_model.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
 
 class StationEditState {
-  final StationModel? station;
+  final Station? station;
   final String name;
   final String provinceName;
   final String cityName;
@@ -38,7 +38,7 @@ class StationEditState {
   });
 
   StationEditState copyWith({
-    StationModel? station,
+    Station? station,
     String? name,
     String? provinceName,
     String? cityName,

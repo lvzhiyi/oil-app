@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:oil_business_app/models/station_model.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
+import 'package:oil_business_app/utils/station_extension.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
 class StationSelectorButton extends StatelessWidget {
-  final StationModel? station;
+  final Station? station;
   final VoidCallback onTap;
 
   const StationSelectorButton({
@@ -44,7 +45,7 @@ class StationSelectorButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CommonText(
-                    text: station?.name ?? '选择加油站',
+                    text: station?.displayName ?? '选择加油站',
                     fontSize: AppSizes.setFontSize(16),
                     fontWeight: FontWeight.w600,
                     textColor: station != null
@@ -55,7 +56,7 @@ class StationSelectorButton extends StatelessWidget {
                   if (station != null) ...[
                     SizedBox(height: AppSizes.setHeight(4)),
                     CommonText(
-                      text: station!.address,
+                      text: station!.fullAddress,
                       fontSize: AppSizes.setFontSize(14),
                       textColor: CustomAppColor.of(context).txtGrey,
                       textAlign: TextAlign.left,

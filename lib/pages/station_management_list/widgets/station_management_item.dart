@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:oil_business_app/global/enum/common.dart';
-import 'package:oil_business_app/models/station_model.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
+import 'package:oil_business_app/utils/station_extension.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
 class StationManagementItem extends StatelessWidget {
-  final StationModel station;
+  final Station station;
   final VoidCallback onEdit;
 
   const StationManagementItem({
@@ -50,7 +51,7 @@ class StationManagementItem extends StatelessWidget {
                   children: [
                     Flexible(
                       child: CommonText(
-                        text: station.name,
+                        text: station.displayName,
                         fontSize: AppSizes.setFontSize(18),
                         fontWeight: FontWeight.bold,
                         textColor: isDisabled ? colors.txtGrey : colors.txtBlack,
@@ -78,7 +79,7 @@ class StationManagementItem extends StatelessWidget {
               SizedBox(width: AppSizes.setWidth(8)),
               Expanded(
                 child: CommonText(
-                  text: station.address,
+                  text: station.fullAddress,
                   fontSize: AppSizes.setFontSize(14),
                   textColor: colors.txtGrey,
                   maxLines: 2,
@@ -88,7 +89,7 @@ class StationManagementItem extends StatelessWidget {
               ),
             ],
           ),
-          if (isRejected && station.rejectReason != null && station.rejectReason!.isNotEmpty)
+          if (isRejected && station.rejectionReason != null && station.rejectionReason!.isNotEmpty)
             _buildRejectReason(context),
         ],
       ),
@@ -216,7 +217,7 @@ class StationManagementItem extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   TextSpan(
-                    text: station.rejectReason ?? '',
+                    text: station.rejectionReason ?? '',
                   ),
                 ],
               ),

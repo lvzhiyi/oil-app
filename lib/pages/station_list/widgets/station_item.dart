@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:oil_business_app/models/station_model.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
+import 'package:oil_business_app/utils/station_extension.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
 class StationItem extends StatelessWidget {
-  final StationModel station;
+  final Station station;
   final VoidCallback onTap;
   final VoidCallback? onEdit;
   final bool isSelected;
@@ -51,7 +52,7 @@ class StationItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CommonText(
-                    text: station.name,
+                    text: station.displayName,
                     fontSize: AppSizes.setFontSize(16),
                     fontWeight: FontWeight.w600,
                     textColor: isSelected
@@ -61,7 +62,7 @@ class StationItem extends StatelessWidget {
                   ),
                   SizedBox(height: AppSizes.setHeight(8)),
                   CommonText(
-                    text: station.address,
+                    text: station.fullAddress,
                     fontSize: AppSizes.setFontSize(14),
                     textColor: CustomAppColor.of(context).txtGrey,
                     textAlign: TextAlign.left,

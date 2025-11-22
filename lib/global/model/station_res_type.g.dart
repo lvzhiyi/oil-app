@@ -40,6 +40,7 @@ Station _$StationFromJson(Map<String, dynamic> json) => Station(
       rejectReason: json['rejectReason'] as String?,
       createdAt: json['createdAt'] as String?,
       updatedAt: json['updatedAt'] as String?,
+      rejectionReason: json['rejectionReason'] as String?,
     );
 
 Map<String, dynamic> _$StationToJson(Station instance) => <String, dynamic>{
@@ -58,6 +59,7 @@ Map<String, dynamic> _$StationToJson(Station instance) => <String, dynamic>{
       'rejectReason': instance.rejectReason,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
+      'rejectionReason': instance.rejectionReason,
     };
 
 const _$StationStatusEnumMap = {

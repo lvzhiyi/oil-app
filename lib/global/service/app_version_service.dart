@@ -11,7 +11,9 @@ abstract class AppVersionService {
 
   /// 获取版本信息
   @GET('/version/latest')
-  Future<AppVersionInfoResponse> appVersion();
+  Future<AppVersionInfo> appVersion(
+    @Query('platform') String platform,
+  );
 }
 
 /// 获取AuthService实例，确保网络管理器已初始化

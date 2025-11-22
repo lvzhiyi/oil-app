@@ -65,8 +65,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                           : "",
               isShowProfile: selectedBottomIndex == 0,
               isShowNotification: false,
-              isShowLike: selectedBottomIndex == 1,
-              isShowSearchField: selectedBottomIndex == 1 ? true : false,
+              isShowLike: false,
+              isShowSearchField: false,
               height: 120,
               isShowCart: selectedBottomIndex == 0 || selectedBottomIndex == 1,
               topBarColor: selectedBottomIndex == 0
@@ -148,6 +148,10 @@ class _DashboardScreenState extends State<DashboardScreen>
   @override
   void onTopBarClick(String name, {String value = ""}) {
     if (name == 'pay_order_list') {
+      if (selectedBottomIndex == 1) {
+        BaseRouter.push(url: AppPage.oilPickupPage.path);
+        return;
+      }
       BaseRouter.push(url: AppPage.payOrderListPage.path);
     }
   }

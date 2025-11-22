@@ -1,9 +1,9 @@
 import 'package:oil_business_app/global/model/auth_rep_type.dart';
-import 'package:oil_business_app/models/station_model.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
 
 class AppState {
   AuthResponse? authResponse;
-  StationModel? selectedStation;
+  Station? selectedStation;
 
   AppState({
     this.authResponse,
@@ -12,7 +12,7 @@ class AppState {
 
   AppState copyWith({
     AuthResponse? authResponse,
-    StationModel? selectedStation,
+    Station? selectedStation,
   }) {
     return AppState(
       authResponse: authResponse ?? this.authResponse,

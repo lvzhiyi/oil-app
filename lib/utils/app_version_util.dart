@@ -76,12 +76,12 @@ class AppVersionUtil {
   /// ```
   static Future<AppVersionInfo?> checkNewVersion() async {
     try {
-      AppVersionInfo _res = await appVersionService.appVersion().then((value) {
-        return value.data;
+      AppVersionInfo _res = await appVersionService
+          .appVersion(Platform.isAndroid ? 'android' : 'ios')
+          .then((value) {
+        return value;
       });
-      appVersionUpdateTip = Platform.isAndroid
-          ? _res.androidVersion.updateTip
-          : _res.iosVersion.updateTip;
+      appVersionUpdateTip = _res.updateMessage;
       return _res;
     } on DioException catch (_) {
       return Future.value(null);
@@ -91,9 +91,9 @@ class AppVersionUtil {
   static Future<void> showUpdateDialog({bool isForceUpdate = false}) async {
     await SportsDialog.show(
       title: '发现新版本',
-      clickMaskDismiss: newVersion?.isForceUpdate == false,
-      showClose: newVersion?.isForceUpdate == false,
-      bodyText: newVersion?.updateTip ?? '',
+      clickMaskDismiss: newVersion?.forceUpdate == false,
+      showClose: newVersion?.forceUpdate == false,
+      bodyText: newVersion?.updateMessage ?? '',
       okText: '立即更新',
       onOk: () async {
         if (!await launchUrl(Uri.parse(BaseAddress.appDownloadUrl))) {
@@ -108,13 +108,13 @@ class AppVersionUtil {
 
   static Future<void> checkVersionShowDialog() async {
     final newVersionInfo = await AppVersionUtil.checkNewVersion();
-    final newVersion = Platform.isAndroid
-        ? newVersionInfo?.androidVersion
-        : newVersionInfo?.iosVersion;
-    AppVersionUtil.newVersion = newVersion;
+
+    AppVersionUtil.newVersion = newVersionInfo;
+
+    final hasNewVersion = hasNewVersionUpdate();
 
     /// 如果存在新版本且强制更新，则显示更新弹窗
-    if (hasNewVersionUpdate() == true && newVersion?.isForceUpdate == true) {
+    if (hasNewVersion == true && newVersion?.forceUpdate == true) {
       await showUpdateDialog(isForceUpdate: true);
       return;
     }
@@ -128,7 +128,7 @@ class AppVersionUtil {
         .isBefore(DateTime.now().subtract(const Duration(days: 1)));
 
     /// 如果存在新版本且上次显示时间距今大于1天，则显示更新弹窗
-    if (hasNewVersionUpdate() == true && isShowDoneToOneDay) {
+    if (hasNewVersion == true && isShowDoneToOneDay) {
       GlobalStorage.sportsSingleton
           .put(StorageKey.lastShowVersionTime, DateTime.now());
       await showUpdateDialog();
@@ -169,7 +169,7 @@ class AppVersionUtil {
     return appVersion[2];
   }
 
-  static VersionInfo? newVersion;
+  static AppVersionInfo? newVersion;
 
   /// 是否有更新新版本
   static bool? hasNewVersionUpdate() {

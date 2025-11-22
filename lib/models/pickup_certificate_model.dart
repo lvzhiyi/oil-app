@@ -1,9 +1,9 @@
-import 'package:oil_business_app/models/station_model.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
 
 class PickupCertificateModel {
   final String id;
-  final StationModel station;
+  final Station station;
   final String oilAmount;
   final VehicleModel vehicleInfo;
   final DateTime createdAt;
@@ -18,7 +18,7 @@ class PickupCertificateModel {
 
   PickupCertificateModel copyWith({
     String? id,
-    StationModel? station,
+    Station? station,
     String? oilAmount,
     VehicleModel? vehicleInfo,
     DateTime? createdAt,
@@ -45,7 +45,7 @@ class PickupCertificateModel {
   factory PickupCertificateModel.fromJson(Map<String, dynamic> json) {
     return PickupCertificateModel(
       id: json['id'] as String,
-      station: StationModel.fromJson(json['station'] as Map<String, dynamic>),
+      station: Station.fromJson(json['station'] as Map<String, dynamic>),
       oilAmount: json['oilAmount'] as String,
       vehicleInfo: VehicleModel.fromJson(json['vehicleInfo'] as Map<String, dynamic>),
       createdAt: DateTime.parse(json['createdAt'] as String),

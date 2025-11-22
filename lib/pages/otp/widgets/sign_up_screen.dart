@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/pages/otp/controller.dart';
 import 'package:oil_business_app/resources/colors.dart';
@@ -80,10 +81,13 @@ class SignUpScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(30)),
                 child: CommonTextFormField(
                   controller: ctrl.phoneController,
-                  isPhoneNumberField: true,
+                  isPhoneNumberField: false,
                   enabled: extra?["type"] != 'password_change',
                   borderColor: CustomAppColor.of(context).textFieldBorder,
                   hintText: '手机号码',
+                  keyboardType: TextInputType.phone,
+                  inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                  maxLength: 11,
                 ),
               ),
               Padding(
