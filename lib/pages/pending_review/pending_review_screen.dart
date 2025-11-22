@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/resources/colors.dart';
@@ -25,7 +28,8 @@ class PendingReviewScreen extends StatefulWidget {
 
 class _PendingReviewScreenState extends State<PendingReviewScreen> {
   bool get isRejected => widget.station?.status == StationStatus.rejected;
-  bool get canEdit => widget.station?.status == StationStatus.rejected ||
+  bool get canEdit =>
+      widget.station?.status == StationStatus.rejected ||
       widget.station?.status == StationStatus.pending_review;
 
   @override
