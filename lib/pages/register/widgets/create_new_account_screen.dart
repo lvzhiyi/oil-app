@@ -77,7 +77,7 @@ class CreateNewAccountScreen extends StatelessWidget {
                         width: AppSizes.setHeight(20),
                         height: AppSizes.setHeight(20),
                       ),
-                      hintText: '全名',
+                      hintText: '姓名',
                       validators: FormBuilderValidators.compose([
                         FormBuilderValidators.required(errorText: '请输入全名'),
                       ]),
@@ -86,10 +86,9 @@ class CreateNewAccountScreen extends StatelessWidget {
                   CommonTextFormField(
                     name: 'phone',
                     borderColor: CustomAppColor.of(context).textFieldBorder,
-                    leadingIcon: Image.asset(
-                      AssetsIcon.IC_PROFILE,
-                      width: AppSizes.setHeight(20),
-                      height: AppSizes.setHeight(20),
+                    leadingIcon: Icon(
+                      Icons.phone_outlined,
+                      color: CustomAppColor.of(context).txtGrey,
                     ),
                     hintText: '手机号',
                     keyboardType: TextInputType.phone,
@@ -150,11 +149,12 @@ class CreateNewAccountScreen extends StatelessWidget {
                     name: 'code',
                     borderColor: CustomAppColor.of(context).textFieldBorder,
                     leadingIcon: Image.asset(
-                      AssetsIcon.IC_PASSWORD,
+                      AssetsIcon.IC_REFER,
                       width: AppSizes.setHeight(20),
                       height: AppSizes.setHeight(20),
                     ),
                     hintText: '邀请码',
+                    validators: FormBuilderValidators.compose([]),
                   ),
                   Padding(
                     padding:
