@@ -200,7 +200,7 @@ class _AccountScreenState extends State<AccountScreen>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CommonText(
-                text: "V1.0",
+                text: AppVersionUtil.appVersionText,
                 fontWeight: FontWeight.w500,
                 fontSize: AppSizes.setFontSize(15),
                 textColor: CustomAppColor.of(context).txtGrey,
@@ -209,21 +209,26 @@ class _AccountScreenState extends State<AccountScreen>
             ],
           ),
           if (AppVersionUtil.hasNewVersionUpdate() == true)
-            Container(
-              padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(3)),
-              width: AppSizes.setWidth(70),
-              height: AppSizes.setHeight(23),
-              decoration: BoxDecoration(
-                color: CustomAppColor.of(context)
-                    .bgContainerRed
-                    .withValues(alpha: 0.8),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: CommonText(
-                text: '更新版本',
-                fontWeight: FontWeight.w600,
-                fontSize: AppSizes.setFontSize(12),
-                textColor: CustomAppColor.of(context).white,
+            GestureDetector(
+              onTap: () {
+                AppVersionUtil.showUpdateDialog();
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(4)),
+                width: AppSizes.setWidth(70),
+                height: AppSizes.setHeight(23),
+                decoration: BoxDecoration(
+                  color: CustomAppColor.of(context)
+                      .bgContainerRed
+                      .withValues(alpha: 0.8),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: CommonText(
+                  text: '更新版本',
+                  fontWeight: FontWeight.w600,
+                  fontSize: AppSizes.setFontSize(12),
+                  textColor: CustomAppColor.of(context).white,
+                ),
               ),
             ),
         ],
