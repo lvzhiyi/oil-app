@@ -21,6 +21,7 @@ class SplaseView extends HookWidget {
             assetName: AssetsImg.SPLASE_SPLASE,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
+            fit: BoxFit.fill,
           ),
         ],
       ),
