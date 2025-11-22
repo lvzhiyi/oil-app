@@ -118,6 +118,16 @@ class CreateNewAccountScreen extends StatelessWidget {
                         ]),
                       ),
                     ),
+                    CommonTextFormField(
+                      name: 'code',
+                      borderColor: CustomAppColor.of(context).textFieldBorder,
+                      leadingIcon: Image.asset(
+                        AssetsIcon.IC_PASSWORD,
+                        width: AppSizes.setHeight(20),
+                        height: AppSizes.setHeight(20),
+                      ),
+                      hintText: '邀请码',
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(
                           vertical: AppSizes.setHeight(20)),

@@ -72,7 +72,10 @@ class AppController extends HydratedCubit<AppState>
         return;
       }
 
-      BaseRouter.replace(url: AppPage.pendingReviewPage.path);
+      BaseRouter.replace(url: AppPage.pendingReviewPage.path, extra: {
+        'station': pendingAndActiveStation.list?[0],
+        'isFromLogin': isFromLogin,
+      });
     }
   }
 
