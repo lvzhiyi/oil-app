@@ -28,6 +28,9 @@ Map<String, dynamic> _$WithdrawOrderListResponseToJson(
 
 WithdrawOrderModel _$WithdrawOrderModelFromJson(Map<String, dynamic> json) =>
     WithdrawOrderModel(
+      withdrawId: (json['withdrawId'] as num?)?.toInt(),
+      withdrawNo: json['withdrawNo'] as String?,
+      inventoryId: (json['inventoryId'] as num?)?.toInt(),
       id: (json['id'] as num?)?.toInt(),
       oilOrderId: (json['oilOrderId'] as num?)?.toInt(),
       status: json['status'] as String?,
@@ -41,6 +44,9 @@ WithdrawOrderModel _$WithdrawOrderModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$WithdrawOrderModelToJson(WithdrawOrderModel instance) =>
     <String, dynamic>{
+      'withdrawId': instance.withdrawId,
+      'withdrawNo': instance.withdrawNo,
+      'inventoryId': instance.inventoryId,
       'id': instance.id,
       'oilOrderId': instance.oilOrderId,
       'status': instance.status,

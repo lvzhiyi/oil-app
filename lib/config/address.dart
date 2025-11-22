@@ -14,7 +14,7 @@ class BaseAddress {
   /// 远程服务器地址映射
   static Map<HttpEnv, String> envDomainMap = {
     HttpEnv.qa: 'https://test.maiyoubei.com',
-    HttpEnv.pro: 'https://sszc.quicksales.cn',
+    HttpEnv.pro: 'https://test.maiyoubei.com',
   };
 
   /// 远程服务器地址映射
