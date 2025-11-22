@@ -43,6 +43,7 @@ class OtpCtrl extends Cubit<OtpState> {
   }
 
   initPhone() {
+    if (isClosed) return;
     phoneController.text = BaseConfig.appContext
             ?.read<AppController>()
             .state
@@ -54,12 +55,14 @@ class OtpCtrl extends Cubit<OtpState> {
   }
 
   sendOtp({required String type}) async {
+    if (isClosed) return;
     emit(state.copyWith(phone: phoneController.text, loading: true));
 
     try {
       await authService.sendCode(
         SendCodeRequest(phone: phoneController.text, type: type),
       );
+      if (isClosed) return;
       emit(state.copyWith(loading: false));
       final phone = phoneController.text;
       BaseRouter.push(url: AppPage.otpVerificationPage.path, extra: {
@@ -70,7 +73,9 @@ class OtpCtrl extends Cubit<OtpState> {
       startCountdown();
     } catch (e) {
       // 发生错误时重置 loading 状态，避免页面卡住
-      emit(state.copyWith(loading: false));
+      if (!isClosed) {
+        emit(state.copyWith(loading: false));
+      }
       debugPrint('发送验证码失败: $e');
       // 错误已被捕获，不再向上传播，避免页面崩溃
     }
@@ -78,9 +83,15 @@ class OtpCtrl extends Cubit<OtpState> {
 
   /// 启动倒计时
   void startCountdown() {
+    if (isClosed) return;
     _countdownTimer?.cancel();
     emit(state.copyWith(countdownSeconds: _countdownDuration));
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (isClosed) {
+        timer.cancel();
+        _countdownTimer = null;
+        return;
+      }
       final currentSeconds = state.countdownSeconds ?? 0;
       if (currentSeconds > 0) {
         emit(state.copyWith(countdownSeconds: currentSeconds - 1));
@@ -93,6 +104,7 @@ class OtpCtrl extends Cubit<OtpState> {
 
   /// 重新发送验证码
   Future<void> resendOtp({required String type, required String phone}) async {
+    if (isClosed) return;
     if (state.countdownSeconds != null && state.countdownSeconds! > 0) {
       // 倒计时未结束，不允许重新发送
       return;
@@ -104,11 +116,14 @@ class OtpCtrl extends Cubit<OtpState> {
       await authService.sendCode(
         SendCodeRequest(phone: phone, type: type),
       );
+      if (isClosed) return;
       emit(state.copyWith(loading: false));
       // 重新启动倒计时
       startCountdown();
     } catch (e) {
-      emit(state.copyWith(loading: false));
+      if (!isClosed) {
+        emit(state.copyWith(loading: false));
+      }
       debugPrint('重新发送验证码失败: $e');
     }
   }
@@ -140,6 +155,7 @@ class OtpCtrl extends Cubit<OtpState> {
       return;
     }
 
+    if (isClosed) return;
     emit(state.copyWith(loading: true));
     try {
       final response = await authService.login(LoginRequest(
@@ -147,11 +163,15 @@ class OtpCtrl extends Cubit<OtpState> {
           code: codeController.map((e) => e.text).join('')));
       print('response: $response');
       BaseConfig.appContext?.read<AppController>().loginSucessProcess(response);
-      emit(state.copyWith(loading: false));
+      if (!isClosed) {
+        emit(state.copyWith(loading: false));
+      }
       phoneController.clear();
     } catch (e) {
       phoneController.clear();
-      emit(state.copyWith(loading: false));
+      if (!isClosed) {
+        emit(state.copyWith(loading: false));
+      }
       return;
     }
   }
