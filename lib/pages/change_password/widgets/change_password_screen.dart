@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -67,6 +68,23 @@ class ChangePasswordScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: AppSizes.setHeight(16)),
+                      child: CommonTextFormField(
+                        controller: ctrl.phoneController,
+                        enabled: false,
+                        borderColor: CustomAppColor.of(context).textFieldBorder,
+                        leadingIcon: Image.asset(
+                          AssetsIcon.IC_PROFILE,
+                          width: AppSizes.setHeight(20),
+                          height: AppSizes.setHeight(20),
+                        ),
+                        hintText: '手机号',
+                        keyboardType: TextInputType.phone,
+                        inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                        maxLength: 11,
+                      ),
+                    ),
                     CommonTextFormField(
                       name: 'password',
                       borderColor: CustomAppColor.of(context).textFieldBorder,
@@ -85,6 +103,7 @@ class ChangePasswordScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                           vertical: AppSizes.setHeight(16)),
                       child: CommonTextFormField(
+                        name: 'confirmPassword',
                         borderColor: CustomAppColor.of(context).textFieldBorder,
                         leadingIcon: Image.asset(
                           AssetsIcon.IC_PASSWORD,
@@ -111,9 +130,9 @@ class ChangePasswordScreen extends StatelessWidget {
                           vertical: AppSizes.setHeight(20)),
                       child: CommonButton(
                         isLoading: ctrl.state.loading,
-                        btnText: '确认修改',
+                        btnText: '确认',
                         onTap: () {
-                          ctrl.submit();
+                          ctrl.goToOtpPage();
                         },
                       ),
                     ),
@@ -127,4 +146,3 @@ class ChangePasswordScreen extends StatelessWidget {
     );
   }
 }
-

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/pages/bind_station/page.dart';
+import 'package:oil_business_app/pages/login/widgets/verification_login.dart';
 import 'package:oil_business_app/pages/otp/page.dart';
 import 'package:oil_business_app/pages/otp/widgets/otp_verification_screen.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
@@ -43,6 +44,9 @@ enum AppPage {
 
   /// 登录
   loginPage("/login"),
+
+  /// 验证码登录
+  verificationLoginPage("/verificationLogin"),
 
   /// 验证码登录
   otpPage("/otp"),
@@ -138,9 +142,6 @@ extension PageRoute on AppPage {
       case AppPage.splasePage:
         return (context, state) => const SplasePage();
 
-      case AppPage.loginPage:
-        return (context, state) => const LoginPage();
-
       case AppPage.otpPage:
         return (context, state) =>
             OtpPage(extra: state.extra as Map<String, dynamic>? ?? {});
@@ -228,6 +229,13 @@ extension PageRoute on AppPage {
     if (this == AppPage.loginPage) {
       return (context, state) => bottomToTopPageTransition(
           context: context, state: state, child: const LoginPage());
+    }
+
+    if (this == AppPage.verificationLoginPage) {
+      return (context, state) => bottomToTopPageTransition(
+          context: context,
+          state: state,
+          child: const VerificationLoginScreen());
     }
 
     return null;

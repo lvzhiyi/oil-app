@@ -8,6 +8,8 @@ import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/auth_req_type.dart';
 import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/pages/register/state.dart';
+import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
 
 class RegisterCtrl extends Cubit<RegisterState> {
@@ -31,19 +33,39 @@ class RegisterCtrl extends Cubit<RegisterState> {
     return formKey.currentState?.saveAndValidate() ?? false;
   }
 
-  submit() async {
-    print('submit');
+  /// 跳转到 OTP 验证码页面
+  goToOtpPage() async {
     if (!registerPrecheck()) return;
 
-    print('submit1');
+    // 获取表单数据
+    final formData = formKey.currentState?.value ?? {};
+    final phone = formData['phone'] ?? '';
+    final name = formData['name'] ?? '';
+    final password = formData['password'] ?? '';
+    final code = formData['code'] ?? '';
+
+    // 跳转到 OTP 发送验证码页面，传递表单数据
+    BaseRouter.push(url: AppPage.otpPage.path, extra: {
+      'type': 'register',
+      'phone': phone,
+      'name': name,
+      'password': password,
+      'code': code,
+    });
+  }
+
+  /// 提交注册（从 OTP 页面调用）
+  submit({required String phone, required String otpCode}) async {
+    if (!registerPrecheck()) return;
+
     emit(state.copyWith(loading: true, errorMessage: null));
 
     // 获取表单数据
     final formData = formKey.currentState?.value ?? {};
     final reqParams = RegisterRequest(
       name: formData['name'] ?? '',
-      phone: extra?['phone'] ?? '',
-      code: extra?['code'] ?? '',
+      phone: phone,
+      code: otpCode,
       password: formData['password'] ?? '',
     );
     l.d('Register', '开始注册: reqParams.toJson(): ${reqParams.toJson()}');

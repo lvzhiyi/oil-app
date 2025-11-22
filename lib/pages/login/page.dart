@@ -7,7 +7,8 @@ import 'package:oil_business_app/widgets/common/base_page.dart';
 import 'controller.dart';
 
 class LoginPage extends BasePage {
-  const LoginPage({Key? key}) : super(key: key);
+  final Map<String, dynamic>? extra;
+  const LoginPage({Key? key, this.extra}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoginPage();

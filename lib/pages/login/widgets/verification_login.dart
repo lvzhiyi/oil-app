@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oil_business_app/pages/otp/controller.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/static/icon.dart';
 
 import '../../../utils/sizer_utils.dart';
@@ -11,28 +10,29 @@ import '../../../widgets/base/button/common_button.dart';
 import '../../../widgets/base/text/common_text.dart';
 import '../../../widgets/base/textfield/common_textformfield.dart';
 
-class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key, this.extra});
-  final Map<String, dynamic>? extra;
+class VerificationLoginScreen extends StatefulWidget {
+  const VerificationLoginScreen({super.key});
 
-  static Route route() {
-    return MaterialPageRoute(builder: (context) => const SignUpScreen());
+  @override
+  State<VerificationLoginScreen> createState() =>
+      _VerificationLoginScreenState();
+}
+
+class _VerificationLoginScreenState extends State<VerificationLoginScreen> {
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  final phoneController = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
-    final ctrl = context.read<OtpCtrl>();
-
-    const mapTitle = {
-      'register': '注册',
-      'password_change': '修改密码',
-      'login': '登录',
-    };
-
-    if (extra?["type"] == "password_change") {
-      ctrl.initPhone();
-    }
-
     return Scaffold(
       backgroundColor: CustomAppColor.of(context).bgScaffold,
       body: SingleChildScrollView(
@@ -60,7 +60,7 @@ class SignUpScreen extends StatelessWidget {
                   bottom: AppSizes.setHeight(25),
                 ),
                 child: CommonText(
-                  text: mapTitle[extra?["type"]] ?? '登录',
+                  text: '登录',
                   fontWeight: FontWeight.w800,
                   fontSize: AppSizes.setFontSize(35),
                 ),
@@ -80,9 +80,9 @@ class SignUpScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(30)),
                 child: CommonTextFormField(
-                  controller: ctrl.phoneController,
+                  controller: phoneController,
                   isPhoneNumberField: false,
-                  enabled: extra?["type"] != 'password_change',
+                  enabled: true,
                   borderColor: CustomAppColor.of(context).textFieldBorder,
                   hintText: '手机号码',
                   keyboardType: TextInputType.phone,
@@ -94,7 +94,10 @@ class SignUpScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(35)),
                 child: CommonButton(
                   onTap: () => {
-                    ctrl.sendOtp(type: extra?["type"]),
+                    BaseRouter.push(url: AppPage.otpPage.path, extra: {
+                      "type": "login",
+                      "phone": phoneController.text,
+                    }),
                   },
                   btnText: '发送验证码',
                 ),
