@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:oil_business_app/global/enum/common.dart';
-import 'package:oil_business_app/models/station_model.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 import 'package:oil_business_app/resources/colors.dart';
@@ -8,13 +8,14 @@ import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/fuel_type_helper.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
+import 'package:oil_business_app/utils/station_extension.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
 class OilPickupSuccessScreen extends StatelessWidget {
   final WithdrawResponse response;
   final InventoryModel inventory;
-  final StationModel station;
+  final Station station;
   final String oilAmount;
   final VehicleModel vehicleModel;
 
@@ -222,8 +223,8 @@ class OilPickupSuccessScreen extends StatelessWidget {
             textColor: CustomAppColor.of(context).txtBlack,
           ),
           SizedBox(height: AppSizes.setHeight(16)),
-          _buildInfoRow(context, '加油站名称', station.name),
-          _buildInfoRow(context, '地址', station.address),
+          _buildInfoRow(context, '加油站名称', station.displayName),
+          _buildInfoRow(context, '地址', station.fullAddress),
         ],
       ),
     );

@@ -54,12 +54,12 @@ station_edit/
     └── station_edit_form.dart
 ```
 
-**理由**: 
+**理由**:
 - 符合项目现有架构规范
 - 清晰的职责分离
 - 便于状态管理和测试
 
-**替代方案**: 
+**替代方案**:
 - 单文件实现: 不符合项目规范,难以维护
 - 使用 Bloc 替代 Cubit: 过度设计,页面逻辑较简单
 
@@ -69,15 +69,15 @@ station_edit/
 
 ```dart
 // lib/models/station_model.dart
-class StationModel {
+class Station {
   final String id;
   final String name;
   final String address;
   final double? latitude;   // 可选,预留地图功能
   final double? longitude;
   final bool isActive;
-  
-  StationModel({
+
+  Station({
     required this.id,
     required this.name,
     required this.address,
@@ -85,7 +85,7 @@ class StationModel {
     this.longitude,
     this.isActive = true,
   });
-  
+
   // copyWith, toJson, fromJson
 }
 
@@ -107,7 +107,7 @@ class VehicleModel {
   final String? tank2Capacity;     // 二仓容量
   final String? hasPump;           // 是否带泵
   final String? oilAmount;         // 提油吨位
-  
+
   VehicleModel({
     this.date,
     this.oilType,
@@ -126,7 +126,7 @@ class VehicleModel {
     this.hasPump,
     this.oilAmount,
   });
-  
+
   // toJson, fromJson, copyWith
 }
 ```
@@ -147,22 +147,22 @@ class StationListCtrl extends Cubit<StationListState> {
   StationListCtrl() : super(StationListState(
     stations: _mockStations,
   ));
-  
-  static final List<StationModel> _mockStations = [
-    StationModel(
+
+  static final List<Station> _mockStations = [
+    Station(
       id: '1',
       name: 'xxx加油站',
       address: '北京市朝阳区xxx路xxx号',
     ),
     // ... 更多 mock 数据
   ];
-  
+
   void selectStation(String stationId) {
     // 保存到全局状态或本地存储
   }
-  
-  void updateStation(StationModel station) {
-    final updated = state.stations.map((s) => 
+
+  void updateStation(Station station) {
+    final updated = state.stations.map((s) =>
       s.id == station.id ? station : s
     ).toList();
     emit(state.copyWith(stations: updated));
@@ -205,25 +205,25 @@ class VehicleInfoParser {
     'hasPump': ['是否带泵', '带泵'],
     'oilAmount': ['提油吨位', '提油量', '吨位'],
   };
-  
+
   /// 解析车辆信息文本
   static VehicleModel parse(String text) {
     final Map<String, String> result = {};
-    
+
     // 1. 预处理: 统一分隔符
     text = text
         .replaceAll(':', ':')  // 中文冒号 -> 英文冒号
         .replaceAll('=', ':')  // 等号 -> 冒号
         .trim();
-    
+
     // 2. 按行分割
     final lines = text.split('\n').where((line) => line.trim().isNotEmpty);
-    
+
     // 3. 逐行解析
     for (final line in lines) {
       _parseLine(line, result);
     }
-    
+
     // 4. 生成 VehicleModel
     return VehicleModel(
       date: result['date'],
@@ -244,19 +244,19 @@ class VehicleInfoParser {
       oilAmount: result['oilAmount'],
     );
   }
-  
+
   /// 解析单行文本
   static void _parseLine(String line, Map<String, String> result) {
     line = line.trim();
-    
+
     // 尝试匹配每个字段
     for (final entry in fieldKeywords.entries) {
       final fieldName = entry.key;
       final keywords = entry.value;
-      
+
       // 跳过已识别的字段
       if (result.containsKey(fieldName)) continue;
-      
+
       // 尝试匹配关键词
       for (final keyword in keywords) {
         if (line.contains(keyword)) {
@@ -269,42 +269,42 @@ class VehicleInfoParser {
       }
     }
   }
-  
+
   /// 提取字段值
   static String? _extractValue(String line, String keyword) {
     // 查找关键词位置
     final keywordIndex = line.indexOf(keyword);
     if (keywordIndex == -1) return null;
-    
+
     // 提取关键词后的内容
     String value = line.substring(keywordIndex + keyword.length).trim();
-    
+
     // 移除前导分隔符
-    if (value.startsWith(':') || 
-        value.startsWith('=') || 
+    if (value.startsWith(':') ||
+        value.startsWith('=') ||
         value.startsWith('：')) {
       value = value.substring(1).trim();
     }
-    
+
     // 提取到下一个分隔符或行尾
     final separators = ['\n', ',', ';', '。', ' '];
     int endIndex = value.length;
-    
+
     for (final sep in separators) {
       final index = value.indexOf(sep);
       if (index != -1 && index < endIndex) {
         endIndex = index;
       }
     }
-    
+
     value = value.substring(0, endIndex).trim();
-    
+
     // 特殊处理: 移除单位
     value = _removeUnits(value);
-    
+
     return value.isEmpty ? null : value;
   }
-  
+
   /// 移除单位
   static String _removeUnits(String value) {
     // 移除常见单位,保留数字和文字
@@ -316,16 +316,16 @@ class VehicleInfoParser {
     }
     return value;
   }
-  
+
   /// 生成 JSON 字符串
   static String toJson(VehicleModel model) {
     return jsonEncode(model.toJson());
   }
-  
+
   /// 验证必填字段
   static List<String> validateRequired(VehicleModel model) {
     final missing = <String>[];
-    
+
     if (model.driverName == null || model.driverName!.isEmpty) {
       missing.add('驾驶员姓名');
     }
@@ -335,7 +335,7 @@ class VehicleInfoParser {
     if (model.oilAmount == null || model.oilAmount!.isEmpty) {
       missing.add('提油吨位');
     }
-    
+
     return missing;
   }
 }
@@ -404,31 +404,31 @@ class VehicleInfoParser {
 
 ### 4. 状态管理策略
 
-**决策**: 
+**决策**:
 - 页面级状态: 使用 Cubit
 - 选中的加油站: 保存到全局 AppController
 
 ```dart
 // oil_pickup/state.dart
 class OilPickupState {
-  final StationModel? selectedStation;  // 当前选中的加油站
+  final Station? selectedStation;  // 当前选中的加油站
   final String oilAmount;               // 油量输入
   final String vehicleInfo;             // 粘贴的车辆信息
   final bool loading;
-  
+
   OilPickupState({
     this.selectedStation,
     this.oilAmount = '',
     this.vehicleInfo = '',
     this.loading = false,
   });
-  
+
   OilPickupState copyWith({...}) => ...;
 }
 
 // global/app_controller.dart
 class AppController extends HydratedCubit<AppState> {
-  void setSelectedStation(StationModel station) {
+  void setSelectedStation(Station station) {
     emit(state.copyWith(selectedStation: station));
   }
 }

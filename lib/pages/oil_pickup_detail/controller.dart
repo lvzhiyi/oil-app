@@ -99,7 +99,7 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
         errorMessage: null,
       ));
     }
-    
+
     if (state.inventory == null || state.inventory!.inventoryId == null) {
       emit(state.copyWith(
         errorMessage: '库存信息异常',
@@ -153,12 +153,12 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
 
     try {
       // 构建提油请求参数
-      final stationId = int.tryParse(state.selectedStation!.id);
+      final stationId = state.selectedStation!.id;
       if (stationId == null) {
-        l.e('OilPickupDetail', '加油站ID格式错误: ${state.selectedStation!.id}');
+        l.e('OilPickupDetail', '加油站ID为空');
         emit(state.copyWith(
           isLoading: false,
-          errorMessage: '加油站ID格式错误',
+          errorMessage: '加油站ID为空',
         ));
         return;
       }

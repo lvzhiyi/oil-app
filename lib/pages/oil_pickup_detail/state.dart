@@ -1,10 +1,10 @@
-import 'package:oil_business_app/models/station_model.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 
 class OilPickupDetailState {
   final InventoryModel? inventory;
-  final StationModel? selectedStation;
+  final Station? selectedStation;
   final String oilAmount;
   final String vehicleInfo;
   final VehicleModel? vehicleModel;
@@ -27,7 +27,7 @@ class OilPickupDetailState {
 
   OilPickupDetailState copyWith({
     InventoryModel? inventory,
-    StationModel? selectedStation,
+    Station? selectedStation,
     String? oilAmount,
     String? vehicleInfo,
     VehicleModel? vehicleModel,

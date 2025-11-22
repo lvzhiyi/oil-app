@@ -19,9 +19,12 @@ class _StationEditPage extends BaseState<StationEditPage> with BasicInitPage {
   Widget body(context) {
     final extra = GoRouterState.of(context).extra as Map<String, dynamic>?;
     final stationId = extra?['stationId'] as String?;
+    final isFromPendingReview = extra?['isFromPendingReview'] as bool?;
 
     return BlocProvider(
-      create: (BuildContext context) => StationEditCtrl(stationId: stationId),
+      create: (BuildContext context) => StationEditCtrl(
+          stationId: stationId,
+          isFromPendingReview: isFromPendingReview ?? false),
       child: BlocBuilder<StationEditCtrl, StationEditState>(
         builder: (context, state) {
           return StationEditView(state: state);
@@ -30,4 +33,3 @@ class _StationEditPage extends BaseState<StationEditPage> with BasicInitPage {
     );
   }
 }
-

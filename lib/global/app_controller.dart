@@ -6,7 +6,6 @@ import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/auth_rep_type.dart';
 import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/global/service/station_service.dart';
-import 'package:oil_business_app/models/station_model.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 
@@ -36,7 +35,7 @@ class AppController extends HydratedCubit<AppState>
     emit(state.copyWith(authResponse: authResponse));
   }
 
-  void setSelectedStation(StationModel station) {
+  void setSelectedStation(Station station) {
     emit(state.copyWith(selectedStation: station));
   }
 
@@ -56,7 +55,7 @@ class AppController extends HydratedCubit<AppState>
 
   /// 绑定加油站流程
   bindStationProcess({bool isFromLogin = false}) async {
-    final pendingAndActiveStation = await getStationStatus();
+    final pendingAndActiveStation = await getStationStatus(1, 1);
     if (pendingAndActiveStation.list?.isEmpty ?? true) {
       BaseRouter.push(url: AppPage.bindStationPage.path, extra: {
         'isFromLogin': isFromLogin,
@@ -79,9 +78,16 @@ class AppController extends HydratedCubit<AppState>
     }
   }
 
-  Future<GetStationResponse> getStationStatus() async {
+  Future<GetStationResponse> getStationStatus(int page, int pageSize) async {
     final response = await stationService.getStationStatus(
-        1, 1, [StationStatus.active.name, StationStatus.pending_review.name]);
+      page,
+      pageSize,
+      [
+        StationStatus.active.name,
+        StationStatus.pending_review.name,
+        StationStatus.rejected.name
+      ],
+    );
     return response;
   }
 
@@ -104,8 +110,7 @@ class AppController extends HydratedCubit<AppState>
           ? AuthResponse.fromJson(json['authResponse'])
           : null,
       selectedStation: json['selectedStation'] != null
-          ? StationModel.fromJson(
-              json['selectedStation'] as Map<String, dynamic>)
+          ? Station.fromJson(json['selectedStation'] as Map<String, dynamic>)
           : null,
     );
   }

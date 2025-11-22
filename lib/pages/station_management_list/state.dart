@@ -1,8 +1,8 @@
 import 'package:oil_business_app/global/enum/common.dart';
-import 'package:oil_business_app/models/station_model.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
 
 class StationManagementListState {
-  final List<StationModel> stations;
+  final List<Station> stations;
   final bool isLoading;
   final bool hasError;
   final String? errorMessage;
@@ -17,7 +17,7 @@ class StationManagementListState {
   });
 
   StationManagementListState copyWith({
-    List<StationModel>? stations,
+    List<Station>? stations,
     bool? isLoading,
     bool? hasError,
     String? errorMessage,

@@ -3,38 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/global/service/station_service.dart';
-import 'package:oil_business_app/models/station_model.dart';
 import 'package:oil_business_app/pages/station_management_list/state.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
+import 'package:oil_business_app/utils/station_extension.dart';
 
 class StationManagementListCtrl extends Cubit<StationManagementListState> {
   StationManagementListCtrl() : super(StationManagementListState(stations: [])) {
     initState();
-  }
-
-  StationModel _convertToStationModel(Station station) {
-    return StationModel(
-      id: station.id?.toString() ?? '',
-      name: station.stationName ?? '',
-      address: _buildFullAddress(station),
-      latitude: null,
-      longitude: null,
-      isActive: station.status == StationStatus.active,
-      status: station.status,
-      rejectReason: station.rejectReason,
-    );
-  }
-
-  String _buildFullAddress(Station station) {
-    final parts = [
-      station.provinceName,
-      station.cityName,
-      station.areaName,
-      station.addressDetail,
-    ].where((part) => part != null && part.isNotEmpty);
-    return parts.join('');
   }
 
   void initState() async {
@@ -50,9 +27,8 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
 
       final response = await stationService.getStationStatus(1, 100, statuses);
 
-      final stations = (response.list ?? [])
-          .map((station) => _convertToStationModel(station))
-          .toList();
+      // 直接使用 Station 模型
+      final stations = response.list ?? [];
 
       emit(state.copyWith(
         stations: stations,
@@ -78,10 +54,10 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
     loadStations();
   }
 
-  void navigateToEdit(StationModel station, BuildContext context) {
+  void navigateToEdit(Station station, BuildContext context) {
     BaseRouter.push(
       url: AppPage.stationEditPage.path,
-      extra: {'stationId': station.id},
+      extra: {'stationId': station.idString},
     );
   }
 
@@ -89,7 +65,7 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
     BaseRouter.push(url: AppPage.stationEditPage.path);
   }
 
-  void updateStation(StationModel station) {
+  void updateStation(Station station) {
     final updated = state.stations.map((s) {
       return s.id == station.id ? station : s;
     }).toList();

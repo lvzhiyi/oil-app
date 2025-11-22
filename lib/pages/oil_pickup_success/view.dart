@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oil_business_app/models/station_model.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 import 'package:oil_business_app/pages/oil_pickup_success/widgets/oil_pickup_success_screen.dart';
@@ -7,7 +7,7 @@ import 'package:oil_business_app/pages/oil_pickup_success/widgets/oil_pickup_suc
 class OilPickupSuccessView extends StatelessWidget {
   final WithdrawResponse response;
   final InventoryModel inventory;
-  final StationModel station;
+  final Station station;
   final String oilAmount;
   final VehicleModel vehicleModel;
 

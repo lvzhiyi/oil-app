@@ -2,47 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/commom/upload.dart';
+import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/station_req_type.dart';
-import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/global/service/station_service.dart';
-import 'package:oil_business_app/models/station_model.dart';
 import 'package:oil_business_app/pages/station_edit/state.dart';
 import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
 class StationEditCtrl extends Cubit<StationEditState> {
-  StationEditCtrl({String? stationId}) : super(StationEditState()) {
+  StationEditCtrl({String? stationId, bool isFromPendingReview = false})
+      : super(StationEditState()) {
     _stationId = stationId;
+    _isFromPendingReview = isFromPendingReview;
     if (stationId != null) {
       initState(stationId);
     }
   }
 
   String? _stationId;
-
+  bool _isFromPendingReview = false;
   void initState(String stationId) async {
     emit(state.copyWith(isLoading: true));
     try {
-      final response = await appController.getStationStatus();
-      
+      final response = await appController.getStationStatus(1, 10);
+
       final station = (response.list ?? []).firstWhere(
         (s) => s.id?.toString() == stationId,
         orElse: () => throw Exception('未找到加油站信息'),
       );
 
-      final stationModel = StationModel(
-        id: station.id?.toString() ?? '',
-        name: station.stationName ?? '',
-        address: _buildFullAddress(station),
-        isActive: station.status?.name == 'active',
-      );
-
       final businessLicenseUrl = station.businessLicenseUrl ?? '';
       final fuelRetailPermitUrl = station.fuelRetailPermitUrl ?? '';
-      
+
       emit(state.copyWith(
-        station: stationModel,
+        station: station,
         name: station.stationName ?? '',
         provinceName: station.provinceName ?? '',
         cityName: station.cityName ?? '',
@@ -65,16 +60,6 @@ class StationEditCtrl extends Cubit<StationEditState> {
         errorMessage: '加载加油站信息失败: ${e.toString()}',
       ));
     }
-  }
-
-  String _buildFullAddress(Station station) {
-    final parts = [
-      station.provinceName,
-      station.cityName,
-      station.areaName,
-      station.addressDetail,
-    ].where((part) => part != null && part.isNotEmpty);
-    return parts.join('');
   }
 
   void updateName(String name) {
@@ -203,6 +188,14 @@ class StationEditCtrl extends Cubit<StationEditState> {
       ));
 
       SportsToast.showSuccess('保存成功');
+      if (_isFromPendingReview) {
+        BaseRouter.popAndPush(url: AppPage.pendingReviewPage.path, extra: {
+          'station':
+              state.station?.copyWith(status: StationStatus.pending_review),
+        });
+      } else {
+        BaseRouter.pop();
+      }
       BaseRouter.pop();
       return true;
     } catch (e) {

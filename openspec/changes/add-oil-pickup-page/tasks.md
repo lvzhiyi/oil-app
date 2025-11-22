@@ -1,7 +1,7 @@
 # 实现任务清单
 
 ## 1. 数据模型和 Mock 数据
-- [x] 1.1 创建加油站数据模型 (StationModel)
+- [x] 1.1 创建加油站数据模型 (Station)
 - [x] 1.2 创建车辆信息数据模型 (VehicleModel)
 - [x] 1.3 创建提油凭证数据模型 (PickupCertificateModel)
 - [x] 1.4 创建 Mock 数据服务提供测试数据

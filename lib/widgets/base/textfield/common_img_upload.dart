@@ -64,7 +64,6 @@ class CommonImgUpload extends StatefulWidget {
 }
 
 class CommonImgUploadState extends State<CommonImgUpload> {
-  bool _obscureText = true;
   late FocusNode _focusNode;
 
   late TextEditingController _controller;
@@ -149,7 +148,7 @@ class CommonImgUploadState extends State<CommonImgUpload> {
       controller: _controller,
       onChanged: widget.onChanged,
       maxLines: widget.maxLines ?? 1,
-      obscureText: _obscureText,
+      obscureText: false,
       onTap: () {
         if (!hasImage) {
           imagePicker();

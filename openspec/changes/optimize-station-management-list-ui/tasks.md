@@ -1,5 +1,5 @@
 ## 1. 数据模型更新
-- [x] 1.1 在StationModel中添加status和rejectReason字段
+- [x] 1.1 在Station中添加status和rejectReason字段
 - [x] 1.2 在Station模型中添加rejectReason字段
 - [x] 1.3 重新生成代码（build_runner）
 - [x] 1.4 更新controller，在转换时保留status和rejectReason信息
