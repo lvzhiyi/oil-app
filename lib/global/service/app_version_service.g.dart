@@ -18,12 +18,12 @@ class _AppVersionService implements AppVersionService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<AppVersionInfoResponse> appVersion() async {
+  Future<AppVersionInfo> appVersion(String platform) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'platform': platform};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<AppVersionInfoResponse>(
+    final _options = _setStreamType<AppVersionInfo>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -34,9 +34,9 @@ class _AppVersionService implements AppVersionService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late AppVersionInfoResponse _value;
+    late AppVersionInfo _value;
     try {
-      _value = AppVersionInfoResponse.fromJson(_result.data!);
+      _value = AppVersionInfo.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

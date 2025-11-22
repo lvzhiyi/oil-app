@@ -5,6 +5,7 @@ import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/pages/splase/state.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
+import 'package:oil_business_app/utils/app_version_util.dart';
 import 'package:oil_business_app/utils/log.dart';
 
 class SplaseCtrl extends Cubit<SplaseState> {
@@ -19,6 +20,9 @@ class SplaseCtrl extends Cubit<SplaseState> {
 
   initState() async {
     try {
+      /// 检查版本更新
+      await AppVersionUtil.checkVersionShowDialog();
+
       final appController = BaseConfig.appContext?.read<AppController>();
       final authResponse = appController?.state.authResponse;
       if (authResponse == null) {
