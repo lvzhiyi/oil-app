@@ -99,6 +99,10 @@ class SportsDialog {
             onTap: () => _handleCancel(onCancel),
             btnText: cancelText ?? '',
             height: pt(42),
+            buttonColor: Colors.white,
+            textColor: const Color(0xFF666666),
+            borderColor: const Color(0xFFE5E5E5),
+            isButtonShadow: false,
           ),
         ));
 

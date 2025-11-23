@@ -17,6 +17,7 @@ class CommonButton extends StatelessWidget {
   final double? fontSize;
   final bool? isButtonShadow;
   final bool? isLoading;
+  final Color? textColor;
 
   const CommonButton(
       {super.key,
@@ -32,7 +33,8 @@ class CommonButton extends StatelessWidget {
       this.child,
       this.fontSize,
       this.isButtonShadow = true,
-      this.isLoading = false});
+      this.isLoading = false,
+      this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +80,7 @@ class CommonButton extends StatelessWidget {
                   CommonText(
                     text: btnText ?? '',
                     fontSize: fontSize ?? AppSizes.setFontSize(15),
-                    textColor: CustomAppColor.of(context).white,
+                    textColor: textColor ?? CustomAppColor.of(context).white,
                     fontWeight: FontWeight.w500,
                     textAlign: TextAlign.center,
                   ),
