@@ -227,13 +227,13 @@ class StationManagementListScreen extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    if (state.isLoading) {
+    if (state.isLoading && state.stations.isEmpty) {
       return const Center(
         child: CircularProgressIndicator(),
       );
     }
 
-    if (state.hasError) {
+    if (state.hasError && state.stations.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -249,14 +249,14 @@ class StationManagementListScreen extends StatelessWidget {
               width: AppSizes.setWidth(120),
               height: AppSizes.setHeight(40),
               fontSize: AppSizes.setFontSize(14),
-              onTap: () => controller.initState(),
+              onTap: () => controller.onRefresh(),
             ),
           ],
         ),
       );
     }
 
-    if (state.stations.isEmpty) {
+    if (state.stations.isEmpty && !state.isLoading) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -279,19 +279,62 @@ class StationManagementListScreen extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
-      padding: EdgeInsets.all(AppSizes.setWidth(16)),
-      itemCount: state.stations.length,
-      itemBuilder: (context, index) {
-        final station = state.stations[index];
-        return Padding(
-          padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
-          child: StationManagementItem(
-            station: station,
-            onEdit: () => controller.navigateToEdit(station, context),
-          ),
-        );
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollInfo) {
+        if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 50 &&
+            !state.isLoadingMore &&
+            state.hasMore) {
+          controller.onLoadMore();
+        }
+        return false;
       },
+      child: RefreshIndicator(
+        onRefresh: controller.onRefresh,
+        child: ListView.builder(
+          padding: EdgeInsets.all(AppSizes.setWidth(16)),
+          itemCount: state.stations.length + 1, // +1 for footer
+          itemBuilder: (context, index) {
+            if (index == state.stations.length) {
+              return _buildFooter(context);
+            }
+            
+            final station = state.stations[index];
+            return Padding(
+              padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
+              child: StationManagementItem(
+                station: station,
+                onEdit: () => controller.navigateToEdit(station, context),
+              ),
+            );
+          },
+        ),
+      ),
     );
+  }
+
+  Widget _buildFooter(BuildContext context) {
+    if (state.isLoadingMore) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
+        child: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (!state.hasMore && state.stations.isNotEmpty) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
+        child: Center(
+          child: CommonText(
+            text: '没有更多数据了',
+            fontSize: AppSizes.setFontSize(12),
+            textColor: CustomAppColor.of(context).txtGrey,
+          ),
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
   }
 }

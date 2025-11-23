@@ -10,35 +10,66 @@ import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/utils/station_extension.dart';
 
 class StationManagementListCtrl extends Cubit<StationManagementListState> {
+  static const int _pageSize = 10;
+
   StationManagementListCtrl() : super(StationManagementListState(stations: [])) {
-    initState();
+    onRefresh();
   }
 
-  void initState() async {
-    await loadStations();
+  Future<void> onRefresh() async {
+    if (state.isLoading) return;
+    
+    emit(state.copyWith(
+      isLoading: true,
+      hasError: false,
+      page: 1,
+      hasMore: true,
+    ));
+
+    await _loadData(isRefresh: true);
   }
 
-  Future<void> loadStations() async {
-    emit(state.copyWith(isLoading: true));
+  Future<void> onLoadMore() async {
+    if (state.isLoading || state.isLoadingMore || !state.hasMore) return;
+
+    emit(state.copyWith(isLoadingMore: true));
+    await _loadData(isRefresh: false);
+  }
+
+  Future<void> _loadData({required bool isRefresh}) async {
     try {
+      final pageToLoad = isRefresh ? 1 : state.page + 1;
+      
       final statuses = state.selectedStatus == null
           ? StationStatus.values.map((e) => e.name).toList()
           : [state.selectedStatus!.name];
 
-      final response = await stationService.getStationStatus(1, 100, statuses);
+      final response = await stationService.getStationStatus(pageToLoad, _pageSize, statuses);
 
       // 直接使用 Station 模型
-      final stations = response.list ?? [];
+      final newStations = response.list ?? [];
+      final hasMore = newStations.length >= _pageSize;
+
+      List<Station> finalStations;
+      if (isRefresh) {
+        finalStations = newStations;
+      } else {
+        finalStations = [...state.stations, ...newStations];
+      }
 
       emit(state.copyWith(
-        stations: stations,
+        stations: finalStations,
         isLoading: false,
+        isLoadingMore: false,
         hasError: false,
+        page: pageToLoad,
+        hasMore: hasMore,
       ));
     } catch (e) {
       l.e('StationManagementListCtrl', '加载加油站列表失败: $e');
       emit(state.copyWith(
         isLoading: false,
+        isLoadingMore: false,
         hasError: true,
         errorMessage: e.toString(),
       ));
@@ -46,12 +77,16 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
   }
 
   void filterByStatus(StationStatus? status) {
+    if (status == state.selectedStatus && !(status == null && state.selectedStatus == null)) {
+       return;
+    }
+    
     if (status == null) {
       emit(state.copyWith(clearSelectedStatus: true));
     } else {
       emit(state.copyWith(selectedStatus: status));
     }
-    loadStations();
+    onRefresh();
   }
 
   void navigateToEdit(Station station, BuildContext context) {
