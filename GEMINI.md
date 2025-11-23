@@ -122,6 +122,8 @@ lib/
 
 ## UI/UX Guidelines
 
+**Source of Truth:** The `UI_SPECIFICATION.md` document is the authoritative source for all UI components, color palettes, typography, sizing, and spacing. All UI development and refactoring must strictly adhere to this specification.
+
 **Strict Component Usage:**
 *   **Text:** MUST use `CommonText`.
 *   **Buttons:** MUST use `CommonButton`.
