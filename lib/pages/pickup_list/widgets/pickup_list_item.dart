@@ -58,13 +58,13 @@ class PickupListItem extends StatelessWidget {
               SizedBox(height: AppSizes.setHeight(8)),
               if(item.createdAt != null && item.createdAt!.isNotEmpty)
               CommonText(
-                text: '申请时间: ${formatDate(DateTime.parse(item.createdAt ?? ""), format: "yyyy.MM.dd HH:mm:ss")}',
+                text: _getDateTimeString(item.createdAt, prefix: '申请时间'),
                 fontSize: AppSizes.setFontSize(12),
                 textColor: CustomAppColor.of(context).txtGrey,
               ),
               if(item.status == WithdrawStatus.completed.value && item.updatedAt != null && item.updatedAt!.isNotEmpty)
                 CommonText(
-                  text: '完成时间: ${formatDate(DateTime.parse(item.updatedAt ?? ""), format: "yyyy.MM.dd HH:mm:ss")}',
+                  text: _getDateTimeString(item.updatedAt, prefix: '完成时间'),
                   fontSize: AppSizes.setFontSize(12),
                   textColor: CustomAppColor.of(context).txtGrey,
                 ),
@@ -73,6 +73,13 @@ class PickupListItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getDateTimeString(String? dateTime, { String prefix = '申请时间' }) {
+    if(dateTime == null || dateTime.isEmpty) {
+      return '$prefix: --';
+    }
+    return '$prefix: ${formatDate(DateTime.parse(dateTime), format: "yyyy.MM.dd HH:mm:ss")}';
   }
 
   Widget _buildVehicleInfo(BuildContext context, String? vehicleInfoJson) {
