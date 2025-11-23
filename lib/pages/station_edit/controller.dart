@@ -4,62 +4,49 @@ import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/commom/upload.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/station_req_type.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/global/service/station_service.dart';
 import 'package:oil_business_app/pages/station_edit/state.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
+import 'package:oil_business_app/utils/station_extension.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
 class StationEditCtrl extends Cubit<StationEditState> {
-  StationEditCtrl({String? stationId, bool isFromPendingReview = false})
+  StationEditCtrl({Station? station, bool isFromPendingReview = false})
       : super(StationEditState()) {
-    _stationId = stationId;
     _isFromPendingReview = isFromPendingReview;
-    if (stationId != null) {
-      initState(stationId);
+    if (station != null) {
+      initState(station);
     }
   }
 
   String? _stationId;
   bool _isFromPendingReview = false;
-  void initState(String stationId) async {
-    emit(state.copyWith(isLoading: true));
-    try {
-      final response = await appController.getStationStatus(1, 10);
+  
+  void initState(Station station) {
+    _stationId = station.idString;
+    
+    final businessLicenseUrl = station.businessLicenseUrl ?? '';
+    final fuelRetailPermitUrl = station.fuelRetailPermitUrl ?? '';
 
-      final station = (response.list ?? []).firstWhere(
-        (s) => s.id?.toString() == stationId,
-        orElse: () => throw Exception('未找到加油站信息'),
-      );
-
-      final businessLicenseUrl = station.businessLicenseUrl ?? '';
-      final fuelRetailPermitUrl = station.fuelRetailPermitUrl ?? '';
-
-      emit(state.copyWith(
-        station: station,
-        name: station.stationName ?? '',
-        provinceName: station.provinceName ?? '',
-        cityName: station.cityName ?? '',
-        areaName: station.areaName ?? '',
-        provinceCode: station.provinceCode ?? '',
-        cityCode: station.cityCode ?? '',
-        areaCode: station.areaCode ?? '',
-        addressDetail: station.addressDetail ?? '',
-        businessLicenseUrl: businessLicenseUrl,
-        fuelRetailPermitUrl: fuelRetailPermitUrl,
-        originalBusinessLicenseUrl: businessLicenseUrl,
-        originalFuelRetailPermitUrl: fuelRetailPermitUrl,
-        isLoading: false,
-      ));
-    } catch (e) {
-      l.e('StationEditCtrl', '加载加油站信息失败: $e');
-      emit(state.copyWith(
-        isLoading: false,
-        hasError: true,
-        errorMessage: '加载加油站信息失败: ${e.toString()}',
-      ));
-    }
+    emit(state.copyWith(
+      station: station,
+      name: station.stationName ?? '',
+      provinceName: station.provinceName ?? '',
+      cityName: station.cityName ?? '',
+      areaName: station.areaName ?? '',
+      provinceCode: station.provinceCode ?? '',
+      cityCode: station.cityCode ?? '',
+      areaCode: station.areaCode ?? '',
+      addressDetail: station.addressDetail ?? '',
+      businessLicenseUrl: businessLicenseUrl,
+      fuelRetailPermitUrl: fuelRetailPermitUrl,
+      originalBusinessLicenseUrl: businessLicenseUrl,
+      originalFuelRetailPermitUrl: fuelRetailPermitUrl,
+      isLoading: false,
+    ));
   }
 
   void updateName(String name) {

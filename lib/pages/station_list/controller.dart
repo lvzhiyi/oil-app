@@ -86,7 +86,7 @@ class StationListCtrl extends Cubit<StationListState> {
   void navigateToEdit(Station station, BuildContext context) {
     BaseRouter.push(
       url: AppPage.stationEditPage.path,
-      extra: {'stationId': station.idString},
+      extra: {'station': station},
     );
   }
 

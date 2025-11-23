@@ -179,12 +179,7 @@ extension PageRoute on AppPage {
         return (context, state) => const PickupListPage();
 
       case AppPage.stationListPage:
-        return (context, state) {
-          final extra = state.extra as Map<String, dynamic>? ?? {};
-          final allowEditValue = extra['allowEdit'];
-          final allowEdit = allowEditValue is bool ? allowEditValue : true;
-          return StationListPage(allowEdit: allowEdit);
-        };
+        return (context, state) => StationListPage();
 
       case AppPage.stationEditPage:
         return (context, state) => const StationEditPage();

@@ -7,12 +7,10 @@ import 'widgets/station_list_screen.dart';
 
 class StationListView extends StatelessWidget {
   final StationListState state;
-  final bool allowEdit;
 
   const StationListView({
     Key? key,
     required this.state,
-    this.allowEdit = true,
   }) : super(key: key);
 
   @override
@@ -21,7 +19,6 @@ class StationListView extends StatelessWidget {
     return StationListScreen(
       state: state,
       controller: ctrl,
-      allowEdit: allowEdit,
     );
   }
 }

@@ -13,13 +13,11 @@ import 'station_item.dart';
 class StationListScreen extends StatelessWidget {
   final StationListState state;
   final StationListCtrl controller;
-  final bool allowEdit;
 
   const StationListScreen({
     Key? key,
     required this.state,
     required this.controller,
-    this.allowEdit = true,
   }) : super(key: key);
 
   @override
@@ -125,38 +123,15 @@ class StationListScreen extends StatelessWidget {
                         station: station,
                         isSelected: isSelected,
                         onTap: () => controller.selectStation(station, context),
-                        onEdit: allowEdit ? () => controller.navigateToEdit(station, context) : null,
                       ),
                     );
                   },
                 ),
               ),
             ),
-            if (allowEdit) _buildAddButton(context),
           ],
         );
       },
-    );
-  }
-
-  Widget _buildAddButton(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(AppSizes.setWidth(20)),
-      decoration: BoxDecoration(
-        color: CustomAppColor.of(context).bgScaffold,
-        border: Border(
-          top: BorderSide(
-            color: CustomAppColor.of(context).containerBorder,
-            width: 1,
-          ),
-        ),
-      ),
-      child: CommonButton(
-        btnText: '新增加油站',
-        height: AppSizes.setHeight(52),
-        fontSize: AppSizes.setFontSize(15),
-        onTap: () => controller.navigateToAdd(context),
-      ),
     );
   }
 }
