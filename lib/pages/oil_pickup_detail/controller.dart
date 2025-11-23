@@ -93,7 +93,11 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
     }
   }
 
-  Future<void> generateCertificate(BuildContext context, {String? currentOilAmount}) async {
+  Future<void> generateCertificate(
+    BuildContext context, {
+    String? currentOilAmount,
+    required VehicleModel vehicleModel,
+  }) async {
     if (currentOilAmount != '' && currentOilAmount != state.oilAmount) {
       emit(state.copyWith(
         oilAmount: currentOilAmount,
@@ -130,13 +134,7 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
 
     final oilAmountInt = oilAmountDouble.toInt();
 
-    final missing = VehicleInfoParser.validateRequired(
-      state.vehicleModel ?? VehicleModel(),
-    );
-    if (missing.isNotEmpty) {
-      SportsToast.showWarning('请完善车辆信息，缺少必填字段: ${missing.join(', ')}');
-      return;
-    }
+    // Note: Field validation is now handled by the Form in the UI before calling this.
 
     emit(state.copyWith(isLoading: true, errorMessage: null));
 
@@ -150,10 +148,17 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
         return;
       }
 
+      // Ensure the vehicle model has the correct oil amount if not set
+      final finalVehicleModel = vehicleModel.copyWith(
+        oilAmount: vehicleModel.oilAmount ?? finalOilAmount,
+      );
+      
+      final vehicleInfoJson = VehicleInfoParser.toJson(finalVehicleModel);
+
       final request = WithdrawRequest(
         withdrawTon: oilAmountInt,
         stationId: stationId,
-        vehicleInfo: state.vehicleInfo,
+        vehicleInfo: vehicleInfoJson,
       );
 
       // 调用提油接口
@@ -170,7 +175,7 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
       ));
 
       if (context.mounted) {
-        if (state.inventory == null || state.selectedStation == null || state.vehicleModel == null) {
+        if (state.inventory == null || state.selectedStation == null) {
           SportsToast.showWarning('数据异常，无法跳转');
           return;
         }
@@ -183,7 +188,7 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
             'inventory': state.inventory!,
             'station': state.selectedStation!,
             'oilAmount': finalOilAmount,
-            'vehicleModel': state.vehicleModel!,
+            'vehicleModel': finalVehicleModel,
           },
         );
       }
