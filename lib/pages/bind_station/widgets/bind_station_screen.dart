@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:oil_business_app/pages/bind_station/controller.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/static/icon.dart';
@@ -68,6 +69,11 @@ class BindStationScreen extends StatelessWidget {
                         EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
                     child: CommonTextFormField(
                       name: 'stationName',
+                      validators: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(errorText: '请输入加油站名称'),
+                        FormBuilderValidators.minLength(2,
+                            errorText: '加油站名称至少2个字符'),
+                      ]),
                       borderColor: CustomAppColor.of(context).textFieldBorder,
                       leadingIcon: Image.asset(
                         AssetsIcon.IC_PROFILE,
