@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 import 'package:oil_business_app/resources/colors.dart';
-import 'package:oil_business_app/utils/fuel_type_helper.dart';
 import 'package:oil_business_app/utils/pt.dart';
 
 class InventoryItem extends StatelessWidget {
@@ -38,7 +37,7 @@ class InventoryItem extends StatelessWidget {
       symbolBgColor = AppColor.orange.withValues(alpha: 0.08);
       symbolTextColor = AppColor.orange;
     } else {
-      symbolBgColor = themeColor.withOpacity(0.08);
+      symbolBgColor = themeColor.withValues(alpha: 0.08);
       symbolTextColor = themeColor;
     }
 
@@ -49,7 +48,7 @@ class InventoryItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: themeColor.withOpacity(0.06),
+            color: themeColor.withValues(alpha: 0.06),
             offset: const Offset(0, 4),
             blurRadius: 16,
           ),
@@ -131,7 +130,7 @@ class InventoryItem extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                             color: isOutOfStock
                                 ? const Color(0xFFAAAAAA)
-                                : symbolTextColor.withOpacity(0.9),
+                                : symbolTextColor.withValues(alpha: 0.9),
                           ),
                         ),
                       ],
