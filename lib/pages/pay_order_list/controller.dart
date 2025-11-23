@@ -34,10 +34,13 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
     if (status != null) {
       _currentStatus = status;
     }
-    
-    // Prevent redundant refresh if already loading (unless it's a status change which forces refresh)
-    // Also check if list is empty, if so, we might want to show full screen loading
-    if (state.pageStatus == PageStatus.loading && status == null) return;
+
+    // 防止重复刷新，但允许首屏加载或状态切换
+    if (state.pageStatus == PageStatus.loading &&
+        status == null &&
+        state.orderList.isNotEmpty) {
+      return;
+    }
 
     emit(state.copyWith(
       pageStatus: PageStatus.loading,
