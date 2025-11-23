@@ -114,6 +114,7 @@ lib/
     *   Files: `snake_case`
     *   Constants: `UPPER_SNAKE_CASE`
 *   **Constructors:** Use `const` whenever possible.
+*   **Logic Extraction:** Complex logic (parsing, calculations) must be extracted from `build()` methods into private helpers or Blocs/Cubits. `build()` should be declarative only.
 
 **Linting:**
 *   Strict rules in `analysis_options.yaml`.
@@ -133,6 +134,7 @@ lib/
 *   **Font:** Urbanist (Main).
 *   **Themes:** Light & Dark mode support (mandatory).
 *   **Responsiveness:** Phone, Tablet (>600px), Foldable support.
+*   **Consistency:** When refactoring or designing UI, ensure all pages maintain a unified UI style and theme color to preserve a consistent user experience.
 
 ## Key Directories
 
