@@ -18,6 +18,7 @@ import 'package:oil_business_app/pages/splase/page.dart';
 import 'package:oil_business_app/pages/login/page.dart';
 import 'package:oil_business_app/pages/register/page.dart';
 import 'package:oil_business_app/pages/change_password/page.dart';
+import 'package:oil_business_app/pages/privacy_feedback/page.dart';
 
 import 'package:oil_business_app/pages/profile/page.dart';
 import 'package:oil_business_app/pages/main_layout/page.dart';
@@ -107,6 +108,9 @@ enum AppPage {
 
   /// 提油订单详情页面
   pickupOrderDetailPage('/pickupOrderDetail'),
+
+  /// 隐私政策
+  privacyPolicyPage('/privacyPolicy'),
   ;
 
   const AppPage(this.path);
@@ -219,6 +223,9 @@ extension PageRoute on AppPage {
           final order = extra['order'] as WithdrawOrderModel?;
           return PickupOrderDetailPage(order: order);
         };
+
+      case AppPage.privacyPolicyPage:
+        return (context, state) => const PrivacyFeedbackPage();
 
       default:
         return (context, state) => const Text('404');

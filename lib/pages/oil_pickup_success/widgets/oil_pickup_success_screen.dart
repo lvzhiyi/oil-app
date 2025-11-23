@@ -108,10 +108,8 @@ class OilPickupSuccessScreen extends StatelessWidget {
   }
 
   void _handleBack(BuildContext context) {
-    BaseRouter.popAndPush(
-      context: context,
-      url: AppPage.oilPickupPage.path,
-    );
+    BaseRouter.pop(context: context, result: true);
+    BaseRouter.pop(context: context, result: true);
   }
 
   Widget _buildSuccessIcon(BuildContext context) {

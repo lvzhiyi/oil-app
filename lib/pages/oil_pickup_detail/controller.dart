@@ -9,6 +9,7 @@ import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/utils/vehicle_info_parser.dart';
+import 'package:oil_business_app/widgets/popup/toast.dart';
 
 class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
   OilPickupDetailCtrl(InventoryModel inventory)
@@ -92,7 +93,11 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
     }
   }
 
-  Future<void> generateCertificate(BuildContext context, {String? currentOilAmount}) async {
+  Future<void> generateCertificate(
+    BuildContext context, {
+    String? currentOilAmount,
+    required VehicleModel vehicleModel,
+  }) async {
     if (currentOilAmount != '' && currentOilAmount != state.oilAmount) {
       emit(state.copyWith(
         oilAmount: currentOilAmount,
@@ -101,53 +106,35 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
     }
 
     if (state.inventory == null || state.inventory!.inventoryId == null) {
-      emit(state.copyWith(
-        errorMessage: '库存信息异常',
-      ));
+      SportsToast.showWarning('库存信息异常');
       return;
     }
 
     if (state.selectedStation == null) {
-      emit(state.copyWith(
-        errorMessage: '请先选择加油站',
-      ));
+      SportsToast.showWarning('请先选择加油站');
       return;
     }
 
     final finalOilAmount = currentOilAmount ?? state.oilAmount;
     if (finalOilAmount.isEmpty || finalOilAmount.trim().isEmpty) {
-      emit(state.copyWith(
-        errorMessage: '请输入提油量',
-      ));
+      SportsToast.showWarning('请输入提油量');
       return;
     }
 
     final oilAmountDouble = double.tryParse(finalOilAmount);
     if (oilAmountDouble == null) {
-      emit(state.copyWith(
-        errorMessage: '提油量必须为数字',
-      ));
+      SportsToast.showWarning('提油量必须为数字');
       return;
     }
 
     if (oilAmountDouble <= 0) {
-      emit(state.copyWith(
-        errorMessage: '提油量必须大于0',
-      ));
+      SportsToast.showWarning('提油量必须大于0');
       return;
     }
 
     final oilAmountInt = oilAmountDouble.toInt();
 
-    final missing = VehicleInfoParser.validateRequired(
-      state.vehicleModel ?? VehicleModel(),
-    );
-    if (missing.isNotEmpty) {
-      emit(state.copyWith(
-        errorMessage: '缺少必填字段: ${missing.join(', ')}',
-      ));
-      return;
-    }
+    // Note: Field validation is now handled by the Form in the UI before calling this.
 
     emit(state.copyWith(isLoading: true, errorMessage: null));
 
@@ -156,17 +143,22 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
       final stationId = state.selectedStation!.id;
       if (stationId == null) {
         l.e('OilPickupDetail', '加油站ID为空');
-        emit(state.copyWith(
-          isLoading: false,
-          errorMessage: '加油站ID为空',
-        ));
+        emit(state.copyWith(isLoading: false));
+        SportsToast.showWarning('加油站ID为空');
         return;
       }
+
+      // Ensure the vehicle model has the correct oil amount if not set
+      final finalVehicleModel = vehicleModel.copyWith(
+        oilAmount: vehicleModel.oilAmount ?? finalOilAmount,
+      );
+      
+      final vehicleInfoJson = VehicleInfoParser.toJson(finalVehicleModel);
 
       final request = WithdrawRequest(
         withdrawTon: oilAmountInt,
         stationId: stationId,
-        vehicleInfo: state.vehicleInfo,
+        vehicleInfo: vehicleInfoJson,
       );
 
       // 调用提油接口
@@ -183,10 +175,8 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
       ));
 
       if (context.mounted) {
-        if (state.inventory == null || state.selectedStation == null || state.vehicleModel == null) {
-          emit(state.copyWith(
-            errorMessage: '数据异常，无法跳转',
-          ));
+        if (state.inventory == null || state.selectedStation == null) {
+          SportsToast.showWarning('数据异常，无法跳转');
           return;
         }
 
@@ -198,7 +188,7 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
             'inventory': state.inventory!,
             'station': state.selectedStation!,
             'oilAmount': finalOilAmount,
-            'vehicleModel': state.vehicleModel!,
+            'vehicleModel': finalVehicleModel,
           },
         );
       }
@@ -207,8 +197,8 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
       l.e('OilPickupDetail', '提油申请提交失败: $e');
       emit(state.copyWith(
         isLoading: false,
-        errorMessage: '提交失败,请重试',
       ));
+      SportsToast.showWarning('提交失败,请重试');
     }
   }
 }

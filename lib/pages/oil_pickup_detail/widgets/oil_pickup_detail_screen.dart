@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 import 'package:oil_business_app/pages/oil_pickup/widgets/station_selector_button.dart';
 import 'package:oil_business_app/pages/oil_pickup_detail/controller.dart';
 import 'package:oil_business_app/pages/oil_pickup_detail/state.dart';
+import 'package:oil_business_app/pages/oil_pickup_detail/widgets/smart_parse_card.dart';
+import 'package:oil_business_app/pages/oil_pickup_detail/widgets/vehicle_info_form.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/fuel_type_helper.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/common/global_update_ui.dart';
+import 'package:oil_business_app/widgets/popup/toast.dart';
 
 class OilPickupDetailScreen extends StatefulWidget {
   final OilPickupDetailState state;
@@ -28,139 +32,284 @@ class OilPickupDetailScreen extends StatefulWidget {
 
 class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
   late TextEditingController _oilAmountController;
-  late TextEditingController _vehicleInfoController;
+  
+  // Form Controllers
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late TextEditingController _driverNameController;
+  late TextEditingController _plateNumberController;
+  late TextEditingController _idCardController;
+  late TextEditingController _phoneController;
+  late TextEditingController _loadCapacityController;
+  late TextEditingController _tank1CapacityController;
+  late TextEditingController _tank2CapacityController;
+  
+  // New Fields
+  late TextEditingController _vehicleTypeController;
+  late TextEditingController _driverLicenseController;
+  late TextEditingController _vehicleLicenseController;
+  late TextEditingController _tankTypeController;
+  late TextEditingController _hasPumpController;
 
   @override
   void initState() {
     super.initState();
     _oilAmountController = TextEditingController(text: widget.state.oilAmount);
-    _vehicleInfoController = TextEditingController(text: '');
+    
+    // Init Form Controllers
+    _driverNameController = TextEditingController();
+    _plateNumberController = TextEditingController();
+    _idCardController = TextEditingController();
+    _phoneController = TextEditingController();
+    _loadCapacityController = TextEditingController();
+    _tank1CapacityController = TextEditingController();
+    _tank2CapacityController = TextEditingController();
+    
+    _vehicleTypeController = TextEditingController();
+    _driverLicenseController = TextEditingController();
+    _vehicleLicenseController = TextEditingController();
+    _tankTypeController = TextEditingController();
+    _hasPumpController = TextEditingController();
+    
+    // If there's initial data (unlikely on fresh load, but good practice)
+    if (widget.state.vehicleModel != null) {
+      _populateForm(widget.state.vehicleModel!);
+    }
   }
 
   @override
   void dispose() {
     _oilAmountController.dispose();
-    _vehicleInfoController.dispose();
+    _driverNameController.dispose();
+    _plateNumberController.dispose();
+    _idCardController.dispose();
+    _phoneController.dispose();
+    _loadCapacityController.dispose();
+    _tank1CapacityController.dispose();
+    _tank2CapacityController.dispose();
+    
+    _vehicleTypeController.dispose();
+    _driverLicenseController.dispose();
+    _vehicleLicenseController.dispose();
+    _tankTypeController.dispose();
+    _hasPumpController.dispose();
     super.dispose();
+  }
+  
+  void _populateForm(VehicleModel model) {
+    _driverNameController.text = model.driverName ?? '';
+    _plateNumberController.text = model.plateNumber ?? '';
+    _idCardController.text = model.driverIdCard ?? '';
+    _phoneController.text = model.driverPhone ?? '';
+    _loadCapacityController.text = model.loadCapacity ?? '';
+    _tank1CapacityController.text = model.tank1Capacity ?? '';
+    _tank2CapacityController.text = model.tank2Capacity ?? '';
+    
+    _vehicleTypeController.text = model.vehicleType ?? '';
+    _driverLicenseController.text = model.driverLicense ?? '';
+    _vehicleLicenseController.text = model.vehicleLicense ?? '';
+    _tankTypeController.text = model.tankType ?? '';
+    _hasPumpController.text = model.hasPump ?? '';
+    
+    // Also update the main oil amount if parsed
+    if (model.oilAmount != null && model.oilAmount!.isNotEmpty) {
+      // Always update if parser found an amount, assuming "Intelligent Fill" takes precedence
+      _oilAmountController.text = model.oilAmount!;
+      widget.controller.updateOilAmount(model.oilAmount!);
+    }
+  }
+
+  void _handleGenerateCertificate() {
+    if (!_formKey.currentState!.validate()) {
+      SportsToast.showWarning('请完善车辆及司机信息');
+      return;
+    }
+
+    final currentOilAmount = _oilAmountController.text.trim();
+    
+    // Construct VehicleModel from form
+    final vehicleModel = VehicleModel(
+      driverName: _driverNameController.text.trim(),
+      plateNumber: _plateNumberController.text.trim(),
+      driverIdCard: _idCardController.text.trim(),
+      driverPhone: _phoneController.text.trim(),
+      oilAmount: currentOilAmount, // Use the main oil amount as the definitive one
+      loadCapacity: _loadCapacityController.text.trim(),
+      tank1Capacity: _tank1CapacityController.text.trim(),
+      tank2Capacity: _tank2CapacityController.text.trim(),
+      
+      vehicleType: _vehicleTypeController.text.trim(),
+      driverLicense: _driverLicenseController.text.trim(),
+      vehicleLicense: _vehicleLicenseController.text.trim(),
+      tankType: _tankTypeController.text.trim(),
+      hasPump: _hasPumpController.text.trim(),
+    );
+    
+    final baseModel = widget.state.vehicleModel ?? VehicleModel();
+    final finalModel = baseModel.copyWith(
+       driverName: _driverNameController.text.trim(),
+       plateNumber: _plateNumberController.text.trim(),
+       driverIdCard: _idCardController.text.trim(),
+       driverPhone: _phoneController.text.trim(),
+       oilAmount: currentOilAmount,
+       loadCapacity: _loadCapacityController.text.trim(),
+       tank1Capacity: _tank1CapacityController.text.trim(),
+       tank2Capacity: _tank2CapacityController.text.trim(),
+       
+       vehicleType: _vehicleTypeController.text.trim(),
+       driverLicense: _driverLicenseController.text.trim(),
+       vehicleLicense: _vehicleLicenseController.text.trim(),
+       tankType: _tankTypeController.text.trim(),
+       hasPump: _hasPumpController.text.trim(),
+    );
+
+    widget.controller.generateCertificate(
+      context, 
+      currentOilAmount: currentOilAmount,
+      vehicleModel: finalModel,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return GlobalUpdateUi(
-      builder: (context, appCtrl) {
-        final selectedStation = appCtrl.state.selectedStation;
-        final currentState = widget.state.copyWith(selectedStation: selectedStation);
-
-        return Scaffold(
-          backgroundColor: CustomAppColor.of(context).bgScaffold,
-          appBar: AppBar(
-            backgroundColor: CustomAppColor.of(context).bgScaffold,
-            elevation: 0,
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: CustomAppColor.of(context).txtBlack,
-              ),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            title: CommonText(
-              text: '提油详情',
-              fontSize: AppSizes.setFontSize(18),
-              fontWeight: FontWeight.w600,
-              textColor: CustomAppColor.of(context).txtBlack,
-            ),
-            centerTitle: true,
-          ),
-          body: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (currentState.inventory != null) ...[
-                        _buildInventoryInfoCard(context, currentState.inventory!),
-                      ],
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: AppSizes.setHeight(16)),
-                            _buildOilAmountInput(context),
-                            SizedBox(height: AppSizes.setHeight(12)),
-                            _buildArrowDown(context),
-                            SizedBox(height: AppSizes.setHeight(12)),
-                            StationSelectorButton(
-                              station: currentState.selectedStation,
-                              onTap: () => widget.controller.selectStation(context),
-                            ),
-                            SizedBox(height: AppSizes.setHeight(24)),
-                            _buildVehicleInfoInput(context, currentState),
-                            SizedBox(height: AppSizes.setHeight(20)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(
-                  left: AppSizes.setWidth(16),
-                  right: AppSizes.setWidth(16),
-                  top: AppSizes.setHeight(12),
-                  bottom: AppSizes.setHeight(12) + MediaQuery.of(context).padding.bottom,
-                ),
-                decoration: BoxDecoration(
-                  color: CustomAppColor.of(context).bgScaffold,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 4,
-                      offset: const Offset(0, -2),
-                    ),
-                  ],
-                ),
-                child: SafeArea(
-                  top: false,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (currentState.errorMessage != null)
-                        Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.all(AppSizes.setWidth(12)),
-                          margin: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
-                          decoration: BoxDecoration(
-                            color: CustomAppColor.of(context).red.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
-                          ),
-                          child: CommonText(
-                            text: currentState.errorMessage!,
-                            fontSize: AppSizes.setFontSize(14),
-                            textColor: CustomAppColor.of(context).red,
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                      CommonButton(
-                        btnText: '生成提油凭证',
-                        height: AppSizes.setHeight(52),
-                        fontSize: AppSizes.setFontSize(15),
-                        isLoading: currentState.isLoading,
-                        onTap: () {
-                          final currentOilAmount = _oilAmountController.text.trim();
-                          widget.controller.generateCertificate(context, currentOilAmount: currentOilAmount);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
+    return BlocListener<OilPickupDetailCtrl, OilPickupDetailState>(
+      listenWhen: (previous, current) => previous.vehicleModel != current.vehicleModel,
+      listener: (context, state) {
+        if (state.vehicleModel != null) {
+          _populateForm(state.vehicleModel!);
+          
+          // Trigger validation to clear errors if fields are now filled,
+          // or to highlight what is still missing.
+          // Using addPostFrameCallback to ensure UI is ready if needed, 
+          // though for FormState synchronous call is usually fine.
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+             _formKey.currentState?.validate();
+          });
+        }
       },
+      child: GlobalUpdateUi(
+        builder: (context, appCtrl) {
+          final selectedStation = appCtrl.state.selectedStation;
+          final currentState = widget.state.copyWith(selectedStation: selectedStation);
+
+          return Scaffold(
+            backgroundColor: CustomAppColor.of(context).bgScaffold,
+            appBar: AppBar(
+              backgroundColor: CustomAppColor.of(context).bgScaffold,
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: CustomAppColor.of(context).txtBlack,
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              title: CommonText(
+                text: '提油详情',
+                fontSize: AppSizes.setFontSize(18),
+                fontWeight: FontWeight.w600,
+                textColor: CustomAppColor.of(context).txtBlack,
+              ),
+              centerTitle: true,
+            ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (currentState.inventory != null) ...[
+                          _buildInventoryInfoCard(context, currentState.inventory!),
+                        ],
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: AppSizes.setHeight(16)),
+                              _buildOilAmountInput(context),
+                              SizedBox(height: AppSizes.setHeight(12)),
+                              _buildArrowDown(context),
+                              SizedBox(height: AppSizes.setHeight(12)),
+                              StationSelectorButton(
+                                station: currentState.selectedStation,
+                                onTap: () => widget.controller.selectStation(context),
+                              ),
+                              SizedBox(height: AppSizes.setHeight(24)),
+                              
+                              // Smart Parse Card
+                              SmartParseCard(
+                                onParse: (text) => widget.controller.onVehicleInfoPasted(text),
+                              ),
+                              
+                              SizedBox(height: AppSizes.setHeight(16)),
+                              
+                              // Structured Form
+                              Form(
+                                key: _formKey,
+                                child: VehicleInfoForm(
+                                  driverNameController: _driverNameController,
+                                  plateNumberController: _plateNumberController,
+                                  idCardController: _idCardController,
+                                  phoneController: _phoneController,
+                                  loadCapacityController: _loadCapacityController,
+                                  tank1CapacityController: _tank1CapacityController,
+                                  tank2CapacityController: _tank2CapacityController,
+                                  
+                                  vehicleTypeController: _vehicleTypeController,
+                                  driverLicenseController: _driverLicenseController,
+                                  vehicleLicenseController: _vehicleLicenseController,
+                                  tankTypeController: _tankTypeController,
+                                  hasPumpController: _hasPumpController,
+                                ),
+                              ),
+                              
+                              SizedBox(height: AppSizes.setHeight(20)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(
+                    left: AppSizes.setWidth(16),
+                    right: AppSizes.setWidth(16),
+                    top: AppSizes.setHeight(12),
+                    bottom: AppSizes.setHeight(12) + MediaQuery.of(context).padding.bottom,
+                  ),
+                  decoration: BoxDecoration(
+                    color: CustomAppColor.of(context).bgScaffold,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 4,
+                        offset: const Offset(0, -2),
+                      ),
+                    ],
+                  ),
+                  child: SafeArea(
+                    top: false,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CommonButton(
+                          btnText: '生成提油凭证',
+                          height: AppSizes.setHeight(52),
+                          fontSize: AppSizes.setFontSize(15),
+                          isLoading: currentState.isLoading,
+                          onTap: _handleGenerateCertificate,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -213,12 +362,6 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
                           textAlign: TextAlign.left,
                         ),
                         SizedBox(height: AppSizes.setHeight(4)),
-                        // CommonText(
-                        //   text: '四川省广安市前锋区xxxxx',
-                        //   fontSize: AppSizes.setFontSize(12),
-                        //   textColor: CustomAppColor.of(context).txtGrey,
-                        //   textAlign: TextAlign.left,
-                        // ),
                       ],
                     ),
                   ),
@@ -363,247 +506,6 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
         Icons.arrow_downward,
         size: AppSizes.setWidth(24),
         color: CustomAppColor.of(context).txtGrey.withValues(alpha: 0.3),
-      ),
-    );
-  }
-
-  Widget _buildVehicleInfoInput(BuildContext context, OilPickupDetailState state) {
-    final showInput = !state.parseSuccess || state.vehicleModel == null;
-    
-    return Container(
-      padding: EdgeInsets.all(AppSizes.setWidth(16)),
-      decoration: BoxDecoration(
-        color: CustomAppColor.of(context).white,
-        borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
-        border: Border.all(
-          color: CustomAppColor.of(context).containerBorder,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CommonText(
-                text: '车辆及司机信息',
-                fontSize: AppSizes.setFontSize(14),
-                fontWeight: FontWeight.w700,
-                textColor: CustomAppColor.of(context).txtBlack,
-                textAlign: TextAlign.left,
-              ),
-              if (showInput)
-                Row(
-                  children: [
-                    Icon(
-                      Icons.copy_all,
-                      size: AppSizes.setWidth(14),
-                      color: CustomAppColor.of(context).txtGrey,
-                    ),
-                    SizedBox(width: AppSizes.setWidth(4)),
-                    CommonText(
-                      text: '支持智能识别',
-                      fontSize: AppSizes.setFontSize(12),
-                      textColor: CustomAppColor.of(context).txtGrey,
-                      textAlign: TextAlign.left,
-                    ),
-                  ],
-                ),
-            ],
-          ),
-          if (showInput) ...[
-            SizedBox(height: AppSizes.setHeight(12)),
-            Container(
-              padding: EdgeInsets.all(AppSizes.setWidth(16)),
-              decoration: BoxDecoration(
-                color: CustomAppColor.of(context).bgScaffold,
-                borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
-                border: Border.all(
-                  color: CustomAppColor.of(context).containerBorder,
-                  width: 1,
-                  style: BorderStyle.solid,
-                ),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _vehicleInfoController,
-                      maxLines: 8,
-                      style: TextStyle(
-                        fontSize: AppSizes.setFontSize(16),
-                        color: CustomAppColor.of(context).txtBlack,
-                        height: 1.5,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: '2025年8月23日\n油品：XXX油库：92与95\n重型罐式挂车\n驾驶员姓名：张三\n驾驶员身份证：510123199001011234。\n驾驶员电话：13800138000。\n\n驾驶证编码：510100123456\n车型：重型罐式挂车\n车号：川X88888\n核定载重（公斤）：33.400\n行驶证编号：A00000000001\n单双仓：双仓\n一仓：16.5吨。\n二仓：16.5吨。\n是否带泵：否\n提油吨位：33吨。',
-                        hintStyle: TextStyle(
-                          fontSize: AppSizes.setFontSize(14),
-                          color: CustomAppColor.of(context).txtGrey.withValues(alpha: 0.6),
-                          height: 1.5,
-                        ),
-                        border: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                      onChanged: (text) => widget.controller.onVehicleInfoPasted(text),
-                    ),
-                  ),
-                  SizedBox(width: AppSizes.setWidth(8)),
-                  GestureDetector(
-                    onTap: () async {
-                      final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-                      if (clipboardData != null && clipboardData.text != null) {
-                        _vehicleInfoController.text = clipboardData.text!;
-                        widget.controller.onVehicleInfoPasted(clipboardData.text!);
-                      }
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(AppSizes.setWidth(8)),
-                      child: Icon(
-                        Icons.paste,
-                        size: AppSizes.setWidth(20),
-                        color: CustomAppColor.of(context).txtBlue,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          if (!showInput && state.parseSuccess && state.vehicleModel != null) ...[
-            SizedBox(height: AppSizes.setHeight(16)),
-            _buildParsedVehicleInfo(context, state.vehicleModel!, state.missingFields),
-            if (state.missingFields.isNotEmpty) ...[
-              SizedBox(height: AppSizes.setHeight(12)),
-              Container(
-                padding: EdgeInsets.all(AppSizes.setWidth(12)),
-                decoration: BoxDecoration(
-                  color: CustomAppColor.of(context).txtOrange.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
-                ),
-                child: CommonText(
-                  text: '缺少必填字段: ${state.missingFields.join(', ')}',
-                  fontSize: AppSizes.setFontSize(12),
-                  textColor: CustomAppColor.of(context).txtOrange,
-                  textAlign: TextAlign.left,
-                ),
-              ),
-            ],
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildParsedVehicleInfo(BuildContext context, VehicleModel model, List<String> missingFields) {
-    return Container(
-      padding: EdgeInsets.all(AppSizes.setWidth(16)),
-      decoration: BoxDecoration(
-        color: CustomAppColor.of(context).bgContainer,
-        borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
-        border: Border.all(
-          color: CustomAppColor.of(context).containerBorder,
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CommonText(
-                text: '识别结果',
-                fontSize: AppSizes.setFontSize(14),
-                fontWeight: FontWeight.w600,
-                textColor: CustomAppColor.of(context).txtBlack,
-                textAlign: TextAlign.left,
-              ),
-              GestureDetector(
-                onTap: () {
-                  _vehicleInfoController.clear();
-                  widget.controller.resetVehicleInfo();
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSizes.setWidth(12),
-                    vertical: AppSizes.setHeight(6),
-                  ),
-                  decoration: BoxDecoration(
-                    color: CustomAppColor.of(context).txtBlue,
-                    borderRadius: BorderRadius.circular(AppSizes.setWidth(6)),
-                  ),
-                  child: CommonText(
-                    text: '重新输入识别',
-                    fontSize: AppSizes.setFontSize(12),
-                    textColor: CustomAppColor.of(context).white,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: AppSizes.setHeight(12)),
-          if (model.driverName != null)
-            _buildInfoRow(context, '驾驶员姓名', model.driverName!),
-          if (model.plateNumber != null)
-            _buildInfoRow(context, '车号', model.plateNumber!),
-          if (model.oilAmount != null)
-            _buildInfoRow(context, '提油吨位', '${model.oilAmount}吨'),
-          if (model.driverPhone != null)
-            _buildInfoRow(context, '驾驶员电话', model.driverPhone!),
-          if (model.driverIdCard != null)
-            _buildInfoRow(context, '身份证号', model.driverIdCard!),
-          if (model.date != null)
-            _buildInfoRow(context, '日期', model.date!),
-          if (model.oilType != null)
-            _buildInfoRow(
-              context,
-              '油品',
-              FuelTypeHelper.getDisplayName(model.oilType),
-            ),
-          if (model.oilSource != null)
-            _buildInfoRow(context, '油库', model.oilSource!),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(BuildContext context, String label, String value) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: AppSizes.setHeight(8)),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: AppSizes.setWidth(80),
-            child: CommonText(
-              text: '$label:',
-              fontSize: AppSizes.setFontSize(14),
-              textColor: CustomAppColor.of(context).txtGrey,
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Expanded(
-            child: CommonText(
-              text: value,
-              fontSize: AppSizes.setFontSize(14),
-              textColor: CustomAppColor.of(context).txtBlack,
-              textAlign: TextAlign.left,
-            ),
-          ),
-        ],
       ),
     );
   }

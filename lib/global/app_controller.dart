@@ -31,7 +31,19 @@ class AppController extends HydratedCubit<AppState>
     WidgetsBinding.instance.addObserver(this);
   }
 
-  initState() async {}
+  initState() async {
+    if (state.authResponse?.accessToken != null &&
+        state.selectedStation == null) {
+      final pendingAndActiveStation = await getStationStatus(1, 1);
+      final findStationActive = pendingAndActiveStation.list?.firstWhere(
+        (element) => element.status == StationStatus.active,
+        orElse: () => Station(),
+      );
+      if (findStationActive?.id != null) {
+        setSelectedStation(findStationActive!);
+      }
+    }
+  }
 
   setAuthResponse(AuthResponse authResponse) {
     emit(state.copyWith(authResponse: authResponse));
@@ -69,6 +81,7 @@ class AppController extends HydratedCubit<AppState>
         orElse: () => Station(),
       );
       if (findStationActive?.id != null) {
+        setSelectedStation(findStationActive!);
         BaseRouter.replace(url: AppPage.mainLayoutPage.path);
         return;
       }
