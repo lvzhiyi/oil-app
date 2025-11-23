@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/global/app_controller.dart';
@@ -11,6 +13,7 @@ import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/utils/station_extension.dart';
+import 'package:oil_business_app/widgets/popup/dialog.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
 class StationEditCtrl extends Cubit<StationEditState> {
@@ -106,6 +109,29 @@ class StationEditCtrl extends Cubit<StationEditState> {
         errorMessage: '请输入详细地址',
       ));
       return false;
+    }
+
+    if (_stationId != null && state.station?.status == StationStatus.active) {
+      final completer = Completer<bool>();
+
+      SportsDialog.show(
+        title: '提示',
+        bodyText: '修改信息后需要重新审核，加油站将暂时无法使用，确认继续吗？',
+        cancelText: '取消',
+        okText: '确认',
+        onCancel: () {
+          if (!completer.isCompleted) completer.complete(false);
+        },
+        onOk: () {
+          SportsDialog.dismiss();
+          if (!completer.isCompleted) completer.complete(true);
+        },
+      );
+
+      final confirm = await completer.future;
+      if (!confirm) {
+        return false;
+      }
     }
 
     emit(state.copyWith(isLoading: true, hasError: false, errorMessage: null));
