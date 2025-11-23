@@ -6,8 +6,6 @@ import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/commom/upload.dart';
 import 'package:oil_business_app/global/model/station_req_type.dart';
 import 'package:oil_business_app/global/service/station_service.dart';
-import 'package:oil_business_app/router/router.dart';
-import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
@@ -37,6 +35,7 @@ class BindStationCtrl extends Cubit<BindStationState> {
 
   initState() async {
     print('extra: $extra');
+    BaseConfig.appContext?.read<AppController>().logout();
   }
 
   /// 注册前置检查

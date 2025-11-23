@@ -27,7 +27,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   void initState() {
     super.initState();
     // 如果倒计时未启动，则启动倒计时
-    final ctrl = otpCtrl;
+    final ctrl = context.read<OtpCtrl>();
     if (ctrl.state.countdownSeconds == null) {
       ctrl.startCountdown();
     }
@@ -37,7 +37,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   Widget build(BuildContext context) {
     // 直接使用全局 otpCtrl，不再创建新的 BlocProvider
     // 避免在页面销毁时关闭全局单例
-    final ctrl = otpCtrl;
+    final ctrl = context.read<OtpCtrl>();
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -137,11 +137,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   return GestureDetector(
                     onTap: canResend
                         ? () {
-                            final phone = widget.extra?["phone"] ?? '';
-                            final type = widget.extra?["type"] ?? '';
-                            if (phone.isNotEmpty && type.isNotEmpty) {
-                              ctrl.resendOtp(type: type, phone: phone);
-                            }
+                            ctrl.resendOtp();
                           }
                         : null,
                     child: Padding(
@@ -167,8 +163,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 padding: EdgeInsets.only(top: AppSizes.setHeight(143)),
                 child: CommonButton(
                   btnText: '继续',
-                  onTap: () => {
-                    ctrl.submit(type: widget.extra?["type"] ?? ''),
+                  onTap: () {
+                    // 传递表单数据
+
+                    ctrl.submit(
+                      type: widget.extra?["type"] ?? '',
+                    );
                   },
                 ),
               ),

@@ -141,8 +141,7 @@ class _AccountScreenState extends State<AccountScreen>
                     logoutBottomSheet(context);
                   } else if (accountData.label == '修改密码') {
                     BaseRouter.push(
-                        url: AppPage.otpPage.path,
-                        extra: {'type': 'password_change'});
+                        url: AppPage.changePasswordPage.path);
                   } else if (accountData.label == '加油站管理') {
                     BaseRouter.push(
                         url: AppPage.stationManagementListPage.path);

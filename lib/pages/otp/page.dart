@@ -18,7 +18,7 @@ class _OtpPage extends BaseState<OtpPage> with BasicInitPage {
   @override
   Widget body(context) {
     return BlocProvider.value(
-      value: otpCtrl,
+      value: OtpCtrl(extra: widget.extra),
       child: BlocBuilder<OtpCtrl, OtpState>(builder: (context, state) {
         return OtpView(state: state, extra: widget.extra);
       }),

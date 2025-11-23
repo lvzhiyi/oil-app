@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:oil_business_app/interfaces/top_bar_click_listener.dart';
-import 'package:oil_business_app/pages/pay_order_list/controller.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
@@ -47,55 +46,54 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: true,
-      top: false,
-      child: Scaffold(
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TopBar(
-              this,
-              title: selectedBottomIndex == 0
-                  ? '买油'
-                  : selectedBottomIndex == 1
-                      ? '提油'
-                      : selectedBottomIndex == 2
-                          ? '我的'
-                          : "",
-              isShowProfile: selectedBottomIndex == 0,
-              isShowNotification: false,
-              isShowLike: false,
-              isShowSearchField: false,
-              height: 120,
-              isShowCart: selectedBottomIndex == 0 || selectedBottomIndex == 1,
-              topBarColor: selectedBottomIndex == 0
-                  ? CustomAppColor(context).bgTopBar
-                  : selectedBottomIndex == 1
-                      ? CustomAppColor(context).bgScaffold
-                      : CustomAppColor(context).bgBlackWhiteScaffold,
-              isShowShadow: selectedBottomIndex == 0 ||
-                      selectedBottomIndex == 1 ||
-                      selectedBottomIndex == 3
-                  ? false
-                  : true,
-              textColor: selectedBottomIndex == 0
-                  ? CustomAppColor.of(context).txtAppBar
-                  : CustomAppColor.of(context).txtBlack,
-              isShowCartCount: false,
+    return Scaffold(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TopBar(
+            this,
+            title: selectedBottomIndex == 0
+                ? '买油'
+                : selectedBottomIndex == 1
+                    ? '提油'
+                    : selectedBottomIndex == 2
+                        ? '我的'
+                        : "",
+            isShowProfile: selectedBottomIndex == 0,
+            isShowNotification: false,
+            isShowLike: false,
+            isShowSearchField: false,
+            height: 120,
+            isShowCart: selectedBottomIndex == 0 || selectedBottomIndex == 1,
+            topBarColor: selectedBottomIndex == 0
+                ? CustomAppColor(context).bgTopBar
+                : selectedBottomIndex == 1
+                    ? CustomAppColor(context).bgScaffold
+                    : CustomAppColor(context).bgBlackWhiteScaffold,
+            isShowShadow: selectedBottomIndex == 0 ||
+                    selectedBottomIndex == 1 ||
+                    selectedBottomIndex == 3
+                ? false
+                : true,
+            textColor: selectedBottomIndex == 0
+                ? CustomAppColor.of(context).txtAppBar
+                : CustomAppColor.of(context).txtBlack,
+            isShowCartCount: false,
+          ),
+          Expanded(
+            child: TabBarView(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: _tabController,
+              children: bottomNavigationBarList
+                  .map((item) => item.screen ?? const SizedBox())
+                  .toList(),
             ),
-            Expanded(
-              child: TabBarView(
-                physics: const NeverScrollableScrollPhysics(),
-                controller: _tabController,
-                children: bottomNavigationBarList
-                    .map((item) => item.screen ?? const SizedBox())
-                    .toList(),
-              ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: Container(
+          ),
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        bottom: true,
+        child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
             color: CustomAppColor.of(context).bgNavBar,
@@ -107,11 +105,9 @@ class _DashboardScreenState extends State<DashboardScreen>
           child: TabBar(
             physics: const NeverScrollableScrollPhysics(),
             controller: _tabController,
-            indicatorWeight: 4,
-            indicator: const BoxDecoration(
-                border: Border(
-                    top: BorderSide(color: AppColor.icPurple, width: 4))),
+            indicator: const BoxDecoration(),
             indicatorSize: TabBarIndicatorSize.tab,
+            dividerColor: Colors.transparent,
             indicatorPadding:
                 EdgeInsets.symmetric(horizontal: AppSizes.setWidth(20)),
             labelColor: CustomAppColor.of(context).icPurple,

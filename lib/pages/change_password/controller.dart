@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
+import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/model/auth_req_type.dart';
 import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/pages/change_password/state.dart';
@@ -19,9 +21,25 @@ class ChangePasswordCtrl extends Cubit<ChangePasswordState> {
   final Map<String, dynamic>? extra;
 
   final formKey = GlobalKey<FormBuilderState>();
+  final phoneController = TextEditingController();
 
   initState() async {
     print('extra: $extra');
+    // 初始化手机号（从当前登录用户获取）
+    final phone = BaseConfig.appContext
+            ?.read<AppController>()
+            .state
+            .authResponse
+            ?.account
+            ?.phone ??
+        '';
+    phoneController.text = phone;
+  }
+
+  @override
+  Future<void> close() {
+    phoneController.dispose();
+    return super.close();
   }
 
   /// 修改密码前置检查
@@ -30,18 +48,34 @@ class ChangePasswordCtrl extends Cubit<ChangePasswordState> {
     return formKey.currentState?.saveAndValidate() ?? false;
   }
 
-  submit() async {
-    print('submit');
+  /// 跳转到 OTP 验证码页面
+  goToOtpPage() async {
     if (!changePasswordPrecheck()) return;
 
-    print('submit1');
+    // 获取表单数据
+    final formData = formKey.currentState?.value ?? {};
+    final phone = phoneController.text;
+    final password = formData['password'] ?? '';
+
+    // 跳转到 OTP 发送验证码页面，传递表单数据
+    BaseRouter.push(url: AppPage.otpPage.path, extra: {
+      'type': 'password_change',
+      'phone': phone,
+      'password': password,
+    });
+  }
+
+  /// 提交修改密码（从 OTP 页面调用）
+  submit({required String phone, required String otpCode}) async {
+    if (!changePasswordPrecheck()) return;
+
     emit(state.copyWith(loading: true, errorMessage: null));
 
     // 获取表单数据
     final formData = formKey.currentState?.value ?? {};
     final reqParams = ChangePasswordRequest(
-      phone: extra?['phone'] ?? '',
-      code: extra?['code'] ?? '',
+      phone: phone,
+      code: otpCode,
       newPassword: formData['password'] ?? '',
     );
     l.d('ChangePassword', '开始修改密码: reqParams.toJson(): ${reqParams.toJson()}');

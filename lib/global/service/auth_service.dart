@@ -29,7 +29,7 @@ abstract class AuthService {
 
   /// 修改密码
   @POST('/auth/change-password')
-  Future<AuthResponse> changePassword(@Body() ChangePasswordRequest request);
+  Future changePassword(@Body() ChangePasswordRequest request);
 
   // /// 退出登录
   // @POST('/auth/logout')

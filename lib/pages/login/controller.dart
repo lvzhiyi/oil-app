@@ -19,6 +19,8 @@ class LoginCtrl extends Cubit<LoginState> {
 
   final formKey = GlobalKey<FormBuilderState>();
 
+  final phoneController = TextEditingController();
+
   initState() async {}
 
   /// 登录前置检查

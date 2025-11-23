@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'state.dart';
-import 'widgets/sign_up_screen.dart';
+import 'widgets/otp_verification_screen.dart';
 
 class OtpView extends StatefulWidget {
   final OtpState state;
@@ -28,6 +28,6 @@ class _OtpViewState extends State<OtpView> {
 
   @override
   Widget build(BuildContext context) {
-    return SignUpScreen(extra: widget.extra);
+    return OtpVerificationScreen(extra: widget.extra);
   }
 }

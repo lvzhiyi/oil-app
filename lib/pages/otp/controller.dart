@@ -4,19 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
+import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/auth_req_type.dart';
 import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
+import 'package:oil_business_app/utils/log.dart';
 
 import 'state.dart';
 
 class OtpCtrl extends Cubit<OtpState> {
-  OtpCtrl() : super(OtpState()) {
+  final Map<String, dynamic>? extra;
+  OtpCtrl({this.extra}) : super(OtpState()) {
     initState();
   }
-
-  final phoneController = TextEditingController();
 
   final codeController = [
     TextEditingController(),
@@ -40,35 +41,20 @@ class OtpCtrl extends Cubit<OtpState> {
         }
       });
     }
-  }
 
-  initPhone() {
-    if (isClosed) return;
-    phoneController.text = BaseConfig.appContext
-            ?.read<AppController>()
-            .state
-            .authResponse
-            ?.account
-            ?.phone ??
-        '';
-    emit(state.copyWith(phone: phoneController.text));
+    sendOtp(type: extra?['type'] ?? '');
   }
 
   sendOtp({required String type}) async {
     if (isClosed) return;
-    emit(state.copyWith(phone: phoneController.text, loading: true));
+    emit(state.copyWith(phone: extra?['phone'] ?? '', loading: true));
 
     try {
       await authService.sendCode(
-        SendCodeRequest(phone: phoneController.text, type: type),
+        SendCodeRequest(phone: extra?['phone'] ?? '', type: type),
       );
       if (isClosed) return;
       emit(state.copyWith(loading: false));
-      final phone = phoneController.text;
-      BaseRouter.push(url: AppPage.otpVerificationPage.path, extra: {
-        "type": type,
-        "phone": phone,
-      });
       // 启动倒计时
       startCountdown();
     } catch (e) {
@@ -103,7 +89,7 @@ class OtpCtrl extends Cubit<OtpState> {
   }
 
   /// 重新发送验证码
-  Future<void> resendOtp({required String type, required String phone}) async {
+  Future<void> resendOtp() async {
     if (isClosed) return;
     if (state.countdownSeconds != null && state.countdownSeconds! > 0) {
       // 倒计时未结束，不允许重新发送
@@ -114,7 +100,8 @@ class OtpCtrl extends Cubit<OtpState> {
 
     try {
       await authService.sendCode(
-        SendCodeRequest(phone: phone, type: type),
+        SendCodeRequest(
+            phone: extra?['phone'] ?? '', type: extra?['type'] ?? ''),
       );
       if (isClosed) return;
       emit(state.copyWith(loading: false));
@@ -136,22 +123,85 @@ class OtpCtrl extends Cubit<OtpState> {
 
   submit({required String type}) async {
     if (type == "register") {
-      print('submit register');
-      BaseRouter.push(url: AppPage.registerPage.path, extra: {
-        "phone": phoneController.text,
-        "code": codeController.map((e) => e.text).join(''),
-      });
-      phoneController.clear();
+      // 注册流程：直接调用注册接口
+      if (isClosed) return;
+      emit(state.copyWith(loading: true));
+
+      try {
+        final otpCode = codeController.map((e) => e.text).join('');
+        final phone = extra?['phone'] ?? '';
+        final name = extra?['name'] ?? '';
+        final password = extra?['password'] ?? '';
+
+        final reqParams = RegisterRequest(
+          name: name,
+          phone: phone,
+          code: otpCode,
+          password: password,
+        );
+
+        final response = await authService.register(reqParams);
+        BaseConfig.appContext
+            ?.read<AppController>()
+            .loginSucessProcess(response, type: AuthReqType.register);
+
+        if (!isClosed) {
+          emit(state.copyWith(loading: false));
+        }
+        // 清除验证码输入框
+        for (var controller in codeController) {
+          controller.clear();
+        }
+      } catch (e) {
+        // 清除验证码输入框
+        for (var controller in codeController) {
+          controller.clear();
+        }
+        if (!isClosed) {
+          emit(state.copyWith(loading: false));
+        }
+        debugPrint('注册失败: $e');
+        return;
+      }
       return;
     }
 
     if (type == "password_change") {
-      print('submit password_change');
-      BaseRouter.push(url: AppPage.changePasswordPage.path, extra: {
-        "phone": phoneController.text,
-        "code": codeController.map((e) => e.text).join(''),
-      });
-      phoneController.clear();
+      // 修改密码流程：直接调用修改密码接口
+      if (isClosed) return;
+      emit(state.copyWith(loading: true));
+
+      try {
+        final otpCode = codeController.map((e) => e.text).join('');
+        final phone = extra?['phone'] ?? '';
+        final newPassword = extra?['password'] ?? '';
+
+        final reqParams = ChangePasswordRequest(
+          phone: phone,
+          code: otpCode,
+          newPassword: newPassword,
+        );
+
+        await authService.changePassword(reqParams);
+        BaseConfig.appContext?.read<AppController>().logout();
+        if (!isClosed) {
+          emit(state.copyWith(loading: false));
+        }
+        // 清除验证码输入框
+        for (var controller in codeController) {
+          controller.clear();
+        }
+      } catch (e) {
+        // 清除验证码输入框
+        for (var controller in codeController) {
+          controller.clear();
+        }
+        if (!isClosed) {
+          emit(state.copyWith(loading: false));
+        }
+        debugPrint('修改密码失败: $e');
+        return;
+      }
       return;
     }
 
@@ -159,16 +209,14 @@ class OtpCtrl extends Cubit<OtpState> {
     emit(state.copyWith(loading: true));
     try {
       final response = await authService.login(LoginRequest(
-          phone: phoneController.text,
+          phone: extra?['phone'] ?? '',
           code: codeController.map((e) => e.text).join('')));
       print('response: $response');
       BaseConfig.appContext?.read<AppController>().loginSucessProcess(response);
       if (!isClosed) {
         emit(state.copyWith(loading: false));
       }
-      phoneController.clear();
     } catch (e) {
-      phoneController.clear();
       if (!isClosed) {
         emit(state.copyWith(loading: false));
       }
@@ -176,5 +224,3 @@ class OtpCtrl extends Cubit<OtpState> {
     }
   }
 }
-
-final otpCtrl = OtpCtrl();
