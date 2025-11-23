@@ -177,12 +177,16 @@ class PickupOrderDetailScreen extends StatelessWidget {
             '加油站名称',
             order!.stationName ?? '未知油站',
           ),
-          if (order!.stationId != null)
-            _buildInfoRow(
-              context,
-              '加油站ID',
-              order!.stationId!.toString(),
-            ),
+          // _buildInfoRow(
+          //   context,
+          //   '加油站地址',
+          //   [
+          //     order!.provinceName,
+          //     order!.cityName,
+          //     order!.areaName,
+          //     order!.addressDetail
+          //   ].where((s) => s != null && s.isNotEmpty).join(''),
+          // ),
         ],
       ),
     );

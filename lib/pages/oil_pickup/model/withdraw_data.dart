@@ -70,6 +70,22 @@ class WithdrawOrderModel {
   /// 更新时间
   final String? updatedAt;
 
+  /// 省份名称
+  @JsonKey(name: 'provinceName')
+  final String? provinceName;
+
+  /// 城市名称
+  @JsonKey(name: 'cityName')
+  final String? cityName;
+
+  /// 区域名称
+  @JsonKey(name: 'areaName')
+  final String? areaName;
+
+  /// 详细地址
+  @JsonKey(name: 'addressDetail')
+  final String? addressDetail;
+
   WithdrawOrderModel({
     this.withdrawId,
     this.withdrawNo,
@@ -83,6 +99,10 @@ class WithdrawOrderModel {
     this.vehicleInfo,
     this.createdAt,
     this.updatedAt,
+    this.provinceName,
+    this.cityName,
+    this.areaName,
+    this.addressDetail,
   });
 
   factory WithdrawOrderModel.fromJson(Map<String, dynamic> json) =>
