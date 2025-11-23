@@ -9,30 +9,67 @@ import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/utils/station_extension.dart';
 
 class StationListCtrl extends Cubit<StationListState> {
+  static const int _pageSize = 10;
+
   StationListCtrl() : super(StationListState(stations: [])) {
-    initState();
+    onRefresh();
   }
 
-  void initState() async {
-    emit(state.copyWith(isLoading: true));
+  Future<void> onRefresh() async {
+    if (state.isLoading) return;
+    
+    emit(state.copyWith(
+      isLoading: true,
+      hasError: false,
+      page: 1,
+      hasMore: true,
+    ));
+
+    await _loadData(isRefresh: true);
+  }
+
+  Future<void> onLoadMore() async {
+    if (state.isLoading || state.isLoadingMore || !state.hasMore) return;
+
+    emit(state.copyWith(isLoadingMore: true));
+    await _loadData(isRefresh: false);
+  }
+
+  Future<void> _loadData({required bool isRefresh}) async {
     try {
+      final pageToLoad = isRefresh ? 1 : state.page + 1;
+      
       // 调用真实 API 获取加油站数据
       // 只获取已激活的加油站（YAGNI 原则，仅实现当前需求）
-      final response = await appController.getStationStatus(1, 10);
+      final response = await appController.getStationStatus(pageToLoad, _pageSize);
 
-      // 直接使用 Station 模型
-      final stations = response.list ?? [];
+      final newStations = response.list ?? [];
+      final hasMore = newStations.length >= _pageSize;
+
+      List<Station> finalStations;
+      if (isRefresh) {
+        finalStations = newStations;
+      } else {
+        finalStations = [...state.stations, ...newStations];
+      }
 
       emit(state.copyWith(
-        stations: stations,
+        stations: finalStations,
         isLoading: false,
+        isLoadingMore: false,
         hasError: false,
+        page: pageToLoad,
+        hasMore: hasMore,
       ));
     } catch (e) {
       l.e('StationListCtrl', '加载加油站列表失败: $e');
+      
+      // Keep existing data on error if loading more, but show error
+      // If refreshing, show error state
       emit(state.copyWith(
         isLoading: false,
-        hasError: true,
+        isLoadingMore: false,
+        hasError: true, // Only meaningful for full page error or toast
         errorMessage: e.toString(),
       ));
     }
