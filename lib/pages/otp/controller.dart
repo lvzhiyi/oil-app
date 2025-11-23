@@ -7,15 +7,11 @@ import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/auth_req_type.dart';
 import 'package:oil_business_app/global/service/auth_service.dart';
-import 'package:oil_business_app/router/router.dart';
-import 'package:oil_business_app/router/routes.dart';
-import 'package:oil_business_app/utils/log.dart';
 
 import 'state.dart';
 
 class OtpCtrl extends Cubit<OtpState> {
-  final Map<String, dynamic>? extra;
-  OtpCtrl({this.extra}) : super(OtpState()) {
+  OtpCtrl() : super(OtpState()) {
     initState();
   }
 
@@ -42,16 +38,19 @@ class OtpCtrl extends Cubit<OtpState> {
       });
     }
 
-    sendOtp(type: extra?['type'] ?? '');
+    // 清除验证码输入框
+    for (var controller in codeController) {
+      controller.clear();
+    }
   }
 
-  sendOtp({required String type}) async {
+  sendOtp({required Map<String, dynamic> extra}) async {
     if (isClosed) return;
-    emit(state.copyWith(phone: extra?['phone'] ?? '', loading: true));
+    emit(state.copyWith(phone: extra['phone'] ?? '', loading: true));
 
     try {
       await authService.sendCode(
-        SendCodeRequest(phone: extra?['phone'] ?? '', type: type),
+        SendCodeRequest(phone: extra['phone'] ?? '', type: extra['type'] ?? ''),
       );
       if (isClosed) return;
       emit(state.copyWith(loading: false));
@@ -89,7 +88,7 @@ class OtpCtrl extends Cubit<OtpState> {
   }
 
   /// 重新发送验证码
-  Future<void> resendOtp() async {
+  Future<void> resendOtp({required Map<String, dynamic> extra}) async {
     if (isClosed) return;
     if (state.countdownSeconds != null && state.countdownSeconds! > 0) {
       // 倒计时未结束，不允许重新发送
@@ -100,8 +99,7 @@ class OtpCtrl extends Cubit<OtpState> {
 
     try {
       await authService.sendCode(
-        SendCodeRequest(
-            phone: extra?['phone'] ?? '', type: extra?['type'] ?? ''),
+        SendCodeRequest(phone: extra['phone'] ?? '', type: extra['type'] ?? ''),
       );
       if (isClosed) return;
       emit(state.copyWith(loading: false));
@@ -121,17 +119,17 @@ class OtpCtrl extends Cubit<OtpState> {
     return super.close();
   }
 
-  submit({required String type}) async {
-    if (type == "register") {
+  submit({required Map<String, dynamic> extra}) async {
+    if (extra['type'] == "register") {
       // 注册流程：直接调用注册接口
       if (isClosed) return;
       emit(state.copyWith(loading: true));
 
       try {
         final otpCode = codeController.map((e) => e.text).join('');
-        final phone = extra?['phone'] ?? '';
-        final name = extra?['name'] ?? '';
-        final password = extra?['password'] ?? '';
+        final phone = extra['phone'] ?? '';
+        final name = extra['name'] ?? '';
+        final password = extra['password'] ?? '';
 
         final reqParams = RegisterRequest(
           name: name,
@@ -166,15 +164,15 @@ class OtpCtrl extends Cubit<OtpState> {
       return;
     }
 
-    if (type == "password_change") {
+    if (extra['type'] == "password_change") {
       // 修改密码流程：直接调用修改密码接口
       if (isClosed) return;
       emit(state.copyWith(loading: true));
 
       try {
         final otpCode = codeController.map((e) => e.text).join('');
-        final phone = extra?['phone'] ?? '';
-        final newPassword = extra?['password'] ?? '';
+        final phone = extra['phone'] ?? '';
+        final newPassword = extra['password'] ?? '';
 
         final reqParams = ChangePasswordRequest(
           phone: phone,
@@ -221,6 +219,9 @@ class OtpCtrl extends Cubit<OtpState> {
         emit(state.copyWith(loading: false));
       }
       return;
+    }
+    for (var controller in codeController) {
+      controller.clear();
     }
   }
 }

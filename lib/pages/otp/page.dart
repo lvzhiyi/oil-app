@@ -16,12 +16,20 @@ class OtpPage extends BasePage {
 
 class _OtpPage extends BaseState<OtpPage> with BasicInitPage {
   @override
+  void initState() {
+    super.initState();
+    otpCtrl.sendOtp(extra: widget.extra ?? {});
+  }
+
+  @override
   Widget body(context) {
     return BlocProvider.value(
-      value: OtpCtrl(extra: widget.extra),
+      value: otpCtrl,
       child: BlocBuilder<OtpCtrl, OtpState>(builder: (context, state) {
         return OtpView(state: state, extra: widget.extra);
       }),
     );
   }
 }
+
+final otpCtrl = OtpCtrl();

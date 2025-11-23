@@ -35,7 +35,6 @@ class BindStationCtrl extends Cubit<BindStationState> {
 
   initState() async {
     print('extra: $extra');
-    BaseConfig.appContext?.read<AppController>().logout();
   }
 
   /// 注册前置检查

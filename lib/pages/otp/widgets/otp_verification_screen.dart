@@ -45,7 +45,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(top: AppSizes.setHeight(150)),
+                padding: EdgeInsets.only(top: AppSizes.setHeight(120)),
                 child: CommonText(
                   text: 'OTP验证',
                   fontSize: AppSizes.setFontSize(35),
@@ -120,6 +120,17 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 ),
               ),
               Padding(
+                padding: EdgeInsets.only(bottom: AppSizes.setHeight(43)),
+                child: CommonButton(
+                  btnText: '继续',
+                  onTap: () {
+                    // 传递表单数据
+
+                    ctrl.submit(extra: widget.extra ?? {});
+                  },
+                ),
+              ),
+              Padding(
                 padding: EdgeInsets.only(top: AppSizes.setHeight(7)),
                 child: CommonText(
                   text: '没有收到验证码？',
@@ -128,6 +139,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   textColor: CustomAppColor.of(context).txtGrey,
                 ),
               ),
+
               BlocBuilder<OtpCtrl, OtpState>(
                 bloc: ctrl,
                 builder: (context, state) {
@@ -137,15 +149,13 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   return GestureDetector(
                     onTap: canResend
                         ? () {
-                            ctrl.resendOtp();
+                            ctrl.resendOtp(extra: widget.extra ?? {});
                           }
                         : null,
                     child: Padding(
                       padding: EdgeInsets.only(top: AppSizes.setHeight(7)),
                       child: CommonText(
-                        text: canResend
-                            ? '重新发送验证码'
-                            : '${countdownSeconds}s 后重新发送',
+                        text: canResend ? '重新发送' : '${countdownSeconds}s 后重新发送',
                         fontSize: AppSizes.setFontSize(15),
                         fontWeight: FontWeight.w600,
                         textColor: canResend
@@ -159,37 +169,25 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   );
                 },
               ),
-              Padding(
-                padding: EdgeInsets.only(top: AppSizes.setHeight(143)),
-                child: CommonButton(
-                  btnText: '继续',
-                  onTap: () {
-                    // 传递表单数据
 
-                    ctrl.submit(
-                      type: widget.extra?["type"] ?? '',
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    top: AppSizes.setHeight(39),
-                    left: AppSizes.setWidth(41),
-                    right: AppSizes.setWidth(30)),
-                child: CommonText(
-                  text: '通过继续，您同意买油呗的',
-                  fontSize: AppSizes.setFontSize(15),
-                  fontWeight: FontWeight.w600,
-                  textColor: CustomAppColor.of(context).txtGrey,
-                ),
-              ),
-              CommonText(
-                text: '条款和条件和隐私政策',
-                fontSize: AppSizes.setFontSize(15),
-                fontWeight: FontWeight.w600,
-                textColor: CustomAppColor.of(context).txtGrey,
-              )
+              // Padding(
+              //   padding: EdgeInsets.only(
+              //       top: AppSizes.setHeight(39),
+              //       left: AppSizes.setWidth(41),
+              //       right: AppSizes.setWidth(30)),
+              //   child: CommonText(
+              //     text: '通过继续，您同意买油呗的',
+              //     fontSize: AppSizes.setFontSize(15),
+              //     fontWeight: FontWeight.w600,
+              //     textColor: CustomAppColor.of(context).txtGrey,
+              //   ),
+              // ),
+              // CommonText(
+              //   text: '条款和条件和隐私政策',
+              //   fontSize: AppSizes.setFontSize(15),
+              //   fontWeight: FontWeight.w600,
+              //   textColor: CustomAppColor.of(context).txtGrey,
+              // )
             ],
           ),
         ),

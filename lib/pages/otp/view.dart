@@ -1,33 +1,14 @@
 import 'package:flutter/material.dart';
-import 'state.dart';
+import 'package:oil_business_app/pages/otp/state.dart';
 import 'widgets/otp_verification_screen.dart';
 
-class OtpView extends StatefulWidget {
+class OtpView extends StatelessWidget {
+  const OtpView({super.key, required this.state, required this.extra});
   final OtpState state;
   final Map<String, dynamic>? extra;
 
-  const OtpView({super.key, required this.state, this.extra});
-
-  @override
-  State<OtpView> createState() => _OtpViewState();
-}
-
-class _OtpViewState extends State<OtpView> {
-  FocusNode passwordFocusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    passwordFocusNode.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return OtpVerificationScreen(extra: widget.extra);
+    return OtpVerificationScreen(extra: extra);
   }
 }

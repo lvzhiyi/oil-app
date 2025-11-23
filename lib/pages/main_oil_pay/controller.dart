@@ -1,4 +1,6 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oil_business_app/pages/main_oil_pay/model/oil_order_res.type.dart';
 import 'package:oil_business_app/pages/main_oil_pay/service/oil_order_service.dart';
 import 'package:oil_business_app/widgets/common/page_loading.dart';
 
@@ -10,38 +12,64 @@ class OilPayCtrl extends Cubit<MainOilPayState> {
   }
 
   initState() async {
-    getOilStoreList(isRefresh: true);
+    getOilStoreList();
   }
+
+  final EasyRefreshController refreshController = EasyRefreshController(
+    controlFinishLoad: true,
+    controlFinishRefresh: true,
+  );
+
+  int pageNum = 1;
+  int total = 0;
+  int pageSize = 10;
 
   /// 获取油库列表
   /// [isRefresh] 是否为刷新操作，true表示刷新，false表示加载更多
-  Future<void> getOilStoreList({bool isRefresh = false}) async {
+  Future<GetOilStoreResponse> getOilStoreList(
+      {bool loadMore = false, bool onRefresh = false}) async {
     try {
-      emit(state.copyWith(pageStatus: PageStatus.loading));
-      final response =
-          await oilOrderService.getOilStoreList(page: 1, pageSize: 10);
+      if (!onRefresh && !loadMore) {
+        emit(state.copyWith(pageStatus: PageStatus.loading));
+      }
+      final response = await oilOrderService.getOilStoreList(
+        page: pageNum,
+        pageSize: pageSize,
+      );
 
       emit(state.copyWith(
           depotList: response.list,
           pageStatus: response.list?.isEmpty ?? true
               ? PageStatus.empty
               : PageStatus.success));
+      return response;
     } catch (e) {
       emit(state.copyWith(pageStatus: PageStatus.error));
+      return GetOilStoreResponse(list: [], total: 0);
     }
-  }
-
-  /// 刷新列表
-  Future<void> refresh() async {
-    await getOilStoreList(isRefresh: true);
   }
 
   /// 加载更多
-  Future<void> loadMore() async {
-    if (state.currentPage >= (state.total)) {
-      return; // 已加载全部数据
+  void onLoading() async {
+    if (state.depotList.length >= total) {
+      refreshController.finishLoad(IndicatorResult.noMore);
+      return;
     }
-    await getOilStoreList(isRefresh: false);
+    pageNum++;
+    final response = await getOilStoreList(loadMore: true);
+    refreshController.finishLoad(IndicatorResult.success);
+    emit(state.copyWith(
+        depotList: pageNum == 1
+            ? state.depotList
+            : [...state.depotList, ...response.list ?? []],
+        pageStatus: PageStatus.success));
+  }
+
+  /// 刷新
+  void onRefresh() async {
+    pageNum = 1;
+    await getOilStoreList(onRefresh: true);
+    refreshController.finishRefresh(IndicatorResult.success);
   }
 }
 
