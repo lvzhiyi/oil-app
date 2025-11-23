@@ -1,0 +1,11 @@
+## 1. Implementation
+- [ ] 1.1 Update `PayOrderListState` to include `hasMore` and `isLoadingMore`.
+- [ ] 1.2 Refactor `PayOrderListCtrl`:
+    - Remove `EasyRefreshController`.
+    - Fix `getOrderList` to properly return and/or emit appended data.
+    - Implement `onRefresh` and `onLoadMore`.
+- [ ] 1.3 Refactor `OrdersScreen`:
+    - Remove `PullOrRefreshEasy`.
+    - Implement `RefreshIndicator` + `ListView` + `NotificationListener`.
+    - Add footer loader.
+- [ ] 1.4 Verify Tab switching correctly resets pagination.

@@ -1,4 +1,3 @@
-import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/pages/pay_order_list/service/pay_order_list.dart';
@@ -13,90 +12,85 @@ import 'package:oil_business_app/widgets/common/page_loading.dart';
 import 'model/orders_data.dart';
 
 class PayOrderListCtrl extends Cubit<PayOrderListState> {
+  static const int _pageSize = 10;
+  int? _currentStatus; // Keep track of current filter status
+
   PayOrderListCtrl()
       : super(
           PayOrderListState(),
         ) {
-    initState();
+    onRefresh();
   }
-
-  final EasyRefreshController refreshController = EasyRefreshController(
-    controlFinishLoad: true,
-    controlFinishRefresh: true,
-  );
 
   TextEditingController cancelOrderReasonController = TextEditingController();
 
-  int pageNum = 1;
-  int total = 0;
-  int pageSize = 10;
+  /// 刷新
+  Future<void> onRefresh({int? status}) async {
+    if (status != null) {
+      _currentStatus = status;
+    }
+    
+    // Prevent redundant refresh if already loading (unless it's a status change which forces refresh)
+    if (state.pageStatus == PageStatus.loading && status == null) return;
 
-  initState() async {
-    getOrderList();
+    emit(state.copyWith(
+      pageStatus: PageStatus.loading,
+      currentPage: 1,
+      hasMore: true,
+      errorMessage: null,
+      // Clear list if status changed to avoid showing wrong data while loading
+      orderList: status != null ? [] : state.orderList, 
+    ));
+
+    await _loadData(isRefresh: true);
   }
 
   /// 加载更多
-  void onLoading() async {
-    if (state.orderList.length >= total) {
-      refreshController.finishLoad(IndicatorResult.noMore);
-      return;
-    }
-    pageNum++;
-    await getOrderList(loadMore: true);
-    refreshController.finishLoad(IndicatorResult.success);
-    emit(state.copyWith(
-      orderList: pageNum == 1
-          ? state.orderList
-          : [...state.orderList, ...state.orderList],
-      pageStatus: PageStatus.success,
-    ));
+  Future<void> onLoadMore() async {
+    if (state.pageStatus == PageStatus.loading || state.isLoadingMore || !state.hasMore) return;
+
+    emit(state.copyWith(isLoadingMore: true));
+    await _loadData(isRefresh: false);
   }
 
-  /// 刷新
-  void onRefresh() async {
-    pageNum = 1;
-    await getOrderList(onRefresh: true);
-    refreshController.finishRefresh(IndicatorResult.success);
-  }
-
-  /// 加载记录列表
-  Future<OrderListResponse> getOrderList(
-      {bool loadMore = false, bool onRefresh = false, int? status}) async {
+  Future<void> _loadData({required bool isRefresh}) async {
     try {
-      if (!onRefresh && !loadMore) {
-        emit(state.copyWith(pageStatus: PageStatus.loading));
+      final page = isRefresh ? 1 : state.currentPage + 1;
+      
+      final response = await payOrderListService.getOrderList(
+          page: page, pageSize: _pageSize, status: _currentStatus);
+
+      final newRecords = response.list ?? [];
+      final hasMore = newRecords.length >= _pageSize;
+
+      List<OrderModel> finalList;
+      if (isRefresh) {
+        finalList = newRecords;
+      } else {
+        finalList = [...state.orderList, ...newRecords];
       }
 
-      if (status != null) {
-        pageNum = 1;
-      }
-      OrderListResponse? response;
-
-      response = await payOrderListService.getOrderList(
-          page: pageNum, pageSize: pageSize, status: status);
-
-      final List<OrderModel> newRecords = response.list ?? [];
-      total = response.total ?? 0;
-
-      /// 加载下一页统一在外部处理新的列表
-      if (!loadMore) {
-        emit(state.copyWith(
-          orderList: newRecords,
-          pageStatus: PageStatus.success,
-        ));
-      }
-
-      if (response.list?.isEmpty ?? true) {
-        emit(state.copyWith(pageStatus: PageStatus.empty));
-      }
-
-      return response;
+      emit(state.copyWith(
+        orderList: finalList,
+        currentPage: page,
+        hasMore: hasMore,
+        isLoadingMore: false,
+        pageStatus: finalList.isEmpty ? PageStatus.empty : PageStatus.success,
+      ));
     } catch (e) {
       print(e);
-      emit(state.copyWith(pageStatus: PageStatus.error));
-      pageNum = 1;
-      return OrderListResponse(list: [], total: 0);
+      emit(state.copyWith(
+        isLoadingMore: false,
+        pageStatus: isRefresh ? PageStatus.error : state.pageStatus, // Only show error page if refresh failed
+        errorMessage: e.toString(),
+      ));
     }
+  }
+  
+  // Deprecated method kept for compatibility if needed, but redirected to onRefresh
+  // Users of this controller should call onRefresh(status: ...) instead
+  Future<void> getOrderList({int? status}) async {
+    await onRefresh(status: status);
   }
 
   /// 取消订单
@@ -115,17 +109,6 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
       content: ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
-          // Padding(
-          //   padding:
-          //       EdgeInsets.symmetric(horizontal: AppSizes.setWidth(22)),
-          //   child: CommonText(
-          //     text: '请选择取消订单的原因',
-          //     textColor: CustomAppColor.of(context).txtGrey,
-          //     fontSize: AppSizes.setFontSize(15),
-          //     fontWeight: FontWeight.w500,
-          //     textAlign: TextAlign.start,
-          //   ),
-          // ),
           SizedBox(height: AppSizes.setHeight(10)),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(24)),

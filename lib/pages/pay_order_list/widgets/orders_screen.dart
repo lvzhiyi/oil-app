@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -9,13 +10,11 @@ import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/utils/constant.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
-import 'package:oil_business_app/widgets/base/bottom_sheet/bottom_sheet.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
-import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dart';
 import 'package:oil_business_app/widgets/base/topbar/topbar.dart';
+import 'package:oil_business_app/widgets/common/empty_card.dart';
 import 'package:oil_business_app/widgets/common/page_loading.dart';
-import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
 
 import '../../../../../../interfaces/top_bar_click_listener.dart';
 import '../../../router/router.dart';
@@ -36,22 +35,23 @@ class _OrdersScreenState extends State<OrdersScreen>
   List<String> tabList = [];
 
   List<ReasonOfCancellationData> reasons = [];
-  // bool _isBottomSheetOpen = false;
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
     _tabController.addListener(() {
-      print('tabController: ${_tabController.index}');
-      final statusArr = [
-        null,
-        OrderStatus.PendingPayment.value,
-        OrderStatus.PaymentUploaded.value,
-        OrderStatus.Cancelled.value
-      ];
-      context
-          .read<PayOrderListCtrl>()
-          .getOrderList(status: statusArr[_tabController.index]);
+      if (!_tabController.indexIsChanging) {
+        print('tabController: ${_tabController.index}');
+        final statusArr = [
+          null,
+          OrderStatus.PendingPayment.value,
+          OrderStatus.PaymentUploaded.value,
+          OrderStatus.Cancelled.value
+        ];
+        context
+            .read<PayOrderListCtrl>()
+            .onRefresh(status: statusArr[_tabController.index]);
+      }
     });
   }
 
@@ -98,33 +98,118 @@ class _OrdersScreenState extends State<OrdersScreen>
             child: TabBarView(
               controller: _tabController,
               children: tabList.map((tab) {
-                return OilPageLoading(
-                  status: widget.state.pageStatus,
-                  child: PullOrRefreshEasy(
-                    onRefresh: () async {
-                      context.read<PayOrderListCtrl>().onRefresh();
-                    },
-                    onLoading: () async {
-                      context.read<PayOrderListCtrl>().onLoading();
-                    },
-                    refreshController:
-                        context.read<PayOrderListCtrl>().refreshController,
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: widget.state.orderList.length,
-                      itemBuilder: (context, index) {
-                        final order = widget.state.orderList[index];
-                        return _buildOrderCard(order, context);
-                      },
-                    ),
-                  ),
-                );
+                return _buildList(context);
               }).toList(),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildList(BuildContext context) {
+    final ctrl = context.read<PayOrderListCtrl>();
+    
+    // Initial Loading
+    if (widget.state.pageStatus == PageStatus.loading && widget.state.orderList.isEmpty) {
+      return const Center(
+        child: CupertinoActivityIndicator(),
+      );
+    }
+
+    // Error State
+    if (widget.state.pageStatus == PageStatus.error && widget.state.orderList.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CommonText(
+              text: '加载失败',
+              fontSize: AppSizes.setFontSize(16),
+              textColor: CustomAppColor.of(context).txtGrey,
+            ),
+            SizedBox(height: AppSizes.setHeight(16)),
+            CommonButton(
+              btnText: '重试',
+              width: AppSizes.setWidth(120),
+              height: AppSizes.setHeight(40),
+              fontSize: AppSizes.setFontSize(14),
+              onTap: () => ctrl.onRefresh(),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Empty State
+    if (widget.state.orderList.isEmpty) {
+      return RefreshIndicator(
+        onRefresh: () => ctrl.onRefresh(),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Container(
+            height: MediaQuery.of(context).size.height - 200,
+            alignment: Alignment.center,
+            child: EmptyCard(
+              desc: '暂无订单',
+              icon: Image.asset(AssetsIcon.IC_BAG),
+            ),
+          ),
+        ),
+      );
+    }
+
+    // List with Pagination
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollInfo) {
+        if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 50 &&
+            !widget.state.isLoadingMore &&
+            widget.state.hasMore) {
+          ctrl.onLoadMore();
+        }
+        return false;
+      },
+      child: RefreshIndicator(
+        onRefresh: () => ctrl.onRefresh(),
+        child: ListView.builder(
+          padding: EdgeInsets.zero,
+          itemCount: widget.state.orderList.length + 1,
+          itemBuilder: (context, index) {
+            if (index == widget.state.orderList.length) {
+              return _buildFooter(context);
+            }
+            final order = widget.state.orderList[index];
+            return _buildOrderCard(order, context);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFooter(BuildContext context) {
+    if (widget.state.isLoadingMore) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
+        child: const Center(
+          child: CupertinoActivityIndicator(),
+        ),
+      );
+    }
+
+    if (!widget.state.hasMore && widget.state.orderList.isNotEmpty) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
+        child: Center(
+          child: CommonText(
+            text: '没有更多数据了',
+            fontSize: AppSizes.setFontSize(12),
+            textColor: CustomAppColor.of(context).txtGrey,
+          ),
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
   }
 
   _tabBar() {
