@@ -1,4 +1,3 @@
-import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +12,7 @@ import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/common/empty_card.dart';
+import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 import 'package:oil_business_app/static/icon.dart';
 
@@ -49,94 +49,66 @@ class _PickupListViewState extends State<PickupListView>
             _buildTopBar(context),
             _buildFilterBar(context),
             Expanded(
-              child: EasyRefresh(
-              controller: ctrl.refreshController,
-              header: ClassicHeader(
-                showMessage: false,
-                showText: true,
-                textStyle: TextStyle(
-                  fontSize: AppSizes.setFontSize(14),
-                  color: CustomAppColor.of(context).txtGrey,
-                ),
-                dragText: '下拉刷新',
-                armedText: '释放刷新',
-                readyText: '刷新中...',
-                processingText: '刷新中...',
-                processedText: '刷新完成',
-                failedText: '刷新失败',
-                noMoreText: '没有更多了',
-                pullIconBuilder: (context, state, __) {
-                  return const CupertinoActivityIndicator();
-                },
-              ),
-              footer: ClassicFooter(
-                showMessage: false,
-                showText: true,
-                textStyle: TextStyle(
-                  fontSize: AppSizes.setFontSize(14),
-                  color: CustomAppColor.of(context).txtGrey,
-                ),
-                dragText: '上拉加载',
-                armedText: '释放加载',
-                readyText: '加载中...',
-                processingText: '加载中...',
-                processedText: '加载完成',
-                failedText: '加载失败',
-                noMoreText: '没有更多了',
-                pullIconBuilder: (context, state, __) {
-                  switch (state.result) {
-                    case IndicatorResult.noMore:
-                      return const Icon(
-                        Icons.sentiment_satisfied,
-                        size: 16,
-                        color: Colors.grey,
-                      );
-                    case IndicatorResult.fail:
-                      return const Icon(
-                        Icons.sentiment_very_dissatisfied,
-                        size: 16,
-                        color: Colors.grey,
-                      );
-                    default:
-                      return const CupertinoActivityIndicator();
-                  }
-                },
-              ),
-              onRefresh: () => ctrl.loadData(refresh: true),
-              onLoad: () => ctrl.loadData(refresh: false),
-              child: widget.state.orderList.isEmpty && !widget.state.isLoading
-                  ? EmptyCard(
-                      desc: '暂无提油订单',
-                      icon: Image.asset(AssetsIcon.IC_BAG),
-                    )
-                  : ListView.builder(
-                      padding: EdgeInsets.all(AppSizes.setWidth(16)),
-                      itemCount: widget.state.orderList.length,
-                      itemBuilder: (context, index) {
-                        final item = widget.state.orderList[index];
-                        return GestureDetector(
-                          onTap: () {
-                            if (item.withdrawId != null || item.id != null) {
-                              BaseRouter.push(
-                                context: context,
-                                url: AppPage.pickupOrderDetailPage.path,
-                                extra: {
-                                  'order': item,
-                                },
-                              );
-                            } else {
-                              l.w('PickupListView', '订单ID为空，无法跳转到详情页');
-                              SportsToast.showError('订单信息异常，无法查看详情');
-                            }
-                          },
-                          child: PickupListItem(item: item),
-                        );
-                      },
-                    ),
-              ),
+              child: _buildList(context, ctrl),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildList(BuildContext context, PickupListCtrl ctrl) {
+    if (widget.state.isLoading && widget.state.orderList.isEmpty) {
+      return const Center(
+        child: CupertinoActivityIndicator(),
+      );
+    }
+
+    if (widget.state.orderList.isEmpty) {
+      return PullOrRefreshEasy(
+        refreshController: ctrl.refreshController,
+        onRefresh: ctrl.onRefresh,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Container(
+            height: MediaQuery.of(context).size.height - 200,
+            alignment: Alignment.center,
+            child: EmptyCard(
+              desc: '暂无提油订单',
+              icon: Image.asset(AssetsIcon.IC_BAG),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return PullOrRefreshEasy(
+      refreshController: ctrl.refreshController,
+      onRefresh: ctrl.onRefresh,
+      onLoading: ctrl.onLoadMore,
+      child: ListView.builder(
+        padding: EdgeInsets.all(AppSizes.setWidth(16)),
+        itemCount: widget.state.orderList.length,
+        itemBuilder: (context, index) {
+          final item = widget.state.orderList[index];
+          return GestureDetector(
+            onTap: () {
+              if (item.withdrawId != null || item.id != null) {
+                BaseRouter.push(
+                  context: context,
+                  url: AppPage.pickupOrderDetailPage.path,
+                  extra: {
+                    'order': item,
+                  },
+                );
+              } else {
+                l.w('PickupListView', '订单ID为空，无法跳转到详情页');
+                SportsToast.showError('订单信息异常，无法查看详情');
+              }
+            },
+            child: PickupListItem(item: item),
+          );
+        },
       ),
     );
   }

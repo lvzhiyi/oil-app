@@ -6,6 +6,7 @@ import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/common/global_update_ui.dart';
+import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
 
 import 'station_item.dart';
 
@@ -48,13 +49,13 @@ class StationListScreen extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    if (state.isLoading) {
+    if (state.isLoading && state.stations.isEmpty) {
       return const Center(
         child: CircularProgressIndicator(),
       );
     }
 
-    if (state.hasError) {
+    if (state.hasError && state.stations.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -70,14 +71,14 @@ class StationListScreen extends StatelessWidget {
               width: AppSizes.setWidth(120),
               height: AppSizes.setHeight(40),
               fontSize: AppSizes.setFontSize(14),
-              onTap: () => controller.initState(),
+              onTap: () => controller.onRefresh(),
             ),
           ],
         ),
       );
     }
 
-    if (state.stations.isEmpty) {
+    if (state.stations.isEmpty && !state.isLoading) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -107,23 +108,28 @@ class StationListScreen extends StatelessWidget {
         return Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.all(AppSizes.setWidth(20)),
-                itemCount: state.stations.length,
-                itemBuilder: (context, index) {
-                  final station = state.stations[index];
-                  final isSelected = selectedStation?.id == station.id;
-                  
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
-                    child: StationItem(
-                      station: station,
-                      isSelected: isSelected,
-                      onTap: () => controller.selectStation(station, context),
-                      onEdit: allowEdit ? () => controller.navigateToEdit(station, context) : null,
-                    ),
-                  );
-                },
+              child: PullOrRefreshEasy(
+                refreshController: controller.refreshController,
+                onRefresh: controller.onRefresh,
+                onLoading: controller.onLoadMore,
+                child: ListView.builder(
+                  padding: EdgeInsets.all(AppSizes.setWidth(20)),
+                  itemCount: state.stations.length,
+                  itemBuilder: (context, index) {
+                    final station = state.stations[index];
+                    final isSelected = selectedStation?.id == station.id;
+                    
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
+                      child: StationItem(
+                        station: station,
+                        isSelected: isSelected,
+                        onTap: () => controller.selectStation(station, context),
+                        onEdit: allowEdit ? () => controller.navigateToEdit(station, context) : null,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             if (allowEdit) _buildAddButton(context),

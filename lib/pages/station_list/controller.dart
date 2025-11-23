@@ -1,3 +1,4 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/global/app_controller.dart';
@@ -9,30 +10,69 @@ import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/utils/station_extension.dart';
 
 class StationListCtrl extends Cubit<StationListState> {
+  static const int _pageSize = 10;
+  final EasyRefreshController refreshController = EasyRefreshController(
+    controlFinishRefresh: true,
+    controlFinishLoad: true,
+  );
+
   StationListCtrl() : super(StationListState(stations: [])) {
-    initState();
+    onRefresh();
   }
 
-  void initState() async {
-    emit(state.copyWith(isLoading: true));
-    try {
-      // 调用真实 API 获取加油站数据
-      // 只获取已激活的加油站（YAGNI 原则，仅实现当前需求）
-      final response = await appController.getStationStatus(1, 10);
+  Future<void> onRefresh() async {
+    // Don't block if already loading, EasyRefresh handles debounce usually, but good to be safe.
+    // However, for initial load we might want to show full screen loading.
+    if (state.stations.isEmpty) {
+      emit(state.copyWith(isLoading: true, hasError: false));
+    }
+    
+    await _loadData(isRefresh: true);
+  }
 
-      // 直接使用 Station 模型
-      final stations = response.list ?? [];
+  Future<void> onLoadMore() async {
+    await _loadData(isRefresh: false);
+  }
+
+  Future<void> _loadData({required bool isRefresh}) async {
+    try {
+      final pageToLoad = isRefresh ? 1 : state.page + 1;
+      
+      // 调用真实 API 获取加油站数据
+      final response = await appController.getStationStatus(pageToLoad, _pageSize);
+
+      final newStations = response.list ?? [];
+      final hasMore = newStations.length >= _pageSize;
+
+      List<Station> finalStations;
+      if (isRefresh) {
+        finalStations = newStations;
+        refreshController.finishRefresh();
+        refreshController.resetFooter();
+      } else {
+        finalStations = [...state.stations, ...newStations];
+        refreshController.finishLoad(hasMore ? IndicatorResult.success : IndicatorResult.noMore);
+      }
 
       emit(state.copyWith(
-        stations: stations,
+        stations: finalStations,
         isLoading: false,
         hasError: false,
+        page: pageToLoad,
+        hasMore: hasMore,
       ));
     } catch (e) {
       l.e('StationListCtrl', '加载加油站列表失败: $e');
+      
+      if (isRefresh) {
+        refreshController.finishRefresh(IndicatorResult.fail);
+      } else {
+        refreshController.finishLoad(IndicatorResult.fail);
+      }
+
       emit(state.copyWith(
         isLoading: false,
-        hasError: true,
+        hasError: true, // Only meaningful for full page error or toast
         errorMessage: e.toString(),
       ));
     }

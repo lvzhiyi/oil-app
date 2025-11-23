@@ -6,6 +6,7 @@ import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
+import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
 
 import 'station_management_item.dart';
 
@@ -227,13 +228,13 @@ class StationManagementListScreen extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    if (state.isLoading) {
+    if (state.isLoading && state.stations.isEmpty) {
       return const Center(
         child: CircularProgressIndicator(),
       );
     }
 
-    if (state.hasError) {
+    if (state.hasError && state.stations.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -249,14 +250,14 @@ class StationManagementListScreen extends StatelessWidget {
               width: AppSizes.setWidth(120),
               height: AppSizes.setHeight(40),
               fontSize: AppSizes.setFontSize(14),
-              onTap: () => controller.initState(),
+              onTap: () => controller.onRefresh(),
             ),
           ],
         ),
       );
     }
 
-    if (state.stations.isEmpty) {
+    if (state.stations.isEmpty && !state.isLoading) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -279,19 +280,24 @@ class StationManagementListScreen extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
-      padding: EdgeInsets.all(AppSizes.setWidth(16)),
-      itemCount: state.stations.length,
-      itemBuilder: (context, index) {
-        final station = state.stations[index];
-        return Padding(
-          padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
-          child: StationManagementItem(
-            station: station,
-            onEdit: () => controller.navigateToEdit(station, context),
-          ),
-        );
-      },
+    return PullOrRefreshEasy(
+      refreshController: controller.refreshController,
+      onRefresh: controller.onRefresh,
+      onLoading: controller.onLoadMore,
+      child: ListView.builder(
+        padding: EdgeInsets.all(AppSizes.setWidth(16)),
+        itemCount: state.stations.length,
+        itemBuilder: (context, index) {
+          final station = state.stations[index];
+          return Padding(
+            padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
+            child: StationManagementItem(
+              station: station,
+              onEdit: () => controller.navigateToEdit(station, context),
+            ),
+          );
+        },
+      ),
     );
   }
 }

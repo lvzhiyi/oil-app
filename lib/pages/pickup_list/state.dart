@@ -13,6 +13,9 @@ class PickupListState {
   /// 是否有更多数据
   bool hasMore;
 
+  /// 是否正在加载更多
+  bool isLoadingMore;
+
   /// 当前页码
   int page;
 
@@ -24,6 +27,7 @@ class PickupListState {
     this.orderList = const [],
     this.isLoading = false,
     this.hasMore = true,
+    this.isLoadingMore = false,
     this.page = 1,
     this.errorMessage,
   });
@@ -33,6 +37,7 @@ class PickupListState {
     List<WithdrawOrderModel>? orderList,
     bool? isLoading,
     bool? hasMore,
+    bool? isLoadingMore,
     int? page,
     String? errorMessage,
   }) {
@@ -41,6 +46,7 @@ class PickupListState {
       orderList: orderList ?? this.orderList,
       isLoading: isLoading ?? this.isLoading,
       hasMore: hasMore ?? this.hasMore,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       page: page ?? this.page,
       errorMessage: errorMessage ?? this.errorMessage,
     );

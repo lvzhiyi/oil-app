@@ -7,6 +7,11 @@ class StationManagementListState {
   final bool hasError;
   final String? errorMessage;
   final StationStatus? selectedStatus;
+  
+  // Pagination
+  final int page;
+  final bool hasMore;
+  final bool isLoadingMore;
 
   StationManagementListState({
     required this.stations,
@@ -14,6 +19,9 @@ class StationManagementListState {
     this.hasError = false,
     this.errorMessage,
     this.selectedStatus,
+    this.page = 1,
+    this.hasMore = true,
+    this.isLoadingMore = false,
   });
 
   StationManagementListState copyWith({
@@ -23,6 +31,9 @@ class StationManagementListState {
     String? errorMessage,
     StationStatus? selectedStatus,
     bool clearSelectedStatus = false,
+    int? page,
+    bool? hasMore,
+    bool? isLoadingMore,
   }) {
     return StationManagementListState(
       stations: stations ?? this.stations,
@@ -30,6 +41,9 @@ class StationManagementListState {
       hasError: hasError ?? this.hasError,
       errorMessage: errorMessage ?? this.errorMessage,
       selectedStatus: clearSelectedStatus ? null : (selectedStatus ?? this.selectedStatus),
+      page: page ?? this.page,
+      hasMore: hasMore ?? this.hasMore,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
     );
   }
 }
