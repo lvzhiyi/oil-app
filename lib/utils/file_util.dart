@@ -9,7 +9,6 @@ class FileUtil {
 
     switch (extension) {
       case 'jpg':
-        return 'image/jpg';
       case 'jpeg':
         return 'image/jpeg';
       case 'png':

@@ -127,7 +127,7 @@ class CommonImgUploadState extends State<CommonImgUpload> {
     final image = await ImagePicker().pickImage(
       source: ImageSource.gallery,
       maxWidth: 1920,
-      maxHeight: 1920,
+      maxHeight: 1080,
       imageQuality: 85,
     );
     if (image != null) {

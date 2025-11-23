@@ -92,7 +92,7 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
       final XFile? image = await picker.pickImage(
         source: ImageSource.gallery,
         maxWidth: 1920,
-        maxHeight: 1920,
+        maxHeight: 1080,
         imageQuality: 85,
       );
 
