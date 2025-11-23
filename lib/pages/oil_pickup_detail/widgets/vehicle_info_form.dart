@@ -131,6 +131,38 @@ class VehicleInfoForm extends StatelessWidget {
             ],
           ),
           SizedBox(height: AppSizes.setHeight(12)),
+          // Row 2: Vehicle Type & Tank Type & Has Pump
+          Row(
+            children: [
+              Expanded(
+                child: _buildTextField(
+                  context,
+                  label: '车型',
+                  controller: vehicleTypeController,
+                  hint: '选填',
+                ),
+              ),
+              SizedBox(width: AppSizes.setWidth(12)),
+              Expanded(
+                child: _buildTextField(
+                  context,
+                  label: '单双仓',
+                  controller: tankTypeController,
+                  hint: '选填',
+                ),
+              ),
+              SizedBox(width: AppSizes.setWidth(12)),
+              Expanded(
+                child: _buildTextField(
+                  context,
+                  label: '是否带泵',
+                  controller: hasPumpController,
+                  hint: '选填',
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: AppSizes.setHeight(12)),
           // Row 1: Load Capacity & Tank Capacities
           Row(
             children: [
@@ -161,38 +193,6 @@ class VehicleInfoForm extends StatelessWidget {
                   controller: tank2CapacityController,
                   hint: '选填',
                   inputType: TextInputType.number,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: AppSizes.setHeight(12)),
-          // Row 2: Vehicle Type & Tank Type & Has Pump
-          Row(
-            children: [
-              Expanded(
-                child: _buildTextField(
-                  context,
-                  label: '车型',
-                  controller: vehicleTypeController,
-                  hint: '选填',
-                ),
-              ),
-              SizedBox(width: AppSizes.setWidth(12)),
-              Expanded(
-                child: _buildTextField(
-                  context,
-                  label: '单双仓',
-                  controller: tankTypeController,
-                  hint: '选填',
-                ),
-              ),
-              SizedBox(width: AppSizes.setWidth(12)),
-              Expanded(
-                child: _buildTextField(
-                  context,
-                  label: '是否带泵',
-                  controller: hasPumpController,
-                  hint: '选填',
                 ),
               ),
             ],
