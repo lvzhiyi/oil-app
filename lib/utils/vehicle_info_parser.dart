@@ -119,19 +119,29 @@ class VehicleInfoParser {
     return match?.group(0);
   }
 
-  /// 清理提取到的值 (移除单位等)
+  /// 清理提取到的值 (移除单位、首尾标点等)
   static String _cleanValue(String value) {
     if (value.isEmpty) return value;
     
-    // 移除常见的尾部单位
-    final unitsToRemove = ['吨', '公斤', 'kg', 't', 'L', '升'];
     String result = value;
+
+    // 1. 移除常见的尾部单位
+    final unitsToRemove = ['吨', '公斤', 'kg', 't', 'L', '升'];
     for (final unit in unitsToRemove) {
-      // 大小写不敏感检查
       if (result.toLowerCase().endsWith(unit.toLowerCase())) {
         result = result.substring(0, result.length - unit.length).trim();
       }
     }
+
+    // 2. 移除首尾的标点符号
+    // 包含：句号(。.)、逗号(，,)、分号(；;)、冒号(：:)、顿号(、)、感叹号(!！)、问号(?？)以及空白字符
+    // 注意：正则匹配末尾的 '.' 会被移除，这符合预期 (例如 "10.5." -> "10.5")
+    final startPunctuation = RegExp(r'^[。.,，;；:：!！?？、\s]+');
+    final endPunctuation = RegExp(r'[。.,，;；:：!！?？、\s]+$');
+
+    result = result.replaceAll(startPunctuation, '');
+    result = result.replaceAll(endPunctuation, '');
+
     return result;
   }
 
