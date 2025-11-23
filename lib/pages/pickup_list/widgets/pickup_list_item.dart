@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
 import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/utils/date_util.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/container/common_container.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
@@ -54,11 +56,18 @@ class PickupListItem extends StatelessWidget {
               SizedBox(height: AppSizes.setHeight(8)),
               _buildVehicleInfo(context, item.vehicleInfo),
               SizedBox(height: AppSizes.setHeight(8)),
+              if(item.createdAt != null && item.createdAt!.isNotEmpty)
               CommonText(
-                text: '申请时间: ${item.createdAt ?? ""}',
+                text: '申请时间: ${formatDate(DateTime.parse(item.createdAt ?? ""), format: "yyyy.MM.dd HH:mm:ss")}',
                 fontSize: AppSizes.setFontSize(12),
                 textColor: CustomAppColor.of(context).txtGrey,
               ),
+              if(item.status == WithdrawStatus.completed.value && item.updatedAt != null && item.updatedAt!.isNotEmpty)
+                CommonText(
+                  text: '完成时间: ${formatDate(DateTime.parse(item.updatedAt ?? ""), format: "yyyy.MM.dd HH:mm:ss")}',
+                  fontSize: AppSizes.setFontSize(12),
+                  textColor: CustomAppColor.of(context).txtGrey,
+                ),
             ],
           ),
         ),
