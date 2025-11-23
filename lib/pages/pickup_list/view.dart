@@ -12,6 +12,7 @@ import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/common/empty_card.dart';
+import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 import 'package:oil_business_app/static/icon.dart';
 
@@ -64,7 +65,8 @@ class _PickupListViewState extends State<PickupListView>
     }
 
     if (widget.state.orderList.isEmpty) {
-      return RefreshIndicator(
+      return PullOrRefreshEasy(
+        refreshController: ctrl.refreshController,
         onRefresh: ctrl.onRefresh,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -80,73 +82,35 @@ class _PickupListViewState extends State<PickupListView>
       );
     }
 
-    return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification scrollInfo) {
-        if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 50 &&
-            !widget.state.isLoadingMore &&
-            widget.state.hasMore) {
-          ctrl.onLoadMore();
-        }
-        return false;
-      },
-      child: RefreshIndicator(
-        onRefresh: ctrl.onRefresh,
-        child: ListView.builder(
-          padding: EdgeInsets.all(AppSizes.setWidth(16)),
-          itemCount: widget.state.orderList.length + 1,
-          itemBuilder: (context, index) {
-            if (index == widget.state.orderList.length) {
-              return _buildFooter(context);
-            }
-
-            final item = widget.state.orderList[index];
-            return GestureDetector(
-              onTap: () {
-                if (item.withdrawId != null || item.id != null) {
-                  BaseRouter.push(
-                    context: context,
-                    url: AppPage.pickupOrderDetailPage.path,
-                    extra: {
-                      'order': item,
-                    },
-                  );
-                } else {
-                  l.w('PickupListView', '订单ID为空，无法跳转到详情页');
-                  SportsToast.showError('订单信息异常，无法查看详情');
-                }
-              },
-              child: PickupListItem(item: item),
-            );
-          },
-        ),
+    return PullOrRefreshEasy(
+      refreshController: ctrl.refreshController,
+      onRefresh: ctrl.onRefresh,
+      onLoading: ctrl.onLoadMore,
+      child: ListView.builder(
+        padding: EdgeInsets.all(AppSizes.setWidth(16)),
+        itemCount: widget.state.orderList.length,
+        itemBuilder: (context, index) {
+          final item = widget.state.orderList[index];
+          return GestureDetector(
+            onTap: () {
+              if (item.withdrawId != null || item.id != null) {
+                BaseRouter.push(
+                  context: context,
+                  url: AppPage.pickupOrderDetailPage.path,
+                  extra: {
+                    'order': item,
+                  },
+                );
+              } else {
+                l.w('PickupListView', '订单ID为空，无法跳转到详情页');
+                SportsToast.showError('订单信息异常，无法查看详情');
+              }
+            },
+            child: PickupListItem(item: item),
+          );
+        },
       ),
     );
-  }
-
-  Widget _buildFooter(BuildContext context) {
-    if (widget.state.isLoadingMore) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-        child: const Center(
-          child: CupertinoActivityIndicator(),
-        ),
-      );
-    }
-
-    if (!widget.state.hasMore && widget.state.orderList.isNotEmpty) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-        child: Center(
-          child: CommonText(
-            text: '没有更多数据了',
-            fontSize: AppSizes.setFontSize(12),
-            textColor: CustomAppColor.of(context).txtGrey,
-          ),
-        ),
-      );
-    }
-
-    return const SizedBox.shrink();
   }
 
   Widget _buildTopBar(BuildContext context) {

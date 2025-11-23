@@ -1,3 +1,4 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/global/enum/common.dart';
@@ -11,28 +12,25 @@ import 'package:oil_business_app/utils/station_extension.dart';
 
 class StationManagementListCtrl extends Cubit<StationManagementListState> {
   static const int _pageSize = 10;
+  final EasyRefreshController refreshController = EasyRefreshController(
+    controlFinishRefresh: true,
+    controlFinishLoad: true,
+  );
 
   StationManagementListCtrl() : super(StationManagementListState(stations: [])) {
     onRefresh();
   }
 
   Future<void> onRefresh() async {
-    if (state.isLoading) return;
-    
-    emit(state.copyWith(
-      isLoading: true,
-      hasError: false,
-      page: 1,
-      hasMore: true,
-    ));
+    // Initial load
+    if (state.stations.isEmpty) {
+      emit(state.copyWith(isLoading: true, hasError: false));
+    }
 
     await _loadData(isRefresh: true);
   }
 
   Future<void> onLoadMore() async {
-    if (state.isLoading || state.isLoadingMore || !state.hasMore) return;
-
-    emit(state.copyWith(isLoadingMore: true));
     await _loadData(isRefresh: false);
   }
 
@@ -53,8 +51,11 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
       List<Station> finalStations;
       if (isRefresh) {
         finalStations = newStations;
+        refreshController.finishRefresh();
+        refreshController.resetFooter();
       } else {
         finalStations = [...state.stations, ...newStations];
+        refreshController.finishLoad(hasMore ? IndicatorResult.success : IndicatorResult.noMore);
       }
 
       emit(state.copyWith(
@@ -67,6 +68,13 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
       ));
     } catch (e) {
       l.e('StationManagementListCtrl', '加载加油站列表失败: $e');
+      
+      if (isRefresh) {
+        refreshController.finishRefresh(IndicatorResult.fail);
+      } else {
+        refreshController.finishLoad(IndicatorResult.fail);
+      }
+
       emit(state.copyWith(
         isLoading: false,
         isLoadingMore: false,

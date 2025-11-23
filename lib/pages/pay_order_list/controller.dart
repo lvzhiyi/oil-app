@@ -1,3 +1,4 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/pages/pay_order_list/service/pay_order_list.dart';
@@ -14,6 +15,10 @@ import 'model/orders_data.dart';
 class PayOrderListCtrl extends Cubit<PayOrderListState> {
   static const int _pageSize = 10;
   int? _currentStatus; // Keep track of current filter status
+  final EasyRefreshController refreshController = EasyRefreshController(
+    controlFinishRefresh: true,
+    controlFinishLoad: true,
+  );
 
   PayOrderListCtrl()
       : super(
@@ -31,6 +36,7 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
     }
     
     // Prevent redundant refresh if already loading (unless it's a status change which forces refresh)
+    // Also check if list is empty, if so, we might want to show full screen loading
     if (state.pageStatus == PageStatus.loading && status == null) return;
 
     emit(state.copyWith(
@@ -47,9 +53,6 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
 
   /// 加载更多
   Future<void> onLoadMore() async {
-    if (state.pageStatus == PageStatus.loading || state.isLoadingMore || !state.hasMore) return;
-
-    emit(state.copyWith(isLoadingMore: true));
     await _loadData(isRefresh: false);
   }
 
@@ -66,8 +69,11 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
       List<OrderModel> finalList;
       if (isRefresh) {
         finalList = newRecords;
+        refreshController.finishRefresh();
+        refreshController.resetFooter();
       } else {
         finalList = [...state.orderList, ...newRecords];
+        refreshController.finishLoad(hasMore ? IndicatorResult.success : IndicatorResult.noMore);
       }
 
       emit(state.copyWith(
@@ -79,6 +85,13 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
       ));
     } catch (e) {
       print(e);
+      
+      if (isRefresh) {
+        refreshController.finishRefresh(IndicatorResult.fail);
+      } else {
+        refreshController.finishLoad(IndicatorResult.fail);
+      }
+
       emit(state.copyWith(
         isLoadingMore: false,
         pageStatus: isRefresh ? PageStatus.error : state.pageStatus, // Only show error page if refresh failed

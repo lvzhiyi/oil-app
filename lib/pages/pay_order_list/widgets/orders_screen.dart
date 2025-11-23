@@ -15,6 +15,7 @@ import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/base/topbar/topbar.dart';
 import 'package:oil_business_app/widgets/common/empty_card.dart';
 import 'package:oil_business_app/widgets/common/page_loading.dart';
+import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
 
 import '../../../../../../interfaces/top_bar_click_listener.dart';
 import '../../../router/router.dart';
@@ -143,7 +144,8 @@ class _OrdersScreenState extends State<OrdersScreen>
 
     // Empty State
     if (widget.state.orderList.isEmpty) {
-      return RefreshIndicator(
+      return PullOrRefreshEasy(
+        refreshController: ctrl.refreshController,
         onRefresh: () => ctrl.onRefresh(),
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -160,56 +162,19 @@ class _OrdersScreenState extends State<OrdersScreen>
     }
 
     // List with Pagination
-    return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification scrollInfo) {
-        if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 50 &&
-            !widget.state.isLoadingMore &&
-            widget.state.hasMore) {
-          ctrl.onLoadMore();
-        }
-        return false;
-      },
-      child: RefreshIndicator(
-        onRefresh: () => ctrl.onRefresh(),
-        child: ListView.builder(
-          padding: EdgeInsets.zero,
-          itemCount: widget.state.orderList.length + 1,
-          itemBuilder: (context, index) {
-            if (index == widget.state.orderList.length) {
-              return _buildFooter(context);
-            }
-            final order = widget.state.orderList[index];
-            return _buildOrderCard(order, context);
-          },
-        ),
+    return PullOrRefreshEasy(
+      refreshController: ctrl.refreshController,
+      onRefresh: () => ctrl.onRefresh(),
+      onLoading: () => ctrl.onLoadMore(),
+      child: ListView.builder(
+        padding: EdgeInsets.zero,
+        itemCount: widget.state.orderList.length,
+        itemBuilder: (context, index) {
+          final order = widget.state.orderList[index];
+          return _buildOrderCard(order, context);
+        },
       ),
     );
-  }
-
-  Widget _buildFooter(BuildContext context) {
-    if (widget.state.isLoadingMore) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-        child: const Center(
-          child: CupertinoActivityIndicator(),
-        ),
-      );
-    }
-
-    if (!widget.state.hasMore && widget.state.orderList.isNotEmpty) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-        child: Center(
-          child: CommonText(
-            text: '没有更多数据了',
-            fontSize: AppSizes.setFontSize(12),
-            textColor: CustomAppColor.of(context).txtGrey,
-          ),
-        ),
-      );
-    }
-
-    return const SizedBox.shrink();
   }
 
   _tabBar() {

@@ -1,3 +1,4 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/pages/pickup_list/state.dart';
 import 'package:oil_business_app/pages/oil_pickup/service/oil_pickup_service.dart';
@@ -5,6 +6,10 @@ import 'package:oil_business_app/utils/log.dart';
 
 class PickupListCtrl extends Cubit<PickupListState> {
   static const int _pageSize = 10;
+  final EasyRefreshController refreshController = EasyRefreshController(
+    controlFinishRefresh: true,
+    controlFinishLoad: true,
+  );
 
   PickupListCtrl() : super(PickupListState()) {
     onRefresh();
@@ -24,9 +29,6 @@ class PickupListCtrl extends Cubit<PickupListState> {
   }
 
   Future<void> onLoadMore() async {
-    if (state.isLoading || state.isLoadingMore || !state.hasMore) return;
-
-    emit(state.copyWith(isLoadingMore: true));
     await _loadData(isRefresh: false);
   }
 
@@ -70,6 +72,8 @@ class PickupListCtrl extends Cubit<PickupListState> {
           isLoading: false,
           isLoadingMore: false,
         ));
+        refreshController.finishRefresh();
+        refreshController.resetFooter();
       } else {
         emit(state.copyWith(
           orderList: [...state.orderList, ...list],
@@ -78,6 +82,7 @@ class PickupListCtrl extends Cubit<PickupListState> {
           isLoading: false,
           isLoadingMore: false,
         ));
+        refreshController.finishLoad(hasMore ? IndicatorResult.success : IndicatorResult.noMore);
       }
     } catch (e) {
       l.e('PickupListCtrl', '加载提油列表失败: $e');
@@ -86,6 +91,12 @@ class PickupListCtrl extends Cubit<PickupListState> {
         isLoadingMore: false,
         errorMessage: e.toString(),
       ));
+      
+      if (isRefresh) {
+        refreshController.finishRefresh(IndicatorResult.fail);
+      } else {
+        refreshController.finishLoad(IndicatorResult.fail);
+      }
     }
   }
 }

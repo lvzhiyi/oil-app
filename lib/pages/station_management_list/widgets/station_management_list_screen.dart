@@ -6,6 +6,7 @@ import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
+import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
 
 import 'station_management_item.dart';
 
@@ -279,62 +280,24 @@ class StationManagementListScreen extends StatelessWidget {
       );
     }
 
-    return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification scrollInfo) {
-        if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 50 &&
-            !state.isLoadingMore &&
-            state.hasMore) {
-          controller.onLoadMore();
-        }
-        return false;
-      },
-      child: RefreshIndicator(
-        onRefresh: controller.onRefresh,
-        child: ListView.builder(
-          padding: EdgeInsets.all(AppSizes.setWidth(16)),
-          itemCount: state.stations.length + 1, // +1 for footer
-          itemBuilder: (context, index) {
-            if (index == state.stations.length) {
-              return _buildFooter(context);
-            }
-            
-            final station = state.stations[index];
-            return Padding(
-              padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
-              child: StationManagementItem(
-                station: station,
-                onEdit: () => controller.navigateToEdit(station, context),
-              ),
-            );
-          },
-        ),
+    return PullOrRefreshEasy(
+      refreshController: controller.refreshController,
+      onRefresh: controller.onRefresh,
+      onLoading: controller.onLoadMore,
+      child: ListView.builder(
+        padding: EdgeInsets.all(AppSizes.setWidth(16)),
+        itemCount: state.stations.length,
+        itemBuilder: (context, index) {
+          final station = state.stations[index];
+          return Padding(
+            padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
+            child: StationManagementItem(
+              station: station,
+              onEdit: () => controller.navigateToEdit(station, context),
+            ),
+          );
+        },
       ),
     );
-  }
-
-  Widget _buildFooter(BuildContext context) {
-    if (state.isLoadingMore) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-        child: const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
-    if (!state.hasMore && state.stations.isNotEmpty) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-        child: Center(
-          child: CommonText(
-            text: '没有更多数据了',
-            fontSize: AppSizes.setFontSize(12),
-            textColor: CustomAppColor.of(context).txtGrey,
-          ),
-        ),
-      );
-    }
-
-    return const SizedBox.shrink();
   }
 }

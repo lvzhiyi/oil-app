@@ -6,6 +6,7 @@ import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/common/global_update_ui.dart';
+import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
 
 import 'station_item.dart';
 
@@ -107,39 +108,27 @@ class StationListScreen extends StatelessWidget {
         return Column(
           children: [
             Expanded(
-              child: NotificationListener<ScrollNotification>(
-                onNotification: (ScrollNotification scrollInfo) {
-                  if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 50 &&
-                      !state.isLoadingMore &&
-                      state.hasMore) {
-                    controller.onLoadMore();
-                  }
-                  return false;
-                },
-                child: RefreshIndicator(
-                  onRefresh: controller.onRefresh,
-                  child: ListView.builder(
-                    padding: EdgeInsets.all(AppSizes.setWidth(20)),
-                    itemCount: state.stations.length + 1, // +1 for loading/footer
-                    itemBuilder: (context, index) {
-                      if (index == state.stations.length) {
-                        return _buildFooter(context);
-                      }
-
-                      final station = state.stations[index];
-                      final isSelected = selectedStation?.id == station.id;
-                      
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
-                        child: StationItem(
-                          station: station,
-                          isSelected: isSelected,
-                          onTap: () => controller.selectStation(station, context),
-                          onEdit: allowEdit ? () => controller.navigateToEdit(station, context) : null,
-                        ),
-                      );
-                    },
-                  ),
+              child: PullOrRefreshEasy(
+                refreshController: controller.refreshController,
+                onRefresh: controller.onRefresh,
+                onLoading: controller.onLoadMore,
+                child: ListView.builder(
+                  padding: EdgeInsets.all(AppSizes.setWidth(20)),
+                  itemCount: state.stations.length,
+                  itemBuilder: (context, index) {
+                    final station = state.stations[index];
+                    final isSelected = selectedStation?.id == station.id;
+                    
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
+                      child: StationItem(
+                        station: station,
+                        isSelected: isSelected,
+                        onTap: () => controller.selectStation(station, context),
+                        onEdit: allowEdit ? () => controller.navigateToEdit(station, context) : null,
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -148,32 +137,6 @@ class StationListScreen extends StatelessWidget {
         );
       },
     );
-  }
-
-  Widget _buildFooter(BuildContext context) {
-    if (state.isLoadingMore) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-        child: const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
-    if (!state.hasMore && state.stations.isNotEmpty) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-        child: Center(
-          child: CommonText(
-            text: '没有更多数据了',
-            fontSize: AppSizes.setFontSize(12),
-            textColor: CustomAppColor.of(context).txtGrey,
-          ),
-        ),
-      );
-    }
-
-    return const SizedBox.shrink();
   }
 
   Widget _buildAddButton(BuildContext context) {
