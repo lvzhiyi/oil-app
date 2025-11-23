@@ -21,9 +21,26 @@ class InventoryItem extends StatelessWidget {
     final fuelType = inventory.fuelType ?? '';
     final availableInventory = inventory.availableTon ?? 0.0;
     final isOutOfStock = availableInventory <= 0;
+    // Define low stock threshold (e.g. less than 5 tons)
+    final isLowStock = !isOutOfStock && availableInventory < 5.0;
     final themeColor = CustomAppColor.of(context).btnPurple;
 
     final fuelInfo = _parseFuelType(fuelType);
+
+    // Determine colors based on stock status
+    Color symbolBgColor;
+    Color symbolTextColor;
+
+    if (isOutOfStock) {
+      symbolBgColor = const Color(0xFFF5F5F5);
+      symbolTextColor = const Color(0xFFAAAAAA);
+    } else if (isLowStock) {
+      symbolBgColor = AppColor.orange.withValues(alpha: 0.08);
+      symbolTextColor = AppColor.orange;
+    } else {
+      symbolBgColor = themeColor.withOpacity(0.08);
+      symbolTextColor = themeColor;
+    }
 
     return Container(
       margin: EdgeInsets.only(bottom: pt(12)),
@@ -54,12 +71,26 @@ class InventoryItem extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Text(
-                  depotName,
-                  style: TextStyle(
-                    fontSize: pt(15),
-                    fontWeight: FontWeight.bold,
-                    color: CustomAppColor.of(context).txtBlack,
+                Expanded(
+                  child: Text(
+                    depotName,
+                    style: TextStyle(
+                      fontSize: pt(15),
+                      fontWeight: FontWeight.bold,
+                      color: CustomAppColor.of(context).txtBlack,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Gap(pt(8)),
+                Container(
+                  width: pt(6),
+                  height: pt(6),
+                  decoration: BoxDecoration(
+                    color: (isLowStock || isOutOfStock)
+                        ? AppColor.orange
+                        : CustomAppColor.of(context).green,
+                    shape: BoxShape.circle,
                   ),
                 ),
               ],
@@ -76,9 +107,7 @@ class InventoryItem extends StatelessWidget {
                   width: pt(56),
                   height: pt(56),
                   decoration: BoxDecoration(
-                    color: isOutOfStock
-                        ? const Color(0xFFF5F5F5)
-                        : themeColor.withOpacity(0.08),
+                    color: symbolBgColor,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
@@ -89,9 +118,7 @@ class InventoryItem extends StatelessWidget {
                         style: TextStyle(
                           fontSize: pt(20),
                           fontWeight: FontWeight.w900,
-                          color: isOutOfStock
-                              ? const Color(0xFFAAAAAA)
-                              : themeColor,
+                          color: symbolTextColor,
                           height: 1.0,
                         ),
                       ),
@@ -104,23 +131,9 @@ class InventoryItem extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                             color: isOutOfStock
                                 ? const Color(0xFFAAAAAA)
-                                : themeColor.withOpacity(0.9),
+                                : symbolTextColor.withOpacity(0.9),
                           ),
                         ),
-                        // Check if this is duplicate with name. 
-                        // If FuelTypeHelper provides a better name, consider using only one.
-                        // For now, keeping existing behavior but observing it might be redundant.
-                        if (FuelTypeHelper.getDisplayName(fuelType) != fuelInfo.name)
-                          Text(
-                            FuelTypeHelper.getDisplayName(fuelType),
-                            style: TextStyle(
-                              fontSize: pt(10),
-                              fontWeight: FontWeight.w500,
-                              color: isOutOfStock
-                                  ? const Color(0xFFAAAAAA)
-                                  : themeColor.withOpacity(0.9),
-                            ),
-                          ),
                       ],
                     ],
                   ),
@@ -137,7 +150,7 @@ class InventoryItem extends StatelessWidget {
                         '当前持有',
                         style: TextStyle(
                           fontSize: pt(12),
-                          color: CustomAppColor.of(context).txtGrey,
+                          color: const Color(0xff888888),
                         ),
                       ),
                       Gap(pt(2)),
@@ -148,7 +161,6 @@ class InventoryItem extends StatelessWidget {
                           Text(
                             '${availableInventory.toInt()}',
                             style: TextStyle(
-                              fontFamily: 'Roboto',
                               fontSize: pt(24),
                               fontWeight: FontWeight.bold,
                               color: isOutOfStock
@@ -161,7 +173,7 @@ class InventoryItem extends StatelessWidget {
                             '吨',
                             style: TextStyle(
                               fontSize: pt(12),
-                              color: CustomAppColor.of(context).txtGrey,
+                              color: const Color(0xff888888),
                             ),
                           ),
                         ],
@@ -207,32 +219,38 @@ class InventoryItem extends StatelessWidget {
 
     String code = '';
     String name = '';
+    String numberPart = RegExp(r'[-]?\d+').stringMatch(fuelType) ?? '';
 
     if (fuelType.contains('#')) {
       // Handle formats like "#95汽油" or "95#汽油"
-      if (fuelType.startsWith('#')) {
-        final match = RegExp(r'^(#[0-9]+)(.*)').firstMatch(fuelType);
-        code = match?.group(1) ?? '';
-        name = match?.group(2) ?? '';
+      final match = RegExp(r'([#]?[-]?\d+[#]?)(.*)').firstMatch(fuelType);
+      if (match != null) {
+        code = match.group(1) ?? '';
+        name = match.group(2) ?? '';
       } else {
-        final match = RegExp(r'^([0-9]+#)(.*)').firstMatch(fuelType);
-        code = match?.group(1) ?? '';
-        name = match?.group(2) ?? '';
+        code = fuelType;
       }
-    } else if (RegExp(r'^[0-9]').hasMatch(fuelType)) {
+    } else if (RegExp(r'[-]?\d+').hasMatch(fuelType)) {
       // Handle format like "95汽油" (implied #95)
-      final match = RegExp(r'^([0-9]+)(.*)').firstMatch(fuelType);
+      final match = RegExp(r'^([-]?\d+)(.*)').firstMatch(fuelType);
       if (match != null) {
         code = '#${match.group(1)}';
         name = match.group(2) ?? '';
-      }
-    } else {
-      // Fallback for other formats (e.g., "柴油")
-      if (fuelType.length > 2) {
-        code = fuelType.substring(0, 2);
-        name = fuelType.substring(2);
       } else {
         code = fuelType;
+      }
+    } else {
+      code = fuelType;
+    }
+
+    name = name.trim();
+
+    // Infer "汽油" or "柴油" if not present
+    if (!name.contains('汽油') && !name.contains('柴油')) {
+      if (['92', '95', '98'].any((e) => numberPart.contains(e))) {
+        name = name.isEmpty ? '汽油' : '$name 汽油';
+      } else if (['0', '-10', '-20', '-35', '-50'].contains(numberPart)) {
+        name = name.isEmpty ? '柴油' : '$name 柴油';
       }
     }
 
