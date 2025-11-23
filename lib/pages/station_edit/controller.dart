@@ -194,9 +194,8 @@ class StationEditCtrl extends Cubit<StationEditState> {
               state.station?.copyWith(status: StationStatus.pending_review),
         });
       } else {
-        BaseRouter.pop();
+        BaseRouter.pop(result: {'refresh': true});
       }
-      BaseRouter.pop();
       return true;
     } catch (e) {
       l.e('StationEditCtrl', '保存失败: $e');

@@ -97,15 +97,23 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
     onRefresh();
   }
 
-  void navigateToEdit(Station station, BuildContext context) {
-    BaseRouter.push(
+  void navigateToEdit(Station station, BuildContext context) async {
+    final result = await BaseRouter.push(
       url: AppPage.stationEditPage.path,
       extra: {'stationId': station.idString},
     );
+    
+    if (result is Map && result['refresh'] == true) {
+      onRefresh();
+    }
   }
 
-  void navigateToAdd(BuildContext context) {
-    BaseRouter.push(url: AppPage.stationEditPage.path);
+  void navigateToAdd(BuildContext context) async {
+    final result = await BaseRouter.push(url: AppPage.stationEditPage.path);
+    
+    if (result is Map && result['refresh'] == true) {
+      onRefresh();
+    }
   }
 
   void updateStation(Station station) {
