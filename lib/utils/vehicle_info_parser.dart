@@ -29,7 +29,7 @@ class VehicleInfoParser {
     'driverPhone': ['驾驶员电话', '联系方式', '电话', '手机'],
     'driverLicense': ['驾驶证编码', '驾驶证号', '驾驶证'],
     'plateNumber': ['车牌号', '车牌', '车号'],
-    'loadCapacity': ['核定载重', '载重'],
+    'loadCapacity': ['核定载重（公斤）', '核定载重(公斤)', '核定载重', '载重'],
     'vehicleLicense': ['行驶证编号', '行驶证号', '行驶证'],
     'tankType': ['单双仓', '仓型'],
     'tank1Capacity': ['一仓', '1仓'],
@@ -40,8 +40,22 @@ class VehicleInfoParser {
 
   static VehicleModel parse(String text) {
     // 1. 预处理
-    // 将全角冒号、等号替换为半角冒号，方便后续处理，但保留空格和换行
-    String processedText = text
+    // 策略：在所有已知关键词前面强制加换行符，解决"姓名:张三电话:123"这种无分隔符连字的问题
+    String processedText = text;
+    
+    // 收集所有关键词并按长度降序排列（防止短词误替换长词的一部分）
+    final allKeywords = fieldKeywords.values.expand((e) => e).toSet().toList()
+      ..sort((a, b) => b.length.compareTo(a.length));
+
+    for (final keyword in allKeywords) {
+      // 简单替换，在关键词前加换行。注意：为了避免破坏本来就有的换行，可以先不加，
+      // 但统一加一个换行符 \n 是最稳妥的，多余的空白会被 trim 掉。
+      // 使用 replaceAll 替换所有出现的关键词
+      processedText = processedText.replaceAll(keyword, '\n$keyword');
+    }
+
+    // 再次做基础清理
+    processedText = processedText
         .replaceAll('：', ':')
         .replaceAll('=', ':')
         .trim();
@@ -49,19 +63,28 @@ class VehicleInfoParser {
     // 2. 提取策略
     // 优先使用 "特征正则" 提取强特征字段 (车牌、手机、身份证)
     // 如果有明确的 Key: Value 格式，Key: Value 优先级更高 (避免误判)
+    // 对于这些格式固定的字段，开启 isStrict: true，遇到空格即停止，防止读取到后续字段
     
-    String? plateNumber = _extract(processedText, fieldKeywords['plateNumber']!) ?? 
+    String? plateNumber = _extract(processedText, fieldKeywords['plateNumber']!, isStrict: true) ?? 
                           _extractByPattern(processedText, _plateRegExp);
+    
+    // 特殊处理：车牌号中不应该包含冒号（针对用户输入 "车号：川A：DT581" 的情况）
+    if (plateNumber != null) {
+      plateNumber = plateNumber.replaceAll(':', '').replaceAll('：', '');
+    }
                           
-    String? driverPhone = _extract(processedText, fieldKeywords['driverPhone']!) ?? 
+    String? driverPhone = _extract(processedText, fieldKeywords['driverPhone']!, isStrict: true) ?? 
                           _extractByPattern(processedText, _phoneRegExp);
                           
-    String? driverIdCard = _extract(processedText, fieldKeywords['driverIdCard']!) ?? 
+    String? driverIdCard = _extract(processedText, fieldKeywords['driverIdCard']!, isStrict: true) ?? 
                            _extractByPattern(processedText, _idCardRegExp);
 
     // 3. 提取其他字段 (主要依赖关键词)
+    // 姓名等字段保持 isStrict: false，允许中间有空格 (如 "张 三")
     String? driverName = _extract(processedText, fieldKeywords['driverName']!);
-    String? oilAmount = _extract(processedText, fieldKeywords['oilAmount']!);
+    
+    // 吨位通常是数字，也建议严格模式
+    String? oilAmount = _extract(processedText, fieldKeywords['oilAmount']!, isStrict: true);
     
     // 针对吨位做特殊处理：提取后只保留数字部分
     if (oilAmount != null) {
@@ -72,7 +95,6 @@ class VehicleInfoParser {
     }
 
     // 4. 组装结果
-    // 其他字段保持原有的关键词提取逻辑
     return VehicleModel(
       date: _extract(processedText, fieldKeywords['date']!),
       oilType: _extract(processedText, fieldKeywords['oilType']!),
@@ -95,15 +117,18 @@ class VehicleInfoParser {
 
   /// 根据关键词提取值
   /// 支持格式：Key: Value, Key Value
-  /// 解决旧算法遇空格截断的问题：现在的逻辑是提取到行尾或下一个分隔符(逗号/分号)
-  static String? _extract(String text, List<String> keys) {
+  /// [isStrict] 为 true 时，遇到空格也会停止提取（适用于车牌、电话等无空格字段）
+  /// [isStrict] 为 false 时，允许空格，直到遇到逗号、分号或换行（适用于姓名等可能含空格字段）
+  static String? _extract(String text, List<String> keys, {bool isStrict = false}) {
     for (final key in keys) {
       // 正则解释：
       // (?:Key)        -> 匹配关键词
       // \s*[:：]?\s*   -> 匹配可选的冒号和周围的空白
-      // ([^,，;；\n]+) -> 捕获组1：匹配除了逗号、分号、换行符之外的任意字符 (贪婪匹配)
-      // 这样 "张 三" 会被完整匹配，直到遇到逗号或换行
-      final pattern = RegExp('(?:$key)\s*[:：]?\s*([^,，;；\n]+)', caseSensitive: false);
+      // stopChars      -> 决定匹配到哪里停止
+      // 更新：加入句号(。.)作为停止符
+      final stopChars = isStrict ? r'[^,，;；.。\n\s]+' : r'[^,，;；.。\n]+';
+      final pattern = RegExp('(?:$key)\s*[:：]?\s*($stopChars)', caseSensitive: false);
+      
       final match = pattern.firstMatch(text);
       if (match != null) {
         String val = match.group(1)!.trim();

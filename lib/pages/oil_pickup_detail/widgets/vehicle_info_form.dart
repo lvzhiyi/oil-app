@@ -8,7 +8,14 @@ class VehicleInfoForm extends StatelessWidget {
   final TextEditingController plateNumberController;
   final TextEditingController idCardController;
   final TextEditingController phoneController;
-  final TextEditingController oilAmountController; // Optional, for "parsed" amount display/edit
+  final TextEditingController loadCapacityController;
+  final TextEditingController tank1CapacityController;
+  final TextEditingController tank2CapacityController;
+  final TextEditingController vehicleTypeController;
+  final TextEditingController driverLicenseController;
+  final TextEditingController vehicleLicenseController;
+  final TextEditingController tankTypeController;
+  final TextEditingController hasPumpController;
 
   const VehicleInfoForm({
     Key? key,
@@ -16,7 +23,14 @@ class VehicleInfoForm extends StatelessWidget {
     required this.plateNumberController,
     required this.idCardController,
     required this.phoneController,
-    required this.oilAmountController,
+    required this.loadCapacityController,
+    required this.tank1CapacityController,
+    required this.tank2CapacityController,
+    required this.vehicleTypeController,
+    required this.driverLicenseController,
+    required this.vehicleLicenseController,
+    required this.tankTypeController,
+    required this.hasPumpController,
   }) : super(key: key);
 
   @override
@@ -93,8 +107,96 @@ class VehicleInfoForm extends StatelessWidget {
               return null;
             },
           ),
-           // Optional: Display parsed oil amount if useful, or keep hidden if it confuses with the main input
-           // Decided to omit for now to avoid conflict with the main "Withdraw Amount" input at the top of the screen.
+          SizedBox(height: AppSizes.setHeight(12)),
+          // Row: Licenses (Moved here)
+          Row(
+            children: [
+              Expanded(
+                child: _buildTextField(
+                  context,
+                  label: '驾驶证编码',
+                  controller: driverLicenseController,
+                  hint: '选填',
+                ),
+              ),
+              SizedBox(width: AppSizes.setWidth(12)),
+              Expanded(
+                child: _buildTextField(
+                  context,
+                  label: '行驶证编号',
+                  controller: vehicleLicenseController,
+                  hint: '选填',
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: AppSizes.setHeight(12)),
+          // Row 1: Load Capacity & Tank Capacities
+          Row(
+            children: [
+              Expanded(
+                child: _buildTextField(
+                  context,
+                  label: '核定载重(吨)',
+                  controller: loadCapacityController,
+                  hint: '选填',
+                  inputType: TextInputType.number,
+                ),
+              ),
+              SizedBox(width: AppSizes.setWidth(12)),
+              Expanded(
+                child: _buildTextField(
+                  context,
+                  label: '一仓(吨)',
+                  controller: tank1CapacityController,
+                  hint: '选填',
+                  inputType: TextInputType.number,
+                ),
+              ),
+              SizedBox(width: AppSizes.setWidth(12)),
+              Expanded(
+                child: _buildTextField(
+                  context,
+                  label: '二仓(吨)',
+                  controller: tank2CapacityController,
+                  hint: '选填',
+                  inputType: TextInputType.number,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: AppSizes.setHeight(12)),
+          // Row 2: Vehicle Type & Tank Type & Has Pump
+          Row(
+            children: [
+              Expanded(
+                child: _buildTextField(
+                  context,
+                  label: '车型',
+                  controller: vehicleTypeController,
+                  hint: '选填',
+                ),
+              ),
+              SizedBox(width: AppSizes.setWidth(12)),
+              Expanded(
+                child: _buildTextField(
+                  context,
+                  label: '单双仓',
+                  controller: tankTypeController,
+                  hint: '选填',
+                ),
+              ),
+              SizedBox(width: AppSizes.setWidth(12)),
+              Expanded(
+                child: _buildTextField(
+                  context,
+                  label: '是否带泵',
+                  controller: hasPumpController,
+                  hint: '选填',
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

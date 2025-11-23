@@ -39,7 +39,16 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
   late TextEditingController _plateNumberController;
   late TextEditingController _idCardController;
   late TextEditingController _phoneController;
-  late TextEditingController _parsedOilAmountController;
+  late TextEditingController _loadCapacityController;
+  late TextEditingController _tank1CapacityController;
+  late TextEditingController _tank2CapacityController;
+  
+  // New Fields
+  late TextEditingController _vehicleTypeController;
+  late TextEditingController _driverLicenseController;
+  late TextEditingController _vehicleLicenseController;
+  late TextEditingController _tankTypeController;
+  late TextEditingController _hasPumpController;
 
   @override
   void initState() {
@@ -51,7 +60,15 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
     _plateNumberController = TextEditingController();
     _idCardController = TextEditingController();
     _phoneController = TextEditingController();
-    _parsedOilAmountController = TextEditingController();
+    _loadCapacityController = TextEditingController();
+    _tank1CapacityController = TextEditingController();
+    _tank2CapacityController = TextEditingController();
+    
+    _vehicleTypeController = TextEditingController();
+    _driverLicenseController = TextEditingController();
+    _vehicleLicenseController = TextEditingController();
+    _tankTypeController = TextEditingController();
+    _hasPumpController = TextEditingController();
     
     // If there's initial data (unlikely on fresh load, but good practice)
     if (widget.state.vehicleModel != null) {
@@ -66,7 +83,15 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
     _plateNumberController.dispose();
     _idCardController.dispose();
     _phoneController.dispose();
-    _parsedOilAmountController.dispose();
+    _loadCapacityController.dispose();
+    _tank1CapacityController.dispose();
+    _tank2CapacityController.dispose();
+    
+    _vehicleTypeController.dispose();
+    _driverLicenseController.dispose();
+    _vehicleLicenseController.dispose();
+    _tankTypeController.dispose();
+    _hasPumpController.dispose();
     super.dispose();
   }
   
@@ -75,7 +100,15 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
     _plateNumberController.text = model.plateNumber ?? '';
     _idCardController.text = model.driverIdCard ?? '';
     _phoneController.text = model.driverPhone ?? '';
-    _parsedOilAmountController.text = model.oilAmount ?? '';
+    _loadCapacityController.text = model.loadCapacity ?? '';
+    _tank1CapacityController.text = model.tank1Capacity ?? '';
+    _tank2CapacityController.text = model.tank2Capacity ?? '';
+    
+    _vehicleTypeController.text = model.vehicleType ?? '';
+    _driverLicenseController.text = model.driverLicense ?? '';
+    _vehicleLicenseController.text = model.vehicleLicense ?? '';
+    _tankTypeController.text = model.tankType ?? '';
+    _hasPumpController.text = model.hasPump ?? '';
     
     // Also update the main oil amount if parsed
     if (model.oilAmount != null && model.oilAmount!.isNotEmpty) {
@@ -100,9 +133,15 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
       driverIdCard: _idCardController.text.trim(),
       driverPhone: _phoneController.text.trim(),
       oilAmount: currentOilAmount, // Use the main oil amount as the definitive one
-      // Preserve other fields if they were in the state (e.g. tank capacity)
-      // But since we only edit these 4, others might be lost if we create a fresh one.
-      // Better to copy from state.vehicleModel if exists
+      loadCapacity: _loadCapacityController.text.trim(),
+      tank1Capacity: _tank1CapacityController.text.trim(),
+      tank2Capacity: _tank2CapacityController.text.trim(),
+      
+      vehicleType: _vehicleTypeController.text.trim(),
+      driverLicense: _driverLicenseController.text.trim(),
+      vehicleLicense: _vehicleLicenseController.text.trim(),
+      tankType: _tankTypeController.text.trim(),
+      hasPump: _hasPumpController.text.trim(),
     );
     
     final baseModel = widget.state.vehicleModel ?? VehicleModel();
@@ -112,6 +151,15 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
        driverIdCard: _idCardController.text.trim(),
        driverPhone: _phoneController.text.trim(),
        oilAmount: currentOilAmount,
+       loadCapacity: _loadCapacityController.text.trim(),
+       tank1Capacity: _tank1CapacityController.text.trim(),
+       tank2Capacity: _tank2CapacityController.text.trim(),
+       
+       vehicleType: _vehicleTypeController.text.trim(),
+       driverLicense: _driverLicenseController.text.trim(),
+       vehicleLicense: _vehicleLicenseController.text.trim(),
+       tankType: _tankTypeController.text.trim(),
+       hasPump: _hasPumpController.text.trim(),
     );
 
     widget.controller.generateCertificate(
@@ -204,7 +252,15 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
                                   plateNumberController: _plateNumberController,
                                   idCardController: _idCardController,
                                   phoneController: _phoneController,
-                                  oilAmountController: _parsedOilAmountController,
+                                  loadCapacityController: _loadCapacityController,
+                                  tank1CapacityController: _tank1CapacityController,
+                                  tank2CapacityController: _tank2CapacityController,
+                                  
+                                  vehicleTypeController: _vehicleTypeController,
+                                  driverLicenseController: _driverLicenseController,
+                                  vehicleLicenseController: _vehicleLicenseController,
+                                  tankTypeController: _tankTypeController,
+                                  hasPumpController: _hasPumpController,
                                 ),
                               ),
                               
