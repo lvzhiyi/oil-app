@@ -287,4 +287,14 @@ class AppColor {
   static const cardBlue = Color(0xffDFF7FC);
   static const cardPink = Color(0xffFBE9F1);
   static const cardYellow = Color(0xffFDF4E6);
+
+  // 油品颜色主题
+  static const dieselBg = Color(0xffEEECFC);
+  static const dieselText = Color(0xff7165E3);
+  static const gasBg = Color(0xffFFF7ED);
+  static const gasText = Color(0xffF59E0B);
+  
+  // 库存状态颜色
+  static const stockSufficient = Color(0xff10B981);
+  static const stockLow = Color(0xffF59E0B);
 }

@@ -20,127 +20,84 @@ class InventoryItem extends StatelessWidget {
     final fuelType = inventory.fuelType ?? '';
     final availableInventory = inventory.availableTon ?? 0.0;
     final isOutOfStock = availableInventory <= 0;
-    // Define low stock threshold (e.g. less than 5 tons)
     final isLowStock = !isOutOfStock && availableInventory < 5.0;
-    final themeColor = CustomAppColor.of(context).btnPurple;
 
     final fuelInfo = _parseFuelType(fuelType);
-
-    // Determine colors based on stock status
-    Color symbolBgColor;
-    Color symbolTextColor;
-
-    if (isOutOfStock) {
-      symbolBgColor = const Color(0xFFF5F5F5);
-      symbolTextColor = const Color(0xFFAAAAAA);
-    } else if (isLowStock) {
-      symbolBgColor = AppColor.orange.withValues(alpha: 0.08);
-      symbolTextColor = AppColor.orange;
-    } else {
-      symbolBgColor = themeColor.withValues(alpha: 0.08);
-      symbolTextColor = themeColor;
-    }
+    final isDiesel = _isDiesel(fuelInfo.code);
 
     return Container(
       margin: EdgeInsets.only(bottom: pt(12)),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: CustomAppColor.of(context).white,
+        borderRadius: BorderRadius.circular(pt(16)),
+        border: Border.all(
+          color: const Color(0x08000000),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: themeColor.withValues(alpha: 0.06),
-            offset: const Offset(0, 4),
-            blurRadius: 16,
+            color: const Color(0x00000000).withValues(alpha: 0.02),
+            offset: const Offset(0, 2),
+            blurRadius: 8,
+            spreadRadius: 0,
           ),
         ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Header
+          // Card Header: Depot Info
           Container(
-            padding: EdgeInsets.symmetric(horizontal: pt(16), vertical: pt(12)),
-            decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: Color(0xFFF5F5F5),
-                  width: 1,
-                ),
-              ),
+            padding: EdgeInsets.symmetric(
+              horizontal: pt(16),
+              vertical: pt(12),
             ),
-            child: Row(
+            child: Column(
               children: [
-                Expanded(
-                  child: Text(
-                    depotName,
-                    style: TextStyle(
-                      fontSize: pt(15),
-                      fontWeight: FontWeight.bold,
-                      color: CustomAppColor.of(context).txtBlack,
+                Row(
+                  children: [
+                    // Depot Icon
+                    Icon(
+                      Icons.warehouse_outlined,
+                      size: pt(14),
+                      color: CustomAppColor.of(context).txtGrey,
                     ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                    Gap(pt(6)),
+                    // Depot Name
+                    Expanded(
+                      child: Text(
+                        depotName,
+                        style: TextStyle(
+                          fontSize: pt(14),
+                          fontWeight: FontWeight.w600,
+                          color: CustomAppColor.of(context).txtBlack,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
-                Gap(pt(8)),
-                Container(
-                  width: pt(6),
-                  height: pt(6),
-                  decoration: BoxDecoration(
-                    color: (isLowStock || isOutOfStock)
-                        ? AppColor.orange
-                        : CustomAppColor.of(context).green,
-                    shape: BoxShape.circle,
-                  ),
-                ),
+                Gap(pt(12)),
+                _buildDashedDivider(),
               ],
             ),
           ),
 
-          // Body
+          // Card Body
           Padding(
-            padding: EdgeInsets.all(pt(16)),
+            padding: EdgeInsets.only(left: pt(16), right: pt(16), bottom: pt(16)),
             child: Row(
               children: [
-                // Left: Symbol
-                Container(
-                  width: pt(56),
-                  height: pt(56),
-                  decoration: BoxDecoration(
-                    color: symbolBgColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        fuelInfo.code,
-                        style: TextStyle(
-                          fontSize: pt(20),
-                          fontWeight: FontWeight.w900,
-                          color: symbolTextColor,
-                          height: 1.0,
-                        ),
-                      ),
-                      if (fuelInfo.name.isNotEmpty) ...[
-                        Gap(pt(4)),
-                        Text(
-                          fuelInfo.name,
-                          style: TextStyle(
-                            fontSize: pt(10),
-                            fontWeight: FontWeight.w500,
-                            color: isOutOfStock
-                                ? const Color(0xFFAAAAAA)
-                                : symbolTextColor.withValues(alpha: 0.9),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
+                // Left: Oil Badge
+                _buildOilBadge(
+                  fuelInfo: fuelInfo,
+                  isDiesel: isDiesel,
+                  isOutOfStock: isOutOfStock,
                 ),
 
-                Gap(pt(16)),
+                Gap(pt(14)),
 
-                // Middle: Stock
+                // Middle: Stock Info
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,8 +105,8 @@ class InventoryItem extends StatelessWidget {
                       Text(
                         '当前持有',
                         style: TextStyle(
-                          fontSize: pt(12),
-                          color: const Color(0xff888888),
+                          fontSize: pt(11),
+                          color: CustomAppColor.of(context).txtGrey,
                         ),
                       ),
                       Gap(pt(2)),
@@ -160,11 +117,13 @@ class InventoryItem extends StatelessWidget {
                           Text(
                             '${availableInventory.toInt()}',
                             style: TextStyle(
-                              fontSize: pt(24),
-                              fontWeight: FontWeight.bold,
+                              fontSize: pt(26),
+                              fontWeight: FontWeight.w700,
+                              fontFeatures: const [FontFeature.tabularFigures()],
                               color: isOutOfStock
                                   ? const Color(0xFFCCCCCC)
                                   : CustomAppColor.of(context).txtBlack,
+                              height: 1.0,
                             ),
                           ),
                           Gap(pt(2)),
@@ -172,38 +131,22 @@ class InventoryItem extends StatelessWidget {
                             '吨',
                             style: TextStyle(
                               fontSize: pt(12),
-                              color: const Color(0xff888888),
+                              fontWeight: FontWeight.w500,
+                              color: CustomAppColor.of(context).txtGrey,
                             ),
                           ),
                         ],
                       ),
+                      Gap(pt(6)),
+                      if (!isOutOfStock) _buildStockStatusTag(isLowStock),
                     ],
                   ),
                 ),
 
-                // Right: Button
-                Material(
-                  color: isOutOfStock ? const Color(0xFFEEEEEE) : themeColor,
-                  borderRadius: BorderRadius.circular(18),
-                  child: InkWell(
-                    onTap: isOutOfStock ? null : onTap,
-                    borderRadius: BorderRadius.circular(18),
-                    child: Container(
-                      height: pt(36),
-                      padding: EdgeInsets.symmetric(horizontal: pt(20)),
-                      alignment: Alignment.center,
-                      child: Text(
-                        isOutOfStock ? '暂无库存' : '去提油',
-                        style: TextStyle(
-                          fontSize: pt(13),
-                          fontWeight: FontWeight.w600,
-                          color: isOutOfStock
-                              ? const Color(0xFFBBBBBB)
-                              : Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
+                // Right: Action Button
+                _buildActionButton(
+                  context: context,
+                  isOutOfStock: isOutOfStock,
                 ),
               ],
             ),
@@ -211,6 +154,158 @@ class InventoryItem extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildOilBadge({
+    required ({String code, String name}) fuelInfo,
+    required bool isDiesel,
+    required bool isOutOfStock,
+  }) {
+    Color badgeBgColor;
+    Color badgeTextColor;
+
+    if (isOutOfStock) {
+      badgeBgColor = const Color(0xFFF5F5F5);
+      badgeTextColor = const Color(0xFFAAAAAA);
+    } else if (isDiesel) {
+      badgeBgColor = AppColor.dieselBg;
+      badgeTextColor = AppColor.dieselText;
+    } else {
+      badgeBgColor = AppColor.gasBg;
+      badgeTextColor = AppColor.gasText;
+    }
+
+    return Container(
+      width: pt(52),
+      height: pt(52),
+      decoration: BoxDecoration(
+        color: badgeBgColor,
+        borderRadius: BorderRadius.circular(pt(12)),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            fuelInfo.code,
+            style: TextStyle(
+              fontSize: pt(18),
+              fontWeight: FontWeight.w700,
+              color: badgeTextColor,
+              height: 1.1,
+            ),
+          ),
+          if (fuelInfo.name.isNotEmpty) ...[
+            Text(
+              fuelInfo.name,
+              style: TextStyle(
+                fontSize: pt(11),
+                fontWeight: FontWeight.w500,
+                color: isOutOfStock
+                    ? const Color(0xFFAAAAAA)
+                    : badgeTextColor,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStockStatusTag(bool isLowStock) {
+    final Color tagColor;
+    final String tagText;
+
+    if (isLowStock) {
+      tagColor = AppColor.stockLow;
+      tagText = '库存紧张';
+    } else {
+      tagColor = AppColor.stockSufficient;
+      tagText = '库存充足';
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: pt(6),
+          height: pt(6),
+          decoration: BoxDecoration(
+            color: tagColor,
+            shape: BoxShape.circle,
+          ),
+        ),
+        Gap(pt(4)),
+        Text(
+          tagText,
+          style: TextStyle(
+            fontSize: pt(11),
+            fontWeight: FontWeight.w500,
+            color: tagColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionButton({
+    required BuildContext context,
+    required bool isOutOfStock,
+  }) {
+    final themeColor = CustomAppColor.of(context).btnPurple;
+
+    return Material(
+      color: isOutOfStock ? const Color(0xFFEEEEEE) : themeColor,
+      borderRadius: BorderRadius.circular(pt(20)),
+      child: InkWell(
+        onTap: isOutOfStock ? null : onTap,
+        borderRadius: BorderRadius.circular(pt(20)),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: pt(20),
+            vertical: pt(8),
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(pt(20)),
+            boxShadow: isOutOfStock
+                ? null
+                : [
+                    BoxShadow(
+                      color: themeColor.withValues(alpha: 0.2),
+                      offset: const Offset(0, 4),
+                      blurRadius: 10,
+                      spreadRadius: 0,
+                    ),
+                  ],
+          ),
+          child: Text(
+            isOutOfStock ? '暂无库存' : '去提油',
+            style: TextStyle(
+              fontSize: pt(14),
+              fontWeight: FontWeight.w600,
+              color: isOutOfStock
+                  ? const Color(0xFFBBBBBB)
+                  : Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  bool _isDiesel(String code) {
+    if (code.isEmpty) return false;
+    
+    final numberPart = RegExp(r'[-]?\d+').stringMatch(code) ?? '';
+    
+    if (['0', '-10', '-20', '-35', '-50'].contains(numberPart)) {
+      return true;
+    }
+    
+    if (['92', '95', '98'].any((e) => numberPart.contains(e))) {
+      return false;
+    }
+    
+    return false;
   }
 
   ({String code, String name}) _parseFuelType(String fuelType) {
@@ -221,7 +316,6 @@ class InventoryItem extends StatelessWidget {
     String numberPart = RegExp(r'[-]?\d+').stringMatch(fuelType) ?? '';
 
     if (fuelType.contains('#')) {
-      // Handle formats like "#95汽油" or "95#汽油"
       final match = RegExp(r'([#]?[-]?\d+[#]?)(.*)').firstMatch(fuelType);
       if (match != null) {
         code = match.group(1) ?? '';
@@ -230,7 +324,6 @@ class InventoryItem extends StatelessWidget {
         code = fuelType;
       }
     } else if (RegExp(r'[-]?\d+').hasMatch(fuelType)) {
-      // Handle format like "95汽油" (implied #95)
       final match = RegExp(r'^([-]?\d+)(.*)').firstMatch(fuelType);
       if (match != null) {
         code = '#${match.group(1)}';
@@ -244,7 +337,6 @@ class InventoryItem extends StatelessWidget {
 
     name = name.trim();
 
-    // Infer "汽油" or "柴油" if not present
     if (!name.contains('汽油') && !name.contains('柴油')) {
       if (['92', '95', '98'].any((e) => numberPart.contains(e))) {
         name = name.isEmpty ? '汽油' : '$name 汽油';
@@ -258,5 +350,60 @@ class InventoryItem extends StatelessWidget {
     }
 
     return (code: code, name: name);
+  }
+
+  Widget _buildDashedDivider() {
+    return CustomPaint(
+      painter: DashedLinePainter(
+        color: const Color(0xFFF3F4F6),
+        strokeWidth: 1,
+        dashWidth: 4,
+        dashSpace: 4,
+      ),
+      child: const SizedBox(
+        height: 1,
+        width: double.infinity,
+      ),
+    );
+  }
+}
+
+class DashedLinePainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double dashWidth;
+  final double dashSpace;
+
+  DashedLinePainter({
+    required this.color,
+    this.strokeWidth = 1,
+    this.dashWidth = 4,
+    this.dashSpace = 4,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    double startX = 0;
+    while (startX < size.width) {
+      canvas.drawLine(
+        Offset(startX, size.height / 2),
+        Offset(startX + dashWidth, size.height / 2),
+        paint,
+      );
+      startX += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(DashedLinePainter oldDelegate) {
+    return oldDelegate.color != color ||
+        oldDelegate.strokeWidth != strokeWidth ||
+        oldDelegate.dashWidth != dashWidth ||
+        oldDelegate.dashSpace != dashSpace;
   }
 }

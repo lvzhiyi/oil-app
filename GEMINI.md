@@ -14,7 +14,6 @@
 *   **Storage:** Hive, SharedPreferences.
 *   **UI Library:** TDesign Flutter, Custom Components.
 *   **Code Generation:** Freezed, JSON Serializable, Build Runner.
-*   **Task Runner:** `pnpm` (via `rps` tool) wraps project scripts.
 
 ## Development Workflow (OpenSpec)
 
@@ -73,13 +72,13 @@ lib/
 
 | Command | Description |
 | :--- | :--- |
-| `pnpm dev` | Run dev environment (oppo flavor) |
+| `flutter run --flavor oppo` | Run dev environment (oppo flavor) |
 | `flutter run --flavor <flavor>` | Run specific flavor (oppo, vivo, xiaomi) |
-| `pnpm gen_model` | Generate models (build_runner) |
-| `pnpm gen_assets` | Generate static asset references |
-| `pnpm gen_page` | Scaffold a new page (standard structure) |
-| `pnpm build_android` | Build APK |
-| `pnpm build_ios` | Build IPA |
+| `flutter pub run build_runner build --delete-conflicting-outputs` | Generate models (build_runner) |
+| `flutter pub run flutter_gen` | Generate static asset references |
+| `flutter create --template=app <page_name>` | Scaffold a new page (or use custom script) |
+| `flutter build apk --flavor <flavor>` | Build APK |
+| `flutter build ios --flavor <flavor>` | Build IPA |
 
 **Environment Variables:**
 *   `HTTP_ENV`: 1=Dev, 2=Pro

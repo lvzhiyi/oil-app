@@ -12,7 +12,7 @@ import 'package:oil_business_app/pages/oil_pickup_success/page.dart';
 import 'package:oil_business_app/pages/pay_order_detail/page.dart';
 import 'package:oil_business_app/pages/pay_order_list/page.dart';
 import 'package:oil_business_app/pages/pending_review/pending_review_screen.dart';
-import 'package:oil_business_app/pages/pickup_list/page.dart';
+import 'package:oil_business_app/pages/pickup_order_list/page.dart';
 import 'package:oil_business_app/pages/pickup_order_detail/page.dart';
 import 'package:oil_business_app/pages/splase/page.dart';
 import 'package:oil_business_app/pages/login/page.dart';
@@ -176,7 +176,7 @@ extension PageRoute on AppPage {
         return (context, state) => const OilPickupPage();
 
       case AppPage.pickupListPage:
-        return (context, state) => const PickupListPage();
+        return (context, state) => const PickupOrderListPage();
 
       case AppPage.stationListPage:
         return (context, state) => StationListPage();
