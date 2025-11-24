@@ -76,23 +76,27 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
       return _buildEmptyState(context);
     }
 
-    return ListView.builder(
-      controller: _scrollController,
-      padding: EdgeInsets.symmetric(
-        horizontal: pt(12),
-        vertical: pt(12),
+    return SafeArea(
+      top: true,
+      bottom: false,
+      child: ListView.builder(
+        controller: _scrollController,
+        padding: EdgeInsets.symmetric(
+          horizontal: pt(12),
+          vertical: pt(12),
+        ),
+        itemCount: widget.state.inventories.length + 1,
+        itemBuilder: (context, index) {
+          if (index == widget.state.inventories.length) {
+            return _buildLoadingMoreIndicator(context);
+          }
+          final inventory = widget.state.inventories[index];
+          return InventoryItem(
+            inventory: inventory,
+            onTap: () => widget.controller.navigateToDetail(context, inventory),
+          );
+        },
       ),
-      itemCount: widget.state.inventories.length + 1,
-      itemBuilder: (context, index) {
-        if (index == widget.state.inventories.length) {
-          return _buildLoadingMoreIndicator(context);
-        }
-        final inventory = widget.state.inventories[index];
-        return InventoryItem(
-          inventory: inventory,
-          onTap: () => widget.controller.navigateToDetail(context, inventory),
-        );
-      },
     );
   }
 
@@ -102,10 +106,9 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
         padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
         child: Center(
             child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: CustomAppColor.of(context).btnPurple,
-            )
-        ),
+          strokeWidth: 2,
+          color: CustomAppColor.of(context).btnPurple,
+        )),
       );
     }
     if (!widget.state.hasMore && widget.state.inventories.isNotEmpty) {
