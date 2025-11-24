@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
-import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
+import 'package:oil_business_app/utils/date_util.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
 class PickupOrderDetailScreen extends StatelessWidget {
@@ -19,18 +19,16 @@ class PickupOrderDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     if (order == null) {
       return Scaffold(
-        backgroundColor: CustomAppColor.of(context).bgScaffold,
+        backgroundColor: const Color(0xFFF5F7FA),
         appBar: AppBar(
-          backgroundColor: CustomAppColor.of(context).bgScaffold,
+          backgroundColor: Colors.white,
           elevation: 0,
-          iconTheme: IconThemeData(
-            color: CustomAppColor.of(context).txtBlack,
-          ),
+          iconTheme: const IconThemeData(color: Color(0xFF1F2937)),
           title: CommonText(
-            text: '提油订单详情',
-            fontSize: AppSizes.setFontSize(18),
+            text: '订单详情',
+            fontSize: AppSizes.setFontSize(17),
             fontWeight: FontWeight.w600,
-            textColor: CustomAppColor.of(context).txtBlack,
+            textColor: const Color(0xFF1F2937),
           ),
           centerTitle: true,
         ),
@@ -38,12 +36,13 @@ class PickupOrderDetailScreen extends StatelessWidget {
           child: CommonText(
             text: '订单信息不存在',
             fontSize: AppSizes.setFontSize(14),
-            textColor: CustomAppColor.of(context).txtGrey,
+            textColor: const Color(0xFF6B7280),
           ),
         ),
       );
     }
 
+    final isCompleted = order!.status == WithdrawStatus.completed.value;
     VehicleModel? vehicleModel;
     if (order!.vehicleInfo != null && order!.vehicleInfo!.isNotEmpty) {
       try {
@@ -55,36 +54,31 @@ class PickupOrderDetailScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: CustomAppColor.of(context).bgScaffold,
+      backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
-        backgroundColor: CustomAppColor.of(context).bgScaffold,
+        backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: IconThemeData(
-          color: CustomAppColor.of(context).txtBlack,
-        ),
+        iconTheme: const IconThemeData(color: Color(0xFF1F2937)),
         title: CommonText(
-          text: '提油订单详情',
-          fontSize: AppSizes.setFontSize(18),
+          text: '订单详情',
+          fontSize: AppSizes.setFontSize(17),
           fontWeight: FontWeight.w600,
-          textColor: CustomAppColor.of(context).txtBlack,
+          textColor: const Color(0xFF1F2937),
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
+      body: SafeArea(
+        bottom: true,
+        top: false,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(20)),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: AppSizes.setHeight(32)),
-              _buildPickupInfoCard(context),
-              SizedBox(height: AppSizes.setHeight(16)),
-              _buildStationInfoCard(context),
-              if (vehicleModel != null) ...[
-                SizedBox(height: AppSizes.setHeight(16)),
-                _buildVehicleInfoCard(context, vehicleModel),
-              ],
               SizedBox(height: AppSizes.setHeight(20)),
+              _buildWaybillCard(context, isCompleted, vehicleModel),
+              SizedBox(height: AppSizes.setHeight(30)),
+              // _buildContactButton(context),
+              // SizedBox(height: AppSizes.setHeight(20)),
             ],
           ),
         ),
@@ -92,247 +86,408 @@ class PickupOrderDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPickupInfoCard(BuildContext context) {
+
+  Widget _buildWaybillCard(
+    BuildContext context,
+    bool isCompleted,
+    VehicleModel? vehicleModel,
+  ) {
     return Container(
-      padding: EdgeInsets.all(AppSizes.setWidth(16)),
       decoration: BoxDecoration(
-        color: CustomAppColor.of(context).white,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
-        border: Border.all(
-          color: CustomAppColor.of(context).containerBorder,
-          width: 1,
-        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CommonText(
-            text: '提油信息',
-            fontSize: AppSizes.setFontSize(16),
-            fontWeight: FontWeight.w700,
-            textColor: CustomAppColor.of(context).txtBlack,
-          ),
-          SizedBox(height: AppSizes.setHeight(16)),
-          if (order!.withdrawNo != null || order!.id != null)
-            _buildInfoRow(
-              context,
-              '订单编号',
-              order!.withdrawNo ?? order!.id!.toString(),
-            ),
-          if (order!.withdrawTon != null)
-            _buildInfoRow(context, '提油量', '${order!.withdrawTon} 吨'),
-          if (order!.status != null)
-            _buildStatusRow(
-              context,
-              '状态',
-              _getStatusText(order!.status!),
-              order!.status!,
-            ),
-          if (order!.createdAt != null)
-            _buildInfoRow(context, '创建时间', _formatDateTime(order!.createdAt!)),
-          if (order!.updatedAt != null)
-            _buildInfoRow(context, '更新时间', _formatDateTime(order!.updatedAt!)),
+          _buildTopGradientBar(isCompleted),
+          _buildWaybillHeader(context, isCompleted),
+          _buildWaybillBody(context, isCompleted, vehicleModel),
         ],
       ),
     );
   }
 
-  Widget _buildStationInfoCard(BuildContext context) {
+  Widget _buildTopGradientBar(bool isCompleted) {
     return Container(
-      padding: EdgeInsets.all(AppSizes.setWidth(16)),
+      height: AppSizes.setHeight(6),
       decoration: BoxDecoration(
-        color: CustomAppColor.of(context).white,
-        borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
-        border: Border.all(
-          color: CustomAppColor.of(context).containerBorder,
-          width: 1,
+        gradient: LinearGradient(
+          colors: isCompleted
+              ? [const Color(0xFF10B981), const Color(0xFF34D399)]
+              : [const Color(0xFF7165E3), const Color(0xFFA78BFA)],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CommonText(
-            text: '加油站信息',
-            fontSize: AppSizes.setFontSize(16),
-            fontWeight: FontWeight.w700,
-            textColor: CustomAppColor.of(context).txtBlack,
-          ),
-          SizedBox(height: AppSizes.setHeight(16)),
-          _buildInfoRow(
-            context,
-            '加油站名称',
-            order!.stationName ?? '未知油站',
-          ),
-          // _buildInfoRow(
-          //   context,
-          //   '加油站地址',
-          //   [
-          //     order!.provinceName,
-          //     order!.cityName,
-          //     order!.areaName,
-          //     order!.addressDetail
-          //   ].where((s) => s != null && s.isNotEmpty).join(''),
-          // ),
-        ],
       ),
     );
   }
 
-  Widget _buildVehicleInfoCard(BuildContext context, VehicleModel vehicleModel) {
-    return Container(
-      padding: EdgeInsets.all(AppSizes.setWidth(16)),
-      decoration: BoxDecoration(
-        color: CustomAppColor.of(context).white,
-        borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
-        border: Border.all(
-          color: CustomAppColor.of(context).containerBorder,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CommonText(
-            text: '车辆及司机信息',
-            fontSize: AppSizes.setFontSize(16),
-            fontWeight: FontWeight.w700,
-            textColor: CustomAppColor.of(context).txtBlack,
-          ),
-          SizedBox(height: AppSizes.setHeight(16)),
-          if (vehicleModel.driverName != null && vehicleModel.driverName!.isNotEmpty)
-            _buildInfoRow(context, '驾驶员姓名', vehicleModel.driverName!),
-          if (vehicleModel.plateNumber != null && vehicleModel.plateNumber!.isNotEmpty)
-            _buildInfoRow(context, '车号', vehicleModel.plateNumber!),
-          if (vehicleModel.driverPhone != null && vehicleModel.driverPhone!.isNotEmpty)
-            _buildInfoRow(context, '驾驶员电话', vehicleModel.driverPhone!),
-          if (vehicleModel.driverIdCard != null && vehicleModel.driverIdCard!.isNotEmpty)
-            _buildInfoRow(context, '身份证号', vehicleModel.driverIdCard!),
-          if (vehicleModel.vehicleType != null && vehicleModel.vehicleType!.isNotEmpty)
-            _buildInfoRow(context, '车型', vehicleModel.vehicleType!),
-          if (vehicleModel.loadCapacity != null && vehicleModel.loadCapacity!.isNotEmpty)
-            _buildInfoRow(context, '核定载重', vehicleModel.loadCapacity!),
-        ],
-      ),
-    );
-  }
+  Widget _buildWaybillHeader(BuildContext context, bool isCompleted) {
+    final orderNo = order!.withdrawNo ?? order!.id?.toString() ?? '';
+    final shortOrderNo = orderNo.length > 15 
+        ? '${orderNo.substring(0, 15)}...${orderNo.substring(orderNo.length - 5)}'
+        : orderNo;
 
-  Widget _buildInfoRow(BuildContext context, String label, String value) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
+    return Container(
+      padding: EdgeInsets.all(AppSizes.setWidth(20)),
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Color(0xFFE5E7EB),
+            width: 1,
+            style: BorderStyle.solid,
+          ),
+        ),
+      ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
-            width: AppSizes.setWidth(100),
-            child: CommonText(
-              text: '$label:',
-              fontSize: AppSizes.setFontSize(14),
-              textColor: CustomAppColor.of(context).txtGrey,
-              textAlign: TextAlign.left,
-            ),
+          Row(
+            children: [
+              Icon(
+                isCompleted ? Icons.check_circle : Icons.access_time,
+                size: AppSizes.setFontSize(24),
+                color: isCompleted 
+                    ? const Color(0xFF10B981) 
+                    : const Color(0xFFF59E0B),
+              ),
+              SizedBox(width: AppSizes.setWidth(8)),
+              CommonText(
+                text: isCompleted ? '已完成' : '待提油',
+                fontSize: AppSizes.setFontSize(20),
+                fontWeight: FontWeight.w700,
+                textColor: isCompleted 
+                    ? const Color(0xFF10B981) 
+                    : const Color(0xFFF59E0B),
+              ),
+            ],
           ),
-          Expanded(
-            child: CommonText(
-              text: value,
-              fontSize: AppSizes.setFontSize(14),
-              textColor: CustomAppColor.of(context).txtBlack,
-              textAlign: TextAlign.left,
-            ),
+          CommonText(
+            text: shortOrderNo,
+            fontSize: AppSizes.setFontSize(13),
+            textColor: const Color(0xFF6B7280),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildStatusRow(BuildContext context, String label, String value, String status) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildWaybillBody(
+    BuildContext context,
+    bool isCompleted,
+    VehicleModel? vehicleModel,
+  ) {
+    final amount = order!.withdrawTon ?? 0.0;
+    final amountLabel = isCompleted ? '实际提油量 (吨)' : '核定提油量 (吨)';
+    final amountColor = isCompleted ? const Color(0xFF10B981) : const Color(0xFF1F2937);
+
+    return Container(
+      padding: EdgeInsets.all(AppSizes.setWidth(20)),
+      child: Stack(
         children: [
-          SizedBox(
-            width: AppSizes.setWidth(100),
-            child: CommonText(
-              text: '$label:',
-              fontSize: AppSizes.setFontSize(14),
-              textColor: CustomAppColor.of(context).txtGrey,
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Expanded(
-            child: CommonText(
-              text: value,
-              fontSize: AppSizes.setFontSize(14),
-              textColor: _getStatusColor(context, status),
-              fontWeight: FontWeight.w600,
-              textAlign: TextAlign.left,
-            ),
+          if (isCompleted) _buildSealStamp(),
+          Column(
+            children: [
+              _buildCoreData(amountLabel, amount, amountColor),
+              SizedBox(height: AppSizes.setHeight(8)),
+              _buildDashedDivider(),
+              SizedBox(height: AppSizes.setHeight(16)),
+              _buildDetailList(context, vehicleModel, isCompleted),
+            ],
           ),
         ],
       ),
     );
   }
 
-  String _getStatusText(String status) {
-    final withdrawStatus = WithdrawStatus.fromString(status);
-    if (withdrawStatus != null) {
-      return withdrawStatus.displayName;
-    }
-    switch (status) {
-      case 'pending_pickup':
-        return '待提油';
-      case 'completed':
-        return '已完成';
-      default:
-        return status;
-    }
+  Widget _buildSealStamp() {
+    return Positioned(
+      right: AppSizes.setWidth(5),
+      top: AppSizes.setHeight(10),
+      child: Transform.rotate(
+        angle: -0.35,
+        child: Container(
+          width: AppSizes.setWidth(100),
+          height: AppSizes.setWidth(100),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: const Color(0xFF10B981).withValues(alpha: 0.15),
+              width: 3,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF10B981).withValues(alpha: 0.15),
+                blurRadius: 0,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
+          child: Container(
+            margin: EdgeInsets.all(AppSizes.setWidth(6)),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: const Color(0xFF10B981).withValues(alpha: 0.15),
+                width: 1,
+              ),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CommonText(
+                    text: '提油业务',
+                    fontSize: AppSizes.setFontSize(14),
+                    fontWeight: FontWeight.w700,
+                    textColor: const Color(0xFF10B981).withValues(alpha: 0.15),
+                  ),
+                  CommonText(
+                    text: '已完成',
+                    fontSize: AppSizes.setFontSize(14),
+                    fontWeight: FontWeight.w700,
+                    textColor: const Color(0xFF10B981).withValues(alpha: 0.15),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
-  Color _getStatusColor(BuildContext context, String status) {
-    switch (status) {
-      case 'pending_pickup':
-        return CustomAppColor.of(context).txtOrange;
-      case 'completed':
-        return CustomAppColor.of(context).green;
-      default:
-        return CustomAppColor.of(context).txtGrey;
-    }
+  Widget _buildCoreData(String label, double amount, Color amountColor) {
+    return Column(
+      children: [
+        CommonText(
+          text: label,
+          fontSize: AppSizes.setFontSize(13),
+          textColor: const Color(0xFF6B7280),
+        ),
+        SizedBox(height: AppSizes.setHeight(6)),
+        CommonText(
+          text: amount.toStringAsFixed(1),
+          fontSize: AppSizes.setFontSize(40),
+          fontWeight: FontWeight.w700,
+          textColor: amountColor,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailList(
+    BuildContext context,
+    VehicleModel? vehicleModel,
+    bool isCompleted,
+  ) {
+    return Column(
+      children: [
+        _buildDetailItem('加油站', order!.stationName ?? '未知油站'),
+        SizedBox(height: AppSizes.setHeight(16)),
+        _buildDetailItem('提油油库', '大中华区1号油库'),
+        SizedBox(height: AppSizes.setHeight(16)),
+        _buildDashedDivider(),
+        SizedBox(height: AppSizes.setHeight(16)),
+        if (vehicleModel?.plateNumber != null && vehicleModel!.plateNumber!.isNotEmpty)
+          _buildDetailItem(
+            '车牌号',
+            vehicleModel.plateNumber!,
+            valueWidget: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSizes.setWidth(4),
+                vertical: AppSizes.setHeight(2),
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xFFEFF6FF),
+                borderRadius: BorderRadius.circular(AppSizes.setWidth(4)),
+              ),
+              child: CommonText(
+                text: vehicleModel.plateNumber!,
+                fontSize: AppSizes.setFontSize(14),
+                fontWeight: FontWeight.w500,
+                textColor: const Color(0xFF1D4ED8),
+              ),
+            ),
+          ),
+        if (vehicleModel?.plateNumber != null && vehicleModel!.plateNumber!.isNotEmpty)
+          SizedBox(height: AppSizes.setHeight(16)),
+        if (vehicleModel?.driverName != null && vehicleModel!.driverName!.isNotEmpty)
+          _buildDetailItem('驾驶员', vehicleModel.driverName!),
+        if (vehicleModel?.driverName != null && vehicleModel!.driverName!.isNotEmpty)
+          SizedBox(height: AppSizes.setHeight(16)),
+        if (vehicleModel?.driverPhone != null && vehicleModel!.driverPhone!.isNotEmpty)
+          _buildDetailItem(
+            '联系电话',
+            vehicleModel.driverPhone!,
+            valueWidget: CommonText(
+              text: vehicleModel.driverPhone!,
+              fontSize: AppSizes.setFontSize(14),
+              fontWeight: FontWeight.w500,
+              textColor: const Color(0xFF1F2937),
+            ),
+          ),
+        if (isCompleted) ...[
+          if (vehicleModel?.driverPhone != null && vehicleModel!.driverPhone!.isNotEmpty)
+            SizedBox(height: AppSizes.setHeight(16)),
+          _buildDashedDivider(),
+          SizedBox(height: AppSizes.setHeight(16)),
+          if (order!.updatedAt != null && order!.updatedAt!.isNotEmpty)
+            _buildDetailItem(
+              '完成时间',
+              _formatDateTime(order!.updatedAt!),
+              valueWidget: CommonText(
+                text: _formatDateTime(order!.updatedAt!),
+                fontSize: AppSizes.setFontSize(14),
+                fontWeight: FontWeight.w500,
+                textColor: const Color(0xFF1F2937),
+              ),
+            ),
+          if (order!.updatedAt != null && order!.updatedAt!.isNotEmpty)
+            SizedBox(height: AppSizes.setHeight(16)),
+          _buildDetailItem(
+            '实际提油量',
+            '${order!.withdrawTon ?? 0.0} 吨',
+            valueWidget: CommonText(
+              text: '${order!.withdrawTon ?? 0.0} 吨',
+              fontSize: AppSizes.setFontSize(14),
+              fontWeight: FontWeight.w700,
+              textColor: const Color(0xFF10B981),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildDetailItem(
+    String label,
+    String value, {
+    Widget? valueWidget,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        CommonText(
+          text: label,
+          fontSize: AppSizes.setFontSize(14),
+          textColor: const Color(0xFF6B7280),
+        ),
+        Expanded(
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: valueWidget ??
+                CommonText(
+                  text: value,
+                  fontSize: AppSizes.setFontSize(14),
+                  fontWeight: FontWeight.w500,
+                  textColor: const Color(0xFF1F2937),
+                  textAlign: TextAlign.right,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDashedDivider() {
+    return CustomPaint(
+      painter: DashedLinePainter(
+        color: const Color(0xFFE5E7EB),
+        strokeWidth: 1,
+        dashWidth: 4,
+        dashSpace: 4,
+      ),
+      child: const SizedBox(
+        height: 1,
+        width: double.infinity,
+      ),
+    );
+  }
+
+  Widget _buildContactButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton(
+        onPressed: () {
+          // TODO: 实现联系调度员功能
+        },
+        style: OutlinedButton.styleFrom(
+          padding: EdgeInsets.symmetric(
+            vertical: AppSizes.setHeight(8),
+            horizontal: AppSizes.setWidth(24),
+          ),
+          side: const BorderSide(color: Color(0xFF7165E3)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSizes.setWidth(20)),
+          ),
+        ),
+        child: CommonText(
+          text: '联系调度员',
+          fontSize: AppSizes.setFontSize(14),
+          textColor: const Color(0xFF7165E3),
+        ),
+      ),
+    );
   }
 
   String _formatDateTime(String dateTimeStr) {
     try {
       final dateTime = DateTime.parse(dateTimeStr);
-      final year = dateTime.year;
-      final month = dateTime.month.toString().padLeft(2, '0');
-      final day = dateTime.day.toString().padLeft(2, '0');
-      final hour = dateTime.hour.toString().padLeft(2, '0');
-      final minute = dateTime.minute.toString().padLeft(2, '0');
-      final second = dateTime.second.toString().padLeft(2, '0');
-      return '$year-$month-$day $hour:$minute:$second';
+      return formatDate(dateTime, format: 'yyyy-MM-dd HH:mm:ss');
     } catch (e) {
       return dateTimeStr;
     }
   }
 }
 
+class DashedLinePainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double dashWidth;
+  final double dashSpace;
+
+  DashedLinePainter({
+    required this.color,
+    this.strokeWidth = 1,
+    this.dashWidth = 4,
+    this.dashSpace = 4,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    double startX = 0;
+    while (startX < size.width) {
+      canvas.drawLine(
+        Offset(startX, size.height / 2),
+        Offset(startX + dashWidth, size.height / 2),
+        paint,
+      );
+      startX += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(DashedLinePainter oldDelegate) {
+    return oldDelegate.color != color ||
+        oldDelegate.strokeWidth != strokeWidth ||
+        oldDelegate.dashWidth != dashWidth ||
+        oldDelegate.dashSpace != dashSpace;
+  }
+}
