@@ -10,7 +10,7 @@ class ServiceAgreementView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HtmlWebViewContainer(
+    return const HtmlWebViewContainer(
       htmlAssetPath: AssetsHtml.SERVICE_AGREEMENT,
       title: '用户协议',
     );
