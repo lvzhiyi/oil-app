@@ -26,7 +26,7 @@ class _OilPickupScreenState extends State<OilPickupScreen> {
     return GlobalUpdateUi(
       builder: (context, appCtrl) {
         return Scaffold(
-          backgroundColor: CustomAppColor.of(context).bgScaffold,
+          backgroundColor: const Color(0xffF5F7FA),
           body: InventoryListScreen(
             state: widget.state,
             controller: widget.controller,
