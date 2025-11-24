@@ -86,18 +86,18 @@ void runMyApp() async {
   }
 
   if (kDebugMode) {
-    PluginManager.instance // Register plugin kits
-      ..register(const WidgetInfoInspector())
-      ..register(const WidgetDetailInspector())
-      ..register(const ColorSucker())
-      ..register(AlignRuler())
-      ..register(const ColorPicker()) // New feature
-      ..register(const TouchIndicator()) // New feature
-      ..register(Performance())
-      ..register(const MemoryInfoPage())
-      ..register(const CpuInfoPage())
-      ..register(const DeviceInfoPanel())
-      ..register(Console());
+    // PluginManager.instance // Register plugin kits
+    //   ..register(const WidgetInfoInspector())
+    //   ..register(const WidgetDetailInspector())
+    //   ..register(const ColorSucker())
+    //   ..register(AlignRuler())
+    //   ..register(const ColorPicker()) // New feature
+    //   ..register(const TouchIndicator()) // New feature
+    //   ..register(Performance())
+    //   ..register(const MemoryInfoPage())
+    //   ..register(const CpuInfoPage())
+    //   ..register(const DeviceInfoPanel())
+    //   ..register(Console());
     // ..register(DioInspector(dio: dio)); // Pass in your Dio instance
     // After flutter_ume 0.3.0
     runApp(

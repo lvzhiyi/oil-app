@@ -2,6 +2,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/global/app_controller.dart';
+import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/pages/station_list/state.dart';
 import 'package:oil_business_app/router/router.dart';
@@ -26,7 +27,7 @@ class StationListCtrl extends Cubit<StationListState> {
     if (state.stations.isEmpty) {
       emit(state.copyWith(isLoading: true, hasError: false));
     }
-    
+
     await _loadData(isRefresh: true);
   }
 
@@ -37,9 +38,15 @@ class StationListCtrl extends Cubit<StationListState> {
   Future<void> _loadData({required bool isRefresh}) async {
     try {
       final pageToLoad = isRefresh ? 1 : state.page + 1;
-      
+
       // 调用真实 API 获取加油站数据
-      final response = await appController.getStationStatus(pageToLoad, _pageSize);
+      final response =
+          await appController.getStationStatus(pageToLoad, _pageSize, [
+        StationStatus.active,
+        StationStatus.pending_review,
+        StationStatus.rejected,
+        StationStatus.disabled,
+      ]);
 
       final newStations = response.list ?? [];
       final hasMore = newStations.length >= _pageSize;
@@ -51,7 +58,8 @@ class StationListCtrl extends Cubit<StationListState> {
         refreshController.resetFooter();
       } else {
         finalStations = [...state.stations, ...newStations];
-        refreshController.finishLoad(hasMore ? IndicatorResult.success : IndicatorResult.noMore);
+        refreshController.finishLoad(
+            hasMore ? IndicatorResult.success : IndicatorResult.noMore);
       }
 
       emit(state.copyWith(
@@ -63,7 +71,7 @@ class StationListCtrl extends Cubit<StationListState> {
       ));
     } catch (e) {
       l.e('StationListCtrl', '加载加油站列表失败: $e');
-      
+
       if (isRefresh) {
         refreshController.finishRefresh(IndicatorResult.fail);
       } else {

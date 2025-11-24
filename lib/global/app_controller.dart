@@ -34,7 +34,9 @@ class AppController extends HydratedCubit<AppState>
   initState() async {
     if (state.authResponse?.accessToken != null &&
         state.selectedStation == null) {
-      final pendingAndActiveStation = await getStationStatus(1, 1);
+      final pendingAndActiveStation = await getStationStatus(1, 1, [
+        StationStatus.active,
+      ]);
       final findStationActive = pendingAndActiveStation.list?.firstWhere(
         (element) => element.status == StationStatus.active,
         orElse: () => Station(),
@@ -69,39 +71,36 @@ class AppController extends HydratedCubit<AppState>
 
   /// 绑定加油站流程
   bindStationProcess({bool isFromLogin = false}) async {
-    final pendingAndActiveStation = await getStationStatus(1, 1);
-    if (pendingAndActiveStation.list?.isEmpty ?? true) {
-      BaseRouter.push(url: AppPage.bindStationPage.path, extra: {
+    final activeStation = state.selectedStation;
+    if (activeStation != null) {
+      BaseRouter.replace(url: AppPage.mainLayoutPage.path, extra: {
         'isFromLogin': isFromLogin,
       });
     } else {
-      /// 查找有没有审核过的页面
-      final findStationActive = pendingAndActiveStation.list?.firstWhere(
-        (element) => element.status == StationStatus.active,
-        orElse: () => Station(),
-      );
-      if (findStationActive?.id != null) {
-        setSelectedStation(findStationActive!);
-        BaseRouter.replace(url: AppPage.mainLayoutPage.path);
+      final pendingStation = await getStationStatus(1, 1, [
+        StationStatus.pending_review,
+      ]);
+
+      if (pendingStation.list?.isNotEmpty ?? false) {
+        BaseRouter.replace(url: AppPage.pendingReviewPage.path, extra: {
+          'station': pendingStation.list?[0],
+          'isFromLogin': isFromLogin,
+        });
         return;
       }
 
-      BaseRouter.replace(url: AppPage.pendingReviewPage.path, extra: {
-        'station': pendingAndActiveStation.list?[0],
+      BaseRouter.replace(url: AppPage.bindStationPage.path, extra: {
         'isFromLogin': isFromLogin,
       });
     }
   }
 
-  Future<GetStationResponse> getStationStatus(int page, int pageSize) async {
+  Future<GetStationResponse> getStationStatus(
+      int page, int pageSize, List<StationStatus> statuses) async {
     final response = await stationService.getStationStatus(
       page,
       pageSize,
-      [
-        StationStatus.active.name,
-        StationStatus.pending_review.name,
-        StationStatus.rejected.name
-      ],
+      statuses.map((e) => e.name).toList(),
     );
     return response;
   }
