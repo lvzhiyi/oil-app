@@ -24,18 +24,18 @@ class StationManagementItem extends StatelessWidget {
     final colors = CustomAppColor.of(context);
 
     return Container(
-      padding: EdgeInsets.all(AppSizes.setWidth(20)),
+      padding: EdgeInsets.all(AppSizes.setWidth(16)),
       decoration: BoxDecoration(
-        color: isDisabled ? colors.bgTopBar : colors.bgContainer,
+        color: colors.bgContainer,
         borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
         border: Border.all(
-          color: colors.containerBorder,
+          color: Colors.black.withValues(alpha: 0.02),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 15,
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 6,
             offset: const Offset(0, 2),
           ),
         ],
@@ -47,50 +47,57 @@ class StationManagementItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: CommonText(
-                        text: station.displayName,
-                        fontSize: AppSizes.setFontSize(18),
-                        fontWeight: FontWeight.bold,
-                        textColor: isDisabled ? colors.txtGrey : colors.txtBlack,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    SizedBox(width: AppSizes.setWidth(8)),
-                    _buildStatusTag(context, status),
-                  ],
-                ),
-              ),
-              if (!isDisabled) _buildEditButton(context),
-            ],
-          ),
-          SizedBox(height: AppSizes.setHeight(12)),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                Icons.location_on,
-                size: AppSizes.setFontSize(16),
-                color: colors.icGrey,
-              ),
-              SizedBox(width: AppSizes.setWidth(8)),
-              Expanded(
                 child: CommonText(
-                  text: station.fullAddress,
-                  fontSize: AppSizes.setFontSize(14),
-                  textColor: colors.txtGrey,
-                  maxLines: 2,
+                  text: station.displayName,
+                  fontSize: AppSizes.setFontSize(16),
+                  fontWeight: FontWeight.w700,
+                  textColor: isDisabled ? colors.txtGrey : colors.txtBlack,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.left,
                 ),
               ),
+              SizedBox(width: AppSizes.setWidth(12)),
+              _buildStatusTag(context, status),
             ],
           ),
+          SizedBox(height: AppSizes.setHeight(12)),
+          _buildAddressArea(context),
           if (isRejected && station.rejectionReason != null && station.rejectionReason!.isNotEmpty)
             _buildRejectReason(context),
+          if (!isDisabled) _buildActionButtons(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAddressArea(BuildContext context) {
+    final colors = CustomAppColor.of(context);
+    return Container(
+      padding: EdgeInsets.all(AppSizes.setWidth(8)),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF9FAFB),
+        borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.location_on,
+            size: AppSizes.setFontSize(14),
+            color: const Color(0xff6B7280),
+          ),
+          SizedBox(width: AppSizes.setWidth(6)),
+          Expanded(
+            child: CommonText(
+              text: station.fullAddress,
+              fontSize: AppSizes.setFontSize(13),
+              textColor: colors.txtGrey,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.left,
+            ),
+          ),
         ],
       ),
     );
@@ -101,97 +108,68 @@ class StationManagementItem extends StatelessWidget {
     String label;
     Color bgColor;
     Color textColor;
-    Color borderColor;
 
     switch (status) {
       case StationStatus.active:
         label = '正常';
-        bgColor = AppColor.containerGreen;
-        textColor = AppColor.green;
-        borderColor = AppColor.green.withValues(alpha: 0.3);
+        bgColor = const Color(0xFFECFDF5);
+        textColor = const Color(0xFF10B981);
         break;
       case StationStatus.pending_review:
         label = '待审核';
         bgColor = colors.btnPurple.withValues(alpha: 0.1);
         textColor = colors.btnPurple;
-        borderColor = colors.btnPurple.withValues(alpha: 0.3);
         break;
       case StationStatus.rejected:
         label = '已驳回';
-        bgColor = AppColor.containerRed.withValues(alpha: 0.1);
-        textColor = AppColor.txtRed;
-        borderColor = AppColor.txtRed.withValues(alpha: 0.3);
+        bgColor = const Color(0xFFFEF2F2);
+        textColor = const Color(0xFFEF4444);
         break;
       case StationStatus.disabled:
         label = '禁用';
-        bgColor = colors.containerBorder;
-        textColor = colors.txtGrey;
-        borderColor = colors.containerBorder;
+        bgColor = const Color(0xFFF3F4F6);
+        textColor = const Color(0xFF9CA3AF);
         break;
       default:
         label = '未知';
         bgColor = colors.containerBorder;
         textColor = colors.txtGrey;
-        borderColor = colors.containerBorder;
     }
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.setWidth(6),
+        horizontal: AppSizes.setWidth(8),
         vertical: AppSizes.setHeight(2),
       ),
       decoration: BoxDecoration(
         color: bgColor,
-        border: Border.all(
-          color: borderColor,
-          width: 1,
-        ),
         borderRadius: BorderRadius.circular(AppSizes.setWidth(4)),
       ),
       child: CommonText(
         text: label,
-        fontSize: AppSizes.setFontSize(10),
+        fontSize: AppSizes.setFontSize(11),
         fontWeight: FontWeight.w500,
         textColor: textColor,
       ),
     );
   }
 
-  Widget _buildEditButton(BuildContext context) {
-    final colors = CustomAppColor.of(context);
-    return GestureDetector(
-      onTap: onEdit,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppSizes.setWidth(8),
-          vertical: AppSizes.setHeight(4),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.edit_outlined,
-              size: AppSizes.setFontSize(14),
-              color: colors.txtGrey,
-            ),
-            SizedBox(width: AppSizes.setWidth(4)),
-            CommonText(
-              text: '修改',
-              fontSize: AppSizes.setFontSize(12),
-              textColor: colors.txtGrey,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildRejectReason(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: AppSizes.setHeight(12)),
-      padding: EdgeInsets.all(AppSizes.setWidth(10)),
+      margin: EdgeInsets.only(
+        top: AppSizes.setHeight(12),
+        bottom: AppSizes.setHeight(12),
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.setWidth(12),
+        vertical: AppSizes.setHeight(10),
+      ),
       decoration: BoxDecoration(
-        color: AppColor.containerRed.withValues(alpha: 0.1),
+        color: const Color(0xFFFEF2F2),
+        border: Border.all(
+          color: const Color(0xFFEF4444).withValues(alpha: 0.2),
+          width: 1,
+        ),
         borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
       ),
       child: Row(
@@ -199,32 +177,152 @@ class StationManagementItem extends StatelessWidget {
         children: [
           Icon(
             Icons.info_outline,
-            size: AppSizes.setFontSize(12),
-            color: AppColor.txtRed,
+            size: AppSizes.setFontSize(16),
+            color: const Color(0xFFEF4444),
           ),
           SizedBox(width: AppSizes.setWidth(8)),
           Expanded(
-            child: RichText(
-              text: TextSpan(
-                style: TextStyle(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CommonText(
+                  text: '审核不通过原因：',
                   fontSize: AppSizes.setFontSize(12),
-                  color: AppColor.txtRed,
-                  height: 1.4,
+                  fontWeight: FontWeight.w700,
+                  textColor: const Color(0xFFEF4444),
                 ),
-                children: [
-                  const TextSpan(
-                    text: '驳回原因：',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  TextSpan(
-                    text: station.rejectionReason ?? '',
-                  ),
-                ],
-              ),
+                SizedBox(height: AppSizes.setHeight(2)),
+                CommonText(
+                  text: station.rejectionReason ?? '',
+                  fontSize: AppSizes.setFontSize(12),
+                  textColor: const Color(0xFFEF4444).withValues(alpha: 0.9),
+                  maxLines: null,
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildActionButtons(BuildContext context) {
+    final colors = CustomAppColor.of(context);
+    final isRejected = station.status == StationStatus.rejected;
+
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: AppSizes.setHeight(12)),
+          child: CustomPaint(
+            painter: DashedLinePainter(
+              color: colors.containerBorder,
+              strokeWidth: 1,
+              dashWidth: 4,
+              dashSpace: 4,
+            ),
+            child: const SizedBox(
+              height: 1,
+              width: double.infinity,
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: AppSizes.setHeight(12)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              if (isRejected)
+                GestureDetector(
+                  onTap: onEdit,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSizes.setWidth(16),
+                      vertical: AppSizes.setHeight(6),
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF5F3FF),
+                      border: Border.all(
+                        color: colors.btnPurple,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(AppSizes.setWidth(16)),
+                    ),
+                    child: CommonText(
+                      text: '去修改并重新提交',
+                      fontSize: AppSizes.setFontSize(13),
+                      fontWeight: FontWeight.w500,
+                      textColor: colors.btnPurple,
+                    ),
+                  ),
+                )
+              else
+                GestureDetector(
+                  onTap: onEdit,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSizes.setWidth(16),
+                      vertical: AppSizes.setHeight(6),
+                    ),
+                    decoration: BoxDecoration(
+                      color: colors.bgContainer,
+                      border: Border.all(
+                        color: colors.containerBorder,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(AppSizes.setWidth(16)),
+                    ),
+                    child: CommonText(
+                      text: '修改信息',
+                      fontSize: AppSizes.setFontSize(13),
+                      textColor: colors.txtBlack,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class DashedLinePainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double dashWidth;
+  final double dashSpace;
+
+  DashedLinePainter({
+    required this.color,
+    this.strokeWidth = 1,
+    this.dashWidth = 4,
+    this.dashSpace = 4,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    double startX = 0;
+    while (startX < size.width) {
+      canvas.drawLine(
+        Offset(startX, size.height / 2),
+        Offset(startX + dashWidth, size.height / 2),
+        paint,
+      );
+      startX += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(DashedLinePainter oldDelegate) {
+    return oldDelegate.color != color ||
+        oldDelegate.strokeWidth != strokeWidth ||
+        oldDelegate.dashWidth != dashWidth ||
+        oldDelegate.dashSpace != dashSpace;
   }
 }

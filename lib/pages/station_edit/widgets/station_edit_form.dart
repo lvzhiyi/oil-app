@@ -1,14 +1,16 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:oil_business_app/pages/station_edit/controller.dart';
 import 'package:oil_business_app/pages/station_edit/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
-import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dart';
 import 'package:oil_business_app/widgets/base/textfield/common_city_picker.dart';
-import 'package:oil_business_app/widgets/base/textfield/common_img_upload.dart';
 
 class StationEditForm extends StatefulWidget {
   final StationEditState state;
@@ -90,7 +92,7 @@ class _StationEditFormState extends State<StationEditForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomAppColor.of(context).bgScaffold,
+      backgroundColor: const Color(0xffF5F7FA),
       appBar: AppBar(
         backgroundColor: CustomAppColor.of(context).bgScaffold,
         elevation: 0,
@@ -118,100 +120,101 @@ class _StationEditFormState extends State<StationEditForm> {
       bottom: true,
       top: false,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(20)),
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-                child: CommonTextFormField(
-                  controller: _nameController,
-                  borderColor: CustomAppColor.of(context).textFieldBorder,
-                  leadingIcon: Image.asset(
-                    AssetsIcon.IC_PROFILE,
-                    width: AppSizes.setHeight(20),
-                    height: AppSizes.setHeight(20),
+              SizedBox(height: AppSizes.setHeight(16)),
+              _buildFormSection(
+                context: context,
+                title: '基础信息',
+                children: [
+                  _buildInputWrapper(
+                    context: context,
+                    label: '加油站名称',
+                    child: CommonTextFormField(
+                      controller: _nameController,
+                      borderColor: CustomAppColor.of(context).textFieldBorder,
+                      fillColor: const Color(0xFFF9FAFB),
+                      radius: 10,
+                      hintText: '请输入加油站名称',
+                      onChanged: (value) => widget.controller.updateName(value ?? ''),
+                    ),
                   ),
-                  hintText: '加油站名称',
-                  onChanged: (value) => widget.controller.updateName(value ?? ''),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
-                child: CommonCityPickerFormField(
-                  controller: _cityController,
-                  name: 'city',
-                  hintText: '选择城市 省/市/区',
-                  initialCityData: widget.state.provinceCode.isNotEmpty
-                      ? [
-                          widget.state.provinceCode,
-                          widget.state.cityCode,
-                          widget.state.areaCode,
-                        ]
-                      : null,
-                  onChanged: (cityData) {
-                    widget.controller.updateCityData(cityData);
-                    setState(() {
-                      _cityController.text = _buildCityText();
-                    });
-                  },
-                  borderColor: CustomAppColor.of(context).textFieldBorder,
-                  leadingIcon: Image.asset(
-                    AssetsIcon.IC_PASSWORD,
-                    width: AppSizes.setHeight(20),
-                    height: AppSizes.setHeight(20),
+                  _buildInputWrapper(
+                    context: context,
+                    label: '所在区域',
+                    child: CommonCityPickerFormField(
+                      controller: _cityController,
+                      name: 'city',
+                      hintText: '选择省/市/区',
+                      initialCityData: widget.state.provinceCode.isNotEmpty
+                          ? [
+                              widget.state.provinceCode,
+                              widget.state.cityCode,
+                              widget.state.areaCode,
+                            ]
+                          : null,
+                      onChanged: (cityData) {
+                        widget.controller.updateCityData(cityData);
+                        setState(() {
+                          _cityController.text = _buildCityText();
+                        });
+                      },
+                      borderColor: CustomAppColor.of(context).textFieldBorder,
+                      fillColor: const Color(0xFFF9FAFB),
+                      radius: 10,
+                      suffixIcon: Icon(
+                        Icons.keyboard_arrow_down,
+                        size: AppSizes.setFontSize(20),
+                        color: const Color(0xFF9CA3AF),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
-                child: CommonTextFormField(
-                  controller: _addressDetailController,
-                  borderColor: CustomAppColor.of(context).textFieldBorder,
-                  leadingIcon: Image.asset(
-                    AssetsIcon.IC_BANK,
-                    width: AppSizes.setHeight(20),
-                    height: AppSizes.setHeight(20),
+                  _buildInputWrapper(
+                    context: context,
+                    label: '详细地址',
+                    child: CommonTextFormField(
+                      controller: _addressDetailController,
+                      borderColor: CustomAppColor.of(context).textFieldBorder,
+                      fillColor: const Color(0xFFF9FAFB),
+                      radius: 10,
+                      hintText: '请输入详细地址（不含省市区）',
+                      onChanged: (value) => widget.controller.updateAddressDetail(value ?? ''),
+                    ),
                   ),
-                  hintText: '详细地址',
-                  onChanged: (value) => widget.controller.updateAddressDetail(value ?? ''),
-                ),
+                ],
               ),
-              Padding(
-                padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
-                child: CommonImgUpload(
-                  name: 'businessLicenseUrl',
-                  controller: _businessLicenseController,
-                  hintText: '上传营业执照',
-                  maxLines: 2,
-                  textAlign: TextAlign.start,
-                  textAlignVertical: TextAlignVertical.top,
-                  radius: 6,
-                  onChanged: (value) {
-                    widget.controller.updateBusinessLicenseUrl(value ?? '');
-                  },
-                  hintStyle: TextStyle(
-                    height: AppSizes.setHeight(6),
-                    color: CustomAppColor.of(context).txtGrey,
-                    fontWeight: FontWeight.w500,
+              _buildFormSection(
+                context: context,
+                title: '资质证照',
+                children: [
+                  _buildInputWrapper(
+                    context: context,
+                    label: '营业执照',
+                    child: _buildImageUpload(
+                      context: context,
+                      controller: _businessLicenseController,
+                      hintText: '点击上传照片',
+                      onChanged: (value) {
+                        widget.controller.updateBusinessLicenseUrl(value ?? '');
+                      },
+                    ),
                   ),
-                ),
-              ),
-              CommonImgUpload(
-                name: 'fuelRetailPermitUrl',
-                controller: _fuelRetailPermitController,
-                hintText: '上传成品油零售许可',
-                textAlign: TextAlign.start,
-                textAlignVertical: TextAlignVertical.top,
-                onChanged: (value) {
-                  widget.controller.updateFuelRetailPermitUrl(value ?? '');
-                },
-                hintStyle: TextStyle(
-                  height: AppSizes.setHeight(6),
-                  color: CustomAppColor.of(context).txtGrey,
-                  fontWeight: FontWeight.w500,
-                ),
+                  _buildInputWrapper(
+                    context: context,
+                    label: '成品油零售许可',
+                    child: _buildImageUpload(
+                      context: context,
+                      controller: _fuelRetailPermitController,
+                      hintText: '点击上传照片',
+                      onChanged: (value) {
+                        widget.controller.updateFuelRetailPermitUrl(value ?? '');
+                      },
+                    ),
+                  ),
+                ],
               ),
               if (widget.state.hasError && widget.state.errorMessage != null)
                 Container(
@@ -228,11 +231,14 @@ class _StationEditFormState extends State<StationEditForm> {
                     textAlign: TextAlign.left,
                   ),
                 ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(20)),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
                 child: CommonButton(
-                  isLoading: widget.state.isLoading,
-                  btnText: '保存',
+                  isLoading: widget.controller.state.isLoading,
+                  btnText: '保存提交',
+                  radius: 28,
+                  pVertical: AppSizes.setHeight(14),
+                  fontSize: AppSizes.setFontSize(16),
                   onTap: () {
                     widget.controller.save(context);
                   },
@@ -243,6 +249,208 @@ class _StationEditFormState extends State<StationEditForm> {
         ),
       ),
     );
+  }
+
+  Widget _buildFormSection({
+    required BuildContext context,
+    required String title,
+    required List<Widget> children,
+  }) {
+    final colors = CustomAppColor.of(context);
+    return Container(
+      margin: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
+      padding: EdgeInsets.all(AppSizes.setWidth(20)),
+      decoration: BoxDecoration(
+        color: colors.bgContainer,
+        borderRadius: BorderRadius.circular(AppSizes.setWidth(16)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: AppSizes.setWidth(4),
+                height: AppSizes.setHeight(14),
+                decoration: BoxDecoration(
+                  color: colors.btnPurple,
+                  borderRadius: BorderRadius.circular(AppSizes.setWidth(2)),
+                ),
+              ),
+              SizedBox(width: AppSizes.setWidth(6)),
+              CommonText(
+                text: title,
+                fontSize: AppSizes.setFontSize(15),
+                fontWeight: FontWeight.w700,
+                textColor: colors.txtBlack,
+              ),
+            ],
+          ),
+          SizedBox(height: AppSizes.setHeight(16)),
+          ...children,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInputWrapper({
+    required BuildContext context,
+    required String label,
+    required Widget child,
+  }) {
+    return Container(
+      margin: EdgeInsets.only(bottom: AppSizes.setHeight(20)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CommonText(
+            text: label,
+            fontSize: AppSizes.setFontSize(14),
+            fontWeight: FontWeight.w500,
+            textColor: CustomAppColor.of(context).txtBlack,
+          ),
+          SizedBox(height: AppSizes.setHeight(8)),
+          child,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImageUpload({
+    required BuildContext context,
+    required TextEditingController controller,
+    required String hintText,
+    required ValueChanged<String?> onChanged,
+  }) {
+    final colors = CustomAppColor.of(context);
+    final hasImage = controller.text.isNotEmpty;
+    
+    return GestureDetector(
+      onTap: () {
+        if (!hasImage) {
+          _pickImage(controller, onChanged);
+        } else {
+          _pickImage(controller, onChanged);
+        }
+      },
+      child: Container(
+        height: AppSizes.setHeight(140),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: hasImage ? Colors.transparent : const Color(0xFFF9FAFB),
+          border: Border.all(
+            color: const Color(0xFFD1D5DB),
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
+        ),
+        child: hasImage
+            ? Stack(
+                fit: StackFit.expand,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
+                    child: controller.text.startsWith('http')
+                        ? CachedNetworkImage(
+                            imageUrl: controller.text,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Container(
+                              color: const Color(0xFFF9FAFB),
+                              child: const Center(child: CircularProgressIndicator()),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                              color: const Color(0xFFF9FAFB),
+                              child: Icon(Icons.error, color: colors.txtGrey),
+                            ),
+                          )
+                        : Image.file(
+                            File(controller.text),
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) => Container(
+                              color: const Color(0xFFF9FAFB),
+                              child: Icon(Icons.error, color: colors.txtGrey),
+                            ),
+                          ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: AppSizes.setHeight(6),
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.6),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(AppSizes.setWidth(12)),
+                          bottomRight: Radius.circular(AppSizes.setWidth(12)),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.edit,
+                            size: AppSizes.setFontSize(12),
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: AppSizes.setWidth(4)),
+                          CommonText(
+                            text: '点击更换',
+                            fontSize: AppSizes.setFontSize(12),
+                            textColor: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.image_outlined,
+                      size: AppSizes.setFontSize(32),
+                      color: const Color(0xFFD1D5DB),
+                    ),
+                    SizedBox(height: AppSizes.setHeight(8)),
+                    CommonText(
+                      text: hintText,
+                      fontSize: AppSizes.setFontSize(12),
+                      textColor: const Color(0xFF9CA3AF),
+                    ),
+                  ],
+                ),
+              ),
+      ),
+    );
+  }
+
+  Future<void> _pickImage(
+    TextEditingController controller,
+    ValueChanged<String?> onChanged,
+  ) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1920,
+      maxHeight: 1080,
+      imageQuality: 85,
+    );
+    if (image != null) {
+      controller.text = image.path;
+      onChanged(image.path);
+    }
   }
 
 }
