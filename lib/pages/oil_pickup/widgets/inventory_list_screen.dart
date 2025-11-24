@@ -76,27 +76,23 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
       return _buildEmptyState(context);
     }
 
-    return SafeArea(
-      top: true,
-      bottom: false,
-      child: ListView.builder(
-        controller: _scrollController,
-        padding: EdgeInsets.symmetric(
-          horizontal: pt(12),
-          vertical: pt(12),
-        ),
-        itemCount: widget.state.inventories.length + 1,
-        itemBuilder: (context, index) {
-          if (index == widget.state.inventories.length) {
-            return _buildLoadingMoreIndicator(context);
-          }
-          final inventory = widget.state.inventories[index];
-          return InventoryItem(
-            inventory: inventory,
-            onTap: () => widget.controller.navigateToDetail(context, inventory),
-          );
-        },
+    return ListView.builder(
+      controller: _scrollController,
+      padding: EdgeInsets.symmetric(
+        horizontal: pt(12),
+        vertical: pt(12),
       ),
+      itemCount: widget.state.inventories.length + 1,
+      itemBuilder: (context, index) {
+        if (index == widget.state.inventories.length) {
+          return _buildLoadingMoreIndicator(context);
+        }
+        final inventory = widget.state.inventories[index];
+        return InventoryItem(
+          inventory: inventory,
+          onTap: () => widget.controller.navigateToDetail(context, inventory),
+        );
+      },
     );
   }
 
