@@ -41,31 +41,13 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
   }
 
   void onVehicleInfoPasted(String text) {
-    try {
-      final vehicleModel = VehicleInfoParser.parse(text);
-      final jsonString = VehicleInfoParser.toJson(vehicleModel);
-      final missing = VehicleInfoParser.validateRequired(vehicleModel);
-
-      emit(state.copyWith(
-        vehicleInfo: jsonString,
-        vehicleModel: vehicleModel,
-        missingFields: missing,
-        parseSuccess: true,
-        errorMessage: null,
-      ));
-
-      if (missing.isNotEmpty) {
-        l.w('OilPickupDetail', '缺少必填字段: ${missing.join(', ')}');
-      } else {
-        l.i('OilPickupDetail', '车辆信息解析成功');
-      }
-    } catch (e) {
-      l.e('OilPickupDetail', '车辆信息解析失败: $e');
-      emit(state.copyWith(
-        parseSuccess: false,
-        errorMessage: '解析失败,请检查格式',
-      ));
-    }
+    emit(state.copyWith(
+      vehicleInfo: text.trim(),
+      vehicleModel: null,
+      missingFields: const [],
+      parseSuccess: false,
+      errorMessage: null,
+    ));
   }
 
   void resetVehicleInfo() {
@@ -148,12 +130,15 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
         return;
       }
 
-      // Ensure the vehicle model has the correct oil amount if not set
-      final finalVehicleModel = vehicleModel.copyWith(
-        oilAmount: vehicleModel.oilAmount ?? finalOilAmount,
-      );
-      
-      final vehicleInfoJson = VehicleInfoParser.toJson(finalVehicleModel);
+      String vehicleInfoJson;
+      if (state.vehicleInfo.isNotEmpty) {
+        vehicleInfoJson = state.vehicleInfo;
+      } else {
+        final finalVehicleModel = vehicleModel.copyWith(
+          oilAmount: vehicleModel.oilAmount ?? finalOilAmount,
+        );
+        vehicleInfoJson = VehicleInfoParser.toJson(finalVehicleModel);
+      }
 
       final request = WithdrawRequest(
         withdrawTon: oilAmountInt,
@@ -188,7 +173,7 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
             'inventory': state.inventory!,
             'station': state.selectedStation!,
             'oilAmount': finalOilAmount,
-            'vehicleModel': finalVehicleModel,
+            'vehicleModel': vehicleModel,
           },
         );
       }

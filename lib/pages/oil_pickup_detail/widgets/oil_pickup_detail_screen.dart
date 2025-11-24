@@ -7,7 +7,6 @@ import 'package:oil_business_app/pages/oil_pickup/widgets/station_selector_butto
 import 'package:oil_business_app/pages/oil_pickup_detail/controller.dart';
 import 'package:oil_business_app/pages/oil_pickup_detail/state.dart';
 import 'package:oil_business_app/pages/oil_pickup_detail/widgets/smart_parse_card.dart';
-import 'package:oil_business_app/pages/oil_pickup_detail/widgets/vehicle_info_form.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/fuel_type_helper.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
@@ -33,160 +32,39 @@ class OilPickupDetailScreen extends StatefulWidget {
 class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
   late TextEditingController _oilAmountController;
   
-  // Form Controllers
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late TextEditingController _driverNameController;
-  late TextEditingController _plateNumberController;
-  late TextEditingController _idCardController;
-  late TextEditingController _phoneController;
-  late TextEditingController _loadCapacityController;
-  late TextEditingController _tank1CapacityController;
-  late TextEditingController _tank2CapacityController;
-  
-  // New Fields
-  late TextEditingController _vehicleTypeController;
-  late TextEditingController _driverLicenseController;
-  late TextEditingController _vehicleLicenseController;
-  late TextEditingController _tankTypeController;
-  late TextEditingController _hasPumpController;
 
   @override
   void initState() {
     super.initState();
     _oilAmountController = TextEditingController(text: widget.state.oilAmount);
-    
-    // Init Form Controllers
-    _driverNameController = TextEditingController();
-    _plateNumberController = TextEditingController();
-    _idCardController = TextEditingController();
-    _phoneController = TextEditingController();
-    _loadCapacityController = TextEditingController();
-    _tank1CapacityController = TextEditingController();
-    _tank2CapacityController = TextEditingController();
-    
-    _vehicleTypeController = TextEditingController();
-    _driverLicenseController = TextEditingController();
-    _vehicleLicenseController = TextEditingController();
-    _tankTypeController = TextEditingController();
-    _hasPumpController = TextEditingController();
-    
-    // If there's initial data (unlikely on fresh load, but good practice)
-    if (widget.state.vehicleModel != null) {
-      _populateForm(widget.state.vehicleModel!);
-    }
   }
 
   @override
   void dispose() {
     _oilAmountController.dispose();
-    _driverNameController.dispose();
-    _plateNumberController.dispose();
-    _idCardController.dispose();
-    _phoneController.dispose();
-    _loadCapacityController.dispose();
-    _tank1CapacityController.dispose();
-    _tank2CapacityController.dispose();
-    
-    _vehicleTypeController.dispose();
-    _driverLicenseController.dispose();
-    _vehicleLicenseController.dispose();
-    _tankTypeController.dispose();
-    _hasPumpController.dispose();
     super.dispose();
-  }
-  
-  void _populateForm(VehicleModel model) {
-    _driverNameController.text = model.driverName ?? '';
-    _plateNumberController.text = model.plateNumber ?? '';
-    _idCardController.text = model.driverIdCard ?? '';
-    _phoneController.text = model.driverPhone ?? '';
-    _loadCapacityController.text = model.loadCapacity ?? '';
-    _tank1CapacityController.text = model.tank1Capacity ?? '';
-    _tank2CapacityController.text = model.tank2Capacity ?? '';
-    
-    _vehicleTypeController.text = model.vehicleType ?? '';
-    _driverLicenseController.text = model.driverLicense ?? '';
-    _vehicleLicenseController.text = model.vehicleLicense ?? '';
-    _tankTypeController.text = model.tankType ?? '';
-    _hasPumpController.text = model.hasPump ?? '';
-    
-    // Also update the main oil amount if parsed
-    if (model.oilAmount != null && model.oilAmount!.isNotEmpty) {
-      // Always update if parser found an amount, assuming "Intelligent Fill" takes precedence
-      _oilAmountController.text = model.oilAmount!;
-      widget.controller.updateOilAmount(model.oilAmount!);
-    }
   }
 
   void _handleGenerateCertificate() {
-    if (!_formKey.currentState!.validate()) {
-      SportsToast.showWarning('请完善车辆及司机信息');
+    final currentOilAmount = _oilAmountController.text.trim();
+    
+    if (widget.state.vehicleInfo.isEmpty) {
+      SportsToast.showWarning('请输入车辆及司机信息');
       return;
     }
 
-    final currentOilAmount = _oilAmountController.text.trim();
-    
-    // Construct VehicleModel from form
-    final vehicleModel = VehicleModel(
-      driverName: _driverNameController.text.trim(),
-      plateNumber: _plateNumberController.text.trim(),
-      driverIdCard: _idCardController.text.trim(),
-      driverPhone: _phoneController.text.trim(),
-      oilAmount: currentOilAmount, // Use the main oil amount as the definitive one
-      loadCapacity: _loadCapacityController.text.trim(),
-      tank1Capacity: _tank1CapacityController.text.trim(),
-      tank2Capacity: _tank2CapacityController.text.trim(),
-      
-      vehicleType: _vehicleTypeController.text.trim(),
-      driverLicense: _driverLicenseController.text.trim(),
-      vehicleLicense: _vehicleLicenseController.text.trim(),
-      tankType: _tankTypeController.text.trim(),
-      hasPump: _hasPumpController.text.trim(),
-    );
-    
-    final baseModel = widget.state.vehicleModel ?? VehicleModel();
-    final finalModel = baseModel.copyWith(
-       driverName: _driverNameController.text.trim(),
-       plateNumber: _plateNumberController.text.trim(),
-       driverIdCard: _idCardController.text.trim(),
-       driverPhone: _phoneController.text.trim(),
-       oilAmount: currentOilAmount,
-       loadCapacity: _loadCapacityController.text.trim(),
-       tank1Capacity: _tank1CapacityController.text.trim(),
-       tank2Capacity: _tank2CapacityController.text.trim(),
-       
-       vehicleType: _vehicleTypeController.text.trim(),
-       driverLicense: _driverLicenseController.text.trim(),
-       vehicleLicense: _vehicleLicenseController.text.trim(),
-       tankType: _tankTypeController.text.trim(),
-       hasPump: _hasPumpController.text.trim(),
-    );
+    final vehicleModel = widget.state.vehicleModel ?? VehicleModel();
 
     widget.controller.generateCertificate(
       context, 
       currentOilAmount: currentOilAmount,
-      vehicleModel: finalModel,
+      vehicleModel: vehicleModel,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<OilPickupDetailCtrl, OilPickupDetailState>(
-      listenWhen: (previous, current) => previous.vehicleModel != current.vehicleModel,
-      listener: (context, state) {
-        if (state.vehicleModel != null) {
-          _populateForm(state.vehicleModel!);
-          
-          // Trigger validation to clear errors if fields are now filled,
-          // or to highlight what is still missing.
-          // Using addPostFrameCallback to ensure UI is ready if needed, 
-          // though for FormState synchronous call is usually fine.
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-             _formKey.currentState?.validate();
-          });
-        }
-      },
-      child: GlobalUpdateUi(
+    return GlobalUpdateUi(
         builder: (context, appCtrl) {
           final selectedStation = appCtrl.state.selectedStation;
           final currentState = widget.state.copyWith(selectedStation: selectedStation);
@@ -237,31 +115,8 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
                               ),
                               SizedBox(height: AppSizes.setHeight(24)),
                               
-                              // Smart Parse Card
                               SmartParseCard(
                                 onParse: (text) => widget.controller.onVehicleInfoPasted(text),
-                              ),
-                              
-                              SizedBox(height: AppSizes.setHeight(16)),
-                              
-                              // Structured Form
-                              Form(
-                                key: _formKey,
-                                child: VehicleInfoForm(
-                                  driverNameController: _driverNameController,
-                                  plateNumberController: _plateNumberController,
-                                  idCardController: _idCardController,
-                                  phoneController: _phoneController,
-                                  loadCapacityController: _loadCapacityController,
-                                  tank1CapacityController: _tank1CapacityController,
-                                  tank2CapacityController: _tank2CapacityController,
-                                  
-                                  vehicleTypeController: _vehicleTypeController,
-                                  driverLicenseController: _driverLicenseController,
-                                  vehicleLicenseController: _vehicleLicenseController,
-                                  tankTypeController: _tankTypeController,
-                                  hasPumpController: _hasPumpController,
-                                ),
                               ),
                               
                               SizedBox(height: AppSizes.setHeight(20)),
@@ -309,7 +164,6 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
             ),
           );
         },
-      ),
     );
   }
 

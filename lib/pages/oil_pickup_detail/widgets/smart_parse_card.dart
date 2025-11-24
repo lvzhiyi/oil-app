@@ -23,17 +23,6 @@ class _SmartParseCardState extends State<SmartParseCard> {
     super.dispose();
   }
 
-  void _handleParse() {
-    final text = _controller.text.trim();
-    if (text.isNotEmpty) {
-      widget.onParse(text);
-      // Collapse after parsing to show the result form
-      setState(() {
-        _isExpanded = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -69,13 +58,13 @@ class _SmartParseCardState extends State<SmartParseCard> {
                   Row(
                     children: [
                       Icon(
-                        Icons.auto_fix_high,
+                        Icons.edit_note,
                         size: AppSizes.setWidth(18),
                         color: CustomAppColor.of(context).txtBlue,
                       ),
                       SizedBox(width: AppSizes.setWidth(8)),
                       CommonText(
-                        text: '智能填写',
+                        text: '车辆及司机信息',
                         fontSize: AppSizes.setFontSize(14),
                         fontWeight: FontWeight.w700,
                         textColor: CustomAppColor.of(context).txtBlack,
@@ -118,7 +107,7 @@ class _SmartParseCardState extends State<SmartParseCard> {
                         color: CustomAppColor.of(context).txtBlack,
                       ),
                       decoration: InputDecoration(
-                        hintText: '粘贴车辆调度信息，例如：\n车牌：川A88888 司机：张三 电话：13800000000\n身份证：510100199001011234',
+                        hintText: '粘贴车辆及司机信息',
                         hintStyle: TextStyle(
                           fontSize: AppSizes.setFontSize(13),
                           color: CustomAppColor.of(context).txtGrey.withValues(alpha: 0.6),
@@ -126,6 +115,9 @@ class _SmartParseCardState extends State<SmartParseCard> {
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.zero,
                       ),
+                      onChanged: (text) {
+                        widget.onParse(text);
+                      },
                     ),
                   ),
                   SizedBox(height: AppSizes.setHeight(12)),
@@ -145,25 +137,6 @@ class _SmartParseCardState extends State<SmartParseCard> {
                             text: '粘贴',
                             fontSize: AppSizes.setFontSize(14),
                             textColor: CustomAppColor.of(context).txtBlue,
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: _handleParse,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppSizes.setWidth(16),
-                            vertical: AppSizes.setHeight(8),
-                          ),
-                          decoration: BoxDecoration(
-                            color: CustomAppColor.of(context).txtBlue,
-                            borderRadius: BorderRadius.circular(AppSizes.setWidth(16)),
-                          ),
-                          child: CommonText(
-                            text: '立即识别',
-                            fontSize: AppSizes.setFontSize(14),
-                            textColor: CustomAppColor.of(context).white,
-                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
