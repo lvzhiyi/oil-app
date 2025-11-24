@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/interfaces/top_bar_click_listener.dart';
-import 'package:oil_business_app/pages/pickup_list/controller.dart';
-import 'package:oil_business_app/pages/pickup_list/state.dart';
-import 'package:oil_business_app/pages/pickup_list/widgets/pickup_list_item.dart';
+import 'package:oil_business_app/pages/pickup_order_list/controller.dart';
+import 'package:oil_business_app/pages/pickup_order_list/state.dart';
+import 'package:oil_business_app/pages/pickup_order_list/widgets/pickup_order_list_item.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
@@ -16,16 +16,16 @@ import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 import 'package:oil_business_app/static/icon.dart';
 
-class PickupListView extends StatefulWidget {
-  final PickupListState state;
+class PickupOrderListView extends StatefulWidget {
+  final PickupOrderListState state;
 
-  const PickupListView({Key? key, required this.state}) : super(key: key);
+  const PickupOrderListView({Key? key, required this.state}) : super(key: key);
 
   @override
-  State<PickupListView> createState() => _PickupListViewState();
+  State<PickupOrderListView> createState() => _PickupOrderListViewState();
 }
 
-class _PickupListViewState extends State<PickupListView>
+class _PickupOrderListViewState extends State<PickupOrderListView>
     implements TopBarClickListener {
 
   @override
@@ -37,7 +37,7 @@ class _PickupListViewState extends State<PickupListView>
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = context.read<PickupListCtrl>();
+    final ctrl = context.read<PickupOrderListCtrl>();
 
     return Scaffold(
       backgroundColor: CustomAppColor.of(context).bgTopBar,
@@ -57,7 +57,7 @@ class _PickupListViewState extends State<PickupListView>
     );
   }
 
-  Widget _buildList(BuildContext context, PickupListCtrl ctrl) {
+  Widget _buildList(BuildContext context, PickupOrderListCtrl ctrl) {
     if (widget.state.isLoading && widget.state.orderList.isEmpty) {
       return const Center(
         child: CupertinoActivityIndicator(),
@@ -102,11 +102,11 @@ class _PickupListViewState extends State<PickupListView>
                   },
                 );
               } else {
-                l.w('PickupListView', '订单ID为空，无法跳转到详情页');
+                l.w('PickupOrderListView', '订单ID为空，无法跳转到详情页');
                 SportsToast.showError('订单信息异常，无法查看详情');
               }
             },
-            child: PickupListItem(item: item),
+            child: PickupOrderListItem(item: item),
           );
         },
       ),
@@ -173,7 +173,7 @@ class _PickupListViewState extends State<PickupListView>
   }
 
   Widget _buildFilterBar(BuildContext context) {
-    final ctrl = context.read<PickupListCtrl>();
+    final ctrl = context.read<PickupOrderListCtrl>();
     final isPendingSelected = widget.state.tabIndex == 0;
     final isCompletedSelected = widget.state.tabIndex == 1;
 

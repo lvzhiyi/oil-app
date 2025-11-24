@@ -9,10 +9,10 @@ import 'package:oil_business_app/widgets/base/container/common_container.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 
-class PickupListItem extends StatelessWidget {
+class PickupOrderListItem extends StatelessWidget {
   final WithdrawOrderModel item;
 
-  const PickupListItem({Key? key, required this.item}) : super(key: key);
+  const PickupOrderListItem({Key? key, required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
