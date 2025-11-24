@@ -4,6 +4,7 @@ import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/model/auth_req_type.dart';
 import 'package:oil_business_app/global/model/auth_rep_type.dart';
+import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/net/code.dart';
 import 'package:oil_business_app/net/net_manager.dart';
 import 'package:oil_business_app/net/response.dart';
@@ -15,6 +16,7 @@ import 'dart:async';
 class HttpRespInterceptor extends InterceptorsWrapper {
   /// 用于控制并发刷新，确保同时只有一个刷新请求
   static Completer<bool>? _refreshCompleter;
+
   /// 标记是否正在刷新token
   static bool _isRefreshing = false;
 
@@ -62,20 +64,15 @@ class HttpRespInterceptor extends InterceptorsWrapper {
     final statusCode = err.response?.statusCode;
 
     // 检查是否是401错误，如果是则尝试token刷新
-    if (statusCode == 401) {
+    if (statusCode == 401 || statusCode == 403) {
       final requestOptions = err.requestOptions;
 
       // 如果是刷新token的请求本身返回401，说明refreshToken也过期了，需要重新登录
       if (requestOptions.path == '/auth/refresh-token') {
         l.e('HttpRespInterceptor', 'refreshToken已过期，需要重新登录');
         BaseConfig.appContext?.read<AppController>().logout();
-        if (err.response?.data is String) {
-          SportsToast.showWarning(err.response?.data as String);
-        } else if (err.response?.data['message'] != null) {
-          SportsToast.showWarning(err.response?.data['message']);
-        } else {
-          SportsToast.showWarning('登录已过期，请重新登录');
-        }
+
+        SportsToast.showWarning('登录已过期，请重新登录');
         return handler.reject(err);
       }
 
@@ -117,35 +114,9 @@ class HttpRespInterceptor extends InterceptorsWrapper {
 
         l.i('HttpRespInterceptor', '开始刷新token');
 
-        // 创建一个新的Dio实例用于刷新token，避免触发拦截器循环
-        final refreshDio = Dio(BaseOptions(
-          baseUrl: requestOptions.baseUrl,
-          connectTimeout: requestOptions.connectTimeout,
-          receiveTimeout: requestOptions.receiveTimeout,
-          sendTimeout: requestOptions.sendTimeout,
-        ));
-
         // 调用刷新token接口
         final refreshRequest = RefreshTokenRequest(refreshToken: refreshToken);
-        final response = await refreshDio.post<Map<String, dynamic>>(
-          '/auth/refresh-token',
-          data: refreshRequest.toJson(),
-        );
-
-        // 手动处理响应格式，因为刷新token的请求不经过响应拦截器
-        BaseResponse baseResponse = BaseResponse.fromJson(response.data!);
-        if (baseResponse.code != HttpCode.success) {
-          throw DioException(
-            requestOptions: response.requestOptions,
-            response: response,
-            error: '刷新token失败: ${baseResponse.message}',
-          );
-        }
-
-        // 从data字段解析AuthResponse
-        final authResponse = AuthResponse.fromJson(
-          baseResponse.data as Map<String, dynamic>,
-        );
+        final authResponse = await authService.refreshToken(refreshRequest);
 
         // 更新AppController中的token
         appController?.setAuthResponse(authResponse);
