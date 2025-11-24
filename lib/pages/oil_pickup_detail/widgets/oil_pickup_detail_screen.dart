@@ -31,7 +31,6 @@ class OilPickupDetailScreen extends StatefulWidget {
 
 class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
   late TextEditingController _oilAmountController;
-  
 
   @override
   void initState() {
@@ -47,7 +46,7 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
 
   void _handleGenerateCertificate() {
     final currentOilAmount = _oilAmountController.text.trim();
-    
+
     if (widget.state.vehicleInfo.isEmpty) {
       SportsToast.showWarning('请输入车辆及司机信息');
       return;
@@ -56,7 +55,7 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
     final vehicleModel = widget.state.vehicleModel ?? VehicleModel();
 
     widget.controller.generateCertificate(
-      context, 
+      context,
       currentOilAmount: currentOilAmount,
       vehicleModel: vehicleModel,
     );
@@ -65,213 +64,156 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return GlobalUpdateUi(
-        builder: (context, appCtrl) {
-          final selectedStation = appCtrl.state.selectedStation;
-          final currentState = widget.state.copyWith(selectedStation: selectedStation);
+      builder: (context, appCtrl) {
+        final selectedStation = appCtrl.state.selectedStation;
+        final currentState =
+            widget.state.copyWith(selectedStation: selectedStation);
 
-          return Scaffold(
+        return Scaffold(
+          backgroundColor: const Color(0xffF5F7FA),
+          appBar: AppBar(
             backgroundColor: CustomAppColor.of(context).bgScaffold,
-            appBar: AppBar(
-              backgroundColor: CustomAppColor.of(context).bgScaffold,
-              elevation: 0,
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: CustomAppColor.of(context).txtBlack,
-                ),
-                onPressed: () => Navigator.of(context).pop(),
+            elevation: 0,
+
+            shadowColor: const Color(0xffF5F7FA),
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: CustomAppColor.of(context).txtBlack,
               ),
-              title: CommonText(
-                text: '提油详情',
-                fontSize: AppSizes.setFontSize(18),
-                fontWeight: FontWeight.w600,
-                textColor: CustomAppColor.of(context).txtBlack,
-              ),
-              centerTitle: true,
+              onPressed: () => Navigator.of(context).pop(),
             ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (currentState.inventory != null) ...[
-                          _buildInventoryInfoCard(context, currentState.inventory!),
-                        ],
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: AppSizes.setHeight(16)),
-                              _buildOilAmountInput(context),
-                              SizedBox(height: AppSizes.setHeight(12)),
-                              _buildArrowDown(context),
-                              SizedBox(height: AppSizes.setHeight(12)),
-                              StationSelectorButton(
-                                station: currentState.selectedStation,
-                                onTap: () => widget.controller.selectStation(context),
-                              ),
-                              SizedBox(height: AppSizes.setHeight(24)),
-                              
-                              SmartParseCard(
-                                onParse: (text) => widget.controller.onVehicleInfoPasted(text),
-                              ),
-                              
-                              SizedBox(height: AppSizes.setHeight(20)),
-                            ],
-                          ),
-                        ),
+            title: CommonText(
+              text: '提油详情',
+              fontSize: AppSizes.setFontSize(18),
+              fontWeight: FontWeight.w600,
+              textColor: CustomAppColor.of(context).txtBlack,
+            ),
+            centerTitle: true,
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (currentState.inventory != null) ...[
+                        _buildInventoryInfoCard(
+                            context, currentState.inventory!),
                       ],
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(
-                    left: AppSizes.setWidth(16),
-                    right: AppSizes.setWidth(16),
-                    top: AppSizes.setHeight(12),
-                    bottom: AppSizes.setHeight(12) + MediaQuery.of(context).padding.bottom,
-                  ),
-                  decoration: BoxDecoration(
-                    color: CustomAppColor.of(context).bgScaffold,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 4,
-                        offset: const Offset(0, -2),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: AppSizes.setWidth(16)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildOilAmountInput(context),
+                            SizedBox(height: AppSizes.setHeight(12)),
+                            StationSelectorButton(
+                              station: currentState.selectedStation,
+                              onTap: () =>
+                                  widget.controller.selectStation(context),
+                            ),
+                            SizedBox(height: AppSizes.setHeight(12)),
+                            SmartParseCard(
+                              onParse: (text) =>
+                                  widget.controller.onVehicleInfoPasted(text),
+                            ),
+                            SizedBox(height: AppSizes.setHeight(100)),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                  child: SafeArea(
-                    top: false,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CommonButton(
-                          btnText: '生成提油凭证',
-                          height: AppSizes.setHeight(52),
-                          fontSize: AppSizes.setFontSize(15),
-                          isLoading: currentState.isLoading,
-                          onTap: _handleGenerateCertificate,
-                        ),
-                      ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(
+                  left: AppSizes.setWidth(16),
+                  right: AppSizes.setWidth(16),
+                  top: AppSizes.setHeight(12),
+                  bottom: AppSizes.setHeight(12) +
+                      MediaQuery.of(context).padding.bottom,
+                ),
+                decoration: BoxDecoration(
+                  color: CustomAppColor.of(context).bgScaffold,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 4,
+                      offset: const Offset(0, -2),
                     ),
+                  ],
+                ),
+                child: SafeArea(
+                  top: false,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CommonButton(
+                        btnText: '生成提油凭证',
+                        height: AppSizes.setHeight(52),
+                        fontSize: AppSizes.setFontSize(15),
+                        isLoading: currentState.isLoading,
+                        onTap: _handleGenerateCertificate,
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          );
-        },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildInventoryInfoCard(BuildContext context, InventoryModel inventory) {
+  Widget _buildInventoryInfoCard(
+      BuildContext context, InventoryModel inventory) {
     return Container(
-      margin: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
-      padding: EdgeInsets.only(
-        top: AppSizes.setHeight(16),
-        bottom: AppSizes.setHeight(24),
-        left: AppSizes.setWidth(16),
-        right: AppSizes.setWidth(16),
+      width: double.infinity,
+      margin: EdgeInsets.only(
+          left: AppSizes.setWidth(16),
+          right: AppSizes.setWidth(16),
+          top: AppSizes.setHeight(12),
+          bottom: 0),
+      padding: EdgeInsets.symmetric(
+        vertical: AppSizes.setHeight(24),
       ),
       decoration: BoxDecoration(
         color: CustomAppColor.of(context).white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppSizes.setWidth(12)),
+            topRight: Radius.circular(AppSizes.setWidth(12))),
       ),
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Positioned(
-            right: -AppSizes.setWidth(16),
-            bottom: -AppSizes.setHeight(16),
-            child: Icon(
-              Icons.warehouse,
-              size: AppSizes.setWidth(144),
-              color: CustomAppColor.of(context).txtGrey.withValues(alpha: 0.1),
-            ),
+          CommonText(
+            text: inventory.depotName ?? '',
+            fontSize: AppSizes.setFontSize(16),
+            fontWeight: FontWeight.w700,
+            textColor: CustomAppColor.of(context).txtBlack,
+            textAlign: TextAlign.center,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CommonText(
-                          text: inventory.depotName ?? '',
-                          fontSize: AppSizes.setFontSize(20),
-                          fontWeight: FontWeight.w700,
-                          textColor: CustomAppColor.of(context).txtBlack,
-                          textAlign: TextAlign.left,
-                        ),
-                        SizedBox(height: AppSizes.setHeight(4)),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.setWidth(12),
-                      vertical: AppSizes.setHeight(4),
-                    ),
-                    decoration: BoxDecoration(
-                      color: CustomAppColor.of(context).txtBlue.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(AppSizes.setWidth(4)),
-                    ),
-                    child: CommonText(
-                      text: FuelTypeHelper.getDisplayName(inventory.fuelType),
-                      fontSize: AppSizes.setFontSize(14),
-                      fontWeight: FontWeight.w700,
-                      textColor: CustomAppColor.of(context).txtBlue,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: AppSizes.setHeight(16)),
-              CommonText(
-                text: '当前剩余库存',
-                fontSize: AppSizes.setFontSize(14),
-                textColor: CustomAppColor.of(context).txtGrey,
-                textAlign: TextAlign.left,
-              ),
-              SizedBox(height: AppSizes.setHeight(4)),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  CommonText(
-                    text: '${(inventory.availableTon ?? 0).toInt()}',
-                    fontSize: AppSizes.setFontSize(36),
-                    fontWeight: FontWeight.w700,
-                    textColor: CustomAppColor.of(context).txtBlack,
-                    textAlign: TextAlign.left,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: AppSizes.setWidth(4),
-                      bottom: AppSizes.setHeight(4),
-                    ),
-                    child: CommonText(
-                      text: '吨',
-                      fontSize: AppSizes.setFontSize(14),
-                      fontWeight: FontWeight.w400,
-                      textColor: CustomAppColor.of(context).txtGrey,
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          SizedBox(height: AppSizes.setHeight(6)),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.setWidth(10),
+              vertical: AppSizes.setHeight(2),
+            ),
+            decoration: BoxDecoration(
+              color: CustomAppColor.of(context).bgScaffold,
+              borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
+            ),
+            child: CommonText(
+              text: '可用库存: ${(inventory.availableTon ?? 0).toInt()} 吨',
+              fontSize: AppSizes.setFontSize(13),
+              fontWeight: FontWeight.w400,
+              textColor: CustomAppColor.of(context).txtGrey,
+              textAlign: TextAlign.center,
+            ),
           ),
         ],
       ),
@@ -280,14 +222,15 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
 
   Widget _buildOilAmountInput(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(AppSizes.setWidth(24)),
+      padding: EdgeInsets.symmetric(
+        vertical: AppSizes.setHeight(24),
+        horizontal: AppSizes.setWidth(20),
+      ),
       decoration: BoxDecoration(
         color: CustomAppColor.of(context).white,
-        borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
-        border: Border.all(
-          color: CustomAppColor.of(context).containerBorder,
-          width: 1,
-        ),
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(AppSizes.setWidth(12)),
+            bottomRight: Radius.circular(AppSizes.setWidth(12))),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -298,68 +241,74 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
       ),
       child: Column(
         children: [
-          CommonText(
-            text: '请输入本次提油量',
-            fontSize: AppSizes.setFontSize(12),
-            textColor: CustomAppColor.of(context).txtGrey,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: AppSizes.setHeight(8)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
-              Expanded(
+              Flexible(
                 child: TextField(
                   controller: _oilAmountController,
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                    FilteringTextInputFormatter.allow(
+                        RegExp(r'^\d+\.?\d{0,2}')),
                   ],
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: AppSizes.setFontSize(30),
+                    fontSize: AppSizes.setFontSize(48),
                     fontWeight: FontWeight.w700,
                     color: CustomAppColor.of(context).txtBlack,
                     fontFamily: 'Arial',
                   ),
                   decoration: InputDecoration(
-                    hintText: '0.00',
+                    hintText: '0.0',
                     hintStyle: TextStyle(
-                      fontSize: AppSizes.setFontSize(30),
+                      fontSize: AppSizes.setFontSize(48),
                       fontWeight: FontWeight.w700,
-                      color: CustomAppColor.of(context).txtGrey.withValues(alpha: 0.3),
+                      color: CustomAppColor.of(context)
+                          .txtGrey
+                          .withValues(alpha: 0.3),
                       fontFamily: 'Arial',
                     ),
                     border: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     contentPadding: EdgeInsets.zero,
+                    constraints: BoxConstraints(
+                      minWidth: AppSizes.setWidth(140),
+                    ),
                   ),
-                  onChanged: (value) => widget.controller.updateOilAmount(value),
+                  onChanged: (value) =>
+                      widget.controller.updateOilAmount(value),
                 ),
               ),
               SizedBox(width: AppSizes.setWidth(8)),
               CommonText(
                 text: '吨',
-                fontSize: AppSizes.setFontSize(18),
-                fontWeight: FontWeight.w700,
+                fontSize: AppSizes.setFontSize(16),
+                fontWeight: FontWeight.w500,
                 textColor: CustomAppColor.of(context).txtBlack,
                 textAlign: TextAlign.left,
               ),
             ],
           ),
+          SizedBox(height: AppSizes.setHeight(8)),
+          Container(
+            width: double.infinity,
+            height: 1,
+            color: CustomAppColor.of(context).containerBorder,
+            margin: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(30)),
+          ),
+          SizedBox(height: AppSizes.setHeight(12)),
+          CommonText(
+            text: '请输入本次提油数量',
+            fontSize: AppSizes.setFontSize(12),
+            textColor:
+                CustomAppColor.of(context).txtGrey.withValues(alpha: 0.6),
+            textAlign: TextAlign.center,
+          ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildArrowDown(BuildContext context) {
-    return Center(
-      child: Icon(
-        Icons.arrow_downward,
-        size: AppSizes.setWidth(24),
-        color: CustomAppColor.of(context).txtGrey.withValues(alpha: 0.3),
       ),
     );
   }
