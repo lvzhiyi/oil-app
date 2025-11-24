@@ -102,10 +102,9 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
         padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
         child: Center(
             child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: CustomAppColor.of(context).btnPurple,
-            )
-        ),
+          strokeWidth: 2,
+          color: CustomAppColor.of(context).btnPurple,
+        )),
       );
     }
     if (!widget.state.hasMore && widget.state.inventories.isNotEmpty) {

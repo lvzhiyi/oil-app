@@ -145,7 +145,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   void onTopBarClick(String name, {String value = ""}) {
     if (name == 'pay_order_list') {
       if (selectedBottomIndex == 1) {
-        BaseRouter.push(url: AppPage.oilPickupPage.path);
+        BaseRouter.push(url: AppPage.pickupListPage.path);
         return;
       }
       BaseRouter.push(url: AppPage.payOrderListPage.path);
