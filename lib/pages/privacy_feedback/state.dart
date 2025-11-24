@@ -15,19 +15,23 @@ class PrivacyFeedbackItem {
 class PrivacyFeedbackState {
   bool isLoading;
   List<PrivacyFeedbackItem> items;
+  bool htmlLoading;
 
   PrivacyFeedbackState({
     this.isLoading = false,
     this.items = const [],
+    this.htmlLoading = false,
   });
 
   PrivacyFeedbackState copyWith({
     bool? isLoading,
     List<PrivacyFeedbackItem>? items,
+    bool? htmlLoading,
   }) {
     return PrivacyFeedbackState(
       isLoading: isLoading ?? this.isLoading,
       items: items ?? this.items,
+      htmlLoading: htmlLoading ?? this.htmlLoading,
     );
   }
 }

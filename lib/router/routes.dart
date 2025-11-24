@@ -19,6 +19,7 @@ import 'package:oil_business_app/pages/login/page.dart';
 import 'package:oil_business_app/pages/register/page.dart';
 import 'package:oil_business_app/pages/change_password/page.dart';
 import 'package:oil_business_app/pages/privacy_feedback/page.dart';
+import 'package:oil_business_app/pages/service_agreement/page.dart';
 
 import 'package:oil_business_app/pages/profile/page.dart';
 import 'package:oil_business_app/pages/main_layout/page.dart';
@@ -111,6 +112,9 @@ enum AppPage {
 
   /// 隐私政策
   privacyPolicyPage('/privacyPolicy'),
+
+  /// 用户协议
+  serviceAgreementPage('/serviceAgreement'),
   ;
 
   const AppPage(this.path);
@@ -221,6 +225,9 @@ extension PageRoute on AppPage {
 
       case AppPage.privacyPolicyPage:
         return (context, state) => const PrivacyFeedbackPage();
+
+      case AppPage.serviceAgreementPage:
+        return (context, state) => const ServiceAgreementPage();
 
       default:
         return (context, state) => const Text('404');

@@ -9,7 +9,7 @@ import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/static/img.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
-import 'package:oil_business_app/widgets/base/common_richtext/common_richtext.dart';
+import 'package:flutter/gestures.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dart';
 
@@ -173,10 +173,47 @@ class LoginToYourAccountScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: AppSizes.setHeight(5)),
-              const CommonRichText(
-                firstText: '条款和条件',
-                middleText: '和',
-                lastText: '隐私政策',
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  style: TextStyle(
+                    fontFamily: 'Urbanist',
+                    color: CustomAppColor.of(context).txtGrey,
+                    fontSize: AppSizes.setFontSize(15),
+                    fontWeight: FontWeight.w500,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: '条款和条件',
+                      style: TextStyle(
+                        color: CustomAppColor.of(context).txtPurple,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          BaseRouter.push(url: AppPage.serviceAgreementPage.path);
+                        },
+                    ),
+                    TextSpan(
+                      text: '和',
+                      style: TextStyle(
+                        color: CustomAppColor.of(context).txtGrey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '隐私政策',
+                      style: TextStyle(
+                        color: CustomAppColor.of(context).txtPurple,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          BaseRouter.push(url: AppPage.privacyPolicyPage.path);
+                        },
+                    ),
+                  ],
+                ),
               )
             ],
           ),
