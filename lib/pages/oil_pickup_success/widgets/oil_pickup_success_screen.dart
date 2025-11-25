@@ -189,7 +189,7 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
                     children: [
                       SizedBox(height: AppSizes.setHeight(18)),
                       _buildWithdrawNo(context, withdrawNo),
-                      SizedBox(height: AppSizes.setHeight(12)),
+                      SizedBox(height: AppSizes.setHeight(4)),
                       _buildAmountPanel(context, productName, formattedAmount),
                       SizedBox(height: AppSizes.setHeight(18)),
                       _buildLocationRow(context, depotName, stationName),
@@ -496,9 +496,7 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
                 text: value,
                 fontSize: AppSizes.setFontSize(14),
                 fontWeight: FontWeight.w700,
-                textColor: emphasize
-                    ? CustomAppColor.of(context).txtPurple
-                    : CustomAppColor.of(context).txtBlack,
+                textColor: CustomAppColor.of(context).txtBlack,
                 textAlign: emphasize ? TextAlign.right : TextAlign.left,
               ),
             ),
@@ -653,12 +651,17 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              Icons.download_outlined,
-                              color: Colors.white,
-                              size: AppSizes.setWidth(18),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: AppSizes.setWidth(4),
+                              ),
+                              child: Icon(
+                                Icons.download_outlined,
+                                color: Colors.white,
+                                size: AppSizes.setWidth(18),
+                              ),
                             ),
-                            SizedBox(width: AppSizes.setWidth(8)),
+                            SizedBox(width: AppSizes.setWidth(4)),
                             CommonText(
                               text: '保存凭证图片',
                               fontSize: AppSizes.setFontSize(15),
