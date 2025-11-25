@@ -11,6 +11,7 @@ class OilPickupSuccessPage extends BasePage {
   final Station station;
   final String oilAmount;
   final VehicleModel vehicleModel;
+  final String dispatchInfo;
 
   const OilPickupSuccessPage({
     Key? key,
@@ -19,6 +20,7 @@ class OilPickupSuccessPage extends BasePage {
     required this.station,
     required this.oilAmount,
     required this.vehicleModel,
+    required this.dispatchInfo,
   }) : super(key: key);
 
   @override
@@ -34,6 +36,7 @@ class _OilPickupSuccessPage extends BaseState<OilPickupSuccessPage> with BasicIn
       station: widget.station,
       oilAmount: widget.oilAmount,
       vehicleModel: widget.vehicleModel,
+      dispatchInfo: widget.dispatchInfo,
     );
   }
 

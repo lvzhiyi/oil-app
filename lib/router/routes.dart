@@ -213,6 +213,7 @@ extension PageRoute on AppPage {
             station: extra['station'] as Station,
             oilAmount: extra['oilAmount'] as String,
             vehicleModel: extra['vehicleModel'] as VehicleModel,
+            dispatchInfo: extra['dispatchInfo'] as String? ?? '',
           );
         };
 
