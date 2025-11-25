@@ -172,7 +172,7 @@ class _SmartParseCardState extends State<SmartParseCard> {
                       ),
                       Expanded(
                         child: CommonText(
-                          text: '此框内文字将直接生成在提油凭证图片上，请确保信息准确无误。',
+                          text: '此输入框内文字将直接用于生成提油凭证，请确保信息准确无误。',
                           fontSize: AppSizes.setFontSize(12),
                           textColor: CustomAppColor.of(context).txtOrange,
                           fontWeight: FontWeight.w400,

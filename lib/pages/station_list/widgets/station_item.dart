@@ -19,32 +19,40 @@ class StationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = CustomAppColor.of(context);
+    final primaryBg = const Color(0xFFF0EEFC);
+    
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(AppSizes.setWidth(16)),
         decoration: BoxDecoration(
-          color: isSelected
-              ? CustomAppColor.of(context).btnPurple.withValues(alpha: 0.05)
-              : CustomAppColor.of(context).bgContainer,
+          color: isSelected ? primaryBg : colors.bgContainer,
           borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
           border: Border.all(
-            color: isSelected
-                ? CustomAppColor.of(context).btnPurple
-                : CustomAppColor.of(context).containerBorder,
-            width: isSelected ? 2 : 1,
+            color: isSelected ? colors.btnPurple : Colors.transparent,
+            width: isSelected ? 1 : 0,
           ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: colors.btnPurple.withValues(alpha: 0.1),
+                    blurRadius: 12,
+                    spreadRadius: 0,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: const Color(0xFF000000).withValues(alpha: 0.02),
+                    blurRadius: 6,
+                    spreadRadius: 0,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
         ),
         child: Row(
           children: [
-            if (isSelected) ...[
-              Icon(
-                Icons.check_circle,
-                color: CustomAppColor.of(context).btnPurple,
-                size: AppSizes.setWidth(20),
-              ),
-              SizedBox(width: AppSizes.setWidth(12)),
-            ],
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,22 +61,55 @@ class StationItem extends StatelessWidget {
                     text: station.displayName,
                     fontSize: AppSizes.setFontSize(16),
                     fontWeight: FontWeight.w600,
-                    textColor: isSelected
-                        ? CustomAppColor.of(context).btnPurple
-                        : CustomAppColor.of(context).txtBlack,
+                    textColor: colors.txtBlack,
                     textAlign: TextAlign.left,
                   ),
-                  SizedBox(height: AppSizes.setHeight(8)),
-                  CommonText(
-                    text: station.fullAddress,
-                    fontSize: AppSizes.setFontSize(14),
-                    textColor: CustomAppColor.of(context).txtGrey,
-                    textAlign: TextAlign.left,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  SizedBox(height: AppSizes.setHeight(6)),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        size: AppSizes.setFontSize(12),
+                        color: colors.txtGrey.withValues(alpha: 0.7),
+                      ),
+                      SizedBox(width: AppSizes.setWidth(4)),
+                      Expanded(
+                        child: CommonText(
+                          text: station.fullAddress,
+                          fontSize: AppSizes.setFontSize(12),
+                          textColor: colors.txtGrey,
+                          textAlign: TextAlign.left,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
+            ),
+            SizedBox(width: AppSizes.setWidth(16)),
+            Container(
+              width: AppSizes.setWidth(22),
+              height: AppSizes.setWidth(22),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isSelected ? colors.btnPurple : Colors.white,
+                border: Border.all(
+                  color: isSelected
+                      ? colors.btnPurple
+                      : const Color(0xFFD1D5DB),
+                  width: 1,
+                ),
+              ),
+              child: isSelected
+                  ? Icon(
+                      Icons.check,
+                      size: AppSizes.setFontSize(14),
+                      color: Colors.white,
+                    )
+                  : null,
             ),
           ],
         ),

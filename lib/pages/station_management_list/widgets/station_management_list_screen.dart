@@ -23,7 +23,7 @@ class StationManagementListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomAppColor.of(context).bgTopBar,
+      backgroundColor: const Color(0xffF5F7FA),
       body: SafeArea(
         bottom: true,
         top: false,
@@ -40,34 +40,34 @@ class StationManagementListScreen extends StatelessWidget {
   }
 
   Widget _buildTopBar(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: CustomAppColor.of(context).bgContainer,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 15,
-            offset: const Offset(0, 2),
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: CustomAppColor.of(context).bgContainer,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 15,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Column(
-        children: [
-          SafeArea(
+          child: SafeArea(
             bottom: false,
             child: _buildNavBar(context),
           ),
-          _buildFilterBar(context),
-        ],
-      ),
+        ),
+        _buildFilterBar(context),
+      ],
     );
   }
 
   Widget _buildNavBar(BuildContext context) {
     return Container(
+      height: AppSizes.setHeight(44),
       padding: EdgeInsets.symmetric(
         horizontal: AppSizes.setWidth(16),
-        vertical: AppSizes.setHeight(12),
       ),
       decoration: BoxDecoration(
         border: Border(
@@ -82,12 +82,10 @@ class StationManagementListScreen extends StatelessWidget {
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
             child: Container(
-              width: AppSizes.setWidth(32),
-              height: AppSizes.setHeight(32),
-              alignment: Alignment.center,
+              padding: EdgeInsets.all(AppSizes.setWidth(8)),
               child: Icon(
                 Icons.arrow_back,
-                size: AppSizes.setFontSize(18),
+                size: AppSizes.setFontSize(24),
                 color: CustomAppColor.of(context).txtBlack,
               ),
             ),
@@ -95,8 +93,8 @@ class StationManagementListScreen extends StatelessWidget {
           Expanded(
             child: CommonText(
               text: '加油站管理',
-              fontSize: AppSizes.setFontSize(18),
-              fontWeight: FontWeight.bold,
+              fontSize: AppSizes.setFontSize(17),
+              fontWeight: FontWeight.w600,
               textColor: CustomAppColor.of(context).txtBlack,
               textAlign: TextAlign.center,
             ),
@@ -112,14 +110,14 @@ class StationManagementListScreen extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.add,
-                    size: AppSizes.setFontSize(14),
+                    size: AppSizes.setFontSize(20),
                     color: CustomAppColor.of(context).btnPurple,
                   ),
                   SizedBox(width: AppSizes.setWidth(4)),
                   CommonText(
                     text: '新增',
-                    fontSize: AppSizes.setFontSize(14),
-                    fontWeight: FontWeight.bold,
+                    fontSize: AppSizes.setFontSize(15),
+                    fontWeight: FontWeight.w600,
                     textColor: CustomAppColor.of(context).btnPurple,
                   ),
                 ],
@@ -139,50 +137,52 @@ class StationManagementListScreen extends StatelessWidget {
     final isDisabledSelected = state.selectedStatus == StationStatus.disabled;
 
     return Container(
-      color: CustomAppColor.of(context).bgContainer,
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildFilterTab(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.setWidth(16),
+        vertical: AppSizes.setHeight(12),
+      ),
+      alignment: Alignment.centerLeft,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            _buildFilterTab(
               context: context,
               label: '全部',
               isSelected: isAllSelected,
               onTap: () => controller.filterByStatus(null),
             ),
-          ),
-          Expanded(
-            child: _buildFilterTab(
+            SizedBox(width: AppSizes.setWidth(24)),
+            _buildFilterTab(
               context: context,
               label: '正常',
               isSelected: isActiveSelected,
               onTap: () => controller.filterByStatus(StationStatus.active),
             ),
-          ),
-          Expanded(
-            child: _buildFilterTab(
+            SizedBox(width: AppSizes.setWidth(24)),
+            _buildFilterTab(
               context: context,
               label: '待审核',
               isSelected: isPendingSelected,
               onTap: () => controller.filterByStatus(StationStatus.pending_review),
             ),
-          ),
-          Expanded(
-            child: _buildFilterTab(
+            SizedBox(width: AppSizes.setWidth(24)),
+            _buildFilterTab(
               context: context,
               label: '已驳回',
               isSelected: isRejectedSelected,
               onTap: () => controller.filterByStatus(StationStatus.rejected),
             ),
-          ),
-          Expanded(
-            child: _buildFilterTab(
+            SizedBox(width: AppSizes.setWidth(24)),
+            _buildFilterTab(
               context: context,
               label: '禁用',
               isSelected: isDisabledSelected,
               onTap: () => controller.filterByStatus(StationStatus.disabled),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -196,31 +196,26 @@ class StationManagementListScreen extends StatelessWidget {
     final colors = CustomAppColor.of(context);
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: AppSizes.setHeight(12),
-        ),
+      child: IntrinsicWidth(
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CommonText(
               text: label,
-              fontSize: AppSizes.setFontSize(16),
-              fontWeight: FontWeight.w500,
+              fontSize: AppSizes.setFontSize(14),
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               textColor: isSelected ? colors.btnPurple : colors.txtGrey,
             ),
-            SizedBox(height: AppSizes.setHeight(8)),
-            if (isSelected)
-              Container(
-                width: AppSizes.setWidth(26),
-                height: AppSizes.setWidth(3),
-                decoration: BoxDecoration(
-                  color: colors.btnPurple,
-                  borderRadius: BorderRadius.circular(AppSizes.setWidth(1.5)),
-                ),
-              )
-            else
-              SizedBox(height: AppSizes.setWidth(3)),
+            SizedBox(height: AppSizes.setHeight(6)),
+            Container(
+              width: double.infinity,
+              height: AppSizes.setHeight(2),
+              decoration: BoxDecoration(
+                color: isSelected ? colors.btnPurple : Colors.transparent,
+                borderRadius: BorderRadius.circular(AppSizes.setWidth(1)),
+              ),
+            ),
           ],
         ),
       ),
@@ -285,7 +280,7 @@ class StationManagementListScreen extends StatelessWidget {
       onRefresh: controller.onRefresh,
       onLoading: controller.onLoadMore,
       child: ListView.builder(
-        padding: EdgeInsets.all(AppSizes.setWidth(16)),
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16), vertical: AppSizes.setHeight(12)),
         itemCount: state.stations.length,
         itemBuilder: (context, index) {
           final station = state.stations[index];
