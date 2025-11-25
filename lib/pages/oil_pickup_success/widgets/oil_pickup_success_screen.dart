@@ -808,60 +808,140 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
                   height: AppSizes.setHeight(4),
                   decoration: BoxDecoration(
                     color: CustomAppColor.of(context).containerBorder,
-                    borderRadius:
-                        BorderRadius.circular(AppSizes.setWidth(2)),
+                    borderRadius: BorderRadius.circular(AppSizes.setWidth(2)),
                   ),
                 ),
                 SizedBox(height: AppSizes.setHeight(12)),
                 CommonText(
-                  text: '保存/分享提油凭证',
-                  fontSize: AppSizes.setFontSize(16),
+                  text: '图片已生成',
+                  fontSize: AppSizes.setFontSize(15),
                   fontWeight: FontWeight.w700,
                   textColor: CustomAppColor.of(context).txtBlack,
                 ),
-                SizedBox(height: AppSizes.setHeight(12)),
-                ListTile(
-                  leading: Icon(
-                    Icons.photo_library_outlined,
-                    color: CustomAppColor.of(context).txtPurple,
+                SizedBox(height: AppSizes.setHeight(10)),
+                Container(
+                  width: AppSizes.setWidth(120),
+                  height: AppSizes.setHeight(140),
+                  decoration: BoxDecoration(
+                    color: CustomAppColor.of(context).white,
+                    borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
                   ),
-                  title: const Text('保存到相册（默认）'),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
+                    child: Image.memory(
+                      bytes,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Icon(
+                        Icons.image_outlined,
+                        size: AppSizes.setWidth(32),
+                        color: CustomAppColor.of(context).txtGrey,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: AppSizes.setHeight(16)),
+                _buildActionRow(
+                  icon: Icons.photo_library_outlined,
+                  text: '保存到系统相册',
                   onTap: () async {
                     Navigator.of(context).pop();
                     await _saveToGallery(bytes);
                   },
                 ),
-                ListTile(
-                  leading: Icon(
-                    Icons.folder_open_outlined,
-                    color: CustomAppColor.of(context).txtBlack,
-                  ),
-                  title: const Text('选择目录保存'),
+                _buildDivider(),
+                _buildActionRow(
+                  icon: Icons.folder_open_outlined,
+                  text: '选择存储目录 / 保存到文件',
                   onTap: () async {
                     Navigator.of(context).pop();
                     await _saveToDirectory(bytes);
                   },
                 ),
-                ListTile(
-                  leading: Icon(
-                    Icons.share_outlined,
-                    color: CustomAppColor.of(context).txtPurple,
-                  ),
-                  title: const Text('分享图片'),
+                _buildDivider(),
+                _buildActionRow(
+                  icon: Icons.share_outlined,
+                  text: '发送给好友 / 司机',
                   onTap: () async {
                     Navigator.of(context).pop();
-                    await Share.shareXFiles(
-                      [XFile(filePath)],
-                      text: '提油凭证图片',
+                    await SharePlus.instance.share(
+                      ShareParams(
+                        files: [XFile(filePath)],
+                        text: '提油凭证图片',
+                      ),
                     );
                   },
                 ),
-                SizedBox(height: AppSizes.setHeight(4)),
+                SizedBox(height: AppSizes.setHeight(12)),
+                GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: AppSizes.setHeight(10),
+                    ),
+                    child: CommonText(
+                      text: '取消',
+                      fontSize: AppSizes.setFontSize(15),
+                      fontWeight: FontWeight.w700,
+                      textColor: CustomAppColor.of(context).txtBlack,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildActionRow({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: AppSizes.setHeight(12),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: CustomAppColor.of(context).txtBlack,
+            ),
+            SizedBox(width: AppSizes.setWidth(12)),
+            Expanded(
+              child: CommonText(
+                text: text,
+                fontSize: AppSizes.setFontSize(14),
+                fontWeight: FontWeight.w600,
+                textColor: CustomAppColor.of(context).txtBlack,
+                textAlign: TextAlign.left,
+              ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              color: CustomAppColor.of(context).txtGrey,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDivider() {
+    return Container(
+      height: 1,
+      color: CustomAppColor.of(context).containerBorder,
     );
   }
 
