@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -16,7 +15,10 @@ import 'package:oil_business_app/utils/fuel_type_helper.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/utils/station_extension.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../pickup_order_detail/widgets/pickup_order_detail_screen.dart';
 
@@ -730,6 +732,9 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
   }
 
   Future<void> _saveCertificateImage() async {
+    if (_isSaving) return;
+    setState(() => _isSaving = true);
+
     final BuildContext? boundaryContext = _cardKey.currentContext;
     final RenderRepaintBoundary? boundary =
         boundaryContext?.findRenderObject() as RenderRepaintBoundary?;
@@ -742,10 +747,9 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
           duration: Duration(seconds: 2),
         ),
       );
+      setState(() => _isSaving = false);
       return;
     }
-
-    setState(() => _isSaving = true);
 
     try {
       await Future.delayed(const Duration(milliseconds: 20));
@@ -757,20 +761,15 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
       }
 
       final Uint8List pngBytes = byteData.buffer.asUint8List();
-      final Directory directory = await getTemporaryDirectory();
+      final Directory directory = await getApplicationDocumentsDirectory();
       final String filePath =
           '${directory.path}/oil_certificate_${DateTime.now().millisecondsSinceEpoch}.png';
       final File file = await File(filePath).create(recursive: true);
       await file.writeAsBytes(pngBytes);
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('凭证图片已保存：$filePath'),
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      setState(() => _isSaving = false);
+      await _showSaveShareSheet(pngBytes, filePath);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -780,10 +779,146 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
           duration: Duration(seconds: 2),
         ),
       );
+      setState(() => _isSaving = false);
     } finally {
-      if (mounted) {
-        setState(() => _isSaving = false);
+      if (mounted && _isSaving) setState(() => _isSaving = false);
+    }
+  }
+
+  Future<void> _showSaveShareSheet(Uint8List bytes, String filePath) async {
+    await showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSizes.setWidth(16)),
+        ),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.setWidth(16),
+              vertical: AppSizes.setHeight(12),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: AppSizes.setWidth(40),
+                  height: AppSizes.setHeight(4),
+                  decoration: BoxDecoration(
+                    color: CustomAppColor.of(context).containerBorder,
+                    borderRadius:
+                        BorderRadius.circular(AppSizes.setWidth(2)),
+                  ),
+                ),
+                SizedBox(height: AppSizes.setHeight(12)),
+                CommonText(
+                  text: '保存/分享提油凭证',
+                  fontSize: AppSizes.setFontSize(16),
+                  fontWeight: FontWeight.w700,
+                  textColor: CustomAppColor.of(context).txtBlack,
+                ),
+                SizedBox(height: AppSizes.setHeight(12)),
+                ListTile(
+                  leading: Icon(
+                    Icons.photo_library_outlined,
+                    color: CustomAppColor.of(context).txtPurple,
+                  ),
+                  title: const Text('保存到相册（默认）'),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    await _saveToGallery(bytes);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.folder_open_outlined,
+                    color: CustomAppColor.of(context).txtBlack,
+                  ),
+                  title: const Text('选择目录保存'),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    await _saveToDirectory(bytes);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.share_outlined,
+                    color: CustomAppColor.of(context).txtPurple,
+                  ),
+                  title: const Text('分享图片'),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    await Share.shareXFiles(
+                      [XFile(filePath)],
+                      text: '提油凭证图片',
+                    );
+                  },
+                ),
+                SizedBox(height: AppSizes.setHeight(4)),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _saveToGallery(Uint8List bytes) async {
+    try {
+      final result = await ImageGallerySaverPlus.saveImage(
+        bytes,
+        quality: 100,
+        name: 'oil_certificate_${DateTime.now().millisecondsSinceEpoch}',
+      );
+      final dynamic filePath = result['filePath'] ?? result['filePathList']?.first;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            filePath != null ? '已保存到相册：$filePath' : '已保存到相册',
+          ),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('保存到相册失败，请检查权限'),
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  Future<void> _saveToDirectory(Uint8List bytes) async {
+    try {
+      final String? directoryPath =
+          await FilePicker.platform.getDirectoryPath(dialogTitle: '选择保存目录');
+      if (directoryPath == null) {
+        return;
       }
+      final String filePath =
+          '$directoryPath/oil_certificate_${DateTime.now().millisecondsSinceEpoch}.png';
+      final File file = await File(filePath).create(recursive: true);
+      await file.writeAsBytes(bytes);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('图片已保存：$filePath'),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('保存失败，请重试'),
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
 }
