@@ -33,7 +33,7 @@ class AppController extends HydratedCubit<AppState>
 
   initState() async {
     if (state.authResponse?.accessToken != null &&
-        state.selectedStation == null) {
+        state.selectedStation?.id == null) {
       final pendingAndActiveStation = await getStationStatus(1, 1, [
         StationStatus.active,
       ]);
@@ -56,7 +56,7 @@ class AppController extends HydratedCubit<AppState>
   }
 
   void clearSelectedStation() {
-    emit(state.copyWith(selectedStation: null));
+    emit(state.copyWith(selectedStation: Station()));
   }
 
   /// 登录成功后流程
@@ -71,14 +71,17 @@ class AppController extends HydratedCubit<AppState>
 
   /// 绑定加油站流程
   bindStationProcess({bool isFromLogin = false}) async {
-    final activeStation = state.selectedStation;
-    if (activeStation != null) {
+    final activeStation = await getStationStatus(1, 1, [
+      StationStatus.active,
+    ]);
+    if (activeStation.list?.isNotEmpty ?? false) {
       BaseRouter.replace(url: AppPage.mainLayoutPage.path, extra: {
         'isFromLogin': isFromLogin,
       });
     } else {
       final pendingStation = await getStationStatus(1, 1, [
         StationStatus.pending_review,
+        StationStatus.rejected,
       ]);
 
       if (pendingStation.list?.isNotEmpty ?? false) {
@@ -106,6 +109,7 @@ class AppController extends HydratedCubit<AppState>
   }
 
   logout() {
+    clearSelectedStation();
     setAuthResponse(
         AuthResponse(accessToken: null, refreshToken: null, account: null));
     BaseRouter.replace(url: AppPage.loginPage.path);
