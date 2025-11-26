@@ -111,7 +111,7 @@ analyzer:
     void_checks: info
 linter:
   rules:
-    - max_line_length: 120 # 强制行长度不超过 120 个字符。
+    - max_line_length: 180 # 强制行长度不超过 180 个字符。
     - annotate_overrides # 强制注释被覆盖的类成员。
     - avoid_empty_else # 避免空的 else 代码块。
     - avoid_function_literals_in_foreach_calls # 禁止在 `forEach` 调用中使用函数字面量。
