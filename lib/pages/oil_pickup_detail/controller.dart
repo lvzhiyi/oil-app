@@ -114,6 +114,13 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
       return;
     }
 
+    // 校验提油量不能超过可用库存
+    final availableTon = state.inventory?.availableTon ?? 0;
+    if (oilAmountDouble > availableTon) {
+      SportsToast.showWarning('提油量不能超过可用库存 ${availableTon.toInt()} 吨');
+      return;
+    }
+
     final oilAmountInt = oilAmountDouble.toInt();
 
     // Note: Field validation is now handled by the Form in the UI before calling this.

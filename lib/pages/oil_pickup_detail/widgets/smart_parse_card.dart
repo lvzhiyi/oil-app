@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
+import 'package:oil_business_app/widgets/popup/toast.dart';
 
 class SmartParseCard extends StatefulWidget {
   final Function(String) onParse;
@@ -38,6 +39,34 @@ class _SmartParseCardState extends State<SmartParseCard> {
     super.dispose();
   }
 
+  String _getTemplateText() {
+    return '''2025年1月1日
+油品:XX油库:92与95
+重型罐式挂车
+驾驶员姓名:张三
+驾驶员身份证:123456789012345678
+驾驶员电话:13800000001
+
+驾驶证编码:123456789012
+车型:重型罐式挂车
+车号:川A:AB123
+核定载重(公斤):30.000
+行驶证编号:A00000000000
+单双仓:双仓
+一仓:15.0吨
+二仓:15.0吨
+是否带泵:否
+提油吨位:30吨''';
+  }
+
+  Future<void> _copyTemplate() async {
+    final template = _getTemplateText();
+    await Clipboard.setData(ClipboardData(text: template));
+    if (mounted) {
+      SportsToast.showSuccess('模板已复制到剪贴板');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,34 +90,69 @@ class _SmartParseCardState extends State<SmartParseCard> {
               children: [
                 CommonText(
                   text: '车辆及司机调度信息',
-                  fontSize: AppSizes.setFontSize(15),
+                  fontSize: AppSizes.setFontSize(14),
                   fontWeight: FontWeight.w700,
                   textColor: CustomAppColor.of(context).txtBlack,
                 ),
-                GestureDetector(
-                  onTap: () async {
-                    final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-                    if (clipboardData != null && clipboardData.text != null) {
-                      _controller.text = clipboardData.text!;
-                      widget.onParse(clipboardData.text!);
-                    }
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.setWidth(10),
-                      vertical: AppSizes.setHeight(4),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: _copyTemplate,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSizes.setWidth(10),
+                          vertical: AppSizes.setHeight(4),
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xffF3F4F6),
+                          borderRadius: BorderRadius.circular(AppSizes.setWidth(4)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Icon(
+                            //   Icons.copy_outlined,
+                            //   size: AppSizes.setWidth(12),
+                            //   color: CustomAppColor.of(context).txtOrange,
+                            // ),
+                            // SizedBox(width: AppSizes.setWidth(4)),
+                            CommonText(
+                              text: '复制模板',
+                              fontSize: AppSizes.setFontSize(12),
+                              textColor: const Color(0xff1F2937),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      color: CustomAppColor.of(context).btnPurple.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(AppSizes.setWidth(4)),
+                    SizedBox(width: AppSizes.setWidth(8)),
+                    GestureDetector(
+                      onTap: () async {
+                        final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+                        if (clipboardData != null && clipboardData.text != null) {
+                          _controller.text = clipboardData.text!;
+                          widget.onParse(clipboardData.text!);
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSizes.setWidth(10),
+                          vertical: AppSizes.setHeight(4),
+                        ),
+                        decoration: BoxDecoration(
+                          color: CustomAppColor.of(context).btnPurple.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(AppSizes.setWidth(4)),
+                        ),
+                        child: CommonText(
+                          text: '点击粘贴',
+                          fontSize: AppSizes.setFontSize(12),
+                          textColor: CustomAppColor.of(context).btnPurple,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
-                    child: CommonText(
-                      text: '点击粘贴',
-                      fontSize: AppSizes.setFontSize(12),
-                      textColor: CustomAppColor.of(context).btnPurple,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  ],
                 ),
               ],
             ),

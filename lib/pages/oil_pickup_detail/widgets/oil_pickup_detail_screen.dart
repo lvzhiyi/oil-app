@@ -201,17 +201,17 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
           Container(
             padding: EdgeInsets.symmetric(
               horizontal: AppSizes.setWidth(10),
-              vertical: AppSizes.setHeight(2),
+              vertical: AppSizes.setHeight(4),
             ),
             decoration: BoxDecoration(
-              color: CustomAppColor.of(context).bgScaffold,
+              color: const Color(0xffF3F4F6),
               borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
             ),
             child: CommonText(
               text: '可用库存: ${(inventory.availableTon ?? 0).toInt()} 吨',
-              fontSize: AppSizes.setFontSize(13),
+              fontSize: AppSizes.setFontSize(12),
               fontWeight: FontWeight.w400,
-              textColor: CustomAppColor.of(context).txtGrey,
+              textColor: const Color(0xff6B7280),
               textAlign: TextAlign.center,
             ),
           ),
@@ -249,7 +249,7 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
               Flexible(
                 child: TextField(
                   controller: _oilAmountController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(
                         RegExp(r'^\d+\.?\d{0,2}')),
@@ -259,7 +259,6 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
                     fontSize: AppSizes.setFontSize(48),
                     fontWeight: FontWeight.w700,
                     color: CustomAppColor.of(context).txtBlack,
-                    fontFamily: 'Arial',
                   ),
                   decoration: InputDecoration(
                     hintText: '0.0',
@@ -269,7 +268,6 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
                       color: CustomAppColor.of(context)
                           .txtGrey
                           .withValues(alpha: 0.3),
-                      fontFamily: 'Arial',
                     ),
                     border: InputBorder.none,
                     enabledBorder: InputBorder.none,
