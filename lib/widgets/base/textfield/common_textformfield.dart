@@ -35,6 +35,7 @@ class CommonTextFormField extends StatefulWidget {
   final TextInputType? keyboardType;
   final TextInputFormatter? inputFormatter;
   final bool? enabled;
+  final bool showHint;
   const CommonTextFormField({
     super.key,
     this.hintText,
@@ -63,6 +64,7 @@ class CommonTextFormField extends StatefulWidget {
     this.keyboardType,
     this.inputFormatter,
     this.enabled = true,
+    this.showHint = true,
   });
 
   @override
@@ -72,12 +74,32 @@ class CommonTextFormField extends StatefulWidget {
 class CommonTextFormFieldState extends State<CommonTextFormField> {
   bool _obscureText = true;
   late FocusNode _focusNode;
+  bool _hasText = false;
+
+  void _onControllerChanged() {
+    final hasText = widget.controller?.text.isNotEmpty ?? false;
+    if (hasText != _hasText) {
+      setState(() {
+        _hasText = hasText;
+      });
+    }
+  }
+
+  void _addControllerListener(TextEditingController? controller) {
+    controller?.addListener(_onControllerChanged);
+  }
+
+  void _removeControllerListener(TextEditingController? controller) {
+    controller?.removeListener(_onControllerChanged);
+  }
 
   @override
   void initState() {
     super.initState();
     _focusNode = widget.focusNode ?? FocusNode();
     _obscureText = widget.isPasswordField;
+    _hasText = widget.controller?.text.isNotEmpty ?? false;
+    _addControllerListener(widget.controller);
 
     _focusNode.addListener(() {
       setState(() {});
@@ -86,13 +108,26 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
 
   @override
   void dispose() {
+    _removeControllerListener(widget.controller);
     _focusNode.dispose();
     super.dispose();
   }
 
   @override
+  void didUpdateWidget(covariant CommonTextFormField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      _removeControllerListener(oldWidget.controller);
+      _addControllerListener(widget.controller);
+      _hasText = widget.controller?.text.isNotEmpty ?? false;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool isFocused = _focusNode.hasFocus;
+    final hasLabel =
+        widget.labelText != null && widget.labelText!.trim().isNotEmpty;
     if (widget.isPhoneNumberField) {
       return Stack(
         clipBehavior: Clip.none,
@@ -206,10 +241,13 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
           fontWeight: FontWeight.bold,
         ),
         decoration: InputDecoration(
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          labelText: isFocused
-              ? "${widget.hintText ?? widget.labelText ?? ""}${(widget.isRequiredLabel ?? false) ? " *" : ""}"
-              : "${widget.labelText ?? ""}${(widget.isRequiredLabel ?? false) ? " *" : ""}",
+          floatingLabelBehavior:
+              hasLabel ? FloatingLabelBehavior.auto : FloatingLabelBehavior.never,
+          labelText: hasLabel
+              ? (isFocused
+                  ? "${widget.hintText ?? widget.labelText ?? ""}${(widget.isRequiredLabel ?? false) ? " *" : ""}"
+                  : "${widget.labelText ?? ""}${(widget.isRequiredLabel ?? false) ? " *" : ""}")
+              : null,
           labelStyle: TextStyle(
               color: _focusNode.hasFocus
                   ? CustomAppColor.of(context).borderPurple
@@ -218,9 +256,13 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
               fontWeight: FontWeight.w600),
           fillColor: widget.fillColor ?? CustomAppColor.of(context).bgContainer,
           filled: true,
-          hintText: isFocused
+          hintText: !widget.showHint || _hasText
               ? null
-              : "${widget.hintText ?? ""}${widget.isRequiredHint ?? false ? " *" : ""}",
+              : hasLabel
+                  ? (isFocused
+                      ? null
+                      : "${widget.hintText ?? ""}${widget.isRequiredHint ?? false ? " *" : ""}")
+                  : "${widget.hintText ?? ""}${widget.isRequiredHint ?? false ? " *" : ""}",
           hintStyle: widget.hintStyle ??
               TextStyle(
                   color: CustomAppColor.of(context).hintText,

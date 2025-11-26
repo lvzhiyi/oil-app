@@ -33,6 +33,7 @@ class CommonCityPickerFormField extends StatefulWidget {
   final String? name;
   final String? Function(String?)? validators;
   final List<String>? initialCityData; // 新增：初始省市区数据 [provinceCode, cityCode, areaCode]
+  final bool showHint;
 
   const CommonCityPickerFormField({
     super.key,
@@ -60,6 +61,7 @@ class CommonCityPickerFormField extends StatefulWidget {
     this.name,
     this.validators,
     this.initialCityData,
+    this.showHint = true,
   });
 
   @override
@@ -69,6 +71,24 @@ class CommonCityPickerFormField extends StatefulWidget {
 
 class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
   late FocusNode _focusNode;
+  bool _hasText = false;
+
+  void _onControllerChanged() {
+    final hasText = widget.controller?.text.isNotEmpty ?? false;
+    if (hasText != _hasText) {
+      setState(() {
+        _hasText = hasText;
+      });
+    }
+  }
+
+  void _addControllerListener(TextEditingController? controller) {
+    controller?.addListener(_onControllerChanged);
+  }
+
+  void _removeControllerListener(TextEditingController? controller) {
+    controller?.removeListener(_onControllerChanged);
+  }
 
   List<dynamic> cityData = [];
   List<int> selectedIndexes = [0, 0, 0]; // 存储当前选中的索引
@@ -77,6 +97,8 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
   void initState() {
     super.initState();
     _focusNode = widget.focusNode ?? FocusNode();
+    _hasText = widget.controller?.text.isNotEmpty ?? false;
+    _addControllerListener(widget.controller);
 
     _focusNode.addListener(() {
       print('isFocused: $_focusNode');
@@ -145,11 +167,22 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
 
   @override
   void dispose() {
+    _removeControllerListener(widget.controller);
     _focusNode.dispose();
     super.dispose();
   }
 
-  showPicker(BuildContext context) {
+  @override
+  void didUpdateWidget(covariant CommonCityPickerFormField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      _removeControllerListener(oldWidget.controller);
+      _addControllerListener(widget.controller);
+      _hasText = widget.controller?.text.isNotEmpty ?? false;
+    }
+  }
+
+  showPicker(BuildContext context, ValueChanged<String> onSelected) {
     List<PickerItem> items = cityData.map<PickerItem>((item) {
       List<PickerItem> children1 =
           (item['children'] as List<dynamic>).map<PickerItem>((child) {
@@ -194,6 +227,7 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
         // 更新当前选中的索引（遵循单一职责原则）
         setState(() {
           selectedIndexes = [value[0], value[1], value[2]];
+          _hasText = text.isNotEmpty;
         });
 
         widget.onChanged?.call([
@@ -204,6 +238,7 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
           cityCode,
           areaCode
         ]);
+        onSelected(text);
       },
       confirmTextStyle: TextStyle(
         color: CustomAppColor.of(context).txtBlue,
@@ -232,80 +267,102 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
 
   @override
   Widget build(BuildContext context) {
-    bool isFocused = _focusNode.hasFocus;
-    return FormBuilderTextField(
+    final hasLabel =
+        widget.labelText != null && widget.labelText!.trim().isNotEmpty;
+    return FormBuilderField<String>(
       name: widget.name ?? '',
-      textAlign: widget.textAlign ?? TextAlign.start,
-      textAlignVertical: widget.textAlignVertical ?? TextAlignVertical.top,
-      maxLength: widget.maxLength,
-      focusNode: _focusNode,
-      controller: widget.controller,
-      maxLines: widget.maxLines ?? 1,
-      readOnly: true,
-      onTap: () {
-        showPicker(context);
-      },
-      style: TextStyle(
-        color: CustomAppColor.of(context).txtBlack,
-        fontSize: AppSizes.setFontSize(14),
-        fontWeight: FontWeight.bold,
-      ),
-      decoration: InputDecoration(
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        labelText: isFocused
-            ? "${widget.hintText ?? widget.labelText ?? ""}${(widget.isRequiredLabel ?? false) ? " *" : ""}"
-            : "${widget.labelText ?? ""}${(widget.isRequiredLabel ?? false) ? " *" : ""}",
-        labelStyle: TextStyle(
-            color: _focusNode.hasFocus
-                ? CustomAppColor.of(context).borderPurple
-                : CustomAppColor.of(context).txtGrey,
-            fontSize: AppSizes.setFontSize(15),
-            fontWeight: FontWeight.w600),
-        fillColor: widget.fillColor ?? CustomAppColor.of(context).bgContainer,
-        filled: true,
-        hintText: isFocused
-            ? null
-            : "${widget.hintText ?? ""}${widget.isRequiredHint ?? false ? " *" : ""}",
-        hintStyle: widget.hintStyle ??
-            TextStyle(
-                color: CustomAppColor.of(context).hintText,
-                fontWeight: FontWeight.w400,
-                fontSize: AppSizes.setFontSize(14)),
-        prefixIcon: widget.leadingIcon != null
-            ? Padding(
-                padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(12)),
-                child: widget.leadingIcon,
-              )
-            : null,
-        border: OutlineInputBorder(
-          borderRadius: widget.radius != null
-              ? BorderRadius.circular(widget.radius ?? 0)
-              : BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppColor.transparent, width: 1),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: widget.radius != null
-              ? BorderRadius.circular(widget.radius ?? 0)
-              : BorderRadius.circular(8),
-          borderSide: BorderSide(
-              color:
-                  widget.borderColor ?? CustomAppColor.of(context).borderGrey,
-              width: 1),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: widget.radius != null
-              ? BorderRadius.circular(widget.radius ?? 0)
-              : BorderRadius.circular(8),
-          borderSide: BorderSide(
-              color:
-                  widget.borderColor ?? CustomAppColor.of(context).borderPurple,
-              width: 2),
-        ),
-      ),
+      initialValue: widget.controller?.text,
       validator: widget.validators != null
           ? FormBuilderValidators.compose([widget.validators!])
           : FormBuilderValidators.required(
               errorText: '${widget.name} is required'),
+      builder: (field) {
+        final value = widget.controller?.text ?? field.value ?? '';
+        final hasText = value.isNotEmpty;
+        final colors = CustomAppColor.of(context);
+
+        return GestureDetector(
+          onTap: () {
+            showPicker(context, (selected) {
+              field.didChange(selected);
+            });
+          },
+          child: InputDecorator(
+            isEmpty: !hasText,
+            decoration: InputDecoration(
+              floatingLabelBehavior: hasLabel
+                  ? FloatingLabelBehavior.auto
+                  : FloatingLabelBehavior.never,
+              labelText: hasLabel
+                  ? "${widget.labelText ?? ""}${(widget.isRequiredLabel ?? false) ? " *" : ""}"
+                  : null,
+              labelStyle: TextStyle(
+                  color: colors.txtGrey,
+                  fontSize: AppSizes.setFontSize(15),
+                  fontWeight: FontWeight.w600),
+              errorText: field.errorText,
+              fillColor:
+                  widget.fillColor ?? CustomAppColor.of(context).bgContainer,
+              filled: true,
+              hintText: !widget.showHint || hasText
+                  ? null
+                  : "${widget.hintText ?? ""}${widget.isRequiredHint ?? false ? " *" : ""}",
+              hintStyle: widget.hintStyle ??
+                  TextStyle(
+                      color: CustomAppColor.of(context).hintText,
+                      fontWeight: FontWeight.w400,
+                      fontSize: AppSizes.setFontSize(14)),
+              prefixIcon: widget.leadingIcon != null
+                  ? Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: AppSizes.setHeight(12)),
+                      child: widget.leadingIcon,
+                    )
+                  : null,
+              suffixIcon: widget.suffixIcon,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: AppSizes.setWidth(12),
+                vertical: AppSizes.setHeight(14),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: widget.radius != null
+                    ? BorderRadius.circular(widget.radius ?? 0)
+                    : BorderRadius.circular(8),
+                borderSide:
+                    const BorderSide(color: AppColor.transparent, width: 1),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: widget.radius != null
+                    ? BorderRadius.circular(widget.radius ?? 0)
+                    : BorderRadius.circular(8),
+                borderSide: BorderSide(
+                    color: widget.borderColor ??
+                        CustomAppColor.of(context).borderGrey,
+                    width: 1),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: widget.radius != null
+                    ? BorderRadius.circular(widget.radius ?? 0)
+                    : BorderRadius.circular(8),
+                borderSide: BorderSide(
+                    color: widget.borderColor ??
+                        CustomAppColor.of(context).borderPurple,
+                    width: 2),
+              ),
+            ),
+            child: hasText
+                ? Text(
+                    value,
+                    style: TextStyle(
+                      color: colors.txtBlack,
+                      fontSize: AppSizes.setFontSize(14),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                : null,
+          ),
+        );
+      },
     );
   }
 }
