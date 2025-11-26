@@ -2,6 +2,8 @@ import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 
+const _kNoChange = Object();
+
 class OilPickupDetailState {
   final InventoryModel? inventory;
   final Station? selectedStation;
@@ -33,7 +35,7 @@ class OilPickupDetailState {
     VehicleModel? vehicleModel,
     List<String>? missingFields,
     bool? parseSuccess,
-    String? errorMessage,
+    Object? errorMessage = _kNoChange,
     bool? isLoading,
   }) {
     return OilPickupDetailState(
@@ -44,7 +46,9 @@ class OilPickupDetailState {
       vehicleModel: vehicleModel ?? this.vehicleModel,
       missingFields: missingFields ?? this.missingFields,
       parseSuccess: parseSuccess ?? this.parseSuccess,
-      errorMessage: errorMessage,
+      errorMessage: identical(errorMessage, _kNoChange)
+          ? this.errorMessage
+          : errorMessage as String?,
       isLoading: isLoading ?? this.isLoading,
     );
   }

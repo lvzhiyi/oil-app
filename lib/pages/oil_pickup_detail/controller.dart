@@ -17,6 +17,28 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
     initState();
   }
 
+  String? _validateOilAmount(String amount, {required bool forSubmit}) {
+    final value = amount.trim();
+    if (value.isEmpty) {
+      return forSubmit ? '请输入提油量' : null;
+    }
+
+    final oilAmountDouble = double.tryParse(value);
+    if (oilAmountDouble == null) {
+      return '提油量必须为数字';
+    }
+    if (oilAmountDouble <= 0) {
+      return '提油量必须大于0';
+    }
+
+    final availableTon = state.inventory?.availableTon ?? 0;
+    if (oilAmountDouble > availableTon) {
+      return '提油量不能超过可用库存${availableTon.toInt()} 吨';
+    }
+
+    return null;
+  }
+
   void initState() {
     final selectedStation = appController.state.selectedStation;
     if (selectedStation != null) {
@@ -25,19 +47,8 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
   }
 
   void updateOilAmount(String amount) {
-    emit(state.copyWith(
-      oilAmount: amount,
-      errorMessage: null,
-    ));
-
-    if (amount.isNotEmpty) {
-      final oilAmountInt = int.tryParse(amount);
-      if (oilAmountInt != null && oilAmountInt <= 0) {
-        emit(state.copyWith(
-          errorMessage: '提油量必须大于0',
-        ));
-      }
-    }
+    final error = _validateOilAmount(amount, forSubmit: false);
+    emit(state.copyWith(oilAmount: amount, errorMessage: error));
   }
 
   void onVehicleInfoPasted(String text) {
@@ -80,13 +91,6 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
     String? currentOilAmount,
     required VehicleModel vehicleModel,
   }) async {
-    if (currentOilAmount != '' && currentOilAmount != state.oilAmount) {
-      emit(state.copyWith(
-        oilAmount: currentOilAmount,
-        errorMessage: null,
-      ));
-    }
-
     if (state.inventory == null || state.inventory!.inventoryId == null) {
       SportsToast.showWarning('库存信息异常');
       return;
@@ -98,37 +102,23 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
     }
 
     final finalOilAmount = currentOilAmount ?? state.oilAmount;
-    if (finalOilAmount.isEmpty || finalOilAmount.trim().isEmpty) {
-      SportsToast.showWarning('请输入提油量');
+    final validationError = _validateOilAmount(finalOilAmount, forSubmit: true);
+    emit(state.copyWith(
+      oilAmount: finalOilAmount,
+      errorMessage: validationError,
+    ));
+
+    if (validationError != null) {
+      SportsToast.showWarning(validationError);
       return;
     }
 
-    final oilAmountDouble = double.tryParse(finalOilAmount);
-    if (oilAmountDouble == null) {
-      SportsToast.showWarning('提油量必须为数字');
-      return;
-    }
-
-    if (oilAmountDouble <= 0) {
-      SportsToast.showWarning('提油量必须大于0');
-      return;
-    }
-
-    // 校验提油量不能超过可用库存
-    final availableTon = state.inventory?.availableTon ?? 0;
-    if (oilAmountDouble > availableTon) {
-      SportsToast.showWarning('提油量不能超过可用库存 ${availableTon.toInt()} 吨');
-      return;
-    }
-
+    final oilAmountDouble = double.parse(finalOilAmount);
     final oilAmountInt = oilAmountDouble.toInt();
-
-    // Note: Field validation is now handled by the Form in the UI before calling this.
 
     emit(state.copyWith(isLoading: true, errorMessage: null));
 
     try {
-      // 构建提油请求参数
       final stationId = state.selectedStation!.id;
       if (stationId == null) {
         l.e('OilPickupDetail', '加油站ID为空');
@@ -153,7 +143,6 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
         vehicleInfo: vehicleInfoJson,
       );
 
-      // 调用提油接口
       final response = await oilPickupService.submitWithdraw(
         state.inventory!.inventoryId!,
         request,
@@ -185,13 +174,12 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
           },
         );
       }
-
     } catch (e) {
       l.e('OilPickupDetail', '提油申请提交失败: $e');
       emit(state.copyWith(
         isLoading: false,
       ));
-      SportsToast.showWarning('提交失败,请重试');
+      SportsToast.showWarning('提交失败，请重试');
     }
   }
 }

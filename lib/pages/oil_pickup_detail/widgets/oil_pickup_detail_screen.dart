@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 import 'package:oil_business_app/pages/oil_pickup/widgets/station_selector_button.dart';
@@ -8,7 +7,6 @@ import 'package:oil_business_app/pages/oil_pickup_detail/controller.dart';
 import 'package:oil_business_app/pages/oil_pickup_detail/state.dart';
 import 'package:oil_business_app/pages/oil_pickup_detail/widgets/smart_parse_card.dart';
 import 'package:oil_business_app/resources/colors.dart';
-import 'package:oil_business_app/utils/fuel_type_helper.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
@@ -74,7 +72,6 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
           appBar: AppBar(
             backgroundColor: CustomAppColor.of(context).bgScaffold,
             elevation: 0,
-
             shadowColor: const Color(0xffF5F7FA),
             leading: IconButton(
               icon: Icon(
@@ -108,7 +105,7 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildOilAmountInput(context),
+                            _buildOilAmountInput(context, currentState),
                             SizedBox(height: AppSizes.setHeight(12)),
                             StationSelectorButton(
                               station: currentState.selectedStation,
@@ -170,7 +167,9 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
   }
 
   Widget _buildInventoryInfoCard(
-      BuildContext context, InventoryModel inventory) {
+    BuildContext context,
+    InventoryModel inventory,
+  ) {
     return Container(
       width: double.infinity,
       margin: EdgeInsets.only(
@@ -220,7 +219,8 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
     );
   }
 
-  Widget _buildOilAmountInput(BuildContext context) {
+  Widget _buildOilAmountInput(
+      BuildContext context, OilPickupDetailState currentState) {
     return Container(
       padding: EdgeInsets.symmetric(
         vertical: AppSizes.setHeight(24),
@@ -249,7 +249,8 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
               Flexible(
                 child: TextField(
                   controller: _oilAmountController,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(
                         RegExp(r'^\d+\.?\d{0,2}')),
@@ -300,10 +301,11 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
           ),
           SizedBox(height: AppSizes.setHeight(12)),
           CommonText(
-            text: '请输入本次提油数量',
+            text: currentState.errorMessage ?? '请输入本次提油数量',
             fontSize: AppSizes.setFontSize(12),
-            textColor:
-                CustomAppColor.of(context).txtGrey.withValues(alpha: 0.6),
+            textColor: currentState.errorMessage != null
+                ? CustomAppColor.of(context).red
+                : CustomAppColor.of(context).txtGrey.withValues(alpha: 0.6),
             textAlign: TextAlign.center,
           ),
         ],
