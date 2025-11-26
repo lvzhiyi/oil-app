@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/pages/pickup_order_list/state.dart';
 import 'package:oil_business_app/pages/oil_pickup/service/oil_pickup_service.dart';
 import 'package:oil_business_app/utils/log.dart';
+import 'package:oil_business_app/widgets/popup/toast.dart';
 
 class PickupOrderListCtrl extends Cubit<PickupOrderListState> {
   static const int _pageSize = 10;
@@ -98,5 +99,26 @@ class PickupOrderListCtrl extends Cubit<PickupOrderListState> {
         refreshController.finishLoad(IndicatorResult.fail);
       }
     }
+  }
+
+  /// 取消订单
+  Future<bool> cancelOrder(int withdrawId) async {
+    try {
+      await oilPickupService.cancelWithdraw(withdrawId);
+      SportsToast.showSuccess('订单已取消');
+      // 刷新列表
+      await onRefresh();
+      return true;
+    } catch (e) {
+      l.e('PickupOrderListCtrl', '取消订单失败: $e');
+      SportsToast.showWarning('取消失败，请重试');
+      return false;
+    }
+  }
+
+  @override
+  Future<void> close() {
+    refreshController.dispose();
+    return super.close();
   }
 }

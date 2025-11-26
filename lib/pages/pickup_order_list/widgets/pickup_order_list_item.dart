@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
+import 'package:oil_business_app/pages/pickup_order_list/controller.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/date_util.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
@@ -11,6 +13,7 @@ import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
+import 'package:oil_business_app/widgets/popup/dialog.dart';
 
 class PickupOrderListItem extends StatefulWidget {
   final WithdrawOrderModel item;
@@ -27,17 +30,15 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
   @override
   Widget build(BuildContext context) {
     final isCompleted = widget.item.status == WithdrawStatus.completed.value;
+    final isPending = widget.item.status == WithdrawStatus.pendingPickup.value;
     final vehicle = _parseVehicleInfo(widget.item.vehicleInfo);
     
     return Padding(
       padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
       child: GestureDetector(
         onTapDown: (_) => setState(() => _isPressed = true),
-        onTapUp: (_) {
-          setState(() => _isPressed = false);
-          _handleTap(context);
-        },
         onTapCancel: () => setState(() => _isPressed = false),
+        onTapUp: (_) => setState(() => _isPressed = false),
         child: AnimatedScale(
           scale: _isPressed ? 0.98 : 1.0,
           duration: const Duration(milliseconds: 100),
@@ -71,6 +72,14 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
                   _buildCardBody(context, isCompleted),
                   SizedBox(height: AppSizes.setHeight(12)),
                   _buildCardFooter(context, vehicle, isCompleted),
+                  SizedBox(height: AppSizes.setHeight(12)),
+                  // const Divider(
+                  //   height: 1,
+                  //   thickness: 1,
+                  //   color: Color(0xFFF3F4F6),
+                  // ),
+                  // SizedBox(height: AppSizes.setHeight(12)),
+                  _buildActionButtons(context, isPending),
                 ],
               ),
             ),
@@ -78,21 +87,6 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
         ),
       ),
     );
-  }
-
-  void _handleTap(BuildContext context) {
-    if (widget.item.withdrawId != null || widget.item.id != null) {
-      BaseRouter.push(
-        context: context,
-        url: AppPage.pickupOrderDetailPage.path,
-        extra: {
-          'order': widget.item,
-        },
-      );
-    } else {
-      l.w('PickupOrderListItem', '订单ID为空，无法跳转到详情页');
-      SportsToast.showError('订单信息异常，无法查看详情');
-    }
   }
 
   Widget _buildCardHeader(BuildContext context, bool isCompleted) {
@@ -208,12 +202,6 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
             ],
           ),
         ),
-        SizedBox(width: AppSizes.setWidth(8)),
-        Icon(
-          Icons.chevron_right,
-          size: AppSizes.setFontSize(20),
-          color: const Color(0xFFD1D5DB),
-        ),
       ],
     );
   }
@@ -279,6 +267,112 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildActionButtons(BuildContext context, bool isPending) {
+    if (isPending) {
+      // 待提油状态：显示两个按钮
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          _buildCancelButton(context),
+          SizedBox(width: AppSizes.setWidth(8)),
+          _buildDetailButton(context),
+        ],
+      );
+    } else {
+      // 已完成状态：只显示查看详情按钮
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          _buildDetailButton(context),
+        ],
+      );
+    }
+  }
+
+  Widget _buildCancelButton(BuildContext context) {
+    return SizedBox(
+      width: AppSizes.setWidth(90),
+      child: OutlinedButton(
+        onPressed: () => _handleCancel(context),
+        style: OutlinedButton.styleFrom(
+          padding: EdgeInsets.symmetric(
+            vertical: AppSizes.setHeight(10),
+          ),
+          side: const BorderSide(color: Color(0xFFD1D5DB), width: 1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSizes.setWidth(20)),
+          ),
+          backgroundColor: Colors.white,
+        ),
+        child: CommonText(
+          text: '取消订单',
+          fontSize: AppSizes.setFontSize(13),
+          textColor: const Color(0xFF6B7280),
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailButton(BuildContext context) {
+    return SizedBox(
+      width: AppSizes.setWidth(90),
+      child: OutlinedButton(
+        onPressed: () => _handleViewDetail(context),
+        style: OutlinedButton.styleFrom(
+          padding: EdgeInsets.symmetric(
+            vertical: AppSizes.setHeight(10),
+          ),
+          side: const BorderSide(color: Color(0xFF7165E3), width: 1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSizes.setWidth(20)),
+          ),
+          backgroundColor: Colors.white,
+        ),
+        child: CommonText(
+          text: '查看详情',
+          fontSize: AppSizes.setFontSize(13),
+          textColor: const Color(0xFF7165E3),
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  void _handleViewDetail(BuildContext context) {
+    if (widget.item.withdrawId != null || widget.item.id != null) {
+      BaseRouter.push(
+        context: context,
+        url: AppPage.pickupOrderDetailPage.path,
+        extra: {
+          'order': widget.item,
+        },
+      );
+    } else {
+      l.w('PickupOrderListItem', '订单ID为空，无法跳转到详情页');
+      SportsToast.showError('订单信息异常，无法查看详情');
+    }
+  }
+
+  void _handleCancel(BuildContext context) {
+    if (widget.item.withdrawId == null) {
+      SportsToast.showError('订单信息异常');
+      return;
+    }
+
+    SportsDialog.show(
+      title: '取消订单',
+      bodyText: '确定要取消该提油订单吗？取消后无法恢复。',
+      onOk: () async {
+        await SportsDialog.dismiss();
+        if (context.mounted) {
+          final ctrl = context.read<PickupOrderListCtrl>();
+          await ctrl.cancelOrder(widget.item.withdrawId!);
+        }
+      },
     );
   }
 
