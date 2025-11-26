@@ -225,7 +225,9 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
   ) {
     final plateNumber = vehicle?.plateNumber ?? '';
     final driverName = vehicle?.driverName ?? '';
-    final dateStr = _getDateString(widget.item.createdAt);
+    final dateStr = _getDateString(
+      isCompleted ? widget.item.updatedAt : widget.item.createdAt,
+    );
     
     return Container(
       padding: EdgeInsets.symmetric(
