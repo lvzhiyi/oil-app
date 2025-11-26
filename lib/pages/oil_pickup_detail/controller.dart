@@ -129,14 +129,18 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
 
       String vehicleInfoJson;
       if (state.vehicleInfo.isNotEmpty) {
-        vehicleInfoJson = state.vehicleInfo;
+        final parsedModel = VehicleInfoParser.parse(state.vehicleInfo);
+        final mergedModel = parsedModel.copyWith(
+          oilAmount: parsedModel.oilAmount ?? finalOilAmount,
+        );
+        vehicleInfoJson = VehicleInfoParser.toJson(mergedModel);
       } else {
         final finalVehicleModel = vehicleModel.copyWith(
           oilAmount: vehicleModel.oilAmount ?? finalOilAmount,
         );
         vehicleInfoJson = VehicleInfoParser.toJson(finalVehicleModel);
       }
-
+      print('vehicleInfoJson: $vehicleInfoJson');
       final request = WithdrawRequest(
         withdrawTon: oilAmountInt,
         stationId: stationId,
