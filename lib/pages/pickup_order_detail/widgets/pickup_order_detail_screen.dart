@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
+import 'package:oil_business_app/pages/pickup_order_detail/controller.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/utils/date_util.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/common/dashed_line.dart';
+import 'package:oil_business_app/widgets/popup/dialog.dart';
 
 class PickupOrderDetailScreen extends StatelessWidget {
   final WithdrawOrderModel? order;
@@ -79,7 +82,10 @@ class PickupOrderDetailScreen extends StatelessWidget {
               _buildWaybillCard(context, isCompleted, vehicleModel),
               SizedBox(height: AppSizes.setHeight(30)),
               // _buildContactButton(context),
-              // SizedBox(height: AppSizes.setHeight(20)),
+              if (order!.status == WithdrawStatus.pendingPickup.value) ...[
+                _buildCancelButton(context),
+                SizedBox(height: AppSizes.setHeight(20)),
+              ],
             ],
           ),
         ),
@@ -87,6 +93,47 @@ class PickupOrderDetailScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildCancelButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton(
+        onPressed: () => _handleCancel(context),
+        style: OutlinedButton.styleFrom(
+          padding: EdgeInsets.symmetric(
+            vertical: AppSizes.setHeight(12),
+          ),
+          side: const BorderSide(color: Color(0xFFEF4444)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSizes.setWidth(24)),
+          ),
+          backgroundColor: Colors.white,
+        ),
+        child: CommonText(
+          text: '取消订单',
+          fontSize: AppSizes.setFontSize(15),
+          textColor: const Color(0xFFEF4444),
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  void _handleCancel(BuildContext context) {
+    SportsDialog.show(
+      title: '取消订单',
+      bodyText: '确定要取消该提油订单吗？取消后无法恢复。',
+      onOk: () async {
+        await SportsDialog.dismiss();
+        if (context.mounted) {
+          final success =
+              await context.read<PickupOrderDetailCtrl>().cancelOrder();
+          if (success && context.mounted) {
+            Navigator.pop(context, true);
+          }
+        }
+      },
+    );
+  }
 
   Widget _buildWaybillCard(
     BuildContext context,
@@ -116,13 +163,20 @@ class PickupOrderDetailScreen extends StatelessWidget {
   }
 
   Widget _buildTopGradientBar(bool isCompleted) {
+    final isCancelled = order!.status == WithdrawStatus.cancelled.value;
+    List<Color> gradientColors = [const Color(0xFF7165E3), const Color(0xFFA78BFA)];
+    
+    if (isCompleted) {
+      gradientColors = [const Color(0xFF10B981), const Color(0xFF34D399)];
+    } else if (isCancelled) {
+      gradientColors = [const Color(0xFF9CA3AF), const Color(0xFFD1D5DB)];
+    }
+
     return Container(
       height: AppSizes.setHeight(6),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: isCompleted
-              ? [const Color(0xFF10B981), const Color(0xFF34D399)]
-              : [const Color(0xFF7165E3), const Color(0xFFA78BFA)],
+          colors: gradientColors,
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
@@ -132,9 +186,25 @@ class PickupOrderDetailScreen extends StatelessWidget {
 
   Widget _buildWaybillHeader(BuildContext context, bool isCompleted) {
     final orderNo = order!.withdrawNo ?? order!.id?.toString() ?? '';
-    final shortOrderNo = orderNo.length > 15 
+    final shortOrderNo = orderNo.length > 15
         ? '${orderNo.substring(0, 15)}...${orderNo.substring(orderNo.length - 5)}'
         : orderNo;
+
+    final isCancelled = order!.status == WithdrawStatus.cancelled.value;
+    
+    String statusText = '待提油';
+    Color statusColor = const Color(0xFFF59E0B);
+    IconData statusIcon = Icons.access_time;
+
+    if (isCompleted) {
+      statusText = '已完成';
+      statusColor = const Color(0xFF10B981);
+      statusIcon = Icons.check_circle;
+    } else if (isCancelled) {
+      statusText = '已取消';
+      statusColor = const Color(0xFF9CA3AF);
+      statusIcon = Icons.cancel;
+    }
 
     return Container(
       padding: EdgeInsets.all(AppSizes.setWidth(20)),
@@ -154,20 +224,16 @@ class PickupOrderDetailScreen extends StatelessWidget {
           Row(
             children: [
               Icon(
-                isCompleted ? Icons.check_circle : Icons.access_time,
+                statusIcon,
                 size: AppSizes.setFontSize(24),
-                color: isCompleted 
-                    ? const Color(0xFF10B981) 
-                    : const Color(0xFFF59E0B),
+                color: statusColor,
               ),
               SizedBox(width: AppSizes.setWidth(8)),
               CommonText(
-                text: isCompleted ? '已完成' : '待提油',
+                text: statusText,
                 fontSize: AppSizes.setFontSize(20),
                 fontWeight: FontWeight.w700,
-                textColor: isCompleted 
-                    ? const Color(0xFF10B981) 
-                    : const Color(0xFFF59E0B),
+                textColor: statusColor,
               ),
             ],
           ),
@@ -445,31 +511,7 @@ class PickupOrderDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildContactButton(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton(
-        onPressed: () {
-          // TODO: 实现联系调度员功能
-        },
-        style: OutlinedButton.styleFrom(
-          padding: EdgeInsets.symmetric(
-            vertical: AppSizes.setHeight(8),
-            horizontal: AppSizes.setWidth(24),
-          ),
-          side: const BorderSide(color: Color(0xFF7165E3)),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSizes.setWidth(20)),
-          ),
-        ),
-        child: CommonText(
-          text: '联系调度员',
-          fontSize: AppSizes.setFontSize(14),
-          textColor: const Color(0xFF7165E3),
-        ),
-      ),
-    );
-  }
+
 
   String _formatDateTime(String dateTimeStr) {
     try {

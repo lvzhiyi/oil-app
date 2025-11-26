@@ -65,7 +65,8 @@ enum OrderStatus {
 /// 提油状态枚举
 enum WithdrawStatus {
   pendingPickup('待提油', 'pending_pickup'),
-  completed('已完成', 'completed');
+  completed('已完成', 'completed'),
+  cancelled('已取消', 'cancelled');
 
   const WithdrawStatus(this.displayName, this.value);
 

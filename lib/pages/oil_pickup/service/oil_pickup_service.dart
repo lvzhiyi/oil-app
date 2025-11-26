@@ -31,6 +31,12 @@ abstract class OilPickupService {
     @Query('page') required int page,
     @Query('pageSize') required int pageSize,
   });
+
+  /// 取消提油申请
+  @PUT('/inventories/withdraws/{withdrawId}/cancel')
+  Future<void> cancelWithdraw(
+    @Path('withdrawId') int withdrawId,
+  );
 }
 
 OilPickupService get oilPickupService =>
