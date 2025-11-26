@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>创建账户 - 样式修复版</title>
+    <style>
+        :root {
+            --primary: #7165E3;
+            --primary-hover: #5B50C7;
+            --text-main: #1F2937;
+            --text-sub: #6B7280;
+            --bg-page: #FFFFFF;
+            --input-bg: #F9FAFB;
+            --border: #E5E7EB;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; outline: none; }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif; 
+            background-color: var(--bg-page); 
+            color: var(--text-main); 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .page-view {
+            flex: 1; padding: 32px 24px; overflow-y: auto;
+            display: flex; flex-direction: column;
+        }
+
+        /* 头部品牌区 */
+        .brand-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 32px; margin-top: 20px; }
+        .logo-box {
+            width: 64px; height: 64px; background: #FFF7ED; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+            box-shadow: 0 8px 16px rgba(245, 158, 11, 0.15);
+        }
+        .logo-icon { width: 32px; height: 32px; color: #F59E0B; }
+        .page-title { font-size: 24px; font-weight: 700; color: var(--text-main); }
+
+        /* 输入框组 */
+        .input-group { margin-bottom: 16px; }
+        
+        .input-wrapper {
+            position: relative;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex; align-items: center;
+            transition: all 0.2s;
+        }
+        .input-wrapper:focus-within {
+            background: var(--bg-page); border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(113, 101, 227, 0.1);
+        }
+        
+        .custom-input {
+            /* 关键修复：去除输入框默认样式 */
+            -webkit-appearance: none; appearance: none;
+            flex: 1; padding: 16px; border: none; background: transparent;
+            font-size: 15px; color: var(--text-main); height: 52px;
+            border-radius: 0; /* 防止圆角叠加 */
+        }
+        .custom-input::placeholder { color: #9CA3AF; }
+
+        /* 密码切换图标 */
+        .eye-toggle { padding: 0 16px; color: #9CA3AF; cursor: pointer; display: flex; align-items: center; height: 100%; }
+
+        /* 密码提示规则 */
+        .pwd-hint { 
+            font-size: 11px; color: var(--text-sub); 
+            margin-top: -8px; margin-bottom: 16px; padding-left: 4px; 
+            display: flex; gap: 12px; flex-wrap: wrap;
+        }
+        .hint-item { display: flex; align-items: center; gap: 4px; }
+        .hint-dot { width: 4px; height: 4px; background: #D1D5DB; border-radius: 50%; }
+
+        /* ===============================================
+           核心修复：按钮样式
+           =============================================== */
+        .btn-primary {
+            /* 1. 强制去除原生外观 (最重要) */
+            -webkit-appearance: none;
+            appearance: none;
+            
+            /* 2. 基础盒模型 */
+            width: 100%; 
+            padding: 14px 0;
+            background: var(--primary); 
+            color: white;
+            border-radius: 26px; 
+            border: none;
+            
+            /* 3. 字体与排版 */
+            font-size: 16px; 
+            font-weight: 600; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            /* 4. 间距与阴影优化 */
+            margin-top: 24px; 
+            margin-bottom: 24px;
+            /* 阴影改用更通用的黑色半透明，或者极淡的品牌色，避免"光晕"感 */
+            box-shadow: 0 4px 10px rgba(113, 101, 227, 0.2); 
+            
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        /* 点击态改用透明度变化，比scale更稳 */
+        .btn-primary:active { opacity: 0.85; }
+
+        /* 底部登录引导 */
+        .bottom-area { margin-top: auto; text-align: center; padding-bottom: 20px; }
+        .login-link { font-size: 14px; color: var(--text-sub); }
+        .link-text { color: var(--primary); font-weight: 600; margin-left: 4px; cursor: pointer; }
+
+    </style>
+</head>
+<body>
+
+    <div class="page-view">
+        <div class="brand-header">
+            <div class="logo-box">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C12 2 5 9 5 14.5C5 18.64 8.13 22 12 22C15.87 22 19 18.64 19 14.5C19 9 12 2 12 2ZM10.5 18C10.5 18 13.5 18 14 15.5C14 15.5 10 15.5 10.5 18Z"/></svg>
+            </div>
+            <h1 class="page-title">创建您的账户</h1>
+        </div>
+
+        <div class="input-group">
+            <div class="input-wrapper">
+                <input type="text" class="custom-input" placeholder="您的姓名">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <div class="input-wrapper">
+                <input type="tel" class="custom-input" placeholder="手机号码 (将作为登录账号)" maxlength="11">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <div class="input-wrapper">
+                <input type="password" class="custom-input" id="pwd1" placeholder="设置登录密码">
+                <div class="eye-toggle" onclick="togglePwd('pwd1', this)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <div class="input-wrapper">
+                <input type="password" class="custom-input" id="pwd2" placeholder="确认登录密码">
+                <div class="eye-toggle" onclick="togglePwd('pwd2', this)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="pwd-hint">
+            <div class="hint-item"><div class="hint-dot"></div>8-20位字符</div>
+            <div class="hint-item"><div class="hint-dot"></div>包含字母和数字</div>
+        </div>
+
+        <div class="input-group">
+            <div class="input-wrapper">
+                <input type="text" class="custom-input" placeholder="邀请码 (选填)">
+            </div>
+        </div>
+
+        <button class="btn-primary">注册并登录</button>
+
+        <div class="bottom-area">
+            <span class="login-link">
+                已有账户？ <span class="link-text" onclick="alert('跳转登录')">立即登录</span>
+            </span>
+        </div>
+    </div>
+
+    <script>
+        function togglePwd(id, el) {
+            const input = document.getElementById(id);
+            const isOpen = input.type === 'text';
+            input.type = isOpen ? 'password' : 'text';
+            
+            if(isOpen) {
+                el.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+                el.style.color = '#9CA3AF';
+            } else {
+                el.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+                el.style.color = '#7165E3';
+            }
+        }
+    </script>
+</body>
+</html>
