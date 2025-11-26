@@ -294,53 +294,20 @@ class PickupOrderDetailScreen extends StatelessWidget {
       children: [
         _buildDetailItem('加油站', order!.stationName ?? '未知油站'),
         SizedBox(height: AppSizes.setHeight(16)),
-        _buildDetailItem('提油油库', '大中华区1号油库'),
+        _buildDetailItem(
+          '提油油库',
+          order!.inventoryId != null ? '库存ID: ${order!.inventoryId}' : '未知油库',
+        ),
         SizedBox(height: AppSizes.setHeight(16)),
         _buildDashedDivider(),
         SizedBox(height: AppSizes.setHeight(16)),
-        if (vehicleModel?.plateNumber != null && vehicleModel!.plateNumber!.isNotEmpty)
-          _buildDetailItem(
-            '车牌号',
-            vehicleModel.plateNumber!,
-            valueWidget: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSizes.setWidth(4),
-                vertical: AppSizes.setHeight(2),
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xFFEFF6FF),
-                borderRadius: BorderRadius.circular(AppSizes.setWidth(4)),
-              ),
-              child: CommonText(
-                text: vehicleModel.plateNumber!,
-                fontSize: AppSizes.setFontSize(14),
-                fontWeight: FontWeight.w500,
-                textColor: const Color(0xFF1D4ED8),
-              ),
-            ),
-          ),
-        if (vehicleModel?.plateNumber != null && vehicleModel!.plateNumber!.isNotEmpty)
+        if (vehicleModel != null) ...[
+          _buildVehicleInfoSection(vehicleModel),
           SizedBox(height: AppSizes.setHeight(16)),
-        if (vehicleModel?.driverName != null && vehicleModel!.driverName!.isNotEmpty)
-          _buildDetailItem('驾驶员', vehicleModel.driverName!),
-        if (vehicleModel?.driverName != null && vehicleModel!.driverName!.isNotEmpty)
-          SizedBox(height: AppSizes.setHeight(16)),
-        if (vehicleModel?.driverPhone != null && vehicleModel!.driverPhone!.isNotEmpty)
-          _buildDetailItem(
-            '联系电话',
-            vehicleModel.driverPhone!,
-            valueWidget: CommonText(
-              text: vehicleModel.driverPhone!,
-              fontSize: AppSizes.setFontSize(14),
-              fontWeight: FontWeight.w500,
-              textColor: const Color(0xFF1F2937),
-            ),
-          ),
-        if (isCompleted) ...[
-          if (vehicleModel?.driverPhone != null && vehicleModel!.driverPhone!.isNotEmpty)
-            SizedBox(height: AppSizes.setHeight(16)),
           _buildDashedDivider(),
           SizedBox(height: AppSizes.setHeight(16)),
+        ],
+        if (isCompleted) ...[
           if (order!.updatedAt != null && order!.updatedAt!.isNotEmpty)
             _buildDetailItem(
               '完成时间',
@@ -393,12 +360,79 @@ class PickupOrderDetailScreen extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                   textColor: const Color(0xFF1F2937),
                   textAlign: TextAlign.right,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                  maxLines: null,
+                  overflow: TextOverflow.visible,
                 ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildVehicleInfoSection(VehicleModel vehicleModel) {
+    final items = <Widget>[
+      _buildSectionTitle('车辆及司机信息'),
+    ];
+
+    void addItem(String label, String? value, {Widget? valueWidget}) {
+      if (value != null && value.trim().isNotEmpty) {
+        items.add(_buildDetailItem(label, value, valueWidget: valueWidget));
+        items.add(SizedBox(height: AppSizes.setHeight(12)));
+      }
+    }
+
+    addItem(
+      '车牌号',
+      vehicleModel.plateNumber,
+      valueWidget: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.setWidth(4),
+          vertical: AppSizes.setHeight(2),
+        ),
+        decoration: BoxDecoration(
+          color: const Color(0xFFEFF6FF),
+          borderRadius: BorderRadius.circular(AppSizes.setWidth(4)),
+        ),
+        child: CommonText(
+          text: vehicleModel.plateNumber ?? '',
+          fontSize: AppSizes.setFontSize(14),
+          fontWeight: FontWeight.w500,
+          textColor: const Color(0xFF1D4ED8),
+        ),
+      ),
+    );
+    addItem('车型', vehicleModel.vehicleType);
+    addItem('驾驶员', vehicleModel.driverName);
+    addItem('联系电话', vehicleModel.driverPhone);
+    addItem('身份证号', vehicleModel.driverIdCard);
+    addItem('驾驶证编号', vehicleModel.driverLicense);
+    addItem('行驶证编号', vehicleModel.vehicleLicense);
+    addItem('核定载重', vehicleModel.loadCapacity);
+    addItem('单双仓', vehicleModel.tankType);
+    addItem('一仓(吨)', vehicleModel.tank1Capacity);
+    addItem('二仓(吨)', vehicleModel.tank2Capacity);
+    addItem('是否带泵', vehicleModel.hasPump);
+
+    if (items.isNotEmpty && items.last is SizedBox) {
+      items.removeLast();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: items,
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: AppSizes.setHeight(8)),
+      child: CommonText(
+        text: title,
+        fontSize: AppSizes.setFontSize(13),
+        fontWeight: FontWeight.w700,
+        textColor: const Color(0xFF6B7280),
+        textAlign: TextAlign.left,
+      ),
     );
   }
 
