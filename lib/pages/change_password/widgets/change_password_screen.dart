@@ -313,13 +313,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           ),
           child: Row(
             children: [
-              SvgAsset(
-                assetName: AssetsSvg.DEFAULT_HEAD,
-                width: AppSizes.setWidth(18),
-                height: AppSizes.setHeight(18),
-                color: const Color(0xFF6B7280),
-              ),
-              SizedBox(width: AppSizes.setWidth(12)),
               Expanded(
                 child: CommonText(
                   text: ctrl.phoneController.text.isEmpty
