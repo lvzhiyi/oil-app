@@ -174,6 +174,7 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
             'station': state.selectedStation!,
             'oilAmount': finalOilAmount,
             'vehicleModel': vehicleModel,
+            'dispatchInfo': state.vehicleInfo,
           },
         );
       }

@@ -1,12 +1,12 @@
 class FuelTypeHelper {
   static const Map<String, String> _fuelTypeMap = {
-    '92': '92号汽油',
-    '95': '95号汽油',
-    '98': '98号汽油',
-    '0': '0号柴油',
-    '-10': '-10号柴油',
-    '-20': '-20号柴油',
-    '-35': '-35号柴油',
+    '92': '92#汽油',
+    '95': '95#汽油',
+    '98': '98#汽油',
+    '0': '0#柴油',
+    '-10': '-10#柴油',
+    '-20': '-20#柴油',
+    '-35': '-35#柴油',
   };
 
   static String getDisplayName(String? fuelType) {
@@ -22,17 +22,17 @@ class FuelTypeHelper {
 
     if (trimmedType.contains('92') || trimmedType.contains('95') || trimmedType.contains('98')) {
       final parts = <String>[];
-      if (trimmedType.contains('92')) parts.add('92号汽油');
-      if (trimmedType.contains('95')) parts.add('95号汽油');
-      if (trimmedType.contains('98')) parts.add('98号汽油');
+      if (trimmedType.contains('92')) parts.add('92#汽油');
+      if (trimmedType.contains('95')) parts.add('95#汽油');
+      if (trimmedType.contains('98')) parts.add('98#汽油');
       return parts.join('、');
     }
 
     if (trimmedType.contains('0') || trimmedType.contains('柴油')) {
-      if (trimmedType.contains('-10')) return '-10号柴油';
-      if (trimmedType.contains('-20')) return '-20号柴油';
-      if (trimmedType.contains('-35')) return '-35号柴油';
-      if (trimmedType.contains('0')) return '0号柴油';
+      if (trimmedType.contains('-10')) return '-10#柴油';
+      if (trimmedType.contains('-20')) return '-20#柴油';
+      if (trimmedType.contains('-35')) return '-35#柴油';
+      if (trimmedType.contains('0')) return '0#柴油';
     }
 
     return fuelType;

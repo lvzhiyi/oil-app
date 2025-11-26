@@ -10,6 +10,7 @@ class OilPickupSuccessView extends StatelessWidget {
   final Station station;
   final String oilAmount;
   final VehicleModel vehicleModel;
+  final String dispatchInfo;
 
   const OilPickupSuccessView({
     Key? key,
@@ -18,6 +19,7 @@ class OilPickupSuccessView extends StatelessWidget {
     required this.station,
     required this.oilAmount,
     required this.vehicleModel,
+    required this.dispatchInfo,
   }) : super(key: key);
 
   @override
@@ -28,7 +30,7 @@ class OilPickupSuccessView extends StatelessWidget {
       station: station,
       oilAmount: oilAmount,
       vehicleModel: vehicleModel,
+      dispatchInfo: dispatchInfo,
     );
   }
 }
-
