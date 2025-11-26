@@ -8,6 +8,7 @@ import 'package:oil_business_app/utils/fuel_type_helper.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/utils/station_extension.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
+import 'package:oil_business_app/widgets/common/dashed_line.dart';
 
 class OilPickupReceiptCard extends StatelessWidget {
   final WithdrawResponse response;
@@ -64,13 +65,13 @@ class OilPickupReceiptCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildCardHeader(context, statusLabel),
-                SizedBox(height: AppSizes.setHeight(12)),
+                SizedBox(height: AppSizes.setHeight(18)),
                 _buildDashedDivider(),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(18)),
                   child: Column(
                     children: [
-                      SizedBox(height: AppSizes.setHeight(18)),
+                      SizedBox(height: AppSizes.setHeight(16)),
                       _buildWithdrawNo(context, withdrawNo),
                       SizedBox(height: AppSizes.setHeight(4)),
                       _buildAmountPanel(context, productName, formattedAmount),
@@ -407,14 +408,11 @@ class OilPickupReceiptCard extends StatelessWidget {
   }
 
   Widget _buildDashedDivider() {
-    return CustomPaint(
-      painter: DashedLinePainter(
-        color: const Color(0xFFE5E7EB),
-        strokeWidth: 1,
-        dashWidth: 4,
-        dashSpace: 4,
-      ),
-      child: const SizedBox(height: 1, width: double.infinity),
+    return const DashedLine(
+      color: Color(0xFFE5E7EB),
+      strokeWidth: 1,
+      dashWidth: 4,
+      dashSpace: 4,
     );
   }
 
@@ -426,35 +424,4 @@ class OilPickupReceiptCard extends StatelessWidget {
     }
     return parsed.toStringAsFixed(2);
   }
-}
-
-class DashedLinePainter extends CustomPainter {
-  final Color color;
-  final double strokeWidth;
-  final double dashWidth;
-  final double dashSpace;
-
-  DashedLinePainter({
-    required this.color,
-    required this.strokeWidth,
-    required this.dashWidth,
-    required this.dashSpace,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke;
-    double startX = 0;
-    final double maxX = size.width;
-    while (startX < maxX) {
-      canvas.drawLine(Offset(startX, 0), Offset(startX + dashWidth, 0), paint);
-      startX += dashWidth + dashSpace;
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

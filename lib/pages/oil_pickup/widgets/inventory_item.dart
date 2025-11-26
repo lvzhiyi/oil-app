@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/widgets/common/dashed_line.dart';
 
 class InventoryItem extends StatelessWidget {
   final InventoryModel inventory;
@@ -353,57 +354,11 @@ class InventoryItem extends StatelessWidget {
   }
 
   Widget _buildDashedDivider() {
-    return CustomPaint(
-      painter: DashedLinePainter(
-        color: const Color(0xFFF3F4F6),
-        strokeWidth: 1,
-        dashWidth: 4,
-        dashSpace: 4,
-      ),
-      child: const SizedBox(
-        height: 1,
-        width: double.infinity,
-      ),
+    return const DashedLine(
+      color: Color(0xFFF3F4F6),
+      strokeWidth: 1,
+      dashWidth: 4,
+      dashSpace: 4,
     );
-  }
-}
-
-class DashedLinePainter extends CustomPainter {
-  final Color color;
-  final double strokeWidth;
-  final double dashWidth;
-  final double dashSpace;
-
-  DashedLinePainter({
-    required this.color,
-    this.strokeWidth = 1,
-    this.dashWidth = 4,
-    this.dashSpace = 4,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke;
-
-    double startX = 0;
-    while (startX < size.width) {
-      canvas.drawLine(
-        Offset(startX, size.height / 2),
-        Offset(startX + dashWidth, size.height / 2),
-        paint,
-      );
-      startX += dashWidth + dashSpace;
-    }
-  }
-
-  @override
-  bool shouldRepaint(DashedLinePainter oldDelegate) {
-    return oldDelegate.color != color ||
-        oldDelegate.strokeWidth != strokeWidth ||
-        oldDelegate.dashWidth != dashWidth ||
-        oldDelegate.dashSpace != dashSpace;
   }
 }

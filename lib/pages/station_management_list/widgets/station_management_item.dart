@@ -5,6 +5,7 @@ import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/utils/station_extension.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
+import 'package:oil_business_app/widgets/common/dashed_line.dart';
 
 class StationManagementItem extends StatelessWidget {
   final Station station;
@@ -214,17 +215,11 @@ class StationManagementItem extends StatelessWidget {
       children: [
         Container(
           margin: EdgeInsets.only(top: AppSizes.setHeight(12)),
-          child: CustomPaint(
-            painter: DashedLinePainter(
-              color: colors.containerBorder,
-              strokeWidth: 1,
-              dashWidth: 4,
-              dashSpace: 4,
-            ),
-            child: const SizedBox(
-              height: 1,
-              width: double.infinity,
-            ),
+          child: DashedLine(
+            color: colors.containerBorder,
+            strokeWidth: 1,
+            dashWidth: 4,
+            dashSpace: 4,
           ),
         ),
         Padding(
@@ -284,45 +279,5 @@ class StationManagementItem extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class DashedLinePainter extends CustomPainter {
-  final Color color;
-  final double strokeWidth;
-  final double dashWidth;
-  final double dashSpace;
-
-  DashedLinePainter({
-    required this.color,
-    this.strokeWidth = 1,
-    this.dashWidth = 4,
-    this.dashSpace = 4,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke;
-
-    double startX = 0;
-    while (startX < size.width) {
-      canvas.drawLine(
-        Offset(startX, size.height / 2),
-        Offset(startX + dashWidth, size.height / 2),
-        paint,
-      );
-      startX += dashWidth + dashSpace;
-    }
-  }
-
-  @override
-  bool shouldRepaint(DashedLinePainter oldDelegate) {
-    return oldDelegate.color != color ||
-        oldDelegate.strokeWidth != strokeWidth ||
-        oldDelegate.dashWidth != dashWidth ||
-        oldDelegate.dashSpace != dashSpace;
   }
 }
