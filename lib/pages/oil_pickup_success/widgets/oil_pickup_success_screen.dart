@@ -788,65 +788,64 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
   Future<void> _showSaveShareSheet(Uint8List bytes, String filePath) async {
     await showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSizes.setWidth(16)),
-        ),
-      ),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (context) {
-        return SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppSizes.setWidth(16),
-              vertical: AppSizes.setHeight(12),
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(AppSizes.setWidth(16)),
             ),
+          ),
+          child: SafeArea(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: AppSizes.setWidth(40),
-                  height: AppSizes.setHeight(4),
-                  decoration: BoxDecoration(
-                    color: CustomAppColor.of(context).containerBorder,
-                    borderRadius: BorderRadius.circular(AppSizes.setWidth(2)),
-                  ),
-                ),
-                SizedBox(height: AppSizes.setHeight(12)),
+                SizedBox(height: AppSizes.setHeight(20)),
                 CommonText(
                   text: '图片已生成',
-                  fontSize: AppSizes.setFontSize(15),
-                  fontWeight: FontWeight.w700,
-                  textColor: CustomAppColor.of(context).txtBlack,
+                  fontSize: AppSizes.setFontSize(16),
+                  fontWeight: FontWeight.w600,
+                  textColor: const Color(0xff374151),
                 ),
-                SizedBox(height: AppSizes.setHeight(10)),
+                SizedBox(height: AppSizes.setHeight(16)),
                 Container(
                   width: AppSizes.setWidth(120),
-                  height: AppSizes.setHeight(140),
+                  height: AppSizes.setHeight(160),
                   decoration: BoxDecoration(
-                    color: CustomAppColor.of(context).white,
-                    borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 6,
-                        offset: const Offset(0, 3),
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
                       ),
                     ],
+                    border: Border.all(
+                      color: const Color(0xffE5E7EB),
+                      width: 1,
+                    ),
                   ),
+                  padding: EdgeInsets.all(AppSizes.setWidth(8)),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
+                    borderRadius: BorderRadius.circular(AppSizes.setWidth(4)),
                     child: Image.memory(
                       bytes,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Icon(
-                        Icons.image_outlined,
-                        size: AppSizes.setWidth(32),
-                        color: CustomAppColor.of(context).txtGrey,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, __, ___) => Center(
+                        child: Icon(
+                          Icons.image_outlined,
+                          size: AppSizes.setWidth(32),
+                          color: const Color(0xff9CA3AF),
+                        ),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: AppSizes.setHeight(16)),
+                SizedBox(height: AppSizes.setHeight(24)),
+                _buildDivider(),
                 _buildActionRow(
                   icon: Icons.photo_library_outlined,
                   text: '保存到系统相册',
@@ -864,7 +863,10 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
                     await _saveToDirectory(bytes);
                   },
                 ),
-                _buildDivider(),
+                Container(
+                  color: const Color(0xffF2F2F2),
+                  height: AppSizes.setHeight(8),
+                ),
                 _buildActionRow(
                   icon: Icons.share_outlined,
                   text: '发送给好友 / 司机',
@@ -878,18 +880,24 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
                     );
                   },
                 ),
-                SizedBox(height: AppSizes.setHeight(12)),
+                Container(
+                  color: const Color(0xffF2F2F2),
+                  height: AppSizes.setHeight(8),
+                ),
                 GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
-                  child: Padding(
+                  behavior: HitTestBehavior.opaque,
+                  child: Container(
+                    width: double.infinity,
                     padding: EdgeInsets.symmetric(
-                      vertical: AppSizes.setHeight(10),
+                      vertical: AppSizes.setHeight(16),
                     ),
+                    alignment: Alignment.center,
                     child: CommonText(
                       text: '取消',
-                      fontSize: AppSizes.setFontSize(15),
-                      fontWeight: FontWeight.w700,
-                      textColor: CustomAppColor.of(context).txtBlack,
+                      fontSize: AppSizes.setFontSize(16),
+                      fontWeight: FontWeight.w600,
+                      textColor: const Color(0xff374151),
                     ),
                   ),
                 ),
@@ -910,27 +918,30 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
       onTap: onTap,
       child: Padding(
         padding: EdgeInsets.symmetric(
-          vertical: AppSizes.setHeight(12),
+          horizontal: AppSizes.setWidth(20),
+          vertical: AppSizes.setHeight(16),
         ),
         child: Row(
           children: [
             Icon(
               icon,
-              color: CustomAppColor.of(context).txtBlack,
+              color: const Color(0xff374151),
+              size: AppSizes.setWidth(22),
             ),
             SizedBox(width: AppSizes.setWidth(12)),
             Expanded(
               child: CommonText(
                 text: text,
-                fontSize: AppSizes.setFontSize(14),
-                fontWeight: FontWeight.w600,
-                textColor: CustomAppColor.of(context).txtBlack,
+                fontSize: AppSizes.setFontSize(15),
+                fontWeight: FontWeight.w500,
+                textColor: const Color(0xff374151),
                 textAlign: TextAlign.left,
               ),
             ),
             Icon(
               Icons.chevron_right,
-              color: CustomAppColor.of(context).txtGrey,
+              color: const Color(0xff9CA3AF),
+              size: AppSizes.setWidth(20),
             ),
           ],
         ),
@@ -941,7 +952,7 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
   Widget _buildDivider() {
     return Container(
       height: 1,
-      color: CustomAppColor.of(context).containerBorder,
+      color: const Color(0xffF3F4F6),
     );
   }
 
