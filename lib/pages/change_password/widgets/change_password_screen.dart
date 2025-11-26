@@ -56,15 +56,13 @@ class _PasswordFieldContainerState extends State<_PasswordFieldContainer> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.setWidth(10)),
         border: Border.all(
-          color: _isFocused
-              ? const Color(0xFF7165E3)
-              : const Color(0xFFE5E7EB),
+          color: _isFocused ? const Color(0xFF7165E3) : const Color(0xFFE5E7EB),
           width: 1,
         ),
         boxShadow: _isFocused
             ? [
                 BoxShadow(
-                  color: const Color(0xFF7165E3).withOpacity(0.1),
+                  color: const Color(0xFF7165E3).withValues(alpha: 0.1),
                   blurRadius: 3,
                   spreadRadius: 0,
                 ),
@@ -140,15 +138,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       padding: EdgeInsets.only(top: statusBarHeight),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(
+        border: const Border(
           bottom: BorderSide(
-            color: const Color(0xFFE5E7EB),
+            color: Color(0xFFE5E7EB),
             width: 1,
           ),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             offset: const Offset(0, 1),
             blurRadius: 2,
           ),
@@ -195,13 +193,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         borderRadius: BorderRadius.circular(AppSizes.setWidth(16)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             offset: const Offset(0, 2),
             blurRadius: 8,
           ),
         ],
         border: Border.all(
-          color: Colors.black.withOpacity(0.02),
+          color: Colors.black.withValues(alpha: 0.02),
           width: 1,
         ),
       ),
@@ -255,33 +253,36 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Widget _buildBrandArea() {
-    return Column(
-      children: [
-        SizedBox(height: AppSizes.setHeight(8)),
-        Container(
-          width: AppSizes.setWidth(56),
-          height: AppSizes.setHeight(56),
-          decoration: BoxDecoration(
-            color: const Color(0xFFEEECFC),
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: SvgAsset(
-              assetName: AssetsSvg.LOCK,
-              width: AppSizes.setWidth(28),
-              height: AppSizes.setHeight(28),
-              color: const Color(0xFF7165E3),
+    return Container(
+      alignment: Alignment.center,
+      child: Column(
+        children: [
+          SizedBox(height: AppSizes.setHeight(8)),
+          Container(
+            width: AppSizes.setWidth(56),
+            height: AppSizes.setHeight(56),
+            decoration: const BoxDecoration(
+              color: Color(0xFFEEECFC),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: SvgAsset(
+                assetName: AssetsSvg.LOCK,
+                width: AppSizes.setWidth(28),
+                height: AppSizes.setHeight(28),
+                color: const Color(0xFF7165E3),
+              ),
             ),
           ),
-        ),
-        SizedBox(height: AppSizes.setHeight(12)),
-        CommonText(
-          text: '定期修改密码可有效保护账号资产安全',
-          fontSize: AppSizes.setFontSize(13),
-          textColor: const Color(0xFF6B7280),
-          textAlign: TextAlign.center,
-        ),
-      ],
+          SizedBox(height: AppSizes.setHeight(12)),
+          CommonText(
+            text: '定期修改密码可有效保护账号资产安全',
+            fontSize: AppSizes.setFontSize(13),
+            textColor: const Color(0xFF6B7280),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 
@@ -326,7 +327,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       : _formatPhoneNumber(ctrl.phoneController.text),
                   fontSize: AppSizes.setFontSize(16),
                   fontWeight: FontWeight.w500,
-                  textColor: const Color(0xFF1F2937).withOpacity(0.8),
+                  textColor: const Color(0xFF1F2937).withValues(alpha: 0.8),
                   textAlign: TextAlign.left,
                 ),
               ),
@@ -405,12 +406,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   ),
                   validator: fieldName == 'password'
                       ? FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                              errorText: '请输入新密码'),
+                          FormBuilderValidators.required(errorText: '请输入新密码'),
                         ])
                       : FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                              errorText: '请输入确认密码'),
+                          FormBuilderValidators.required(errorText: '请输入确认密码'),
                           (value) {
                             final formState = ctrl.formKey.currentState;
                             final pw = formState?.fields['password']?.value;
@@ -454,8 +453,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           Container(
             width: AppSizes.setWidth(4),
             height: AppSizes.setHeight(4),
-            decoration: BoxDecoration(
-              color: const Color(0xFFD1D5DB),
+            decoration: const BoxDecoration(
+              color: Color(0xFFD1D5DB),
               shape: BoxShape.circle,
             ),
           ),
@@ -477,7 +476,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         borderRadius: BorderRadius.circular(AppSizes.setWidth(24)),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF7165E3).withOpacity(0.2),
+            color: const Color(0xFF7165E3).withValues(alpha: 0.2),
             offset: const Offset(0, 4),
             blurRadius: 12,
           ),
