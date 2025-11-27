@@ -133,12 +133,14 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
         final mergedModel = parsedModel.copyWith(
           oilAmount: parsedModel.oilAmount ?? finalOilAmount,
         );
-        vehicleInfoJson = VehicleInfoParser.toJson(mergedModel);
+        // 格式：原始字符串|||JSON字符串
+        vehicleInfoJson = '${state.vehicleInfo}|||${VehicleInfoParser.toJson(mergedModel)}';
       } else {
         final finalVehicleModel = vehicleModel.copyWith(
           oilAmount: vehicleModel.oilAmount ?? finalOilAmount,
         );
-        vehicleInfoJson = VehicleInfoParser.toJson(finalVehicleModel);
+        // 格式：|||JSON字符串 (原始字符串为空)
+        vehicleInfoJson = '|||${VehicleInfoParser.toJson(finalVehicleModel)}';
       }
       print('vehicleInfoJson: $vehicleInfoJson');
       final request = WithdrawRequest(
