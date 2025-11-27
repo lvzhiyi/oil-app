@@ -33,7 +33,7 @@ abstract class OilPickupService {
   });
 
   /// 取消提油申请
-  @PUT('/inventories/withdraws/{withdrawId}/cancel')
+  @POST('/inventories/withdraws/{withdrawId}/cancel')
   Future<void> cancelWithdraw(
     @Path('withdrawId') int withdrawId,
   );
