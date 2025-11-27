@@ -109,94 +109,99 @@ class _OrdersScreenState extends State<OrdersScreen>
   Widget _buildList(BuildContext context) {
     final ctrl = context.read<PayOrderListCtrl>();
 
-    // Initial Loading
-    if (widget.state.pageStatus == PageStatus.loading && widget.state.orderList.isEmpty) {
-      return const Center(
-        child: CupertinoActivityIndicator(),
-      );
-    }
+    // 使用 BlocBuilder 监听状态变化，确保切换 tab 时能正确更新
+    return BlocBuilder<PayOrderListCtrl, PayOrderListState>(
+      builder: (context, state) {
+        // Initial Loading
+        if (state.pageStatus == PageStatus.loading && state.orderList.isEmpty) {
+          return const Center(
+            child: CupertinoActivityIndicator(),
+          );
+        }
 
-    // Error State
-    if (widget.state.pageStatus == PageStatus.error && widget.state.orderList.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CommonText(
-              text: '加载失败',
-              fontSize: AppSizes.setFontSize(16),
-              textColor: CustomAppColor.of(context).txtGrey,
-            ),
-            SizedBox(height: AppSizes.setHeight(16)),
-            CommonButton(
-              btnText: '重试',
-              width: AppSizes.setWidth(120),
-              height: AppSizes.setHeight(40),
-              fontSize: AppSizes.setFontSize(14),
-              onTap: () => ctrl.onRefresh(),
-            ),
-          ],
-        ),
-      );
-    }
-
-    // Empty State
-    if (widget.state.orderList.isEmpty) {
-      return PullOrRefreshEasy(
-        refreshController: ctrl.refreshController,
-        onRefresh: () => ctrl.onRefresh(),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Container(
-            height: MediaQuery.of(context).size.height - 200,
-            alignment: Alignment.center,
-            padding: EdgeInsets.only(top: AppSizes.setHeight(100)),
+        // Error State
+        if (state.pageStatus == PageStatus.error && state.orderList.isEmpty) {
+          return Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: AppSizes.setWidth(80),
-                  height: AppSizes.setHeight(80),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF3F4F6),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Center(
-                    child: Image.asset(
-                      AssetsIcon.IC_BAG,
-                      width: AppSizes.setWidth(32),
-                      height: AppSizes.setHeight(32),
-                    ),
-                  ),
+                CommonText(
+                  text: '加载失败',
+                  fontSize: AppSizes.setFontSize(16),
+                  textColor: CustomAppColor.of(context).txtGrey,
                 ),
                 SizedBox(height: AppSizes.setHeight(16)),
-                CommonText(
-                  text: '暂无相关订单',
+                CommonButton(
+                  btnText: '重试',
+                  width: AppSizes.setWidth(120),
+                  height: AppSizes.setHeight(40),
                   fontSize: AppSizes.setFontSize(14),
-                  textColor: const Color(0xFF6B7280),
+                  onTap: () => ctrl.onRefresh(),
                 ),
               ],
             ),
-          ),
-        ),
-      );
-    }
-
-    // List with Pagination
-    return PullOrRefreshEasy(
-      refreshController: ctrl.refreshController,
-      onRefresh: () => ctrl.onRefresh(),
-      onLoading: () => ctrl.onLoadMore(),
-      child: ListView.builder(
-        padding: EdgeInsets.all(AppSizes.setWidth(16)),
-        itemCount: widget.state.orderList.length,
-        itemBuilder: (context, index) {
-          final order = widget.state.orderList[index];
-          return Padding(
-            padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
-            child: _buildOrderCard(order, context),
           );
-        },
-      ),
+        }
+
+        // Empty State
+        if (state.orderList.isEmpty) {
+          return PullOrRefreshEasy(
+            refreshController: ctrl.refreshController,
+            onRefresh: () => ctrl.onRefresh(),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Container(
+                height: MediaQuery.of(context).size.height - 200,
+                alignment: Alignment.center,
+                padding: EdgeInsets.only(top: AppSizes.setHeight(100)),
+                child: Column(
+                  children: [
+                    Container(
+                      width: AppSizes.setWidth(80),
+                      height: AppSizes.setHeight(80),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF3F4F6),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          AssetsIcon.IC_BAG,
+                          width: AppSizes.setWidth(32),
+                          height: AppSizes.setHeight(32),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: AppSizes.setHeight(16)),
+                    CommonText(
+                      text: '暂无相关订单',
+                      fontSize: AppSizes.setFontSize(14),
+                      textColor: const Color(0xFF6B7280),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        // List with Pagination
+        return PullOrRefreshEasy(
+          refreshController: ctrl.refreshController,
+          onRefresh: () => ctrl.onRefresh(),
+          onLoading: () => ctrl.onLoadMore(),
+          child: ListView.builder(
+            padding: EdgeInsets.all(AppSizes.setWidth(16)),
+            itemCount: state.orderList.length,
+            itemBuilder: (context, index) {
+              final order = state.orderList[index];
+              return Padding(
+                padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
+                child: _buildOrderCard(order, context),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 

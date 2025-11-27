@@ -31,13 +31,15 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
 
   /// 刷新
   Future<void> onRefresh({int? status}) async {
-    if (status != null) {
-      _currentStatus = status;
-    }
+    // 检查状态是否真的改变了
+    final statusChanged = _currentStatus != status;
+
+    // 更新当前状态，包括 null 的情况（表示全部）
+    _currentStatus = status;
 
     // 防止重复刷新，但允许首屏加载或状态切换
     if (state.pageStatus == PageStatus.loading &&
-        status == null &&
+        !statusChanged &&
         state.orderList.isNotEmpty) {
       return;
     }
@@ -47,8 +49,8 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
       currentPage: 1,
       hasMore: true,
       errorMessage: null,
-      // Clear list if status changed to avoid showing wrong data while loading
-      orderList: status != null ? [] : state.orderList, 
+      // 如果状态改变了，清空列表以避免显示错误的数据
+      orderList: statusChanged ? [] : state.orderList,
     ));
 
     await _loadData(isRefresh: true);
@@ -62,7 +64,7 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
   Future<void> _loadData({required bool isRefresh}) async {
     try {
       final page = isRefresh ? 1 : state.currentPage + 1;
-      
+
       final response = await payOrderListService.getOrderList(
           page: page, pageSize: _pageSize, status: _currentStatus);
 
@@ -76,7 +78,8 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
         refreshController.resetFooter();
       } else {
         finalList = [...state.orderList, ...newRecords];
-        refreshController.finishLoad(hasMore ? IndicatorResult.success : IndicatorResult.noMore);
+        refreshController.finishLoad(
+            hasMore ? IndicatorResult.success : IndicatorResult.noMore);
       }
 
       emit(state.copyWith(
@@ -88,7 +91,7 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
       ));
     } catch (e) {
       print(e);
-      
+
       if (isRefresh) {
         refreshController.finishRefresh(IndicatorResult.fail);
       } else {
@@ -97,12 +100,14 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
 
       emit(state.copyWith(
         isLoadingMore: false,
-        pageStatus: isRefresh ? PageStatus.error : state.pageStatus, // Only show error page if refresh failed
+        pageStatus: isRefresh
+            ? PageStatus.error
+            : state.pageStatus, // Only show error page if refresh failed
         errorMessage: e.toString(),
       ));
     }
   }
-  
+
   // Deprecated method kept for compatibility if needed, but redirected to onRefresh
   // Users of this controller should call onRefresh(status: ...) instead
   Future<void> getOrderList({int? status}) async {
