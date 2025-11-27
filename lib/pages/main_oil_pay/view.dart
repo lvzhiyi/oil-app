@@ -2,6 +2,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/pages/main_oil_pay/controller.dart';
+import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/pt.dart';
@@ -44,42 +45,42 @@ class _MainOilPayViewState extends State<MainOilPayView> {
     final state = widget.state;
 
     // 列表内容
-    return OilPageLoading(
-      status: state.pageStatus,
-      child: PullOrRefreshEasy(
-        refreshController: _refreshController,
-        onRefresh: () async {
-          context.read<OilPayCtrl>().onLoading();
-          _refreshController.finishRefresh();
-        },
-        onLoading: () async {
-          context.read<OilPayCtrl>().onLoading();
-          final currentState = context.read<OilPayCtrl>().state;
-          if (currentState.depotList.length >= currentState.total) {
-            _refreshController.finishLoad(IndicatorResult.noMore);
-          } else {
-            _refreshController.finishLoad();
-          }
-        },
-        child: ListView.builder(
-          padding: EdgeInsets.symmetric(
-            horizontal: pt(12),
-            vertical: pt(12),
-          ),
-          itemCount: state.depotList?.length ?? 0,
-          itemBuilder: (context, index) {
-            final depot = state.depotList![index];
-            return DepotsItemWidget(
-              depot: depot,
-              onTap: () {
-                BaseRouter.push(
-                  context: context,
-                  url: AppPage.oilPurchaseDetailPage.path,
-                  extra: {'depot': depot},
-                );
-              },
-            );
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FA),
+      body: OilPageLoading(
+        status: state.pageStatus,
+        child: PullOrRefreshEasy(
+          refreshController: _refreshController,
+          onRefresh: () async {
+            context.read<OilPayCtrl>().onLoading();
+            _refreshController.finishRefresh();
           },
+          onLoading: () async {
+            context.read<OilPayCtrl>().onLoading();
+            final currentState = context.read<OilPayCtrl>().state;
+            if (currentState.depotList.length >= currentState.total) {
+              _refreshController.finishLoad(IndicatorResult.noMore);
+            } else {
+              _refreshController.finishLoad();
+            }
+          },
+          child: ListView.builder(
+            padding: EdgeInsets.all(pt(16)),
+            itemCount: state.depotList.length,
+            itemBuilder: (context, index) {
+              final depot = state.depotList[index];
+              return DepotsItemWidget(
+                depot: depot,
+                onTap: () {
+                  BaseRouter.push(
+                    context: context,
+                    url: AppPage.oilPurchaseDetailPage.path,
+                    extra: {'depot': depot},
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );

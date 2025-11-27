@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:oil_business_app/pages/main_oil_pay/model/oil_order_res.type.dart';
 import 'package:oil_business_app/resources/colors.dart';
-import 'package:oil_business_app/resources/size.dart';
-import 'package:oil_business_app/resources/style.dart';
-import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/utils/sizer_utils.dart';
+import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
-class DepotsItemWidget extends StatelessWidget {
+class DepotsItemWidget extends StatefulWidget {
   final bool forBottomSheet;
   final Depot depot;
   final Function()? onTap;
@@ -19,67 +18,137 @@ class DepotsItemWidget extends StatelessWidget {
   });
 
   @override
+  State<DepotsItemWidget> createState() => _DepotsItemWidgetState();
+}
+
+class _DepotsItemWidgetState extends State<DepotsItemWidget> {
+  bool _isPressed = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: pt(12)),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: AppSize.radius,
-        boxShadow: AppSize.boxShadow,
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: AppSize.radius,
-        child: Padding(
-          padding: EdgeInsets.all(pt(16)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 顶部：左侧油库名称，右侧地址
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // 左侧：油库名称
-                  Expanded(
-                    child: Text(
-                      depot.depotName ?? '未知油库',
-                      style: SportsTextStyle.baseBold.copyWith(
-                        fontSize: pt(16),
-                        color: CustomAppColor.of(context).txtBlack,
-                      ),
-                    ),
-                  ),
-                  Gap(pt(12)),
-                  // 右侧：地址
-                  Expanded(
-                    child: Text(
-                      _buildAddress(depot),
-                      textAlign: TextAlign.right,
-                      style: SportsTextStyle.baseNormal.copyWith(
-                        fontSize: pt(14),
-                        color: CustomAppColor.of(context).txtGrey,
-                      ),
-                    ),
-                  ),
-                ],
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapUp: (_) => setState(() => _isPressed = false),
+      onTapCancel: () => setState(() => _isPressed = false),
+      onTap: widget.onTap,
+      child: Transform.scale(
+        scale: _isPressed ? 0.98 : 1.0,
+        child: Container(
+          margin: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
+          decoration: BoxDecoration(
+            color: _isPressed ? const Color(0xFFFAFAFA) : Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: _isPressed ? AppColor.txtPurple : Colors.transparent,
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
-              // 油品信息：三列显示
-              if (depot.fuels != null && depot.fuels!.isNotEmpty) ...[
-                Gap(pt(16)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: depot.fuels!.take(3).map((fuel) {
-                    return Expanded(
-                      child: _FuelColumn(
-                        fuelType: fuel.fuelType ?? '',
-                        price: fuel.priceCny ?? 0,
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ],
             ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(AppSizes.setWidth(16)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 卡片头部
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CommonText(
+                            text: widget.depot.depotName ?? '未知油库',
+                            fontSize: AppSizes.setFontSize(16),
+                            fontWeight: FontWeight.w700,
+                            textColor: const Color(0xFF111827),
+                          ),
+                          SizedBox(height: AppSizes.setHeight(4)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.location_on_outlined,
+                                size: AppSizes.setWidth(12),
+                                color: const Color(0xFF6B7280),
+                              ),
+                              SizedBox(width: AppSizes.setWidth(4)),
+                              CommonText(
+                                text: _buildAddress(widget.depot),
+                                fontSize: AppSizes.setFontSize(12),
+                                textColor: const Color(0xFF6B7280),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: AppSizes.setWidth(12)),
+                    // 去购油按钮
+                    GestureDetector(
+                      onTap: widget.onTap,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSizes.setWidth(10),
+                          vertical: AppSizes.setHeight(6),
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEEECFC),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CommonText(
+                              text: '去购油',
+                              fontSize: AppSizes.setFontSize(13),
+                              fontWeight: FontWeight.w600,
+                              textColor: AppColor.txtPurple,
+                            ),
+                            SizedBox(width: AppSizes.setWidth(2)),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: AppSizes.setWidth(14),
+                              color: AppColor.txtPurple,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(
+                  height: AppSizes.setHeight(12),
+                  thickness: 1,
+                  color: const Color(0xFFE5E7EB),
+                ),
+                // 价格网格
+                if (widget.depot.fuels != null &&
+                    widget.depot.fuels!.isNotEmpty)
+                  Row(
+                    children: widget.depot.fuels!.take(3).map((fuel) {
+                      return Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSizes.setWidth(4),
+                          ),
+                          child: _PriceItem(
+                            fuelType: fuel.fuelType ?? '',
+                            price: fuel.priceCny ?? 0,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -102,36 +171,59 @@ class DepotsItemWidget extends StatelessWidget {
   }
 }
 
-/// 油品列组件（显示油品类型和价格）
-class _FuelColumn extends StatelessWidget {
+/// 价格项组件
+class _PriceItem extends StatelessWidget {
   final String fuelType;
   final double price;
 
-  const _FuelColumn({
+  const _PriceItem({
     required this.fuelType,
     required this.price,
   });
 
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat('#,###');
+    final formattedPrice = formatter.format(price);
+
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // 油品类型（如：92、95、0）
-        Text(
-          fuelType,
-          style: SportsTextStyle.baseBold.copyWith(
-            fontSize: pt(16),
-            color: CustomAppColor.of(context).txtBlack,
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSizes.setWidth(8),
+            vertical: AppSizes.setHeight(2),
+          ),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF3F4F6),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: CommonText(
+            text: fuelType,
+            fontSize: AppSizes.setFontSize(12),
+            textColor: const Color(0xFF6B7280),
           ),
         ),
-        Gap(pt(4)),
-        // 价格（如：6000元/吨）
-        Text(
-          '${price.toStringAsFixed(0)}元/吨',
-          style: SportsTextStyle.baseNormal.copyWith(
-            fontSize: pt(14),
-            color: CustomAppColor.of(context).txtBlack,
+        SizedBox(height: AppSizes.setHeight(6)),
+        RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            style: TextStyle(
+              fontSize: AppSizes.setFontSize(18),
+              fontWeight: FontWeight.w700,
+              color: AppColor.txtPurple,
+              fontFamily: 'DIN Alternate',
+            ),
+            children: [
+              TextSpan(text: formattedPrice),
+              TextSpan(
+                text: '元/吨',
+                style: TextStyle(
+                  fontSize: AppSizes.setFontSize(11),
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xFF9CA3AF),
+                ),
+              ),
+            ],
           ),
         ),
       ],

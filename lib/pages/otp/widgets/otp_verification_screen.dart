@@ -122,6 +122,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               Padding(
                 padding: EdgeInsets.only(bottom: AppSizes.setHeight(43)),
                 child: CommonButton(
+                  radius: 26,
                   btnText: '继续',
                   onTap: () {
                     // 传递表单数据

@@ -8,16 +8,11 @@ import 'package:oil_business_app/pages/pay_order_list/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/static/icon.dart';
-import 'package:oil_business_app/utils/constant.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
-import 'package:oil_business_app/widgets/base/topbar/topbar.dart';
-import 'package:oil_business_app/widgets/common/empty_card.dart';
 import 'package:oil_business_app/widgets/common/page_loading.dart';
 import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
-
-import '../../../../../../interfaces/top_bar_click_listener.dart';
 import '../../../router/router.dart';
 import '../model/orders_data.dart';
 
@@ -30,8 +25,7 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen>
-    with TickerProviderStateMixin
-    implements TopBarClickListener {
+    with TickerProviderStateMixin {
   late TabController _tabController;
   List<String> tabList = [];
 
@@ -76,24 +70,28 @@ class _OrdersScreenState extends State<OrdersScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomAppColor.of(context).bgTopBar,
+      backgroundColor: const Color(0xFFF5F7FA),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: const Color(0xFF1F2937),
+            size: AppSizes.setWidth(20),
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: CommonText(
+          text: '买油订单',
+          fontWeight: FontWeight.w600,
+          fontSize: AppSizes.setFontSize(17),
+          textColor: const Color(0xFF1F2937),
+        ),
+        centerTitle: true,
+      ),
       body: Column(
         children: [
-          TopBar(
-            this,
-            title: '买油订单',
-            isShowProfile: false,
-            isShowNotification: false,
-            isShowLike: false,
-            isShowSearchField: false,
-            isShowBack: true,
-            height: 120,
-            isShowCart: false,
-            topBarColor: CustomAppColor(context).bgTopBar,
-            isShowShadow: false,
-            textColor: CustomAppColor.of(context).txtAppBar,
-            isShowCartCount: false,
-          ),
           _tabBar(),
           Expanded(
             child: TabBarView(
@@ -110,7 +108,7 @@ class _OrdersScreenState extends State<OrdersScreen>
 
   Widget _buildList(BuildContext context) {
     final ctrl = context.read<PayOrderListCtrl>();
-    
+
     // Initial Loading
     if (widget.state.pageStatus == PageStatus.loading && widget.state.orderList.isEmpty) {
       return const Center(
@@ -152,9 +150,31 @@ class _OrdersScreenState extends State<OrdersScreen>
           child: Container(
             height: MediaQuery.of(context).size.height - 200,
             alignment: Alignment.center,
-            child: EmptyCard(
-              desc: '暂无订单',
-              icon: Image.asset(AssetsIcon.IC_BAG),
+            padding: EdgeInsets.only(top: AppSizes.setHeight(100)),
+            child: Column(
+              children: [
+                Container(
+                  width: AppSizes.setWidth(80),
+                  height: AppSizes.setHeight(80),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF3F4F6),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      AssetsIcon.IC_BAG,
+                      width: AppSizes.setWidth(32),
+                      height: AppSizes.setHeight(32),
+                    ),
+                  ),
+                ),
+                SizedBox(height: AppSizes.setHeight(16)),
+                CommonText(
+                  text: '暂无相关订单',
+                  fontSize: AppSizes.setFontSize(14),
+                  textColor: const Color(0xFF6B7280),
+                ),
+              ],
             ),
           ),
         ),
@@ -167,11 +187,14 @@ class _OrdersScreenState extends State<OrdersScreen>
       onRefresh: () => ctrl.onRefresh(),
       onLoading: () => ctrl.onLoadMore(),
       child: ListView.builder(
-        padding: EdgeInsets.zero,
+        padding: EdgeInsets.all(AppSizes.setWidth(16)),
         itemCount: widget.state.orderList.length,
         itemBuilder: (context, index) {
           final order = widget.state.orderList[index];
-          return _buildOrderCard(order, context);
+          return Padding(
+            padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
+            child: _buildOrderCard(order, context),
+          );
         },
       ),
     );
@@ -179,308 +202,397 @@ class _OrdersScreenState extends State<OrdersScreen>
 
   _tabBar() {
     return Container(
-      color: CustomAppColor.of(context).icWhite,
-      child: TabBar(
-        padding: EdgeInsets.zero,
-        controller: _tabController,
-        labelPadding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(14)),
-        isScrollable: false,
-        unselectedLabelColor: AppColor.txtGrey,
-        labelStyle: TextStyle(
-          fontFamily: Constant.fontFamilyUrbanist,
-          fontSize: AppSizes.setFontSize(18),
-          fontWeight: FontWeight.w500,
+      color: Colors.white,
+      padding: EdgeInsets.only(
+        top: AppSizes.setHeight(8),
+        bottom: AppSizes.setHeight(12),
+        left: AppSizes.setWidth(16),
+        right: AppSizes.setWidth(16),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFF3F4F6),
+          borderRadius: BorderRadius.circular(8),
         ),
-        labelColor: AppColor.txtPurple,
-        indicator: UnderlineTabIndicator(
-          borderSide: BorderSide(
-              width: AppSizes.setWidth(3), color: AppColor.txtPurple),
-          insets: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(26)),
+        padding: EdgeInsets.all(AppSizes.setWidth(4)),
+        child: TabBar(
+          controller: _tabController,
+          indicator: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(6),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 3,
+                offset: const Offset(0, 1),
+              ),
+            ],
+          ),
+          indicatorSize: TabBarIndicatorSize.tab,
+          dividerColor: Colors.transparent,
+          labelColor: AppColor.txtPurple,
+          unselectedLabelColor: const Color(0xFF6B7280),
+          labelStyle: TextStyle(
+            fontSize: AppSizes.setFontSize(14),
+            fontWeight: FontWeight.w600,
+          ),
+          unselectedLabelStyle: TextStyle(
+            fontSize: AppSizes.setFontSize(14),
+            fontWeight: FontWeight.w400,
+          ),
+          tabs: tabList.map((tab) {
+            return Tab(
+              text: tab,
+            );
+          }).toList(),
         ),
-        tabs: tabList.map((tab) {
-          return Tab(
-            text: tab,
-          );
-        }).toList(),
       ),
     );
   }
 
   Widget _buildOrderCard(OrderModel order, BuildContext context) {
-    final mapOrderIcon = {
-      OrderStatus.PendingPayment: AssetsIcon.IC_PENDING,
-      OrderStatus.PaymentUploaded: AssetsIcon.IC_PROCESSING,
-      OrderStatus.Cancelled: AssetsIcon.IC_CANCELLED,
-      OrderStatus.Completed: AssetsIcon.IC_CHECK,
-    };
-    return Padding(
-      padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
+    final isCancelled = order.status?.value == OrderStatus.Cancelled.value;
+    final isPendingPayment = order.status?.value == OrderStatus.PendingPayment.value;
+    final isPaid = order.status?.value == OrderStatus.PaymentUploaded.value;
+
+    return GestureDetector(
+      onTap: () {
+        BaseRouter.push(
+          url: AppPage.payOrderDetailPage.path,
+          extra: {'order': order},
+        );
+      },
       child: Container(
-        padding: EdgeInsets.symmetric(
-            vertical: AppSizes.setHeight(14), horizontal: AppSizes.setWidth(5)),
-        color: CustomAppColor.of(context).bgScaffold,
+        decoration: BoxDecoration(
+          color: isCancelled ? const Color(0xFFFAFAFA) : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Colors.black.withValues(alpha: 0.02),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        padding: EdgeInsets.all(AppSizes.setWidth(16)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 头部：订单号 + 状态
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: AppSizes.setWidth(38)),
-                  child: Image.asset(
-                    mapOrderIcon[order.status] ?? '',
-                    height: AppSizes.setHeight(32),
-                    width: AppSizes.setWidth(32),
+                Row(
+                  children: [
+                    CommonText(
+                      text: 'SN: ',
+                      fontSize: AppSizes.setFontSize(12),
+                      textColor: const Color(0xFF6B7280),
+                    ),
+                    CommonText(
+                      text: order.orderNo ?? '',
+                      fontSize: AppSizes.setFontSize(12),
+                      textColor: const Color(0xFF6B7280),
+                      fontFamily: 'DIN Alternate',
+                    ),
+                  ],
+                ),
+                _buildStatusBadge(order.status),
+              ],
+            ),
+            Divider(
+              height: AppSizes.setHeight(12),
+              thickness: 1,
+              color: const Color(0xFFF3F4F6),
+            ),
+            // 中部：油品信息 + 价格
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          CommonText(
+                            text: order.fuelType ?? '',
+                            fontSize: AppSizes.setFontSize(16),
+                            fontWeight: FontWeight.w700,
+                            textColor: isCancelled
+                                ? const Color(0xFF6B7280)
+                                : const Color(0xFF1F2937),
+                          ),
+                          SizedBox(width: AppSizes.setWidth(6)),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppSizes.setWidth(4),
+                              vertical: AppSizes.setHeight(1),
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF3F4F6),
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                            child: CommonText(
+                              text: '成品油',
+                              fontSize: AppSizes.setFontSize(10),
+                              textColor: const Color(0xFF6B7280),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: AppSizes.setHeight(6)),
+                      CommonText(
+                        text: order.depotName ?? '',
+                        fontSize: AppSizes.setFontSize(12),
+                        textColor: isCancelled
+                            ? const Color(0xFF9CA3AF)
+                            : const Color(0xFF6B7280),
+                      ),
+                    ],
                   ),
                 ),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     CommonText(
-                      text: order.status?.displayName ?? '',
+                      text: '¥${_formatPrice(order.totalAmount ?? 0)}',
+                      fontSize: AppSizes.setFontSize(20),
                       fontWeight: FontWeight.w700,
-                      fontSize: AppSizes.setFontSize(15),
-                      textColor:
-                          _getStatusColor(order.status?.displayName ?? ''),
+                      textColor: isCancelled
+                          ? const Color(0xFF6B7280)
+                          : const Color(0xFF1F2937),
+                      fontFamily: 'DIN Alternate',
                     ),
-                    SizedBox(height: AppSizes.setWidth(4)),
+                    SizedBox(height: AppSizes.setHeight(2)),
                     CommonText(
-                      text: DateFormat('yyyy-MM-dd HH:mm:ss')
-                          .format(DateTime.parse(order.updatedAt ?? '')),
-                      fontWeight: FontWeight.w500,
-                      fontSize: AppSizes.setFontSize(15),
-                      textColor: CustomAppColor.of(context).txtGrey,
-                    ),
-                    SizedBox(height: AppSizes.setWidth(4)),
-                    Row(
-                      children: [
-                        CommonText(
-                          text: '订单号',
-                          fontWeight: FontWeight.w500,
-                          fontSize: AppSizes.setFontSize(15),
-                          textColor: CustomAppColor.of(context).txtGrey,
-                        ),
-                        SizedBox(width: AppSizes.setWidth(6)),
-                        CommonText(
-                          text: order.depotId?.toString() ?? '',
-                          fontWeight: FontWeight.w500,
-                          fontSize: AppSizes.setFontSize(15),
-                          textColor: CustomAppColor.of(context).txtGrey,
-                        ),
-                      ],
+                      text: '订单金额',
+                      fontSize: AppSizes.setFontSize(10),
+                      textColor: const Color(0xFF6B7280),
                     ),
                   ],
                 ),
               ],
             ),
-            SizedBox(height: AppSizes.setHeight(23)),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(12)),
+            SizedBox(height: AppSizes.setHeight(12)),
+            // 数据行：购买量、支付方式
+            Container(
+              padding: EdgeInsets.all(AppSizes.setWidth(10)),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF9FAFB),
+                borderRadius: BorderRadius.circular(8),
+              ),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(width: AppSizes.setWidth(10)),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            CommonText(
-                              text: order.fuelType ?? '',
-                              fontSize: AppSizes.setFontSize(15),
-                              fontWeight: FontWeight.w500,
-                            ),
-                            SizedBox(height: AppSizes.setHeight(8)),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                CommonText(
-                                  text: '价格',
-                                  fontSize: AppSizes.setFontSize(15),
-                                  fontWeight: FontWeight.w500,
-                                  textColor: CustomAppColor.of(context).txtGrey,
-                                ),
-                                SizedBox(width: AppSizes.setWidth(8)),
-                                CommonText(
-                                  text:
-                                      order.fuelPriceCny?.toStringAsFixed(0) ??
-                                          '0',
-                                  fontSize: AppSizes.setFontSize(17),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: AppSizes.setHeight(6)),
-                        Row(
-                          children: [
-                            CommonText(
-                              text: '支付方式',
-                              fontSize: AppSizes.setFontSize(15),
-                              fontWeight: FontWeight.w500,
-                              textColor: CustomAppColor.of(context).txtGrey,
-                            ),
-                            SizedBox(width: AppSizes.setWidth(8)),
-                            CommonText(
-                              text: '对公转账',
-                              fontSize: AppSizes.setFontSize(15),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: AppSizes.setHeight(6)),
-                        Row(
-                          children: [
-                            CommonText(
-                              text: '数量',
-                              fontSize: AppSizes.setFontSize(15),
-                              fontWeight: FontWeight.w500,
-                              textColor: CustomAppColor.of(context).txtGrey,
-                            ),
-                            SizedBox(width: AppSizes.setWidth(8)),
-                            CommonText(
-                              text:
-                                  order.purchaseTon?.toStringAsFixed(0) ?? '0',
-                              fontSize: AppSizes.setFontSize(15),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                  CommonText(
+                    text: '购买量: ',
+                    fontSize: AppSizes.setFontSize(12),
+                    textColor: isCancelled
+                        ? const Color(0xFF9CA3AF)
+                        : const Color(0xFF6B7280),
+                  ),
+                  CommonText(
+                    text: '${order.purchaseTon?.toStringAsFixed(0) ?? '0'} 吨',
+                    fontSize: AppSizes.setFontSize(12),
+                    fontWeight: FontWeight.w600,
+                    textColor: isCancelled
+                        ? const Color(0xFF9CA3AF)
+                        : const Color(0xFF1F2937),
+                  ),
+                  SizedBox(width: AppSizes.setWidth(16)),
+                  CommonText(
+                    text: '支付方式: ',
+                    fontSize: AppSizes.setFontSize(12),
+                    textColor: isCancelled
+                        ? const Color(0xFF9CA3AF)
+                        : const Color(0xFF6B7280),
+                  ),
+                  CommonText(
+                    text: '对公转账',
+                    fontSize: AppSizes.setFontSize(12),
+                    fontWeight: FontWeight.w600,
+                    textColor: isCancelled
+                        ? const Color(0xFF9CA3AF)
+                        : const Color(0xFF1F2937),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: AppSizes.setHeight(10)),
-            if (order.status?.value != OrderStatus.Completed.value &&
-                order.status?.value != OrderStatus.Cancelled.value)
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: AppSizes.setWidth(15),
-                        vertical: AppSizes.setHeight(10)),
-                    child: IgnorePointer(
-                      ignoring: false,
-                      child: CommonButton(
-                        height: AppSizes.setHeight(30),
-                        width: AppSizes.setWidth(158),
-                        radius: 2,
-                        borderColor: CustomAppColor.of(context).btnPurple,
-                        buttonColor:
-                            CustomAppColor.of(context).bgBlackWhiteScaffold,
-                        isButtonShadow: true,
-                        child: CommonText(
-                          text: '取消订单',
-                          textColor: CustomAppColor.of(context).txtPurple,
-                          fontWeight: FontWeight.w600,
-                          fontSize: AppSizes.setFontSize(12),
-                        ),
-                        onTap: () => {
+            // 底部按钮
+            if (!isCancelled || isPaid)
+              Padding(
+                padding: EdgeInsets.only(top: AppSizes.setHeight(4)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (isPendingPayment) ...[
+                      _buildActionButton(
+                        text: '取消订单',
+                        isOutline: true,
+                        onTap: () {
                           context
                               .read<PayOrderListCtrl>()
-                              .reasonOfCancellation(context, order),
+                              .reasonOfCancellation(context, order);
                         },
                       ),
-                    ),
-                  ),
+                      SizedBox(width: AppSizes.setWidth(12)),
+                      _buildActionButton(
+                        text: '去支付',
+                        isOutline: false,
+                        isPrimary: true,
+                        onTap: () {
+                          BaseRouter.push(
+                            url: AppPage.payOrderDetailPage.path,
+                            extra: {'order': order},
+                          );
+                        },
+                      ),
+                    ] else if (isPaid) ...[
+                      _buildActionButton(
+                        text: '查看详情',
+                        isOutline: false,
+                        isPrimary: true,
+                        onTap: () {
+                          BaseRouter.push(
+                            url: AppPage.payOrderDetailPage.path,
+                            extra: {'order': order},
+                          );
+                        },
+                      ),
+                    ],
+                  ],
                 ),
-                if (order.status?.value == OrderStatus.PendingPayment.value)
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: AppSizes.setWidth(15),
-                          vertical: AppSizes.setHeight(10)),
-                      child: IgnorePointer(
-                        ignoring: false,
-                        child: CommonButton(
-                            height: AppSizes.setHeight(30),
-                            width: AppSizes.setWidth(158),
-                            radius: 2,
-                            borderColor: CustomAppColor.of(context).btnPurple,
-                            buttonColor: CustomAppColor.of(context).btnPurple,
-                            isButtonShadow: true,
-                            child: CommonText(
-                              text: '去支付',
-                              textColor: CustomAppColor.of(context).white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: AppSizes.setFontSize(12),
-                            ),
-                            onTap: () => {
-                                  BaseRouter.push(
-                                    url: AppPage.payOrderDetailPage.path,
-                                    extra: {'order': order},
-                                  ),
-                                }
-                            // : Navigator.push(context, TrackOrderScreen.route()),
-                            ),
-                      ),
+              ),
+            if (isCancelled)
+              Padding(
+                padding: EdgeInsets.only(top: AppSizes.setHeight(4)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _buildActionButton(
+                      text: '查看详情',
+                      isOutline: true,
+                      textColor: const Color(0xFF6B7280),
+                      borderColor: const Color(0xFFE5E7EB),
+                      onTap: () {
+                        BaseRouter.push(
+                          url: AppPage.payOrderDetailPage.path,
+                          extra: {'order': order},
+                        );
+                      },
                     ),
-                  ),
-                if (order.status?.value == OrderStatus.PaymentUploaded.value)
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: AppSizes.setWidth(15),
-                          vertical: AppSizes.setHeight(10)),
-                      child: IgnorePointer(
-                        ignoring: false,
-                        child: CommonButton(
-                            height: AppSizes.setHeight(30),
-                            width: AppSizes.setWidth(158),
-                            radius: 2,
-                            borderColor: CustomAppColor.of(context).btnPurple,
-                            buttonColor: CustomAppColor.of(context).btnPurple,
-                            isButtonShadow: true,
-                            child: CommonText(
-                              text: '查看详情',
-                              textColor: CustomAppColor.of(context).white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: AppSizes.setFontSize(12),
-                            ),
-                            onTap: () => {
-                                  BaseRouter.push(
-                                    url: AppPage.payOrderDetailPage.path,
-                                    extra: {'order': order},
-                                  ),
-                                }
-                            // : Navigator.push(context, TrackOrderScreen.route()),
-                            ),
-                      ),
-                    ),
-                  ),
-              ]),
+                  ],
+                ),
+              ),
           ],
         ),
       ),
     );
   }
 
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case '待支付':
-        return CustomAppColor.of(context).txtPurple;
-      case '已取消':
-        return CustomAppColor.of(context).red;
-      case '已支付':
-        return AppColor.containerLightBlue;
-      case '已完成':
-        return CustomAppColor.of(context).green;
+  Widget _buildStatusBadge(OrderStatus? status) {
+    String text = status?.displayName ?? '';
+    Color bgColor;
+    Color textColor;
+    Widget? icon;
 
+    switch (status) {
+      case OrderStatus.PendingPayment:
+        bgColor = const Color(0xFFFFF7ED);
+        textColor = const Color(0xFFF59E0B);
+        icon = Icon(
+          Icons.access_time,
+          size: AppSizes.setWidth(10),
+          color: textColor,
+        );
+        break;
+      case OrderStatus.PaymentUploaded:
+        bgColor = const Color(0xFFEFF6FF);
+        textColor = const Color(0xFF3B82F6);
+        break;
+      case OrderStatus.Cancelled:
+        bgColor = const Color(0xFFF3F4F6);
+        textColor = const Color(0xFF9CA3AF);
+        break;
       default:
-        return Colors.black;
+        bgColor = const Color(0xFFF3F4F6);
+        textColor = const Color(0xFF9CA3AF);
     }
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.setWidth(8),
+        vertical: AppSizes.setHeight(2),
+      ),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            icon,
+            SizedBox(width: AppSizes.setWidth(4)),
+          ],
+          CommonText(
+            text: text,
+            fontSize: AppSizes.setFontSize(11),
+            fontWeight: FontWeight.w600,
+            textColor: textColor,
+          ),
+        ],
+      ),
+    );
   }
 
-  @override
-  void onTopBarClick(String name, {String value = ""}) {
-    if (name == 'back') {
-      BaseRouter.pop();
-    }
+  Widget _buildActionButton({
+    required String text,
+    required VoidCallback onTap,
+    bool isOutline = false,
+    bool isPrimary = false,
+    Color? textColor,
+    Color? borderColor,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.setWidth(16),
+          vertical: AppSizes.setHeight(8),
+        ),
+        decoration: BoxDecoration(
+          color: isPrimary
+              ? const Color(0xFFF59E0B)
+              : (isOutline ? Colors.white : AppColor.txtPurple),
+          border: isOutline
+              ? Border.all(
+                  color: borderColor ?? const Color(0xFFD1D5DB),
+                  width: 1,
+                )
+              : null,
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: CommonText(
+          text: text,
+          fontSize: AppSizes.setFontSize(13),
+          fontWeight: FontWeight.w500,
+          textColor: textColor ??
+              (isOutline
+                  ? (isPrimary ? AppColor.txtPurple : const Color(0xFF1F2937))
+                  : Colors.white),
+        ),
+      ),
+    );
+  }
+
+  String _formatPrice(double price) {
+    final formatter = NumberFormat('#,###');
+    return formatter.format(price);
   }
 }

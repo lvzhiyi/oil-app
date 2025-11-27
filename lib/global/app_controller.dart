@@ -85,7 +85,7 @@ class AppController extends HydratedCubit<AppState>
       ]);
 
       if (pendingStation.list?.isNotEmpty ?? false) {
-        BaseRouter.replace(url: AppPage.pendingReviewPage.path, extra: {
+        BaseRouter.push(url: AppPage.pendingReviewPage.path, extra: {
           'station': pendingStation.list?[0],
           'isFromLogin': isFromLogin,
         });

@@ -30,11 +30,19 @@ class BindStationCtrl extends Cubit<BindStationState> {
   String cityName = '';
   String areaCode = '';
   String areaName = '';
-  String businessLicenseUrl = '';
-  String fuelRetailPermitUrl = '';
 
   initState() async {
     print('extra: $extra');
+  }
+
+  /// 更新营业执照图片
+  void updateBusinessLicense(String url) {
+    emit(state.copyWith(businessLicenseUrl: url));
+  }
+
+  /// 更新成品油零售许可图片
+  void updateFuelRetailPermit(String url) {
+    emit(state.copyWith(fuelRetailPermitUrl: url));
   }
 
   /// 注册前置检查
@@ -59,14 +67,14 @@ class BindStationCtrl extends Cubit<BindStationState> {
       areaCode: areaCode,
       areaName: areaName,
       addressDetail: formData['addressDetail'] ?? '',
-      businessLicenseUrl: businessLicenseUrl,
-      fuelRetailPermitUrl: fuelRetailPermitUrl,
+      businessLicenseUrl: state.businessLicenseUrl,
+      fuelRetailPermitUrl: state.fuelRetailPermitUrl,
     );
     l.d('Register', '开始注册: reqParams.toJson(): ${_reqParams.toJson()}');
     try {
       final uploadResult = await Future.wait([
-        uploadImage(businessLicenseUrl),
-        uploadImage(fuelRetailPermitUrl),
+        uploadImage(state.businessLicenseUrl),
+        uploadImage(state.fuelRetailPermitUrl),
       ]);
 
       if (uploadResult.any((element) => element == null)) {

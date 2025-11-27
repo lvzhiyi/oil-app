@@ -45,10 +45,10 @@ class CommonButton extends StatelessWidget {
           boxShadow: (isButtonShadow ?? false)
               ? [
                   BoxShadow(
-                    color: AppColor.btnPurple.withValues(alpha: 0.4),
-                    spreadRadius: 1,
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
+                    color: AppColor.btnPurple.withValues(alpha: 0.25),
+                    spreadRadius: 0,
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
                   ),
                 ]
               : null,

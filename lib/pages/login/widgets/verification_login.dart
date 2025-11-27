@@ -96,6 +96,7 @@ class _VerificationLoginScreenState extends State<VerificationLoginScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(35)),
                 child: CommonButton(
+                  radius: 26,
                   onTap: () => {
                     BaseRouter.push(url: AppPage.otpPage.path, extra: {
                       "type": "login",

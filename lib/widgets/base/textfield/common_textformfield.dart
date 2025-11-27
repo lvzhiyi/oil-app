@@ -221,26 +221,42 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
         ],
       );
     } else {
-      return FormBuilderTextField(
-        enabled: widget.enabled ?? true,
-        name: widget.name ?? '',
-        textAlign: widget.textAlign ?? TextAlign.start,
-        textAlignVertical: widget.textAlignVertical ?? TextAlignVertical.top,
-        maxLength: widget.maxLength,
-        focusNode: _focusNode,
-        controller: widget.controller,
-        onChanged: widget.onChanged,
-        maxLines: widget.maxLines ?? 1,
-        obscureText: _obscureText,
-        keyboardType: widget.keyboardType,
-        inputFormatters:
-            widget.inputFormatter != null ? [widget.inputFormatter!] : null,
-        style: TextStyle(
-          color: CustomAppColor.of(context).txtBlack,
-          fontSize: AppSizes.setFontSize(14),
-          fontWeight: FontWeight.bold,
-        ),
-        decoration: InputDecoration(
+      return Container(
+        decoration: isFocused && widget.fillColor != null
+            ? BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                  widget.radius ?? 12,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColor.txtPurple.withValues(alpha: 0.1),
+                    blurRadius: 12,
+                    offset: const Offset(0, 0),
+                    spreadRadius: 0,
+                  ),
+                ],
+              )
+            : null,
+        child: FormBuilderTextField(
+          enabled: widget.enabled ?? true,
+          name: widget.name ?? '',
+          textAlign: widget.textAlign ?? TextAlign.start,
+          textAlignVertical: widget.textAlignVertical ?? TextAlignVertical.top,
+          maxLength: widget.maxLength,
+          focusNode: _focusNode,
+          controller: widget.controller,
+          onChanged: widget.onChanged,
+          maxLines: widget.maxLines ?? 1,
+          obscureText: _obscureText,
+          keyboardType: widget.keyboardType,
+          inputFormatters:
+              widget.inputFormatter != null ? [widget.inputFormatter!] : null,
+          style: TextStyle(
+            color: CustomAppColor.of(context).txtBlack,
+            fontSize: AppSizes.setFontSize(16),
+            fontWeight: FontWeight.w400,
+          ),
+          decoration: InputDecoration(
           floatingLabelBehavior:
               hasLabel ? FloatingLabelBehavior.auto : FloatingLabelBehavior.never,
           labelText: hasLabel
@@ -254,7 +270,9 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
                   : CustomAppColor.of(context).txtGrey,
               fontSize: AppSizes.setFontSize(15),
               fontWeight: FontWeight.w600),
-          fillColor: widget.fillColor ?? CustomAppColor.of(context).bgContainer,
+          fillColor: isFocused && widget.fillColor != null
+              ? Colors.white
+              : (widget.fillColor ?? CustomAppColor.of(context).bgContainer),
           filled: true,
           hintText: !widget.showHint || _hasText
               ? null
@@ -323,13 +341,14 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
             borderSide: BorderSide(
                 color: widget.borderColor ??
                     CustomAppColor.of(context).borderPurple,
-                width: 2),
+                width: 1.5),
           ),
         ),
         validator: widget.validators != null
             ? FormBuilderValidators.compose([widget.validators!])
             : FormBuilderValidators.required(
                 errorText: widget.hintText ?? '${widget.labelText ?? ""} 不能为空'),
+        ),
       );
     }
   }

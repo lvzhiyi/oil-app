@@ -27,111 +27,145 @@ class CreateNewAccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctrl = context.read<RegisterCtrl>();
     return Scaffold(
-      backgroundColor: CustomAppColor.of(context).bgScaffold,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: const Color(0xFF1F2937),
+            size: AppSizes.setWidth(20),
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: CommonText(
+          text: '注册',
+          fontWeight: FontWeight.w700,
+          fontSize: AppSizes.setFontSize(18),
+          textColor: const Color(0xFF1F2937),
+        ),
+        centerTitle: true,
+      ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(20)),
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(24)),
         child: SingleChildScrollView(
-          child: Column(children: [
-            InkWell(
-              onTap: () => {
-                BaseRouter.pop(),
-              },
-              child: Padding(
-                padding: EdgeInsets.only(top: AppSizes.setHeight(61)),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Image.asset(
-                    AssetsIcon.IC_LEFT_ARROW,
-                    width: AppSizes.setWidth(20),
-                    height: AppSizes.setHeight(20),
-                  ),
-                ),
-              ),
-            ),
-            Image.asset(
-              AssetsImg.LOGO,
-              width: AppSizes.setWidth(80),
-              height: AppSizes.setHeight(80),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(15)),
-              child: CommonText(
-                text: '创建您的账户',
-                fontWeight: FontWeight.w700,
-                fontSize: AppSizes.setFontSize(24),
-              ),
-            ),
-            FormBuilder(
-              key: ctrl.formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+          child: Column(
+            children: [
+              // 品牌头部
+              Column(
                 children: [
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-                    child: CommonTextFormField(
+                  // Logo 盒子
+                  Container(
+                    width: AppSizes.setWidth(64),
+                    height: AppSizes.setHeight(64),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFF7ED),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color:
+                              const Color(0xFFF59E0B).withValues(alpha: 0.15),
+                          blurRadius: 16,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Image.asset(
+                        AssetsImg.LOGO,
+                        width: AppSizes.setWidth(32),
+                        height: AppSizes.setHeight(32),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: AppSizes.setHeight(16)),
+                  CommonText(
+                    text: '创建您的账户',
+                    fontWeight: FontWeight.w700,
+                    fontSize: AppSizes.setFontSize(24),
+                    textColor: const Color(0xFF1F2937),
+                  ),
+                ],
+              ),
+              SizedBox(height: AppSizes.setHeight(32)),
+              FormBuilder(
+                key: ctrl.formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CommonTextFormField(
                       name: 'name',
-                      borderColor: CustomAppColor.of(context).textFieldBorder,
+                      borderColor: const Color(0xFFE5E7EB),
+                      fillColor: const Color(0xFFF9FAFB),
                       leadingIcon: Image.asset(
                         AssetsIcon.IC_PROFILE,
                         width: AppSizes.setHeight(20),
                         height: AppSizes.setHeight(20),
                       ),
-                      hintText: '姓名',
+                      hintText: '您的姓名',
+                      radius: 12,
                       validators: FormBuilderValidators.compose([
                         FormBuilderValidators.required(errorText: '请输入全名'),
                       ]),
                     ),
-                  ),
-                  CommonTextFormField(
-                    name: 'phone',
-                    borderColor: CustomAppColor.of(context).textFieldBorder,
-                    leadingIcon: Icon(
-                      Icons.phone_outlined,
-                      color: CustomAppColor.of(context).txtGrey,
-                    ),
-                    hintText: '手机号',
-                    keyboardType: TextInputType.phone,
-                    inputFormatter: FilteringTextInputFormatter.digitsOnly,
-                    maxLength: 11,
-                    validators: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(errorText: '请输入手机号'),
-                      FormBuilderValidators.minLength(
-                        11,
-                        errorText: '手机号必须是11位数字',
+                    SizedBox(height: AppSizes.setHeight(16)),
+                    CommonTextFormField(
+                      name: 'phone',
+                      borderColor: const Color(0xFFE5E7EB),
+                      fillColor: const Color(0xFFF9FAFB),
+                      leadingIcon: Icon(
+                        Icons.phone_outlined,
+                        size: AppSizes.setHeight(20),
+                        color: const Color(0xFF6B7280),
                       ),
-                      FormBuilderValidators.maxLength(
-                        11,
-                        errorText: '手机号必须是11位数字',
-                      ),
-                    ]),
-                  ),
-                  CommonTextFormField(
-                    name: 'password',
-                    borderColor: CustomAppColor.of(context).textFieldBorder,
-                    leadingIcon: Image.asset(
-                      AssetsIcon.IC_PASSWORD,
-                      width: AppSizes.setHeight(20),
-                      height: AppSizes.setHeight(20),
+                      hintText: '手机号码 (将作为登录账号)',
+                      keyboardType: TextInputType.phone,
+                      inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                      maxLength: 11,
+                      radius: 12,
+                      validators: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(errorText: '请输入手机号'),
+                        FormBuilderValidators.minLength(
+                          11,
+                          errorText: '手机号必须是11位数字',
+                        ),
+                        FormBuilderValidators.maxLength(
+                          11,
+                          errorText: '手机号必须是11位数字',
+                        ),
+                      ]),
                     ),
-                    hintText: '密码',
-                    isPasswordField: true,
-                    validators: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(errorText: '请输入密码'),
-                    ]),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-                    child: CommonTextFormField(
-                      borderColor: CustomAppColor.of(context).textFieldBorder,
+                    SizedBox(height: AppSizes.setHeight(16)),
+                    CommonTextFormField(
+                      name: 'password',
+                      borderColor: const Color(0xFFE5E7EB),
+                      fillColor: const Color(0xFFF9FAFB),
                       leadingIcon: Image.asset(
                         AssetsIcon.IC_PASSWORD,
                         width: AppSizes.setHeight(20),
                         height: AppSizes.setHeight(20),
                       ),
-                      hintText: '确认密码',
+                      hintText: '设置登录密码',
                       isPasswordField: true,
+                      radius: 12,
+                      validators: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(errorText: '请输入密码'),
+                      ]),
+                    ),
+                    SizedBox(height: AppSizes.setHeight(16)),
+                    CommonTextFormField(
+                      name: 'confirmPassword',
+                      borderColor: const Color(0xFFE5E7EB),
+                      fillColor: const Color(0xFFF9FAFB),
+                      leadingIcon: Image.asset(
+                        AssetsIcon.IC_PASSWORD,
+                        width: AppSizes.setHeight(20),
+                        height: AppSizes.setHeight(20),
+                      ),
+                      hintText: '确认登录密码',
+                      isPasswordField: true,
+                      radius: 12,
                       validators: FormBuilderValidators.compose([
                         FormBuilderValidators.required(errorText: '请输入确认密码'),
                         (value) {
@@ -144,93 +178,96 @@ class CreateNewAccountScreen extends StatelessWidget {
                         }
                       ]),
                     ),
-                  ),
-                  CommonTextFormField(
-                    name: 'code',
-                    borderColor: CustomAppColor.of(context).textFieldBorder,
-                    leadingIcon: Image.asset(
-                      AssetsIcon.IC_REFER,
-                      width: AppSizes.setHeight(20),
-                      height: AppSizes.setHeight(20),
+                    // 密码提示规则
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: AppSizes.setHeight(8),
+                        bottom: AppSizes.setHeight(16),
+                      ),
+                      child: Row(
+                        children: [
+                          _buildHintItem('8-20位字符'),
+                          SizedBox(width: AppSizes.setWidth(12)),
+                          _buildHintItem('包含字母和数字'),
+                        ],
+                      ),
                     ),
-                    hintText: '邀请码',
-                    validators: FormBuilderValidators.compose([]),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: AppSizes.setHeight(20)),
-                    child: CommonButton(
+                    CommonTextFormField(
+                      name: 'code',
+                      borderColor: const Color(0xFFE5E7EB),
+                      fillColor: const Color(0xFFF9FAFB),
+                      leadingIcon: Image.asset(
+                        AssetsIcon.IC_REFER,
+                        width: AppSizes.setHeight(20),
+                        height: AppSizes.setHeight(20),
+                      ),
+                      hintText: '邀请码 (选填)',
+                      radius: 12,
+                      validators: FormBuilderValidators.compose([]),
+                    ),
+                    SizedBox(height: AppSizes.setHeight(24)),
+                    CommonButton(
                       isLoading: ctrl.state.loading,
-                      btnText: '确认',
+                      btnText: '注册并登录',
+                      radius: 26,
                       onTap: () {
                         ctrl.goToOtpPage();
                       },
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: AppSizes.setWidth(8),
-                        vertical: AppSizes.setHeight(20)),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: CustomAppColor.of(context).dividerGrey,
-                            thickness: 2,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: AppSizes.setWidth(8)),
-                          child: CommonText(
-                            text: '或继续使用',
-                            fontSize: AppSizes.setFontSize(13),
-                            fontWeight: FontWeight.w500,
-                            textColor: CustomAppColor.of(context).txtGrey,
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: CustomAppColor.of(context).dividerGrey,
-                            thickness: 2,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: AppSizes.setHeight(20)),
-                    child: Row(
+                    SizedBox(height: AppSizes.setHeight(24)),
+                    // 底部登录引导
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CommonText(
-                          text: '有账户？',
-                          textColor: CustomAppColor.of(context).txtGrey,
+                          text: '已有账户？',
+                          textColor: const Color(0xFF6B7280),
                           fontWeight: FontWeight.w500,
+                          fontSize: AppSizes.setFontSize(14),
                         ),
-                        IgnorePointer(
-                          ignoring: true,
-                          child: InkWell(
-                            onTap: () => {
-                              BaseRouter.replace(url: AppPage.loginPage.path),
-                            },
-                            child: CommonText(
-                              text: '登录',
-                              textColor: CustomAppColor.of(context).txtPurple,
-                              fontWeight: FontWeight.w500,
-                            ),
+                        SizedBox(width: AppSizes.setWidth(4)),
+                        InkWell(
+                          onTap: () {
+                            BaseRouter.replace(url: AppPage.loginPage.path);
+                          },
+                          child: CommonText(
+                            text: '立即登录',
+                            textColor: AppColor.txtPurple,
+                            fontWeight: FontWeight.w600,
+                            fontSize: AppSizes.setFontSize(14),
                           ),
                         ),
                       ],
                     ),
-                  )
-                ],
+                    SizedBox(height: AppSizes.setHeight(20)),
+                  ],
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildHintItem(String text) {
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: 4,
+          decoration: const BoxDecoration(
+            color: Color(0xFFD1D5DB),
+            shape: BoxShape.circle,
+          ),
+        ),
+        SizedBox(width: AppSizes.setWidth(4)),
+        CommonText(
+          text: text,
+          fontSize: AppSizes.setFontSize(11),
+          textColor: const Color(0xFF6B7280),
+        ),
+      ],
     );
   }
 }

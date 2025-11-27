@@ -27,195 +27,222 @@ class LoginToYourAccountScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(20)),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: AppSizes.setHeight(61)),
-                child: const Align(
-                  alignment: Alignment.topLeft,
-                  // child: InkWell(
-                  //   onTap: () => Navigator.pop(context),
-                  //   child: Image.asset(
-                  //     AssetsIcon.IC_LEFT_ARROW,
-                  //     width: AppSizes.setWidth(20),
-                  //     height: AppSizes.setHeight(20),
-                  //   ),
-                  // ),
-                ),
-              ),
-              Image.asset(
-                AssetsImg.LOGO,
-                width: AppSizes.setWidth(80),
-                height: AppSizes.setHeight(80),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(15)),
-                child: CommonText(
-                  text: '登录到您的账户',
-                  fontWeight: FontWeight.w700,
-                  fontSize: AppSizes.setFontSize(24),
-                ),
-              ),
-              FormBuilder(
-                key: ctrl.formKey,
-                child: Column(
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(24)),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: AppSizes.setHeight(20)),
+                // 品牌头部
+                Column(
                   children: [
-                    CommonTextFormField(
-                      name: 'phone',
-                      borderColor: CustomAppColor.of(context).textFieldBorder,
-                      leadingIcon: Image.asset(
-                        AssetsIcon.IC_PROFILE,
-                        width: AppSizes.setHeight(20),
-                        height: AppSizes.setHeight(20),
+                    // Logo 盒子
+                    Container(
+                      width: AppSizes.setWidth(64),
+                      height: AppSizes.setHeight(64),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFF7ED),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color:
+                                const Color(0xFFF59E0B).withValues(alpha: 0.15),
+                            blurRadius: 16,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
                       ),
-                      hintText: '账号',
+                      child: Center(
+                        child: Image.asset(
+                          AssetsImg.LOGO,
+                          width: AppSizes.setWidth(32),
+                          height: AppSizes.setHeight(32),
+                        ),
+                      ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: AppSizes.setHeight(16)),
-                      child: CommonTextFormField(
+                    SizedBox(height: AppSizes.setHeight(16)),
+                    CommonText(
+                      text: '欢迎回到买油呗',
+                      fontWeight: FontWeight.w700,
+                      fontSize: AppSizes.setFontSize(24),
+                      textColor: const Color(0xFF1F2937),
+                    ),
+                    SizedBox(height: AppSizes.setHeight(8)),
+                    CommonText(
+                      text: 'B2B成品油交易与物流服务平台',
+                      fontWeight: FontWeight.w400,
+                      fontSize: AppSizes.setFontSize(14),
+                      textColor: const Color(0xFF6B7280),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+                SizedBox(height: AppSizes.setHeight(40)),
+                FormBuilder(
+                  key: ctrl.formKey,
+                  child: Column(
+                    children: [
+                      CommonTextFormField(
+                        name: 'phone',
+                        borderColor: const Color(0xFFE5E7EB),
+                        fillColor: const Color(0xFFF9FAFB),
+                        leadingIcon: Image.asset(
+                          AssetsIcon.IC_PROFILE,
+                          width: AppSizes.setHeight(20),
+                          height: AppSizes.setHeight(20),
+                        ),
+                        hintText: '请输入账号/手机号',
+                        radius: 12,
+                      ),
+                      SizedBox(height: AppSizes.setHeight(16)),
+                      CommonTextFormField(
                         name: 'password',
-                        borderColor: CustomAppColor.of(context).textFieldBorder,
+                        borderColor: const Color(0xFFE5E7EB),
+                        fillColor: const Color(0xFFF9FAFB),
                         leadingIcon: Image.asset(
                           AssetsIcon.IC_PASSWORD,
                           width: AppSizes.setHeight(20),
                           height: AppSizes.setHeight(20),
                         ),
-                        hintText: '密码',
+                        hintText: '请输入密码',
                         isPasswordField: true,
+                        radius: 12,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: AppSizes.setHeight(32)),
-                child: CommonButton(
-                    btnText: '登录',
-                    onTap: () => {
-                          ctrl.submit(),
-                        }),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: AppSizes.setHeight(10)),
-                    child: TextButton(
-                      onPressed: () => {
+                SizedBox(height: AppSizes.setHeight(24)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CommonText(
+                      text: '没有账户？',
+                      textColor: const Color(0xFF6B7280),
+                      fontWeight: FontWeight.w500,
+                      fontSize: AppSizes.setFontSize(14),
+                    ),
+                    SizedBox(width: AppSizes.setWidth(4)),
+                    InkWell(
+                      onTap: () {
                         BaseRouter.push(
-                            url: AppPage.verificationLoginPage.path),
+                          url: AppPage.registerPage.path,
+                          extra: null,
+                        );
                       },
                       child: CommonText(
-                        text: "验证码登录",
+                        text: '注册',
+                        textColor: AppColor.txtPurple,
+                        fontWeight: FontWeight.w600,
                         fontSize: AppSizes.setFontSize(14),
-                        fontWeight: FontWeight.w600,
-                        textColor: CustomAppColor.of(context).txtPurple,
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: AppSizes.setHeight(10)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CommonText(
-                          text: '没有账户？',
-                          textColor: CustomAppColor.of(context).txtGrey,
-                          fontWeight: FontWeight.w500,
+                  ],
+                ),
+
+                SizedBox(height: AppSizes.setHeight(24)),
+                // 登录按钮
+                CommonButton(
+                  btnText: '立即登录',
+                  radius: 26,
+                  onTap: () => ctrl.submit(),
+                  isButtonShadow: true,
+                ),
+                SizedBox(height: AppSizes.setHeight(16)),
+                // 忘记密码
+                Align(
+                  alignment: Alignment.center,
+                  child: // 手机号验证码登录切换
+                      GestureDetector(
+                    onTap: () {
+                      BaseRouter.push(url: AppPage.verificationLoginPage.path);
+                    },
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: AppSizes.setFontSize(14),
+                          color: const Color(0xFF6B7280),
                         ),
-                        InkWell(
-                          onTap: () => {
-                            BaseRouter.push(
-                                url: AppPage.registerPage.path, extra: null),
-                          },
-                          child: CommonText(
-                            text: '注册',
-                            textColor: CustomAppColor.of(context).txtPurple,
-                            fontWeight: FontWeight.w600,
+                        children: [
+                          const TextSpan(text: '手机号验证码登录 '),
+                          TextSpan(
+                            text: '切换',
+                            style: TextStyle(
+                              color: AppColor.txtPurple,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: AppSizes.setHeight(40)),
+                // 协议部分
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 18,
+                      height: 18,
+                      margin: EdgeInsets.only(
+                          top: AppSizes.setHeight(2),
+                          right: AppSizes.setWidth(8)),
+                      decoration: BoxDecoration(
+                        color: AppColor.txtPurple,
+                        border: Border.all(color: AppColor.txtPurple),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Icon(
+                        Icons.check,
+                        size: 12,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Expanded(
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                            fontSize: AppSizes.setFontSize(12),
+                            color: const Color(0xFF6B7280),
+                            height: 1.5,
+                          ),
+                          children: [
+                            const TextSpan(text: '登录即代表您同意 '),
+                            TextSpan(
+                              text: '《用户服务协议》',
+                              style: TextStyle(
+                                color: AppColor.txtPurple,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  BaseRouter.push(
+                                      url: AppPage.serviceAgreementPage.path);
+                                },
+                            ),
+                            const TextSpan(text: ' 和 '),
+                            TextSpan(
+                              text: '《隐私政策》',
+                              style: TextStyle(
+                                color: AppColor.txtPurple,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  BaseRouter.push(
+                                      url: AppPage.privacyPolicyPage.path);
+                                },
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    top: AppSizes.setWidth(160),
-                    bottom: AppSizes.setHeight(15)),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        color: CustomAppColor.of(context).dividerGrey,
-                        thickness: 2,
-                      ),
-                    ),
-                    Expanded(
-                      child: Divider(
-                        color: CustomAppColor.of(context).dividerGrey,
-                        thickness: 2,
                       ),
                     ),
                   ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(),
-                child: CommonText(
-                  text: '通过登录，您将同意买油呗的',
-                  fontSize: AppSizes.setFontSize(15),
-                  fontWeight: FontWeight.w600,
-                  textColor: CustomAppColor.of(context).txtGrey,
-                ),
-              ),
-              SizedBox(height: AppSizes.setHeight(5)),
-              RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  style: TextStyle(
-                    fontFamily: 'Urbanist',
-                    color: CustomAppColor.of(context).txtGrey,
-                    fontSize: AppSizes.setFontSize(15),
-                    fontWeight: FontWeight.w500,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: '条款和条件',
-                      style: TextStyle(
-                        color: CustomAppColor.of(context).txtPurple,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          BaseRouter.push(url: AppPage.serviceAgreementPage.path);
-                        },
-                    ),
-                    TextSpan(
-                      text: '和',
-                      style: TextStyle(
-                        color: CustomAppColor.of(context).txtGrey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    TextSpan(
-                      text: '隐私政策',
-                      style: TextStyle(
-                        color: CustomAppColor.of(context).txtPurple,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          BaseRouter.push(url: AppPage.privacyPolicyPage.path);
-                        },
-                    ),
-                  ],
-                ),
-              )
-            ],
+                SizedBox(height: AppSizes.setHeight(20)),
+              ],
+            ),
           ),
         ),
       ),
