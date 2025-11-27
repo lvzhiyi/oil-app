@@ -1,7 +1,7 @@
 class BindStationState {
-  bool loading;
-  String businessLicenseUrl;
-  String fuelRetailPermitUrl;
+  final bool loading;
+  final String businessLicenseUrl;
+  final String fuelRetailPermitUrl;
 
   BindStationState({
     this.loading = false,

@@ -50,7 +50,15 @@ class PickupOrderDetailScreen extends StatelessWidget {
     VehicleModel? vehicleModel;
     if (order!.vehicleInfo != null && order!.vehicleInfo!.isNotEmpty) {
       try {
-        final jsonMap = jsonDecode(order!.vehicleInfo!);
+        String jsonStr = order!.vehicleInfo!;
+        // 兼容新的格式：原始字符串|||JSON字符串
+        if (jsonStr.contains('|||')) {
+          final parts = jsonStr.split('|||');
+          if (parts.length > 1) {
+            jsonStr = parts[1];
+          }
+        }
+        final jsonMap = jsonDecode(jsonStr);
         vehicleModel = VehicleModel.fromJson(jsonMap);
       } catch (e) {
         // 解析失败，vehicleModel 保持为 null
