@@ -1,17 +1,29 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:oil_business_app/global/enum/common.dart';
+import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
+import 'package:oil_business_app/pages/oil_pickup_success/widgets/receipt_card.dart';
+import 'package:oil_business_app/pages/oil_pickup_success/widgets/save_share_sheet.dart';
 import 'package:oil_business_app/pages/pickup_order_detail/controller.dart';
-import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/utils/date_util.dart';
+import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/common/dashed_line.dart';
 import 'package:oil_business_app/widgets/popup/dialog.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
-class PickupOrderDetailScreen extends StatelessWidget {
+class PickupOrderDetailScreen extends StatefulWidget {
   final WithdrawOrderModel? order;
 
   const PickupOrderDetailScreen({
@@ -20,8 +32,17 @@ class PickupOrderDetailScreen extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<PickupOrderDetailScreen> createState() =>
+      _PickupOrderDetailScreenState();
+}
+
+class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
+  final GlobalKey _cardKey = GlobalKey();
+  bool _isSaving = false;
+
+  @override
   Widget build(BuildContext context) {
-    if (order == null) {
+    if (widget.order == null) {
       return Scaffold(
         backgroundColor: const Color(0xFFF5F7FA),
         appBar: AppBar(
@@ -46,11 +67,12 @@ class PickupOrderDetailScreen extends StatelessWidget {
       );
     }
 
-    final isCompleted = order!.status == WithdrawStatus.completed.value;
+    final isCompleted = widget.order!.status == WithdrawStatus.completed.value;
     VehicleModel? vehicleModel;
-    if (order!.vehicleInfo != null && order!.vehicleInfo!.isNotEmpty) {
+    if (widget.order!.vehicleInfo != null &&
+        widget.order!.vehicleInfo!.isNotEmpty) {
       try {
-        String jsonStr = order!.vehicleInfo!;
+        String jsonStr = widget.order!.vehicleInfo!;
         // 兼容新的格式：原始字符串|||JSON字符串
         if (jsonStr.contains('|||')) {
           final parts = jsonStr.split('|||');
@@ -79,23 +101,135 @@ class PickupOrderDetailScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: SafeArea(
-        bottom: true,
-        top: false,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(20)),
-          child: Column(
+      body: Stack(
+        children: [
+          Column(
             children: [
-              SizedBox(height: AppSizes.setHeight(20)),
-              _buildWaybillCard(context, isCompleted, vehicleModel),
-              SizedBox(height: AppSizes.setHeight(30)),
-              // _buildContactButton(context),
-              if (order!.status == WithdrawStatus.pendingPickup.value) ...[
-                _buildCancelButton(context),
-                SizedBox(height: AppSizes.setHeight(20)),
-              ],
+              Expanded(
+                child: SingleChildScrollView(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: AppSizes.setWidth(20)),
+                  child: Column(
+                    children: [
+                      SizedBox(height: AppSizes.setHeight(20)),
+                      _buildWaybillCard(context, isCompleted, vehicleModel),
+                      SizedBox(height: AppSizes.setHeight(30)),
+                    ],
+                  ),
+                ),
+              ),
+              if (widget.order!.status ==
+                  WithdrawStatus.pendingPickup.value)
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        offset: const Offset(0, -4),
+                        blurRadius: 10,
+                      ),
+                    ],
+                  ),
+                  child: SafeArea(
+                    top: false,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.setWidth(20),
+                        vertical: AppSizes.setHeight(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(child: _buildCancelButton(context)),
+                          SizedBox(width: AppSizes.setWidth(16)),
+                          Expanded(child: _buildRegenerateButton(context)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
+          // Hidden Receipt Card for Image Generation
+          Positioned(
+            left: 9999,
+            child: RepaintBoundary(
+              key: _cardKey,
+              child: SizedBox(
+                width: AppSizes.setWidth(375 - 32), // Approximate width
+                child: OilPickupReceiptCard(
+                  response: WithdrawResponse(
+                    withdrawNo: widget.order!.withdrawNo,
+                    withdrawId: widget.order!.withdrawId,
+                    status: widget.order!.status,
+                  ),
+                  inventory: InventoryModel(
+                    inventoryId: widget.order!.inventoryId,
+                  ),
+                  station: Station(
+                    id: widget.order!.stationId,
+                    stationName: widget.order!.stationName,
+                  ),
+                  oilAmount: widget.order!.withdrawTon?.toString() ?? '0',
+                  dispatchContent: _getDispatchContent(vehicleModel),
+                  onCopyWithdrawNo: (_) {},
+                  showCopyIcon: false,
+                ),
+              ),
+            ),
+          ),
+          if (_isSaving)
+            Container(
+              color: Colors.black.withOpacity(0.3),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  String _getDispatchContent(VehicleModel? vehicleModel) {
+    if (vehicleModel == null) return '暂无调度信息';
+
+    final List<String> lines = [];
+    void addLine(String label, String? value) {
+      if (value != null && value.trim().isNotEmpty) {
+        lines.add('$label: $value');
+      }
+    }
+
+    addLine('驾驶员', vehicleModel.driverName);
+    addLine('电话', vehicleModel.driverPhone);
+    addLine('身份证', vehicleModel.driverIdCard);
+    addLine('车号', vehicleModel.plateNumber);
+    addLine('车型', vehicleModel.vehicleType);
+    addLine('载重', vehicleModel.loadCapacity);
+
+    return lines.isEmpty ? '暂无调度信息' : lines.join('\n');
+  }
+
+  Widget _buildRegenerateButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: _isSaving ? null : _saveCertificateImage,
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(
+            vertical: AppSizes.setHeight(12),
+          ),
+          backgroundColor: const Color(0xFF7165E3),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSizes.setWidth(24)),
+          ),
+          elevation: 0,
+        ),
+        child: CommonText(
+          text: '保存凭证',
+          fontSize: AppSizes.setFontSize(15),
+          textColor: Colors.white,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );
@@ -104,17 +238,16 @@ class PickupOrderDetailScreen extends StatelessWidget {
   Widget _buildCancelButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: OutlinedButton(
+      child: TextButton(
         onPressed: () => _handleCancel(context),
-        style: OutlinedButton.styleFrom(
+        style: TextButton.styleFrom(
           padding: EdgeInsets.symmetric(
             vertical: AppSizes.setHeight(12),
           ),
-          side: const BorderSide(color: Color(0xFFEF4444)),
+          backgroundColor: const Color(0xFFF5F7FA),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSizes.setWidth(24)),
           ),
-          backgroundColor: Colors.white,
         ),
         child: CommonText(
           text: '取消订单',
@@ -142,6 +275,148 @@ class PickupOrderDetailScreen extends StatelessWidget {
         }
       },
     );
+  }
+
+  Future<void> _saveCertificateImage() async {
+    if (_isSaving) return;
+    setState(() => _isSaving = true);
+
+    // Wait for frame to be painted if needed, though hidden widget should be ready
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    final BuildContext? boundaryContext = _cardKey.currentContext;
+    final RenderRepaintBoundary? boundary =
+        boundaryContext?.findRenderObject() as RenderRepaintBoundary?;
+
+    if (boundary == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('暂无法生成图片，请稍后重试'),
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      setState(() => _isSaving = false);
+      return;
+    }
+
+    try {
+      final ui.Image image = await boundary.toImage(pixelRatio: 3);
+      final ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      if (byteData == null) {
+        throw Exception('生成图片失败');
+      }
+
+      final Uint8List pngBytes = byteData.buffer.asUint8List();
+      final Directory directory = await getApplicationDocumentsDirectory();
+      final String filePath =
+          '${directory.path}/oil_certificate_${DateTime.now().millisecondsSinceEpoch}.png';
+      final File file = await File(filePath).create(recursive: true);
+      await file.writeAsBytes(pngBytes);
+
+      if (!mounted) return;
+      setState(() => _isSaving = false);
+      await _showSaveShareSheet(pngBytes, filePath);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('保存失败，请重试'),
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      setState(() => _isSaving = false);
+    }
+  }
+
+  Future<void> _showSaveShareSheet(Uint8List bytes, String filePath) async {
+    await showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return SaveShareSheet(
+          previewBytes: bytes,
+          onSaveToGallery: () async {
+            Navigator.of(context).pop();
+            await _saveToGallery(bytes);
+          },
+          onSaveToDirectory: () async {
+            Navigator.of(context).pop();
+            await _saveToDirectory(bytes);
+          },
+          onShare: () async {
+            Navigator.of(context).pop();
+            await SharePlus.instance.share(
+              ShareParams(
+                files: [XFile(filePath)],
+                text: '提油凭证图片',
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _saveToGallery(Uint8List bytes) async {
+    try {
+      final result = await ImageGallerySaverPlus.saveImage(
+        bytes,
+        quality: 100,
+        name: 'oil_certificate_${DateTime.now().millisecondsSinceEpoch}',
+      );
+      final dynamic filePath =
+          result['filePath'] ?? result['filePathList']?.first;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            filePath != null ? '已保存到相册 $filePath' : '已保存到相册',
+          ),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('保存到相册失败，请检查权限'),
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  Future<void> _saveToDirectory(Uint8List bytes) async {
+    try {
+      final String? directoryPath =
+          await FilePicker.platform.getDirectoryPath(dialogTitle: '选择保存目录');
+      if (directoryPath == null) {
+        return;
+      }
+      final String filePath =
+          '$directoryPath/oil_certificate_${DateTime.now().millisecondsSinceEpoch}.png';
+      final File file = await File(filePath).create(recursive: true);
+      await file.writeAsBytes(bytes);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('图片已保存：$filePath'),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('保存失败，请重试'),
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   Widget _buildWaybillCard(
@@ -172,9 +447,12 @@ class PickupOrderDetailScreen extends StatelessWidget {
   }
 
   Widget _buildTopGradientBar(bool isCompleted) {
-    final isCancelled = order!.status == WithdrawStatus.cancelled.value;
-    List<Color> gradientColors = [const Color(0xFF7165E3), const Color(0xFFA78BFA)];
-    
+    final isCancelled = widget.order!.status == WithdrawStatus.cancelled.value;
+    List<Color> gradientColors = [
+      const Color(0xFF7165E3),
+      const Color(0xFFA78BFA)
+    ];
+
     if (isCompleted) {
       gradientColors = [const Color(0xFF10B981), const Color(0xFF34D399)];
     } else if (isCancelled) {
@@ -194,13 +472,14 @@ class PickupOrderDetailScreen extends StatelessWidget {
   }
 
   Widget _buildWaybillHeader(BuildContext context, bool isCompleted) {
-    final orderNo = order!.withdrawNo ?? order!.id?.toString() ?? '';
+    final orderNo =
+        widget.order!.withdrawNo ?? widget.order!.id?.toString() ?? '';
     final shortOrderNo = orderNo.length > 15
         ? '${orderNo.substring(0, 15)}...${orderNo.substring(orderNo.length - 5)}'
         : orderNo;
 
-    final isCancelled = order!.status == WithdrawStatus.cancelled.value;
-    
+    final isCancelled = widget.order!.status == WithdrawStatus.cancelled.value;
+
     String statusText = '待提油';
     Color statusColor = const Color(0xFFF59E0B);
     IconData statusIcon = Icons.access_time;
@@ -261,9 +540,10 @@ class PickupOrderDetailScreen extends StatelessWidget {
     bool isCompleted,
     VehicleModel? vehicleModel,
   ) {
-    final amount = order!.withdrawTon ?? 0.0;
+    final amount = widget.order!.withdrawTon ?? 0.0;
     final amountLabel = isCompleted ? '实际提油量 (吨)' : '核定提油量 (吨)';
-    final amountColor = isCompleted ? const Color(0xFF10B981) : const Color(0xFF1F2937);
+    final amountColor =
+        isCompleted ? const Color(0xFF10B981) : const Color(0xFF1F2937);
 
     return Container(
       padding: EdgeInsets.all(AppSizes.setWidth(20)),
@@ -367,11 +647,13 @@ class PickupOrderDetailScreen extends StatelessWidget {
   ) {
     return Column(
       children: [
-        _buildDetailItem('加油站', order!.stationName ?? '未知油站'),
+        _buildDetailItem('加油站', widget.order!.stationName ?? '未知油站'),
         SizedBox(height: AppSizes.setHeight(16)),
         _buildDetailItem(
           '提油油库',
-          order!.inventoryId != null ? '库存ID: ${order!.inventoryId}' : '未知油库',
+          widget.order!.inventoryId != null
+              ? '库存ID: ${widget.order!.inventoryId}'
+              : '未知油库',
         ),
         SizedBox(height: AppSizes.setHeight(16)),
         _buildDashedDivider(),
@@ -383,24 +665,26 @@ class PickupOrderDetailScreen extends StatelessWidget {
           SizedBox(height: AppSizes.setHeight(16)),
         ],
         if (isCompleted) ...[
-          if (order!.updatedAt != null && order!.updatedAt!.isNotEmpty)
+          if (widget.order!.updatedAt != null &&
+              widget.order!.updatedAt!.isNotEmpty)
             _buildDetailItem(
               '完成时间',
-              _formatDateTime(order!.updatedAt!),
+              _formatDateTime(widget.order!.updatedAt!),
               valueWidget: CommonText(
-                text: _formatDateTime(order!.updatedAt!),
+                text: _formatDateTime(widget.order!.updatedAt!),
                 fontSize: AppSizes.setFontSize(14),
                 fontWeight: FontWeight.w500,
                 textColor: const Color(0xFF1F2937),
               ),
             ),
-          if (order!.updatedAt != null && order!.updatedAt!.isNotEmpty)
+          if (widget.order!.updatedAt != null &&
+              widget.order!.updatedAt!.isNotEmpty)
             SizedBox(height: AppSizes.setHeight(16)),
           _buildDetailItem(
             '实际提油量',
-            '${order!.withdrawTon ?? 0.0} 吨',
+            '${widget.order!.withdrawTon ?? 0.0} 吨',
             valueWidget: CommonText(
-              text: '${order!.withdrawTon ?? 0.0} 吨',
+              text: '${widget.order!.withdrawTon ?? 0.0} 吨',
               fontSize: AppSizes.setFontSize(14),
               fontWeight: FontWeight.w700,
               textColor: const Color(0xFF10B981),
@@ -519,8 +803,6 @@ class PickupOrderDetailScreen extends StatelessWidget {
       dashSpace: 4,
     );
   }
-
-
 
   String _formatDateTime(String dateTimeStr) {
     try {

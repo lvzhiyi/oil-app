@@ -72,43 +72,69 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                  vertical: AppSizes.setHeight(16),
-                ),
-                child: Column(
-                  children: [
-                    const OilPickupSuccessHeader(),
-                    SizedBox(height: AppSizes.setHeight(16)),
-                    RepaintBoundary(
-                      key: _cardKey,
-                      child: OilPickupReceiptCard(
+      body: _buildBody(horizontalPadding, dispatchContent),
+    );
+  }
+
+  Widget _buildBody(double horizontalPadding, String dispatchContent) {
+    return Stack(
+      children: [
+        Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                    vertical: AppSizes.setHeight(16),
+                  ),
+                  child: Column(
+                    children: [
+                      const OilPickupSuccessHeader(),
+                      SizedBox(height: AppSizes.setHeight(16)),
+                      OilPickupReceiptCard(
                         response: widget.response,
                         inventory: widget.inventory,
                         station: widget.station,
                         oilAmount: widget.oilAmount,
                         dispatchContent: dispatchContent,
                         onCopyWithdrawNo: _copyWithdrawNo,
+                        showCopyIcon: true,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
+            OilPickupSuccessBottomActions(
+              isSaving: _isSaving,
+              onBack: () => _handleBack(context),
+              onSave: _isSaving ? null : _saveCertificateImage,
+            ),
+          ],
+        ),
+        // Hidden widget for image generation
+        Positioned(
+          left: -10000, // Position off-screen
+          top: -10000, // Position off-screen
+          child: RepaintBoundary(
+            key: _cardKey,
+            child: SizedBox(
+              width: AppSizes.setWidth(375 - 32),
+              child: OilPickupReceiptCard(
+                response: widget.response,
+                inventory: widget.inventory,
+                station: widget.station,
+                oilAmount: widget.oilAmount,
+                dispatchContent: dispatchContent,
+                onCopyWithdrawNo: (_) {},
+                showCopyIcon: false, // Hidden for image generation
+              ),
+            ),
           ),
-          OilPickupSuccessBottomActions(
-            isSaving: _isSaving,
-            onBack: () => _handleBack(context),
-            onSave: _isSaving ? null : _saveCertificateImage,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
