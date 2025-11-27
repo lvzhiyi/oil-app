@@ -366,6 +366,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
     SportsDialog.show(
       title: '取消订单',
       bodyText: '确定要取消该提油订单吗？取消后无法恢复。',
+      onCancel: () {},
       onOk: () async {
         await SportsDialog.dismiss();
         if (context.mounted) {
