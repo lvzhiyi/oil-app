@@ -107,10 +107,10 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
           ],
         ),
         SizedBox(height: AppSizes.setHeight(12)),
-        Divider(
+        const Divider(
           height: 1,
           thickness: 1,
-          color: const Color(0xFFF3F4F6),
+          color: Color(0xFFF3F4F6),
         ),
       ],
     );

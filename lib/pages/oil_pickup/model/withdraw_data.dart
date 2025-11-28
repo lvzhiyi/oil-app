@@ -47,6 +47,10 @@ class WithdrawOrderModel {
   /// 订单状态
   final String? status;
 
+  /// 油库名称
+  @JsonKey(name: 'depotName')
+  final String? depotName;
+
   /// 加油站ID
   @JsonKey(name: 'stationId')
   final int? stationId;
@@ -103,6 +107,7 @@ class WithdrawOrderModel {
     this.cityName,
     this.areaName,
     this.addressDetail,
+    this.depotName,
   });
 
   factory WithdrawOrderModel.fromJson(Map<String, dynamic> json) =>

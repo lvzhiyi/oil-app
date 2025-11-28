@@ -44,6 +44,7 @@ WithdrawOrderModel _$WithdrawOrderModelFromJson(Map<String, dynamic> json) =>
       cityName: json['cityName'] as String?,
       areaName: json['areaName'] as String?,
       addressDetail: json['addressDetail'] as String?,
+      depotName: json['depotName'] as String?,
     );
 
 Map<String, dynamic> _$WithdrawOrderModelToJson(WithdrawOrderModel instance) =>
@@ -64,6 +65,7 @@ Map<String, dynamic> _$WithdrawOrderModelToJson(WithdrawOrderModel instance) =>
       'cityName': instance.cityName,
       'areaName': instance.areaName,
       'addressDetail': instance.addressDetail,
+      'depotName': instance.depotName,
     };
 
 WithdrawRequest _$WithdrawRequestFromJson(Map<String, dynamic> json) =>

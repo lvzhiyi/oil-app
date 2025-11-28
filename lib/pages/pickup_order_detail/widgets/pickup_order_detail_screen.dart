@@ -648,14 +648,12 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
   ) {
     return Column(
       children: [
-        _buildDetailItem('加油站', widget.order!.stationName ?? '未知油站'),
-        SizedBox(height: AppSizes.setHeight(16)),
         _buildDetailItem(
           '提油油库',
-          widget.order!.inventoryId != null
-              ? '库存ID: ${widget.order!.inventoryId}'
-              : '未知油库',
+          widget.order!.depotName ?? '-',
         ),
+        SizedBox(height: AppSizes.setHeight(16)),
+        _buildDetailItem('加油站', widget.order!.stationName ?? '未知油站'),
         SizedBox(height: AppSizes.setHeight(16)),
         _buildDashedDivider(),
         SizedBox(height: AppSizes.setHeight(16)),
