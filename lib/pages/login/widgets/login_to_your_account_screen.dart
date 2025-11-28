@@ -70,7 +70,7 @@ class LoginToYourAccountScreen extends StatelessWidget {
                     ),
                     SizedBox(height: AppSizes.setHeight(8)),
                     CommonText(
-                      text: 'B2B成品油交易与物流服务平台',
+                      text: 'B2B成品油交易平台',
                       fontWeight: FontWeight.w400,
                       fontSize: AppSizes.setFontSize(14),
                       textColor: const Color(0xFF6B7280),
