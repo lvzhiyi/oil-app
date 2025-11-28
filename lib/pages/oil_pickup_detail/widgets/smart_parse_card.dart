@@ -41,7 +41,6 @@ class _SmartParseCardState extends State<SmartParseCard> {
 
   String _getTemplateText() {
     return '''2025年1月1日
-油品:XX油库:92与95
 重型罐式挂车
 驾驶员姓名:张三
 驾驶员身份证:123456789012345678
@@ -50,13 +49,12 @@ class _SmartParseCardState extends State<SmartParseCard> {
 驾驶证编码:123456789012
 车型:重型罐式挂车
 车号:川A:AB123
-核定载重(公斤):30.000
+核定载重(公斤):30000
 行驶证编号:A00000000000
 单双仓:双仓
 一仓:15.0吨
 二仓:15.0吨
-是否带泵:否
-提油吨位:30吨''';
+是否带泵:否''';
   }
 
   Future<void> _copyTemplate() async {

@@ -142,7 +142,7 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
         // 格式：|||JSON字符串 (原始字符串为空)
         vehicleInfoJson = '|||${VehicleInfoParser.toJson(finalVehicleModel)}';
       }
-      print('vehicleInfoJson: $vehicleInfoJson');
+      // print('vehicleInfoJson: $vehicleInfoJson');
       final request = WithdrawRequest(
         withdrawTon: oilAmountInt,
         stationId: stationId,

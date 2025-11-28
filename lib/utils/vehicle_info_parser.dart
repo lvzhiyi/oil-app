@@ -6,6 +6,9 @@ class VehicleInfoParser {
   
   // 手机号: 1开头，第二位3-9，后面9位数字
   static final RegExp _phoneRegExp = RegExp(r'1[3-9]\d{9}');
+
+  // 日期: 匹配常见日期格式 (YYYY年MM月DD日, YYYY-MM-DD, YYYY/MM/DD, YYYY.MM.DD)
+  static final RegExp _dateRegExp = RegExp(r'\d{4}[年\-\./]\d{1,2}[月\-\./]\d{1,2}[日]?');
   
   // 身份证: 15位或18位 (这里只匹配18位常见格式，17位数字+1位数字或X)
   static final RegExp _idCardRegExp = RegExp(r'\d{17}[\dXx]');
@@ -96,7 +99,7 @@ class VehicleInfoParser {
 
     // 4. 组装结果
     return VehicleModel(
-      date: _extract(processedText, fieldKeywords['date']!),
+      date: _extract(processedText, fieldKeywords['date']!) ?? _extractByPattern(processedText, _dateRegExp),
       oilType: _extract(processedText, fieldKeywords['oilType']!),
       oilSource: _extract(processedText, fieldKeywords['oilSource']!),
       vehicleType: _extract(processedText, fieldKeywords['vehicleType']!),
