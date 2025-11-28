@@ -103,7 +103,8 @@ class _SmartParseCardState extends State<SmartParseCard> {
                         ),
                         decoration: BoxDecoration(
                           color: const Color(0xffF3F4F6),
-                          borderRadius: BorderRadius.circular(AppSizes.setWidth(4)),
+                          borderRadius:
+                              BorderRadius.circular(AppSizes.setWidth(4)),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -127,8 +128,10 @@ class _SmartParseCardState extends State<SmartParseCard> {
                     SizedBox(width: AppSizes.setWidth(8)),
                     GestureDetector(
                       onTap: () async {
-                        final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-                        if (clipboardData != null && clipboardData.text != null) {
+                        final clipboardData =
+                            await Clipboard.getData(Clipboard.kTextPlain);
+                        if (clipboardData != null &&
+                            clipboardData.text != null) {
                           _controller.text = clipboardData.text!;
                           widget.onParse(clipboardData.text!);
                         }
@@ -139,8 +142,11 @@ class _SmartParseCardState extends State<SmartParseCard> {
                           vertical: AppSizes.setHeight(4),
                         ),
                         decoration: BoxDecoration(
-                          color: CustomAppColor.of(context).btnPurple.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(AppSizes.setWidth(4)),
+                          color: CustomAppColor.of(context)
+                              .btnPurple
+                              .withValues(alpha: 0.1),
+                          borderRadius:
+                              BorderRadius.circular(AppSizes.setWidth(4)),
                         ),
                         child: CommonText(
                           text: '点击粘贴',
@@ -178,7 +184,9 @@ class _SmartParseCardState extends State<SmartParseCard> {
                     boxShadow: _hasFocus
                         ? [
                             BoxShadow(
-                              color: CustomAppColor.of(context).btnPurple.withValues(alpha: 0.1),
+                              color: CustomAppColor.of(context)
+                                  .btnPurple
+                                  .withValues(alpha: 0.1),
                               blurRadius: 3,
                               spreadRadius: 0,
                             ),
@@ -197,10 +205,13 @@ class _SmartParseCardState extends State<SmartParseCard> {
                       height: 1.6,
                     ),
                     decoration: InputDecoration(
-                      hintText: '请粘贴车牌、司机姓名、电话、身份证号等信息...\n\n示例：\n川A88888\n张三 13800000000\n510100199001011234',
+                      hintText:
+                          '请粘贴车牌、司机姓名、电话、身份证号等信息...\n\n示例：\n川A88888\n张三 13800000000\n510100199001011234',
                       hintStyle: TextStyle(
                         fontSize: AppSizes.setFontSize(13),
-                        color: CustomAppColor.of(context).txtGrey.withValues(alpha: 0.6),
+                        color: CustomAppColor.of(context)
+                            .txtGrey
+                            .withValues(alpha: 0.6),
                         height: 1.6,
                       ),
                       border: InputBorder.none,
@@ -215,7 +226,9 @@ class _SmartParseCardState extends State<SmartParseCard> {
                 Container(
                   padding: EdgeInsets.all(AppSizes.setWidth(8)),
                   decoration: BoxDecoration(
-                    color: CustomAppColor.of(context).txtOrange.withValues(alpha: 0.1),
+                    color: CustomAppColor.of(context)
+                        .txtOrange
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(AppSizes.setWidth(6)),
                   ),
                   child: Row(

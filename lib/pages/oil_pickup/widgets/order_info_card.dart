@@ -91,4 +91,3 @@ class OrderInfoCard extends StatelessWidget {
     );
   }
 }
-

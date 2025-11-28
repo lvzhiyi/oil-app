@@ -293,7 +293,7 @@ class AppColor {
   static const dieselText = Color(0xff7165E3);
   static const gasBg = Color(0xffFFF7ED);
   static const gasText = Color(0xffF59E0B);
-  
+
   // 库存状态颜色
   static const stockSufficient = Color(0xff10B981);
   static const stockLow = Color(0xffF59E0B);

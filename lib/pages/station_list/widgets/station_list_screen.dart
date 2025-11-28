@@ -103,7 +103,7 @@ class StationListScreen extends StatelessWidget {
     return GlobalUpdateUi(
       builder: (context, appCtrl) {
         final selectedStation = appCtrl.state.selectedStation;
-        
+
         return Column(
           children: [
             Expanded(
@@ -117,7 +117,7 @@ class StationListScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final station = state.stations[index];
                     final isSelected = selectedStation?.id == station.id;
-                    
+
                     return Padding(
                       padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
                       child: StationItem(
@@ -140,7 +140,7 @@ class StationListScreen extends StatelessWidget {
   Widget _buildBottomButton(BuildContext context, Station? selectedStation) {
     final colors = CustomAppColor.of(context);
     final hasSelection = selectedStation != null;
-    
+
     return Container(
       padding: EdgeInsets.only(
         left: AppSizes.setWidth(16),
@@ -170,7 +170,9 @@ class StationListScreen extends StatelessWidget {
             width: double.infinity,
             height: AppSizes.setHeight(44),
             decoration: BoxDecoration(
-              color: hasSelection ? colors.btnPurple : colors.btnPurple.withValues(alpha: 0.5),
+              color: hasSelection
+                  ? colors.btnPurple
+                  : colors.btnPurple.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(AppSizes.setWidth(28)),
             ),
             alignment: Alignment.center,
@@ -186,4 +188,3 @@ class StationListScreen extends StatelessWidget {
     );
   }
 }
-

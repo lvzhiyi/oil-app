@@ -64,7 +64,9 @@ class StationManagementItem extends StatelessWidget {
           ),
           SizedBox(height: AppSizes.setHeight(12)),
           _buildAddressArea(context),
-          if (isRejected && station.rejectionReason != null && station.rejectionReason!.isNotEmpty)
+          if (isRejected &&
+              station.rejectionReason != null &&
+              station.rejectionReason!.isNotEmpty)
             _buildRejectReason(context),
           if (!isDisabled) _buildActionButtons(context),
         ],
@@ -241,7 +243,8 @@ class StationManagementItem extends StatelessWidget {
                         color: colors.btnPurple,
                         width: 1,
                       ),
-                      borderRadius: BorderRadius.circular(AppSizes.setWidth(16)),
+                      borderRadius:
+                          BorderRadius.circular(AppSizes.setWidth(16)),
                     ),
                     child: CommonText(
                       text: '去修改并重新提交',
@@ -265,7 +268,8 @@ class StationManagementItem extends StatelessWidget {
                         color: colors.containerBorder,
                         width: 1,
                       ),
-                      borderRadius: BorderRadius.circular(AppSizes.setWidth(16)),
+                      borderRadius:
+                          BorderRadius.circular(AppSizes.setWidth(16)),
                     ),
                     child: CommonText(
                       text: '修改信息',

@@ -15,7 +15,8 @@ class OilPickupCtrl extends Cubit<OilPickupState> {
   static const int _pageSize = 10;
 
   Future<void> loadInventories() async {
-    emit(state.copyWith(isLoading: true, errorMessage: null, currentPage: 1, inventories: []));
+    emit(state.copyWith(
+        isLoading: true, errorMessage: null, currentPage: 1, inventories: []));
 
     try {
       final response = await oilPickupService.getInventories(
@@ -70,7 +71,8 @@ class OilPickupCtrl extends Cubit<OilPickupState> {
     }
   }
 
-  Future<void> navigateToDetail(BuildContext context, InventoryModel inventory) async {
+  Future<void> navigateToDetail(
+      BuildContext context, InventoryModel inventory) async {
     final result = await BaseRouter.push(
       context: context,
       url: AppPage.oilPickupDetailPage.path,

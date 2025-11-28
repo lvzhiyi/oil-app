@@ -12,7 +12,8 @@ class PickupOrderListPage extends BasePage {
   State<StatefulWidget> createState() => _PickupOrderListPageState();
 }
 
-class _PickupOrderListPageState extends BaseState<PickupOrderListPage> with BasicInitPage {
+class _PickupOrderListPageState extends BaseState<PickupOrderListPage>
+    with BasicInitPage {
   @override
   Widget body(context) {
     return BlocProvider(

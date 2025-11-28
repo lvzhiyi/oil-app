@@ -140,15 +140,15 @@ class WithdrawRequest {
 class WithdrawResponse {
   @JsonKey(name: 'withdrawId')
   final int? withdrawId;
-  
+
   @JsonKey(name: 'withdrawNo')
   final String? withdrawNo;
-  
+
   @JsonKey(name: 'remainingTon')
   final double? remainingTon;
-  
+
   final String? status;
-  
+
   final String? message;
 
   WithdrawResponse({
@@ -164,7 +164,6 @@ class WithdrawResponse {
 
   Map<String, dynamic> toJson() => _$WithdrawResponseToJson(this);
 }
-
 
 /// 库存油模型
 @JsonSerializable()

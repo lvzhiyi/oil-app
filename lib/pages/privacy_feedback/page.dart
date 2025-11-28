@@ -12,7 +12,8 @@ class PrivacyFeedbackPage extends BasePage {
   State<StatefulWidget> createState() => _PrivacyFeedbackPageState();
 }
 
-class _PrivacyFeedbackPageState extends BaseState<PrivacyFeedbackPage> with BasicInitPage {
+class _PrivacyFeedbackPageState extends BaseState<PrivacyFeedbackPage>
+    with BasicInitPage {
   @override
   Widget body(context) {
     return BlocProvider(

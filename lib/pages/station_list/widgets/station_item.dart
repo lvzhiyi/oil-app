@@ -21,7 +21,7 @@ class StationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = CustomAppColor.of(context);
     final primaryBg = const Color(0xFFF0EEFC);
-    
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -97,9 +97,8 @@ class StationItem extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: isSelected ? colors.btnPurple : Colors.white,
                 border: Border.all(
-                  color: isSelected
-                      ? colors.btnPurple
-                      : const Color(0xFFD1D5DB),
+                  color:
+                      isSelected ? colors.btnPurple : const Color(0xFFD1D5DB),
                   width: 1,
                 ),
               ),
@@ -117,4 +116,3 @@ class StationItem extends StatelessWidget {
     );
   }
 }
-

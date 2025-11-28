@@ -17,4 +17,3 @@ class PickupOrderDetailView extends StatelessWidget {
     );
   }
 }
-

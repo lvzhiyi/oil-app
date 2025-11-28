@@ -8,7 +8,8 @@ import 'widgets/station_management_list_screen.dart';
 class StationManagementListView extends StatelessWidget {
   final StationManagementListState state;
 
-  const StationManagementListView({Key? key, required this.state}) : super(key: key);
+  const StationManagementListView({Key? key, required this.state})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,4 +17,3 @@ class StationManagementListView extends StatelessWidget {
     return StationManagementListScreen(state: state, controller: ctrl);
   }
 }
-

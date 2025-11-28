@@ -67,12 +67,13 @@ class StationEditState {
       addressDetail: addressDetail ?? this.addressDetail,
       businessLicenseUrl: businessLicenseUrl ?? this.businessLicenseUrl,
       fuelRetailPermitUrl: fuelRetailPermitUrl ?? this.fuelRetailPermitUrl,
-      originalBusinessLicenseUrl: originalBusinessLicenseUrl ?? this.originalBusinessLicenseUrl,
-      originalFuelRetailPermitUrl: originalFuelRetailPermitUrl ?? this.originalFuelRetailPermitUrl,
+      originalBusinessLicenseUrl:
+          originalBusinessLicenseUrl ?? this.originalBusinessLicenseUrl,
+      originalFuelRetailPermitUrl:
+          originalFuelRetailPermitUrl ?? this.originalFuelRetailPermitUrl,
       isLoading: isLoading ?? this.isLoading,
       hasError: hasError ?? this.hasError,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }
-

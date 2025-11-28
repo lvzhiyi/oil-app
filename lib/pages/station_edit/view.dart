@@ -16,4 +16,3 @@ class StationEditView extends StatelessWidget {
     return StationEditForm(state: state, controller: ctrl);
   }
 }
-

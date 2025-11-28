@@ -47,9 +47,9 @@ class PickupCertificateModel {
       id: json['id'] as String,
       station: Station.fromJson(json['station'] as Map<String, dynamic>),
       oilAmount: json['oilAmount'] as String,
-      vehicleInfo: VehicleModel.fromJson(json['vehicleInfo'] as Map<String, dynamic>),
+      vehicleInfo:
+          VehicleModel.fromJson(json['vehicleInfo'] as Map<String, dynamic>),
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
   }
 }
-

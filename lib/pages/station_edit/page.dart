@@ -24,8 +24,7 @@ class _StationEditPage extends BaseState<StationEditPage> with BasicInitPage {
 
     return BlocProvider(
       create: (BuildContext context) => StationEditCtrl(
-          station: station,
-          isFromPendingReview: isFromPendingReview ?? false),
+          station: station, isFromPendingReview: isFromPendingReview ?? false),
       child: BlocBuilder<StationEditCtrl, StationEditState>(
         builder: (context, state) {
           return StationEditView(state: state);

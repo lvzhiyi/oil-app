@@ -140,8 +140,7 @@ class _AccountScreenState extends State<AccountScreen>
                   if (accountData.label == '退出登录') {
                     logoutBottomSheet(context);
                   } else if (accountData.label == '修改密码') {
-                    BaseRouter.push(
-                        url: AppPage.changePasswordPage.path);
+                    BaseRouter.push(url: AppPage.changePasswordPage.path);
                   } else if (accountData.label == '加油站管理') {
                     BaseRouter.push(
                         url: AppPage.stationManagementListPage.path);

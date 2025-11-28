@@ -29,4 +29,3 @@ class PickupOrderDetailCtrl extends Cubit<PickupOrderDetailState> {
     }
   }
 }
-

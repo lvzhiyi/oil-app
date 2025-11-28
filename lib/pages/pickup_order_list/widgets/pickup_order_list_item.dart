@@ -32,7 +32,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
     final isCompleted = widget.item.status == WithdrawStatus.completed.value;
     final isPending = widget.item.status == WithdrawStatus.pendingPickup.value;
     final vehicle = _parseVehicleInfo(widget.item.vehicleInfo);
-    
+
     return Padding(
       padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
       child: GestureDetector(
@@ -44,13 +44,13 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
           duration: const Duration(milliseconds: 100),
           child: Container(
             decoration: BoxDecoration(
-              color: _isPressed 
-                  ? const Color(0xFFFAFAFA) 
+              color: _isPressed
+                  ? const Color(0xFFFAFAFA)
                   : CustomAppColor.of(context).white,
               borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
               border: Border.all(
-                color: _isPressed 
-                    ? const Color(0xFF7165E3) 
+                color: _isPressed
+                    ? const Color(0xFF7165E3)
                     : Colors.black.withValues(alpha: 0.02),
                 width: 1,
               ),
@@ -91,7 +91,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
 
   Widget _buildCardHeader(BuildContext context, bool isCompleted) {
     final orderNo = widget.item.withdrawNo ?? widget.item.id?.toString() ?? '';
-    
+
     return Column(
       children: [
         Row(
@@ -123,18 +123,15 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
         vertical: AppSizes.setHeight(2),
       ),
       decoration: BoxDecoration(
-        color: isCompleted 
-            ? const Color(0xFFECFDF5) 
-            : const Color(0xFFFFF7ED),
+        color: isCompleted ? const Color(0xFFECFDF5) : const Color(0xFFFFF7ED),
         borderRadius: BorderRadius.circular(AppSizes.setWidth(4)),
       ),
       child: CommonText(
         text: isCompleted ? '已完成' : '待提油',
         fontSize: AppSizes.setFontSize(11),
         fontWeight: FontWeight.w600,
-        textColor: isCompleted 
-            ? const Color(0xFF10B981) 
-            : const Color(0xFFF59E0B),
+        textColor:
+            isCompleted ? const Color(0xFF10B981) : const Color(0xFFF59E0B),
       ),
     );
   }
@@ -143,7 +140,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
     final amount = widget.item.withdrawTon ?? 0.0;
     final stationName = widget.item.stationName ?? '未知油站';
     final label = isCompleted ? '实提量' : '提油量';
-    
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -163,8 +160,8 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
                   text: amount.toStringAsFixed(1),
                   fontSize: AppSizes.setFontSize(24),
                   fontWeight: FontWeight.w700,
-                  textColor: isCompleted 
-                      ? const Color(0xFF10B981) 
+                  textColor: isCompleted
+                      ? const Color(0xFF10B981)
                       : const Color(0xFF1F2937),
                   fontFamily: 'DIN Alternate',
                 ),
@@ -173,8 +170,8 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
                   text: '吨',
                   fontSize: AppSizes.setFontSize(12),
                   fontWeight: FontWeight.w500,
-                  textColor: isCompleted 
-                      ? const Color(0xFF10B981) 
+                  textColor: isCompleted
+                      ? const Color(0xFF10B981)
                       : const Color(0xFF1F2937),
                 ),
               ],
@@ -216,7 +213,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
     final dateStr = _getDateString(
       isCompleted ? widget.item.updatedAt : widget.item.createdAt,
     );
-    
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSizes.setWidth(10),
@@ -238,8 +235,8 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
                     vertical: AppSizes.setHeight(1),
                   ),
                   decoration: BoxDecoration(
-                    color: isCompleted 
-                        ? const Color(0xFFF3F4F6) 
+                    color: isCompleted
+                        ? const Color(0xFFF3F4F6)
                         : const Color(0xFFEEECFC),
                     borderRadius: BorderRadius.circular(AppSizes.setWidth(3)),
                   ),
@@ -248,8 +245,8 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
                     text: plateNumber,
                     fontSize: AppSizes.setFontSize(11),
                     fontWeight: FontWeight.w600,
-                    textColor: isCompleted 
-                        ? const Color(0xFF6B7280) 
+                    textColor: isCompleted
+                        ? const Color(0xFF6B7280)
                         : const Color(0xFF7165E3),
                   ),
                 ),

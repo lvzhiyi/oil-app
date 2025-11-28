@@ -27,10 +27,10 @@ class StationEditCtrl extends Cubit<StationEditState> {
 
   String? _stationId;
   bool _isFromPendingReview = false;
-  
+
   void initState(Station station) {
     _stationId = station.idString;
-    
+
     final businessLicenseUrl = station.businessLicenseUrl ?? '';
     final fuelRetailPermitUrl = station.fuelRetailPermitUrl ?? '';
 

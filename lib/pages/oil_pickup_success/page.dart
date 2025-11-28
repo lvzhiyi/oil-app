@@ -27,7 +27,8 @@ class OilPickupSuccessPage extends BasePage {
   State<StatefulWidget> createState() => _OilPickupSuccessPage();
 }
 
-class _OilPickupSuccessPage extends BaseState<OilPickupSuccessPage> with BasicInitPage {
+class _OilPickupSuccessPage extends BaseState<OilPickupSuccessPage>
+    with BasicInitPage {
   @override
   Widget body(context) {
     return OilPickupSuccessView(
@@ -42,4 +43,3 @@ class _OilPickupSuccessPage extends BaseState<OilPickupSuccessPage> with BasicIn
 
   String get title => '提油成功';
 }
-

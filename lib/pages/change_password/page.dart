@@ -14,7 +14,8 @@ class ChangePasswordPage extends BasePage {
   State<StatefulWidget> createState() => _ChangePasswordPage();
 }
 
-class _ChangePasswordPage extends BaseState<ChangePasswordPage> with BasicInitPage {
+class _ChangePasswordPage extends BaseState<ChangePasswordPage>
+    with BasicInitPage {
   @override
   Widget body(context) {
     return BlocProvider(
@@ -41,7 +42,3 @@ class _ChangePasswordPage extends BaseState<ChangePasswordPage> with BasicInitPa
     );
   }
 }
-
-
-
-

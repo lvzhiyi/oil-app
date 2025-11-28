@@ -18,14 +18,14 @@ class PickupOrderListCtrl extends Cubit<PickupOrderListState> {
 
   Future<void> onRefresh() async {
     if (state.isLoading) return;
-    
+
     emit(state.copyWith(
       isLoading: true,
       errorMessage: null,
       page: 1,
       hasMore: true,
     ));
-    
+
     await _loadData(isRefresh: true);
   }
 
@@ -50,7 +50,7 @@ class PickupOrderListCtrl extends Cubit<PickupOrderListState> {
   Future<void> _loadData({required bool isRefresh}) async {
     try {
       final page = isRefresh ? 1 : state.page + 1;
-      
+
       // 根据标签索引确定状态筛选条件
       // tabIndex 0: 待提油 (pending_pickup)
       // tabIndex 1: 已完成 (completed)
@@ -83,7 +83,8 @@ class PickupOrderListCtrl extends Cubit<PickupOrderListState> {
           isLoading: false,
           isLoadingMore: false,
         ));
-        refreshController.finishLoad(hasMore ? IndicatorResult.success : IndicatorResult.noMore);
+        refreshController.finishLoad(
+            hasMore ? IndicatorResult.success : IndicatorResult.noMore);
       }
     } catch (e) {
       l.e('PickupOrderListCtrl', '加载提油订单列表失败: $e');
@@ -92,7 +93,7 @@ class PickupOrderListCtrl extends Cubit<PickupOrderListState> {
         isLoadingMore: false,
         errorMessage: e.toString(),
       ));
-      
+
       if (isRefresh) {
         refreshController.finishRefresh(IndicatorResult.fail);
       } else {

@@ -3,7 +3,8 @@
 class AssetsImg {
   static const ACCESS_ERROR_BG = 'assets/img/access_error/bg.png';
   static const ACCESS_ERROR_ERTH = 'assets/img/access_error/erth.png';
-  static const HOME_HOME_BASKETBALL_ICON = 'assets/img/home/home_basketball_icon.png';
+  static const HOME_HOME_BASKETBALL_ICON =
+      'assets/img/home/home_basketball_icon.png';
   static const HOME_HOME_BOXING_ICON = 'assets/img/home/home_boxing_icon.png';
   static const IMG_ACCOUNT_CREATED = 'assets/img/img_account_created.webp';
   static const IMG_EMPTY_ORDER = 'assets/img/img_empty_order.webp';

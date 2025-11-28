@@ -10,13 +10,15 @@ import 'controller.dart';
 class OilPickupDetailPage extends BasePage {
   final InventoryModel inventory;
 
-  const OilPickupDetailPage({Key? key, required this.inventory}) : super(key: key);
+  const OilPickupDetailPage({Key? key, required this.inventory})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _OilPickupDetailPage();
 }
 
-class _OilPickupDetailPage extends BaseState<OilPickupDetailPage> with BasicInitPage {
+class _OilPickupDetailPage extends BaseState<OilPickupDetailPage>
+    with BasicInitPage {
   @override
   Widget body(context) {
     return BlocProvider(
@@ -28,6 +30,6 @@ class _OilPickupDetailPage extends BaseState<OilPickupDetailPage> with BasicInit
       ),
     );
   }
-  
+
   String get title => '提油详情';
 }

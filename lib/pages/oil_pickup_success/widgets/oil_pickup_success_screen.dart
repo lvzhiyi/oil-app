@@ -271,7 +271,8 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
         quality: 100,
         name: 'oil_certificate_${DateTime.now().millisecondsSinceEpoch}',
       );
-      final dynamic filePath = result['filePath'] ?? result['filePathList']?.first;
+      final dynamic filePath =
+          result['filePath'] ?? result['filePathList']?.first;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

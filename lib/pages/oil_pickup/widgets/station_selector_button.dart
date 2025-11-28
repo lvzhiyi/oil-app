@@ -78,12 +78,15 @@ class StationSelectorButton extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                   textColor: CustomAppColor.of(context).btnPurple,
                 ),
-                Padding(padding: EdgeInsets.only(top: AppSizes.setHeight(3)), child: Image.asset(
-                  AssetsIcon.IC_RIGHT_ARROW,
-                  height: AppSizes.setHeight(16),
-                  width: AppSizes.setWidth(16),
-                  color: CustomAppColor.of(context).btnPurple,
-                ),),
+                Padding(
+                  padding: EdgeInsets.only(top: AppSizes.setHeight(3)),
+                  child: Image.asset(
+                    AssetsIcon.IC_RIGHT_ARROW,
+                    height: AppSizes.setHeight(16),
+                    width: AppSizes.setWidth(16),
+                    color: CustomAppColor.of(context).btnPurple,
+                  ),
+                ),
               ],
             ),
           ],
@@ -92,4 +95,3 @@ class StationSelectorButton extends StatelessWidget {
     );
   }
 }
-

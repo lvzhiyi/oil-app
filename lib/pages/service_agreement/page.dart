@@ -13,15 +13,16 @@ class ServiceAgreementPage extends BasePage {
   State<StatefulWidget> createState() => _ServiceAgreementPage();
 }
 
-class _ServiceAgreementPage extends BaseState<ServiceAgreementPage> with BasicInitPage {
+class _ServiceAgreementPage extends BaseState<ServiceAgreementPage>
+    with BasicInitPage {
   @override
   Widget body(context) {
     return BlocProvider(
       create: (BuildContext context) => ServiceAgreementCtrl(),
-      child: BlocBuilder<ServiceAgreementCtrl, ServiceAgreementState>(builder: (context, state) {
+      child: BlocBuilder<ServiceAgreementCtrl, ServiceAgreementState>(
+          builder: (context, state) {
         return ServiceAgreementView(state: state);
       }),
     );
   }
 }
-

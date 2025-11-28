@@ -26,4 +26,3 @@ class OilOrderRequest {
         if (remark != null && remark!.isNotEmpty) 'remark': remark,
       };
 }
-

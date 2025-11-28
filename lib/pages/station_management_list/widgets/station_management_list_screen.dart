@@ -132,7 +132,8 @@ class StationManagementListScreen extends StatelessWidget {
   Widget _buildFilterBar(BuildContext context) {
     final isAllSelected = state.selectedStatus == null;
     final isActiveSelected = state.selectedStatus == StationStatus.active;
-    final isPendingSelected = state.selectedStatus == StationStatus.pending_review;
+    final isPendingSelected =
+        state.selectedStatus == StationStatus.pending_review;
     final isRejectedSelected = state.selectedStatus == StationStatus.rejected;
     final isDisabledSelected = state.selectedStatus == StationStatus.disabled;
 
@@ -165,7 +166,8 @@ class StationManagementListScreen extends StatelessWidget {
               context: context,
               label: '待审核',
               isSelected: isPendingSelected,
-              onTap: () => controller.filterByStatus(StationStatus.pending_review),
+              onTap: () =>
+                  controller.filterByStatus(StationStatus.pending_review),
             ),
             SizedBox(width: AppSizes.setWidth(24)),
             _buildFilterTab(
@@ -280,7 +282,9 @@ class StationManagementListScreen extends StatelessWidget {
       onRefresh: controller.onRefresh,
       onLoading: controller.onLoadMore,
       child: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16), vertical: AppSizes.setHeight(12)),
+        padding: EdgeInsets.symmetric(
+            horizontal: AppSizes.setWidth(16),
+            vertical: AppSizes.setHeight(12)),
         itemCount: state.stations.length,
         itemBuilder: (context, index) {
           final station = state.stations[index];

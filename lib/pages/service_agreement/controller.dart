@@ -11,4 +11,3 @@ class ServiceAgreementCtrl extends Cubit<ServiceAgreementState> {
 
   initState() async {}
 }
-

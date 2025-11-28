@@ -13,7 +13,8 @@ class StationManagementListPage extends BasePage {
   State<StatefulWidget> createState() => _StationManagementListPage();
 }
 
-class _StationManagementListPage extends BaseState<StationManagementListPage> with BasicInitPage {
+class _StationManagementListPage extends BaseState<StationManagementListPage>
+    with BasicInitPage {
   @override
   Widget body(context) {
     return BlocProvider(
@@ -26,4 +27,3 @@ class _StationManagementListPage extends BaseState<StationManagementListPage> wi
     );
   }
 }
-

@@ -33,9 +33,11 @@ class OilPickupReceiptCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String statusLabel = response.status != null
-        ? (WithdrawStatus.fromString(response.status)?.displayName ?? response.status!)
+        ? (WithdrawStatus.fromString(response.status)?.displayName ??
+            response.status!)
         : '待提油';
-    final String withdrawNo = response.withdrawNo ?? response.withdrawId?.toString() ?? '--';
+    final String withdrawNo =
+        response.withdrawNo ?? response.withdrawId?.toString() ?? '--';
     final String productName = inventory.fuelType != null
         ? FuelTypeHelper.getDisplayName(inventory.fuelType)
         : '油品';
@@ -43,7 +45,8 @@ class OilPickupReceiptCard extends StatelessWidget {
     final String depotName = inventory.depotName?.trim().isNotEmpty == true
         ? inventory.depotName!
         : '--';
-    final String stationName = station.displayName.isNotEmpty ? station.displayName : '--';
+    final String stationName =
+        station.displayName.isNotEmpty ? station.displayName : '--';
 
     return Container(
       decoration: BoxDecoration(
@@ -70,7 +73,8 @@ class OilPickupReceiptCard extends StatelessWidget {
                 SizedBox(height: AppSizes.setHeight(18)),
                 _buildDashedDivider(),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(18)),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: AppSizes.setWidth(18)),
                   child: Column(
                     children: [
                       SizedBox(height: AppSizes.setHeight(16)),
@@ -330,10 +334,12 @@ class OilPickupReceiptCard extends StatelessWidget {
     bool emphasize = false,
   }) {
     return Column(
-      crossAxisAlignment: emphasize ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment:
+          emphasize ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: emphasize ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment:
+              emphasize ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
             Expanded(
               child: CommonText(
@@ -359,7 +365,8 @@ class OilPickupReceiptCard extends StatelessWidget {
   }
 
   Widget _buildDispatchDetail(BuildContext context, String dispatchDetail) {
-    final List<String> lines = dispatchDetail.replaceAll('\r\n', '\n').split('\n');
+    final List<String> lines =
+        dispatchDetail.replaceAll('\r\n', '\n').split('\n');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -388,7 +395,8 @@ class OilPickupReceiptCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: const Color(0xFFF8F9FC),
             borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
-            border: Border.all(color: CustomAppColor.of(context).containerBorder),
+            border:
+                Border.all(color: CustomAppColor.of(context).containerBorder),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

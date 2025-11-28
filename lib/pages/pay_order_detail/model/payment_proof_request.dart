@@ -17,4 +17,3 @@ class PaymentProofRequest {
 
   Map<String, dynamic> toJson() => _$PaymentProofRequestToJson(this);
 }
-

@@ -7,7 +7,7 @@ class StationManagementListState {
   final bool hasError;
   final String? errorMessage;
   final StationStatus? selectedStatus;
-  
+
   // Pagination
   final int page;
   final bool hasMore;
@@ -40,11 +40,11 @@ class StationManagementListState {
       isLoading: isLoading ?? this.isLoading,
       hasError: hasError ?? this.hasError,
       errorMessage: errorMessage ?? this.errorMessage,
-      selectedStatus: clearSelectedStatus ? null : (selectedStatus ?? this.selectedStatus),
+      selectedStatus:
+          clearSelectedStatus ? null : (selectedStatus ?? this.selectedStatus),
       page: page ?? this.page,
       hasMore: hasMore ?? this.hasMore,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
     );
   }
 }
-

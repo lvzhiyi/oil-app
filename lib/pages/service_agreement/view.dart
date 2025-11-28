@@ -16,4 +16,3 @@ class ServiceAgreementView extends StatelessWidget {
     );
   }
 }
-

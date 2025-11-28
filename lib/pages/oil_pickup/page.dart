@@ -26,4 +26,3 @@ class _OilPickupPage extends BaseState<OilPickupPage> with BasicInitPage {
     );
   }
 }
-

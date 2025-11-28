@@ -24,7 +24,6 @@ class PickupOrderListView extends StatefulWidget {
 
 class _PickupOrderListViewState extends State<PickupOrderListView>
     implements TopBarClickListener {
-
   @override
   void onTopBarClick(String name, {String value = ""}) {
     if (name == 'back') {
@@ -214,9 +213,7 @@ class _PickupOrderListViewState extends State<PickupOrderListView>
             text: label,
             fontSize: AppSizes.setFontSize(14),
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-            textColor: isSelected 
-                ? Colors.white 
-                : const Color(0xFF6B7280),
+            textColor: isSelected ? Colors.white : const Color(0xFF6B7280),
           ),
         ),
       ),

@@ -17,7 +17,8 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
     controlFinishLoad: true,
   );
 
-  StationManagementListCtrl() : super(StationManagementListState(stations: [])) {
+  StationManagementListCtrl()
+      : super(StationManagementListState(stations: [])) {
     onRefresh();
   }
 
@@ -37,12 +38,13 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
   Future<void> _loadData({required bool isRefresh}) async {
     try {
       final pageToLoad = isRefresh ? 1 : state.page + 1;
-      
+
       final statuses = state.selectedStatus == null
           ? StationStatus.values.map((e) => e.name).toList()
           : [state.selectedStatus!.name];
 
-      final response = await stationService.getStationStatus(pageToLoad, _pageSize, statuses);
+      final response = await stationService.getStationStatus(
+          pageToLoad, _pageSize, statuses);
 
       // 直接使用 Station 模型
       final newStations = response.list ?? [];
@@ -55,7 +57,8 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
         refreshController.resetFooter();
       } else {
         finalStations = [...state.stations, ...newStations];
-        refreshController.finishLoad(hasMore ? IndicatorResult.success : IndicatorResult.noMore);
+        refreshController.finishLoad(
+            hasMore ? IndicatorResult.success : IndicatorResult.noMore);
       }
 
       emit(state.copyWith(
@@ -68,7 +71,7 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
       ));
     } catch (e) {
       l.e('StationManagementListCtrl', '加载加油站列表失败: $e');
-      
+
       if (isRefresh) {
         refreshController.finishRefresh(IndicatorResult.fail);
       } else {
@@ -85,10 +88,11 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
   }
 
   void filterByStatus(StationStatus? status) {
-    if (status == state.selectedStatus && !(status == null && state.selectedStatus == null)) {
-       return;
+    if (status == state.selectedStatus &&
+        !(status == null && state.selectedStatus == null)) {
+      return;
     }
-    
+
     if (status == null) {
       emit(state.copyWith(clearSelectedStatus: true));
     } else {
@@ -102,7 +106,7 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
       url: AppPage.stationEditPage.path,
       extra: {'station': station},
     );
-    
+
     if (result is Map && result['refresh'] == true) {
       onRefresh();
     }
@@ -110,7 +114,7 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
 
   void navigateToAdd(BuildContext context) async {
     final result = await BaseRouter.push(url: AppPage.stationEditPage.path);
-    
+
     if (result is Map && result['refresh'] == true) {
       onRefresh();
     }
@@ -123,4 +127,3 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
     emit(state.copyWith(stations: updated));
   }
 }
-

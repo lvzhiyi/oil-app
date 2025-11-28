@@ -86,7 +86,8 @@ class InventoryItem extends StatelessWidget {
 
           // Card Body
           Padding(
-            padding: EdgeInsets.only(left: pt(16), right: pt(16), bottom: pt(16)),
+            padding:
+                EdgeInsets.only(left: pt(16), right: pt(16), bottom: pt(16)),
             child: Row(
               children: [
                 // Left: Oil Badge
@@ -120,7 +121,9 @@ class InventoryItem extends StatelessWidget {
                             style: TextStyle(
                               fontSize: pt(26),
                               fontWeight: FontWeight.w700,
-                              fontFeatures: const [FontFeature.tabularFigures()],
+                              fontFeatures: const [
+                                FontFeature.tabularFigures()
+                              ],
                               color: isOutOfStock
                                   ? const Color(0xFFCCCCCC)
                                   : CustomAppColor.of(context).txtBlack,
@@ -201,9 +204,7 @@ class InventoryItem extends StatelessWidget {
               style: TextStyle(
                 fontSize: pt(11),
                 fontWeight: FontWeight.w500,
-                color: isOutOfStock
-                    ? const Color(0xFFAAAAAA)
-                    : badgeTextColor,
+                color: isOutOfStock ? const Color(0xFFAAAAAA) : badgeTextColor,
               ),
             ),
           ],
@@ -283,9 +284,7 @@ class InventoryItem extends StatelessWidget {
             style: TextStyle(
               fontSize: pt(14),
               fontWeight: FontWeight.w600,
-              color: isOutOfStock
-                  ? const Color(0xFFBBBBBB)
-                  : Colors.white,
+              color: isOutOfStock ? const Color(0xFFBBBBBB) : Colors.white,
             ),
           ),
         ),
@@ -295,17 +294,17 @@ class InventoryItem extends StatelessWidget {
 
   bool _isDiesel(String code) {
     if (code.isEmpty) return false;
-    
+
     final numberPart = RegExp(r'[-]?\d+').stringMatch(code) ?? '';
-    
+
     if (['0', '-10', '-20', '-35', '-50'].contains(numberPart)) {
       return true;
     }
-    
+
     if (['92', '95', '98'].any((e) => numberPart.contains(e))) {
       return false;
     }
-    
+
     return false;
   }
 

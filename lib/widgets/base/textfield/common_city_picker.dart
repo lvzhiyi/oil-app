@@ -32,7 +32,8 @@ class CommonCityPickerFormField extends StatefulWidget {
   final bool? isCountryLabelVisible;
   final String? name;
   final String? Function(String?)? validators;
-  final List<String>? initialCityData; // 新增：初始省市区数据 [provinceCode, cityCode, areaCode]
+  final List<String>?
+      initialCityData; // 新增：初始省市区数据 [provinceCode, cityCode, areaCode]
   final bool showHint;
 
   const CommonCityPickerFormField({
@@ -109,7 +110,8 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
       setState(() {
         cityData = value;
         // 如果有初始值，计算对应的索引
-        if (widget.initialCityData != null && widget.initialCityData!.length >= 3) {
+        if (widget.initialCityData != null &&
+            widget.initialCityData!.length >= 3) {
           selectedIndexes = _findIndexesByCodes(
             widget.initialCityData![0],
             widget.initialCityData![1],
@@ -122,7 +124,8 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
 
   /// 根据省市区代码查找对应的索引
   /// 遵循 KISS 原则，使用简单的遍历查找
-  List<int> _findIndexesByCodes(String provinceCode, String cityCode, String areaCode) {
+  List<int> _findIndexesByCodes(
+      String provinceCode, String cityCode, String areaCode) {
     int provinceIndex = 0;
     int cityIndex = 0;
     int areaIndex = 0;
@@ -314,8 +317,8 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
                       fontSize: AppSizes.setFontSize(14)),
               prefixIcon: widget.leadingIcon != null
                   ? Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: AppSizes.setHeight(12)),
+                      padding: EdgeInsets.symmetric(
+                          vertical: AppSizes.setHeight(12)),
                       child: widget.leadingIcon,
                     )
                   : null,

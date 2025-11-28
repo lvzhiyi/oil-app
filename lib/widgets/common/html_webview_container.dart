@@ -38,8 +38,9 @@ class _HtmlWebViewContainerState extends State<HtmlWebViewContainer> {
         _errorMessage = null;
       });
 
-      final String htmlString = await rootBundle.loadString(widget.htmlAssetPath);
-      
+      final String htmlString =
+          await rootBundle.loadString(widget.htmlAssetPath);
+
       setState(() {
         _htmlContent = htmlString;
         _isLoading = false;
@@ -176,4 +177,3 @@ class _HtmlWebViewContainerState extends State<HtmlWebViewContainer> {
     );
   }
 }
-

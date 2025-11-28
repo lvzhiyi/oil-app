@@ -36,4 +36,3 @@ class _PickupOrderDetailPage extends BaseState<PickupOrderDetailPage>
 
   String get title => '提油订单详情';
 }
-

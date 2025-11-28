@@ -15,12 +15,14 @@ class FuelTypeHelper {
     }
 
     final trimmedType = fuelType.trim();
-    
+
     if (_fuelTypeMap.containsKey(trimmedType)) {
       return _fuelTypeMap[trimmedType]!;
     }
 
-    if (trimmedType.contains('92') || trimmedType.contains('95') || trimmedType.contains('98')) {
+    if (trimmedType.contains('92') ||
+        trimmedType.contains('95') ||
+        trimmedType.contains('98')) {
       final parts = <String>[];
       if (trimmedType.contains('92')) parts.add('92#汽油');
       if (trimmedType.contains('95')) parts.add('95#汽油');
@@ -38,4 +40,3 @@ class FuelTypeHelper {
     return fuelType;
   }
 }
-

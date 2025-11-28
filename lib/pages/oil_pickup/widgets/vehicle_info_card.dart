@@ -57,7 +57,8 @@ class VehicleInfoCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(AppSizes.setWidth(12)),
             decoration: BoxDecoration(
-              color: CustomAppColor.of(context).txtOrange.withValues(alpha: 0.1),
+              color:
+                  CustomAppColor.of(context).txtOrange.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
             ),
             child: CommonText(
@@ -150,8 +151,7 @@ class VehicleInfoCard extends StatelessWidget {
             _buildInfoRow(context, '驾驶员电话', model.driverPhone!),
           if (model.driverIdCard != null)
             _buildInfoRow(context, '身份证号', model.driverIdCard!),
-          if (model.date != null)
-            _buildInfoRow(context, '日期', model.date!),
+          if (model.date != null) _buildInfoRow(context, '日期', model.date!),
           if (model.oilType != null)
             _buildInfoRow(context, '油品', model.oilType!),
           if (model.oilSource != null)
@@ -189,4 +189,3 @@ class VehicleInfoCard extends StatelessWidget {
     );
   }
 }
-

@@ -21,4 +21,3 @@ extension StationExtension on Station {
   /// 获取加油站ID字符串
   String get idString => id?.toString() ?? '';
 }
-

@@ -134,7 +134,8 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
           oilAmount: parsedModel.oilAmount ?? finalOilAmount,
         );
         // 格式：原始字符串|||JSON字符串
-        vehicleInfoJson = '${state.vehicleInfo}|||${VehicleInfoParser.toJson(mergedModel)}';
+        vehicleInfoJson =
+            '${state.vehicleInfo}|||${VehicleInfoParser.toJson(mergedModel)}';
       } else {
         final finalVehicleModel = vehicleModel.copyWith(
           oilAmount: vehicleModel.oilAmount ?? finalOilAmount,
@@ -154,7 +155,8 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
         request,
       );
 
-      l.i('OilPickupDetail', '提油申请提交成功: ${response.withdrawNo ?? response.withdrawId ?? '-'}');
+      l.i('OilPickupDetail',
+          '提油申请提交成功: ${response.withdrawNo ?? response.withdrawId ?? '-'}');
 
       emit(state.copyWith(
         isLoading: false,

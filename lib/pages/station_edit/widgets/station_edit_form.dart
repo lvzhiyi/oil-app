@@ -40,9 +40,12 @@ class _StationEditFormState extends State<StationEditForm> {
     _cityController = TextEditingController(
       text: _buildCityText(),
     );
-    _addressDetailController = TextEditingController(text: widget.state.addressDetail);
-    _businessLicenseController = TextEditingController(text: widget.state.businessLicenseUrl);
-    _fuelRetailPermitController = TextEditingController(text: widget.state.fuelRetailPermitUrl);
+    _addressDetailController =
+        TextEditingController(text: widget.state.addressDetail);
+    _businessLicenseController =
+        TextEditingController(text: widget.state.businessLicenseUrl);
+    _fuelRetailPermitController =
+        TextEditingController(text: widget.state.fuelRetailPermitUrl);
   }
 
   @override
@@ -62,7 +65,8 @@ class _StationEditFormState extends State<StationEditForm> {
     if (oldWidget.state.businessLicenseUrl != widget.state.businessLicenseUrl) {
       _businessLicenseController.text = widget.state.businessLicenseUrl;
     }
-    if (oldWidget.state.fuelRetailPermitUrl != widget.state.fuelRetailPermitUrl) {
+    if (oldWidget.state.fuelRetailPermitUrl !=
+        widget.state.fuelRetailPermitUrl) {
       _fuelRetailPermitController.text = widget.state.fuelRetailPermitUrl;
     }
   }
@@ -139,7 +143,8 @@ class _StationEditFormState extends State<StationEditForm> {
                       fillColor: const Color(0xFFF9FAFB),
                       radius: 10,
                       hintText: '请输入加油站名称',
-                      onChanged: (value) => widget.controller.updateName(value ?? ''),
+                      onChanged: (value) =>
+                          widget.controller.updateName(value ?? ''),
                     ),
                   ),
                   _buildInputWrapper(
@@ -181,7 +186,8 @@ class _StationEditFormState extends State<StationEditForm> {
                       fillColor: const Color(0xFFF9FAFB),
                       radius: 10,
                       hintText: '请输入详细地址（不含省市区）',
-                      onChanged: (value) => widget.controller.updateAddressDetail(value ?? ''),
+                      onChanged: (value) =>
+                          widget.controller.updateAddressDetail(value ?? ''),
                     ),
                   ),
                 ],
@@ -210,7 +216,8 @@ class _StationEditFormState extends State<StationEditForm> {
                       controller: _fuelRetailPermitController,
                       hintText: '点击上传照片',
                       onChanged: (value) {
-                        widget.controller.updateFuelRetailPermitUrl(value ?? '');
+                        widget.controller
+                            .updateFuelRetailPermitUrl(value ?? '');
                       },
                     ),
                   ),
@@ -221,7 +228,8 @@ class _StationEditFormState extends State<StationEditForm> {
                   padding: EdgeInsets.all(AppSizes.setWidth(12)),
                   margin: EdgeInsets.only(top: AppSizes.setHeight(16)),
                   decoration: BoxDecoration(
-                    color: CustomAppColor.of(context).red.withValues(alpha: 0.1),
+                    color:
+                        CustomAppColor.of(context).red.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
                   ),
                   child: CommonText(
@@ -331,7 +339,7 @@ class _StationEditFormState extends State<StationEditForm> {
   }) {
     final colors = CustomAppColor.of(context);
     final hasImage = controller.text.isNotEmpty;
-    
+
     return GestureDetector(
       onTap: () {
         if (!hasImage) {
@@ -363,7 +371,8 @@ class _StationEditFormState extends State<StationEditForm> {
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Container(
                               color: const Color(0xFFF9FAFB),
-                              child: const Center(child: CircularProgressIndicator()),
+                              child: const Center(
+                                  child: CircularProgressIndicator()),
                             ),
                             errorWidget: (context, url, error) => Container(
                               color: const Color(0xFFF9FAFB),
@@ -373,7 +382,8 @@ class _StationEditFormState extends State<StationEditForm> {
                         : Image.file(
                             File(controller.text),
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Container(
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
                               color: const Color(0xFFF9FAFB),
                               child: Icon(Icons.error, color: colors.txtGrey),
                             ),
@@ -452,6 +462,4 @@ class _StationEditFormState extends State<StationEditForm> {
       onChanged(image.path);
     }
   }
-
 }
-

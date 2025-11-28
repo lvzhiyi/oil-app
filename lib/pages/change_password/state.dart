@@ -16,12 +16,9 @@ class ChangePasswordState {
   }) {
     return ChangePasswordState(
       loading: loading ?? this.loading,
-      changePasswordSuccess: changePasswordSuccess ?? this.changePasswordSuccess,
+      changePasswordSuccess:
+          changePasswordSuccess ?? this.changePasswordSuccess,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }
-
-
-
-

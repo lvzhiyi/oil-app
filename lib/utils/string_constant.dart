@@ -1,11 +1,13 @@
 class AppStrings {
   static const String phoneNumber = " +91 0123456789";
 
-  static const String anniDesignerWomenArt = "Anni Designer Women's Art silk with blouse piece Saree";
+  static const String anniDesignerWomenArt =
+      "Anni Designer Women's Art silk with blouse piece Saree";
   static const String productDiscount1 = "100 OFF | 1st Order Discount Applied";
   static const String fourRating = "4 Ratings";
 
-  static const String womenArtSilkWithBlouse = "Women's Art silk with blouse piece Anni Designer Saree Blue";
+  static const String womenArtSilkWithBlouse =
+      "Women's Art silk with blouse piece Anni Designer Saree Blue";
   static const String freeDelivery = "FREE Delivery";
   static const String dispatch = "Dispatched in 2-3 Days";
   static const String priceInclusiveOfGst = "Price Inclusive of GST";
@@ -25,7 +27,8 @@ class AppStrings {
   static const String review2 =
       "It is same as shown in the picture i am really satisfied  of  this saree material  is too good i love it ,Amazing...Gud Looking...Love it.";
   static const String user3 = "Linnea";
-  static const String review3 = "i am not happy, this product quality is very bad.";
+  static const String review3 =
+      "i am not happy, this product quality is very bad.";
 
   static const String trendyAttractiveSarees = "Trendy Attractive Sarees";
 
@@ -247,17 +250,21 @@ class AppStrings {
   static const String search = "Search";
   static const String wishlist = "Wishlist";
   static const String cart = "Cart";
-  static const String dennisLingoMensSolidSlimFitCasualShirt = "Dennis Lingo Men's Solid Slim Fit Casual Shirt";
+  static const String dennisLingoMensSolidSlimFitCasualShirt =
+      "Dennis Lingo Men's Solid Slim Fit Casual Shirt";
   static const String devin = "Devin";
 
   static const String discount = "25% of Sales";
-  static const String salesOfFirstThreeOrders = "25% of sales of first 3 orders";
+  static const String salesOfFirstThreeOrders =
+      "25% of sales of first 3 orders";
   static const String youtube = "YouTube";
-  static const String getExtra = "Get extra 40% (max \$200) off on your next order";
+  static const String getExtra =
+      "Get extra 40% (max \$200) off on your next order";
 
   static const String ankletsAndTopRings = "Anklets & Top Rings";
   static const String forYou = "For You";
-  static const String applicationCoversAndFridgeMats = "Application Covers & Fridge Mats";
+  static const String applicationCoversAndFridgeMats =
+      "Application Covers & Fridge Mats";
   static const String awesomeApril = "Awesome April";
   static const String bagsAndBackpacks = "Bags & Backpacks";
   static const String bedSheets = "Bedsheets";
@@ -265,26 +272,40 @@ class AppStrings {
   static const String casualShoes = "Casual Shoes";
   static const String classicKurtis = "Classic Kurtis";
   static const String decorativeStickers = "Decorative Stickers";
-  static const String princeDyeingAndProcessing = "Prince dyeing and processing";
+  static const String princeDyeingAndProcessing =
+      "Prince dyeing and processing";
   static const String saturdayMay = "Saturday, 22nd May";
-  static const String address = "168  O Conner Street, Gulfport, MS,\n Mississippi, 39501";
+  static const String address =
+      "168  O Conner Street, Gulfport, MS,\n Mississippi, 39501";
 
   static const String date = "20 May, 2021";
   static const String orderId = "40668899774";
   static const String anniDesigner = "Anni Designer Women's Art Silk";
 
-  static const String yourOrderWasPlaced = "Your order #212454 was placed for delivery.";
-  static const String yourOrderIsPendingForConfirmation = "Your order is pending for confirmation. Will confirm within 5 minutes.";
-  static const String yourOrderIsConfirmed = "Your order is confirmed. Will deliver soon within 20 minutes.";
-  static const String yourProductIsProcessingToDeliverYouOnTime = "Your product is processing to deliver you on time.";
-  static const String productDeliveredToYouAndMarkedAsDeliveredByCustomer = "Product delivered to you and marked as delivered by customer.";
+  static const String yourOrderWasPlaced =
+      "Your order #212454 was placed for delivery.";
+  static const String yourOrderIsPendingForConfirmation =
+      "Your order is pending for confirmation. Will confirm within 5 minutes.";
+  static const String yourOrderIsConfirmed =
+      "Your order is confirmed. Will deliver soon within 20 minutes.";
+  static const String yourProductIsProcessingToDeliverYouOnTime =
+      "Your product is processing to deliver you on time.";
+  static const String productDeliveredToYouAndMarkedAsDeliveredByCustomer =
+      "Product delivered to you and marked as delivered by customer.";
 
-  static const String notification1 = "Exclusive Brand Day Sale!! HURRY,LIMITED period offer!";
-  static const String notification2 = "Order Placed successfully. It will be delivered on Mon 15 July, 2021";
-  static const String notification3 = "Order Placed successfully. It will be delivered on Mon 15 July, 2021";
-  static const String notification4 = "Payment Failed. You can retry making a payment on order sections.";
-  static const String notification5 = "Exclusive Brand Day Sale!! HURRY,LIMITED period offer!";
-  static const String notification6 = "Your order is delivered on time. for any further assistance please contact us.";
+  static const String notification1 =
+      "Exclusive Brand Day Sale!! HURRY,LIMITED period offer!";
+  static const String notification2 =
+      "Order Placed successfully. It will be delivered on Mon 15 July, 2021";
+  static const String notification3 =
+      "Order Placed successfully. It will be delivered on Mon 15 July, 2021";
+  static const String notification4 =
+      "Payment Failed. You can retry making a payment on order sections.";
+  static const String notification5 =
+      "Exclusive Brand Day Sale!! HURRY,LIMITED period offer!";
+  static const String notification6 =
+      "Your order is delivered on time. for any further assistance please contact us.";
 
-  static const String notificationDate = "Your order is delivered on time. for any further assistance please contact us.";
+  static const String notificationDate =
+      "Your order is delivered on time. for any further assistance please contact us.";
 }

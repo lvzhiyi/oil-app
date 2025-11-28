@@ -7,7 +7,7 @@ class PayOrderListState {
   final int total;
   final String? errorMessage;
   final PageStatus pageStatus;
-  
+
   // Pagination
   final bool hasMore;
   final bool isLoadingMore;

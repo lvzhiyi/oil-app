@@ -257,7 +257,8 @@ class _OrdersScreenState extends State<OrdersScreen>
 
   Widget _buildOrderCard(OrderModel order, BuildContext context) {
     final isCancelled = order.status?.value == OrderStatus.Cancelled.value;
-    final isPendingPayment = order.status?.value == OrderStatus.PendingPayment.value;
+    final isPendingPayment =
+        order.status?.value == OrderStatus.PendingPayment.value;
     final isPaid = order.status?.value == OrderStatus.PaymentUploaded.value;
 
     return GestureDetector(

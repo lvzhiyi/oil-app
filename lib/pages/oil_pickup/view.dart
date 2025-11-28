@@ -16,4 +16,3 @@ class OilPickupView extends StatelessWidget {
     return OilPickupScreen(state: state, controller: ctrl);
   }
 }
-

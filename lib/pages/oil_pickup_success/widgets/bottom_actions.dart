@@ -17,7 +17,8 @@ class OilPickupSuccessBottomActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BorderRadius borderRadius = BorderRadius.circular(AppSizes.setWidth(12));
+    final BorderRadius borderRadius =
+        BorderRadius.circular(AppSizes.setWidth(12));
 
     return Container(
       padding: EdgeInsets.only(
@@ -81,7 +82,8 @@ class OilPickupSuccessBottomActions extends StatelessWidget {
                           height: AppSizes.setWidth(20),
                           child: const CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         )
                       : Row(
@@ -89,7 +91,8 @@ class OilPickupSuccessBottomActions extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(top: AppSizes.setWidth(4)),
+                              padding:
+                                  EdgeInsets.only(top: AppSizes.setWidth(4)),
                               child: Icon(
                                 Icons.download_outlined,
                                 color: Colors.white,

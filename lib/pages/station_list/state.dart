@@ -5,7 +5,7 @@ class StationListState {
   final bool isLoading;
   final bool hasError;
   final String? errorMessage;
-  
+
   // Pagination
   final int page;
   final bool hasMore;

@@ -7,7 +7,6 @@ import 'package:oil_business_app/widgets/common/base_page.dart';
 import 'controller.dart';
 
 class StationListPage extends BasePage {
-
   StationListPage({Key? key}) : super(key: key);
 
   @override
@@ -27,4 +26,3 @@ class _StationListPage extends BaseState<StationListPage> with BasicInitPage {
     );
   }
 }
-

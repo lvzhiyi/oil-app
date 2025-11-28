@@ -14,6 +14,3 @@ class ChangePasswordView extends HookWidget {
     return const ChangePasswordScreen();
   }
 }
-
-
-
