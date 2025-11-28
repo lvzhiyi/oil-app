@@ -200,6 +200,7 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
       }
     }
 
+    addLine('提油日期', vehicleModel.date);
     addLine('驾驶员', vehicleModel.driverName);
     addLine('电话', vehicleModel.driverPhone);
     addLine('身份证', vehicleModel.driverIdCard);
@@ -740,6 +741,7 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
       }
     }
 
+    addItem('提油日期', vehicleModel.date);
     addItem(
       '车牌号',
       vehicleModel.plateNumber,

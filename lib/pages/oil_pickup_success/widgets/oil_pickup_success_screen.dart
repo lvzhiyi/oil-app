@@ -169,6 +169,7 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
       }
     }
 
+    addLine('提油日期', widget.vehicleModel.date);
     addLine('驾驶员', widget.vehicleModel.driverName);
     addLine('电话', widget.vehicleModel.driverPhone);
     addLine('身份证', widget.vehicleModel.driverIdCard);
