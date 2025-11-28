@@ -243,7 +243,6 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
           textAlign: widget.textAlign ?? TextAlign.start,
           textAlignVertical: widget.textAlignVertical ?? TextAlignVertical.top,
           maxLength: widget.maxLength,
-          focusNode: _focusNode,
           controller: widget.controller,
           onChanged: widget.onChanged,
           maxLines: widget.maxLines ?? 1,
@@ -257,97 +256,92 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
             fontWeight: FontWeight.w400,
           ),
           decoration: InputDecoration(
-          floatingLabelBehavior:
-              hasLabel ? FloatingLabelBehavior.auto : FloatingLabelBehavior.never,
-          labelText: hasLabel
-              ? (isFocused
-                  ? "${widget.hintText ?? widget.labelText ?? ""}${(widget.isRequiredLabel ?? false) ? " *" : ""}"
-                  : "${widget.labelText ?? ""}${(widget.isRequiredLabel ?? false) ? " *" : ""}")
-              : null,
-          labelStyle: TextStyle(
-              color: _focusNode.hasFocus
-                  ? CustomAppColor.of(context).borderPurple
-                  : CustomAppColor.of(context).txtGrey,
-              fontSize: AppSizes.setFontSize(15),
-              fontWeight: FontWeight.w600),
-          fillColor: isFocused && widget.fillColor != null
-              ? Colors.white
-              : (widget.fillColor ?? CustomAppColor.of(context).bgContainer),
-          filled: true,
-          hintText: !widget.showHint || _hasText
-              ? null
-              : hasLabel
-                  ? (isFocused
-                      ? null
-                      : "${widget.hintText ?? ""}${widget.isRequiredHint ?? false ? " *" : ""}")
-                  : "${widget.hintText ?? ""}${widget.isRequiredHint ?? false ? " *" : ""}",
-          hintStyle: widget.hintStyle ??
-              TextStyle(
-                  color: CustomAppColor.of(context).hintText,
-                  fontWeight: FontWeight.w400,
-                  fontSize: AppSizes.setFontSize(14)),
-          prefixIcon: widget.leadingIcon != null
-              ? Padding(
-                  padding:
-                      EdgeInsets.symmetric(vertical: AppSizes.setHeight(12)),
-                  child: widget.leadingIcon,
-                )
-              : null,
-          suffixIcon: widget.isPasswordField
-              ? _obscureText
-                  ? IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _obscureText = !_obscureText;
-                        });
-                      },
-                      icon: Image.asset(
-                        AssetsIcon.IC_HIDE,
-                        width: AppSizes.setWidth(22),
-                        height: AppSizes.setHeight(22),
-                      ))
-                  : IconButton(
-                      icon: Icon(
-                        _obscureText ? Icons.visibility_off : Icons.visibility,
-                        color: CustomAppColor.of(context).icGrey,
-                        weight: AppSizes.setWidth(20),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _obscureText = !_obscureText;
-                        });
-                      },
-                    )
-              : widget.suffixIcon,
-          border: OutlineInputBorder(
-            borderRadius: widget.radius != null
-                ? BorderRadius.circular(widget.radius ?? 0)
-                : BorderRadius.circular(8),
-            borderSide: const BorderSide(color: AppColor.transparent, width: 1),
+            floatingLabelBehavior: hasLabel
+                ? FloatingLabelBehavior.auto
+                : FloatingLabelBehavior.never,
+            labelText: hasLabel
+                ? (isFocused
+                    ? "${widget.hintText ?? widget.labelText ?? ""}${(widget.isRequiredLabel ?? false) ? " *" : ""}"
+                    : "${widget.labelText ?? ""}${(widget.isRequiredLabel ?? false) ? " *" : ""}")
+                : null,
+            hintText: !widget.showHint || _hasText
+                ? null
+                : hasLabel
+                    ? (isFocused
+                        ? null
+                        : "${widget.hintText ?? ""}${widget.isRequiredHint ?? false ? " *" : ""}")
+                    : "${widget.hintText ?? ""}${widget.isRequiredHint ?? false ? " *" : ""}",
+            hintStyle: widget.hintStyle ??
+                TextStyle(
+                    color: CustomAppColor.of(context).hintText,
+                    fontWeight: FontWeight.w400,
+                    fontSize: AppSizes.setFontSize(14)),
+            prefixIcon: widget.leadingIcon != null
+                ? Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: AppSizes.setHeight(12)),
+                    child: widget.leadingIcon,
+                  )
+                : null,
+            suffixIcon: widget.isPasswordField
+                ? _obscureText
+                    ? IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                        icon: Image.asset(
+                          AssetsIcon.IC_HIDE,
+                          width: AppSizes.setWidth(22),
+                          height: AppSizes.setHeight(22),
+                        ))
+                    : IconButton(
+                        icon: Icon(
+                          _obscureText
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: CustomAppColor.of(context).icGrey,
+                          weight: AppSizes.setWidth(20),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                      )
+                : widget.suffixIcon,
+            border: OutlineInputBorder(
+              borderRadius: widget.radius != null
+                  ? BorderRadius.circular(widget.radius ?? 0)
+                  : BorderRadius.circular(8),
+              borderSide:
+                  const BorderSide(color: AppColor.transparent, width: 1),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: widget.radius != null
+                  ? BorderRadius.circular(widget.radius ?? 0)
+                  : BorderRadius.circular(8),
+              borderSide: BorderSide(
+                  color: widget.borderColor ??
+                      CustomAppColor.of(context).borderGrey,
+                  width: 1),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: widget.radius != null
+                  ? BorderRadius.circular(widget.radius ?? 0)
+                  : BorderRadius.circular(8),
+              borderSide: BorderSide(
+                  color: widget.borderColor ??
+                      CustomAppColor.of(context).borderPurple,
+                  width: 1.5),
+            ),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: widget.radius != null
-                ? BorderRadius.circular(widget.radius ?? 0)
-                : BorderRadius.circular(8),
-            borderSide: BorderSide(
-                color:
-                    widget.borderColor ?? CustomAppColor.of(context).borderGrey,
-                width: 1),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: widget.radius != null
-                ? BorderRadius.circular(widget.radius ?? 0)
-                : BorderRadius.circular(8),
-            borderSide: BorderSide(
-                color: widget.borderColor ??
-                    CustomAppColor.of(context).borderPurple,
-                width: 1.5),
-          ),
-        ),
-        validator: widget.validators != null
-            ? FormBuilderValidators.compose([widget.validators!])
-            : FormBuilderValidators.required(
-                errorText: widget.hintText ?? '${widget.labelText ?? ""} 不能为空'),
+          validator: widget.validators != null
+              ? FormBuilderValidators.compose([widget.validators!])
+              : FormBuilderValidators.required(
+                  errorText:
+                      widget.hintText ?? '${widget.labelText ?? ""} 不能为空'),
         ),
       );
     }
