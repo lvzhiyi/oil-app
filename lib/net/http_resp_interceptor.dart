@@ -111,7 +111,12 @@ class HttpRespInterceptor extends InterceptorsWrapper {
         final authResponse = await authService.refreshToken(refreshRequest);
 
         // 更新AppController中的token
-        appController?.setAuthResponse(authResponse);
+        appController?.setAuthResponse(
+          authResponse.copyWith(
+            accessToken: authResponse.accessToken,
+            refreshToken: refreshToken,
+          ),
+        );
 
         l.i('HttpRespInterceptor', 'token刷新成功');
         _isRefreshing = false;

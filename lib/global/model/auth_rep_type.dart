@@ -14,6 +14,15 @@ class AuthResponse {
       _$AuthResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthResponseToJson(this);
+
+  AuthResponse copyWith(
+      {String? accessToken, String? refreshToken, Account? account}) {
+    return AuthResponse(
+      accessToken: accessToken ?? this.accessToken,
+      refreshToken: refreshToken ?? this.refreshToken,
+      account: account,
+    );
+  }
 }
 
 @JsonSerializable()
