@@ -383,7 +383,16 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
     }
 
     try {
-      final jsonMap = jsonDecode(vehicleInfoJson);
+      String jsonStr = vehicleInfoJson;
+      // 兼容新的格式：原始字符串|||JSON字符串
+      if (vehicleInfoJson.contains('|||')) {
+        final parts = vehicleInfoJson.split('|||');
+        if (parts.length > 1) {
+          jsonStr = parts[1];
+        }
+      }
+
+      final jsonMap = jsonDecode(jsonStr);
       return VehicleModel.fromJson(jsonMap);
     } catch (e) {
       return null;

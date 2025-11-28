@@ -17,6 +17,7 @@ class OilPickupReceiptCard extends StatelessWidget {
   final String oilAmount;
   final String dispatchContent;
   final ValueChanged<String> onCopyWithdrawNo;
+  final bool showCopyIcon;
 
   const OilPickupReceiptCard({
     Key? key,
@@ -26,6 +27,7 @@ class OilPickupReceiptCard extends StatelessWidget {
     required this.oilAmount,
     required this.dispatchContent,
     required this.onCopyWithdrawNo,
+    this.showCopyIcon = true,
   }) : super(key: key);
 
   @override
@@ -188,18 +190,19 @@ class OilPickupReceiptCard extends StatelessWidget {
                 ),
               ),
             ),
-            IconButton(
-              onPressed: () => onCopyWithdrawNo(withdrawNo),
-              icon: Icon(
-                Icons.copy_outlined,
-                size: AppSizes.setWidth(18),
-                color: CustomAppColor.of(context).txtPurple,
+            if (showCopyIcon)
+              IconButton(
+                onPressed: () => onCopyWithdrawNo(withdrawNo),
+                icon: Icon(
+                  Icons.copy_outlined,
+                  size: AppSizes.setWidth(18),
+                  color: CustomAppColor.of(context).txtPurple,
+                ),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                splashRadius: AppSizes.setWidth(18),
+                tooltip: '复制提油单号',
               ),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-              splashRadius: AppSizes.setWidth(18),
-              tooltip: '复制提油单号',
-            ),
           ],
         ),
       ],

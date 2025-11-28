@@ -11,3 +11,5 @@ Currently, the system only sends the parsed JSON object for vehicle information.
 - Affected specs: `oil-pickup`
 - Affected code:
     - `lib/pages/oil_pickup_detail/controller.dart`
+    - `lib/pages/pickup_order_list/widgets/pickup_order_list_item.dart`
+    - `lib/pages/pickup_order_detail/widgets/pickup_order_detail_screen.dart`
