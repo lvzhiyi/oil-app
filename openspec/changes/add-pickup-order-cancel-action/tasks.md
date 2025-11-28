@@ -1,4 +1,0 @@
-- [ ] Update `WithdrawStatus` enum in `lib/global/enum/common.dart` to include `cancelled`.
-- [ ] Add `cancelWithdraw` method to `OilPickupService` in `lib/pages/oil_pickup/service/oil_pickup_service.dart`.
-- [ ] Add `cancelOrder` method to `PickupOrderDetailCtrl` in `lib/pages/pickup_order_detail/controller.dart`.
-- [ ] Add "Cancel Order" button to `PickupOrderDetailScreen` in `lib/pages/pickup_order_detail/widgets/pickup_order_detail_screen.dart`.
