@@ -1,4 +1,4 @@
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: 库存列表项组件
 系统 SHALL 提供库存列表项组件，用于展示单个库存信息，采用现代化的扁平设计风格。

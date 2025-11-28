@@ -336,3 +336,98 @@ The system SHALL allow users to regenerate and save the pickup certificate image
 - **AND** JSON字符串应包含所有解析到的车辆信息字段
 - **AND** 即使某些字段为空，也应包含在JSON中（值为null或空字符串）
 
+### Requirement: 库存列表项组件
+系统 SHALL 提供库存列表项组件，用于展示单个库存信息，采用现代化的扁平设计风格。
+
+#### Scenario: 显示库存卡片头部信息
+- **WHEN** 系统渲染库存列表项
+- **THEN** 组件应显示卡片头部区域
+- **AND** 头部左侧应显示油库图标和油库名称
+- **AND** 头部右侧应显示位置信息（如果API提供）
+- **AND** 头部和主体之间应使用虚线分割线分隔
+
+#### Scenario: 显示油品徽章
+- **WHEN** 系统渲染库存列表项
+- **THEN** 组件应在卡片主体左侧显示油品徽章
+- **AND** 徽章尺寸应为52x52像素，圆角12px
+- **AND** 徽章应显示油品编号（如 #0、#95）和名称（柴油/汽油）
+- **AND** 柴油应使用紫色主题（背景 #EEECFC，文字 #7165E3）
+- **AND** 汽油应使用橙色主题（背景 #FFF7ED，文字 #F59E0B）
+- **AND** 编号字体应为18px粗体，名称字体应为11px
+
+#### Scenario: 显示库存量信息
+- **WHEN** 系统渲染库存列表项
+- **THEN** 组件应在卡片主体中间显示库存量
+- **AND** 库存量数字应使用大号字体（26px，等宽字体）
+- **AND** 单位"吨"应使用12px字体
+- **AND** 数字和单位应基线对齐
+- **AND** 库存量上方应显示"当前持有"标签（12px灰色文字）
+
+#### Scenario: 显示库存状态标签
+- **WHEN** 系统渲染库存列表项
+- **AND** 库存量大于等于5吨
+- **THEN** 组件应显示"库存充足"标签（绿色圆点 + 绿色文字）
+- **WHEN** 系统渲染库存列表项
+- **AND** 库存量大于0但小于5吨
+- **THEN** 组件应显示"库存紧张"标签（橙色圆点 + 橙色文字）
+- **WHEN** 系统渲染库存列表项
+- **AND** 库存量小于等于0
+- **THEN** 组件应显示"暂无库存"标签（灰色圆点 + 灰色文字）或不显示标签
+
+#### Scenario: 显示操作按钮
+- **WHEN** 系统渲染库存列表项
+- **AND** 库存量大于0
+- **THEN** 组件应在卡片主体右侧显示"去提油"按钮
+- **AND** 按钮应为圆角20px（pill形状）
+- **AND** 按钮背景应为紫色（#7165E3），文字为白色
+- **AND** 按钮应具有阴影效果（紫色40%透明度）
+- **WHEN** 系统渲染库存列表项
+- **AND** 库存量小于等于0
+- **THEN** 组件应显示禁用状态的按钮（灰色背景，灰色文字，不可点击）
+
+#### Scenario: 卡片样式
+- **WHEN** 系统渲染库存列表项
+- **THEN** 卡片应具有以下样式：
+- **AND** 圆角：16px
+- **AND** 内边距：16px
+- **AND** 背景色：白色
+- **AND** 阴影：弱阴影（0 2px 8px rgba(0,0,0,0.02)）
+- **AND** 边框：1px 浅色边框（rgba(0,0,0,0.03)）
+- **AND** 列表项之间间距：12px
+
+#### Scenario: 点击列表项
+- **WHEN** 用户点击库存列表项（或点击"去提油"按钮）
+- **AND** 库存量大于0
+- **THEN** 组件应触发点击回调
+- **AND** 应传递当前库存的信息
+- **AND** 系统应跳转到库存详情提油页面
+
+### Requirement: Vehicle Information Entry
+The system SHALL provide a structured form for entering vehicle and driver information, supported by an intelligent text parser.
+
+#### Scenario: Manual Entry
+- **WHEN** the user opens the Oil Pickup Detail page
+- **THEN** a structured form SHALL be displayed with fields for:
+  - Driver Name
+  - Plate Number (Vehicle No.)
+  - ID Card Number
+  - Phone Number
+  - Oil Amount (Ton)
+- **AND** all fields SHALL be manually editable.
+
+#### Scenario: Intelligent Parsing (Auto-Fill)
+- **WHEN** the user pastes vehicle dispatch information into the "Intelligent Parse" area and triggers identification
+- **THEN** the system SHALL parse the text.
+- **AND** automatically populate the corresponding fields in the structured form.
+- **AND** keep the form editable for user corrections.
+
+### Requirement: Validation
+The system SHALL validate vehicle information before generating a pickup certificate.
+
+#### Scenario: Missing Required Fields
+- **WHEN** the user clicks "Generate Certificate"
+- **AND** one or more required fields (Driver Name, Plate Number, ID Card) are empty
+- **THEN** the system SHALL prevent submission.
+- **AND** highlight the empty fields with a visual error indicator (Inline Validation).
+- **AND** display a Toast warning indicating the validation failure.
+
