@@ -7,6 +7,8 @@ import 'package:oil_business_app/static/img.dart';
 import 'package:oil_business_app/utils/pt.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
+import 'package:easy_refresh/easy_refresh.dart';
+import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
 
 class InventoryListScreen extends StatefulWidget {
   final OilPickupState state;
@@ -23,30 +25,26 @@ class InventoryListScreen extends StatefulWidget {
 }
 
 class _InventoryListScreenState extends State<InventoryListScreen> {
-  final ScrollController _scrollController = ScrollController();
+  late EasyRefreshController _refreshController;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    _refreshController = EasyRefreshController(
+      controlFinishRefresh: true,
+      controlFinishLoad: true,
+    );
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _refreshController.dispose();
     super.dispose();
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      widget.controller.loadMoreInventories();
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.state.isLoading) {
+    if (widget.state.isLoading && widget.state.inventories.isEmpty) {
       return Center(
         child: CircularProgressIndicator(
           color: CustomAppColor.of(context).btnPurple,
@@ -54,7 +52,7 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
       );
     }
 
-    if (widget.state.errorMessage != null) {
+    if (widget.state.errorMessage != null && widget.state.inventories.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -64,7 +62,7 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
               textColor: CustomAppColor.of(context).txtGrey,
             ),
             TextButton(
-              onPressed: widget.controller.loadInventories,
+              onPressed: () => widget.controller.loadInventories(isRefresh: true),
               child: Text('重试'),
             ),
           ],
@@ -72,52 +70,46 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
       );
     }
 
-    if (widget.state.inventories.isEmpty) {
-      return _buildEmptyState(context);
+    if (widget.state.inventories.isEmpty && !widget.state.isLoading) {
+      return PullOrRefreshEasy(
+        refreshController: _refreshController,
+        onRefresh: () async {
+          await widget.controller.loadInventories(isRefresh: true);
+          _refreshController.finishRefresh();
+        },
+        child: _buildEmptyState(context),
+      );
     }
 
-    return ListView.builder(
-      controller: _scrollController,
-      padding: EdgeInsets.symmetric(
-        horizontal: pt(12),
-        vertical: pt(12),
-      ),
-      itemCount: widget.state.inventories.length + 1,
-      itemBuilder: (context, index) {
-        if (index == widget.state.inventories.length) {
-          return _buildLoadingMoreIndicator(context);
-        }
-        final inventory = widget.state.inventories[index];
-        return InventoryItem(
-          inventory: inventory,
-          onTap: () => widget.controller.navigateToDetail(context, inventory),
-        );
+    return PullOrRefreshEasy(
+      refreshController: _refreshController,
+      onRefresh: () async {
+        await widget.controller.loadInventories(isRefresh: true);
+        _refreshController.finishRefresh();
       },
-    );
-  }
-
-  Widget _buildLoadingMoreIndicator(BuildContext context) {
-    if (widget.state.isLoadingMore) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-        child: Center(
-            child: CircularProgressIndicator(
-          strokeWidth: 2,
-          color: CustomAppColor.of(context).btnPurple,
-        )),
-      );
-    }
-    if (!widget.state.hasMore && widget.state.inventories.isNotEmpty) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-        child: CommonText(
-          text: '没有更多库存了',
-          textColor: CustomAppColor.of(context).txtGrey,
-          fontSize: AppSizes.setFontSize(12),
+      onLoading: () async {
+        await widget.controller.loadMoreInventories();
+        if (!widget.state.hasMore) {
+          _refreshController.finishLoad(IndicatorResult.noMore);
+        } else {
+          _refreshController.finishLoad();
+        }
+      },
+      child: ListView.builder(
+        padding: EdgeInsets.symmetric(
+          horizontal: pt(12),
+          vertical: pt(12),
         ),
-      );
-    }
-    return SizedBox.shrink();
+        itemCount: widget.state.inventories.length,
+        itemBuilder: (context, index) {
+          final inventory = widget.state.inventories[index];
+          return InventoryItem(
+            inventory: inventory,
+            onTap: () => widget.controller.navigateToDetail(context, inventory),
+          );
+        },
+      ),
+    );
   }
 
   Widget _buildEmptyState(BuildContext context) {

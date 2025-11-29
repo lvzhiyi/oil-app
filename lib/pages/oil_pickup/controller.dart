@@ -14,9 +14,12 @@ class OilPickupCtrl extends Cubit<OilPickupState> {
 
   static const int _pageSize = 10;
 
-  Future<void> loadInventories() async {
+  Future<void> loadInventories({bool isRefresh = false}) async {
     emit(state.copyWith(
-        isLoading: true, errorMessage: null, currentPage: 1, inventories: []));
+        isLoading: true,
+        errorMessage: null,
+        currentPage: 1,
+        inventories: isRefresh ? state.inventories : []));
 
     try {
       final response = await oilPickupService.getInventories(
