@@ -262,6 +262,8 @@ class _OrdersScreenState extends State<OrdersScreen>
         order.status?.value == OrderStatus.PendingPayment.value;
     final isPaid = order.status?.value == OrderStatus.PaymentUploaded.value;
 
+    final isComplete = order.status?.value == OrderStatus.Completed.value;
+
     return GestureDetector(
       onTap: () {
         BaseRouter.push(
@@ -432,7 +434,7 @@ class _OrdersScreenState extends State<OrdersScreen>
               ),
             ),
             // 底部按钮
-            if (!isCancelled || isPaid)
+            if ((!isCancelled && !isComplete) || isPaid)
               Padding(
                 padding: EdgeInsets.only(top: AppSizes.setHeight(4)),
                 child: Row(
@@ -476,7 +478,7 @@ class _OrdersScreenState extends State<OrdersScreen>
                   ],
                 ),
               ),
-            if (isCancelled)
+            if (isCancelled || isComplete)
               Padding(
                 padding: EdgeInsets.only(top: AppSizes.setHeight(4)),
                 child: Row(
