@@ -8,6 +8,7 @@ import 'package:oil_business_app/pages/pay_order_list/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/static/icon.dart';
+import 'package:oil_business_app/utils/fuel_type_helper.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
@@ -326,29 +327,30 @@ class _OrdersScreenState extends State<OrdersScreen>
                       Row(
                         children: [
                           CommonText(
-                            text: order.fuelType ?? '',
+                            /// 油品类型
+                            text: FuelTypeHelper.getDisplayName(order.fuelType),
                             fontSize: AppSizes.setFontSize(16),
                             fontWeight: FontWeight.w700,
                             textColor: isCancelled
                                 ? const Color(0xFF6B7280)
                                 : const Color(0xFF1F2937),
                           ),
-                          SizedBox(width: AppSizes.setWidth(6)),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: AppSizes.setWidth(4),
-                              vertical: AppSizes.setHeight(1),
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF3F4F6),
-                              borderRadius: BorderRadius.circular(3),
-                            ),
-                            child: CommonText(
-                              text: '成品油',
-                              fontSize: AppSizes.setFontSize(10),
-                              textColor: const Color(0xFF6B7280),
-                            ),
-                          ),
+                          // SizedBox(width: AppSizes.setWidth(6)),
+                          // Container(
+                          //   padding: EdgeInsets.symmetric(
+                          //     horizontal: AppSizes.setWidth(4),
+                          //     vertical: AppSizes.setHeight(1),
+                          //   ),
+                          //   decoration: BoxDecoration(
+                          //     color: const Color(0xFFF3F4F6),
+                          //     borderRadius: BorderRadius.circular(3),
+                          //   ),
+                          //   child: CommonText(
+                          //     text: '成品油',
+                          //     fontSize: AppSizes.setFontSize(10),
+                          //     textColor: const Color(0xFF6B7280),
+                          //   ),
+                          // ),
                         ],
                       ),
                       SizedBox(height: AppSizes.setHeight(6)),
@@ -458,7 +460,7 @@ class _OrdersScreenState extends State<OrdersScreen>
                           );
                         },
                       ),
-                    ] else if (isPaid) ...[
+                    ] else if (!isCancelled) ...[
                       _buildActionButton(
                         text: '查看详情',
                         isOutline: false,
