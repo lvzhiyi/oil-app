@@ -142,7 +142,7 @@ class InventoryItem extends StatelessWidget {
                         ],
                       ),
                       Gap(pt(6)),
-                      if (!isOutOfStock) _buildStockStatusTag(isLowStock),
+                      // if (!isOutOfStock) _buildStockStatusTag(isLowStock),
                     ],
                   ),
                 ),
