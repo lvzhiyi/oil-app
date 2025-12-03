@@ -173,7 +173,7 @@ class OilPickupReceiptCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '提油单号 / NO.',
+          '提油单号',
           style: TextStyle(
             fontSize: AppSizes.setFontSize(12),
             fontWeight: FontWeight.w500,
