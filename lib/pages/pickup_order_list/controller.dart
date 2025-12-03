@@ -54,7 +54,12 @@ class PickupOrderListCtrl extends Cubit<PickupOrderListState> {
       // 根据标签索引确定状态筛选条件
       // tabIndex 0: 待提油 (pending_pickup)
       // tabIndex 1: 已完成 (completed)
-      final status = state.tabIndex == 0 ? 'pending_pickup' : 'completed';
+      // tabIndex 2: 已取消 (canceled)
+      final status = state.tabIndex == 0
+          ? 'pending_pickup'
+          : state.tabIndex == 1
+              ? 'completed'
+              : 'canceled';
 
       final response = await oilPickupService.getWithdrawOrderList(
         status: status,

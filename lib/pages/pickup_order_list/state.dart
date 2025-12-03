@@ -1,7 +1,7 @@
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 
 class PickupOrderListState {
-  /// 当前标签索引 (0: 待提油, 1: 已完成)
+  /// 当前标签索引 (0: 待提油, 1: 已完成, 2: 已取消)
   final int tabIndex;
 
   /// 订单列表

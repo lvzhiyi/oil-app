@@ -144,6 +144,7 @@ class _PickupOrderListViewState extends State<PickupOrderListView>
     final ctrl = context.read<PickupOrderListCtrl>();
     final isPendingSelected = widget.state.tabIndex == 0;
     final isCompletedSelected = widget.state.tabIndex == 1;
+    final isCanceledSelected = widget.state.tabIndex == 2;
 
     return Container(
       color: CustomAppColor.of(context).white,
@@ -175,6 +176,14 @@ class _PickupOrderListViewState extends State<PickupOrderListView>
                 label: '已完成',
                 isSelected: isCompletedSelected,
                 onTap: () => ctrl.switchTab(1),
+              ),
+            ),
+            Expanded(
+              child: _buildFilterTab(
+                context: context,
+                label: '已取消',
+                isSelected: isCanceledSelected,
+                onTap: () => ctrl.switchTab(2),
               ),
             ),
           ],
