@@ -119,7 +119,7 @@ class WithdrawOrderModel {
 /// 提油请求
 @JsonSerializable()
 class WithdrawRequest {
-  final int withdrawTon;
+  final double withdrawTon;
   final int stationId;
   final String vehicleInfo;
 

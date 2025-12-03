@@ -114,7 +114,6 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
     }
 
     final oilAmountDouble = double.parse(finalOilAmount);
-    final oilAmountInt = oilAmountDouble.toInt();
 
     emit(state.copyWith(isLoading: true, errorMessage: null));
 
@@ -145,7 +144,7 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
       }
       // print('vehicleInfoJson: $vehicleInfoJson');
       final request = WithdrawRequest(
-        withdrawTon: oilAmountInt,
+        withdrawTon: oilAmountDouble,
         stationId: stationId,
         vehicleInfo: vehicleInfoJson,
       );
