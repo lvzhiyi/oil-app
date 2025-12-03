@@ -39,13 +39,9 @@ class StationListCtrl extends Cubit<StationListState> {
     try {
       final pageToLoad = isRefresh ? 1 : state.page + 1;
 
-      // 调用真实 API 获取加油站数据
       final response =
           await appController.getStationStatus(pageToLoad, _pageSize, [
         StationStatus.active,
-        StationStatus.pending_review,
-        StationStatus.rejected,
-        StationStatus.disabled,
       ]);
 
       final newStations = response.list ?? [];
