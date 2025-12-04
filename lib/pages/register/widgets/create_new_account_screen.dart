@@ -169,7 +169,7 @@ class CreateNewAccountScreen extends StatelessWidget {
                       ),
                     ),
                     CommonTextFormField(
-                      name: 'code',
+                      name: 'referralCode',
                       borderColor: const Color(0xFFE5E7EB),
                       fillColor: const Color(0xFFF9FAFB),
                       leadingIcon: Image.asset(

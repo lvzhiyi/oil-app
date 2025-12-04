@@ -1,8 +1,4 @@
-import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:oil_business_app/pages/station_edit/controller.dart';
 import 'package:oil_business_app/pages/station_edit/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
@@ -11,6 +7,7 @@ import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dart';
 import 'package:oil_business_app/widgets/base/textfield/common_city_picker.dart';
+import 'package:oil_business_app/widgets/common/qualification_image_upload.dart';
 
 class StationEditForm extends StatefulWidget {
   final StationEditState state;
@@ -30,8 +27,6 @@ class _StationEditFormState extends State<StationEditForm> {
   late TextEditingController _nameController;
   late TextEditingController _cityController;
   late TextEditingController _addressDetailController;
-  late TextEditingController _businessLicenseController;
-  late TextEditingController _fuelRetailPermitController;
 
   @override
   void initState() {
@@ -42,10 +37,6 @@ class _StationEditFormState extends State<StationEditForm> {
     );
     _addressDetailController =
         TextEditingController(text: widget.state.addressDetail);
-    _businessLicenseController =
-        TextEditingController(text: widget.state.businessLicenseUrl);
-    _fuelRetailPermitController =
-        TextEditingController(text: widget.state.fuelRetailPermitUrl);
   }
 
   @override
@@ -61,13 +52,6 @@ class _StationEditFormState extends State<StationEditForm> {
     }
     if (oldWidget.state.addressDetail != widget.state.addressDetail) {
       _addressDetailController.text = widget.state.addressDetail;
-    }
-    if (oldWidget.state.businessLicenseUrl != widget.state.businessLicenseUrl) {
-      _businessLicenseController.text = widget.state.businessLicenseUrl;
-    }
-    if (oldWidget.state.fuelRetailPermitUrl !=
-        widget.state.fuelRetailPermitUrl) {
-      _fuelRetailPermitController.text = widget.state.fuelRetailPermitUrl;
     }
   }
 
@@ -88,8 +72,6 @@ class _StationEditFormState extends State<StationEditForm> {
     _nameController.dispose();
     _cityController.dispose();
     _addressDetailController.dispose();
-    _businessLicenseController.dispose();
-    _fuelRetailPermitController.dispose();
     super.dispose();
   }
 
@@ -199,9 +181,8 @@ class _StationEditFormState extends State<StationEditForm> {
                   _buildInputWrapper(
                     context: context,
                     label: '营业执照',
-                    child: _buildImageUpload(
-                      context: context,
-                      controller: _businessLicenseController,
+                    child: QualificationImageUpload(
+                      imageUrl: widget.state.businessLicenseUrl,
                       hintText: '点击上传照片',
                       onChanged: (value) {
                         widget.controller.updateBusinessLicenseUrl(value ?? '');
@@ -211,9 +192,8 @@ class _StationEditFormState extends State<StationEditForm> {
                   _buildInputWrapper(
                     context: context,
                     label: '成品油零售许可',
-                    child: _buildImageUpload(
-                      context: context,
-                      controller: _fuelRetailPermitController,
+                    child: QualificationImageUpload(
+                      imageUrl: widget.state.fuelRetailPermitUrl,
                       hintText: '点击上传照片',
                       onChanged: (value) {
                         widget.controller
@@ -331,135 +311,4 @@ class _StationEditFormState extends State<StationEditForm> {
     );
   }
 
-  Widget _buildImageUpload({
-    required BuildContext context,
-    required TextEditingController controller,
-    required String hintText,
-    required ValueChanged<String?> onChanged,
-  }) {
-    final colors = CustomAppColor.of(context);
-    final hasImage = controller.text.isNotEmpty;
-
-    return GestureDetector(
-      onTap: () {
-        if (!hasImage) {
-          _pickImage(controller, onChanged);
-        } else {
-          _pickImage(controller, onChanged);
-        }
-      },
-      child: Container(
-        height: AppSizes.setHeight(140),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: hasImage ? Colors.transparent : const Color(0xFFF9FAFB),
-          border: Border.all(
-            color: const Color(0xFFD1D5DB),
-            width: 1,
-          ),
-          borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
-        ),
-        child: hasImage
-            ? Stack(
-                fit: StackFit.expand,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
-                    child: controller.text.startsWith('http')
-                        ? CachedNetworkImage(
-                            imageUrl: controller.text,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
-                              color: const Color(0xFFF9FAFB),
-                              child: const Center(
-                                  child: CircularProgressIndicator()),
-                            ),
-                            errorWidget: (context, url, error) => Container(
-                              color: const Color(0xFFF9FAFB),
-                              child: Icon(Icons.error, color: colors.txtGrey),
-                            ),
-                          )
-                        : Image.file(
-                            File(controller.text),
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Container(
-                              color: const Color(0xFFF9FAFB),
-                              child: Icon(Icons.error, color: colors.txtGrey),
-                            ),
-                          ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: AppSizes.setHeight(6),
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.6),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(AppSizes.setWidth(12)),
-                          bottomRight: Radius.circular(AppSizes.setWidth(12)),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.edit,
-                            size: AppSizes.setFontSize(12),
-                            color: Colors.white,
-                          ),
-                          SizedBox(width: AppSizes.setWidth(4)),
-                          CommonText(
-                            text: '点击更换',
-                            fontSize: AppSizes.setFontSize(12),
-                            textColor: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            : Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.image_outlined,
-                      size: AppSizes.setFontSize(32),
-                      color: const Color(0xFFD1D5DB),
-                    ),
-                    SizedBox(height: AppSizes.setHeight(8)),
-                    CommonText(
-                      text: hintText,
-                      fontSize: AppSizes.setFontSize(12),
-                      textColor: const Color(0xFF9CA3AF),
-                    ),
-                  ],
-                ),
-              ),
-      ),
-    );
-  }
-
-  Future<void> _pickImage(
-    TextEditingController controller,
-    ValueChanged<String?> onChanged,
-  ) async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 1920,
-      maxHeight: 1080,
-      imageQuality: 85,
-    );
-    if (image != null) {
-      controller.text = image.path;
-      onChanged(image.path);
-    }
-  }
 }
