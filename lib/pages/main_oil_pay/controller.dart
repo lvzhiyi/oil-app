@@ -30,21 +30,27 @@ class OilPayCtrl extends Cubit<MainOilPayState> {
       {bool loadMore = false, bool onRefresh = false}) async {
     try {
       if (!onRefresh && !loadMore) {
-        emit(state.copyWith(pageStatus: PageStatus.loading));
+        if (!isClosed) {
+          emit(state.copyWith(pageStatus: PageStatus.loading));
+        }
       }
       final response = await oilOrderService.getOilStoreList(
         page: pageNum,
         pageSize: pageSize,
       );
 
-      emit(state.copyWith(
-          depotList: response.list,
-          pageStatus: response.list?.isEmpty ?? true
-              ? PageStatus.empty
-              : PageStatus.success));
+      if (!isClosed) {
+        emit(state.copyWith(
+            depotList: response.list,
+            pageStatus: response.list?.isEmpty ?? true
+                ? PageStatus.empty
+                : PageStatus.success));
+      }
       return response;
     } catch (e) {
-      emit(state.copyWith(pageStatus: PageStatus.error));
+      if (!isClosed) {
+        emit(state.copyWith(pageStatus: PageStatus.error));
+      }
       return GetOilStoreResponse(list: [], total: 0);
     }
   }
@@ -57,19 +63,23 @@ class OilPayCtrl extends Cubit<MainOilPayState> {
     }
     pageNum++;
     final response = await getOilStoreList(loadMore: true);
-    refreshController.finishLoad(IndicatorResult.success);
-    emit(state.copyWith(
-        depotList: pageNum == 1
-            ? state.depotList
-            : [...state.depotList, ...response.list ?? []],
-        pageStatus: PageStatus.success));
+    if (!isClosed) {
+      refreshController.finishLoad(IndicatorResult.success);
+      emit(state.copyWith(
+          depotList: pageNum == 1
+              ? state.depotList
+              : [...state.depotList, ...response.list ?? []],
+          pageStatus: PageStatus.success));
+    }
   }
 
   /// 刷新
   void onRefresh() async {
     pageNum = 1;
     await getOilStoreList(onRefresh: true);
-    refreshController.finishRefresh(IndicatorResult.success);
+    if (!isClosed) {
+      refreshController.finishRefresh(IndicatorResult.success);
+    }
   }
 }
 

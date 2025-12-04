@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:gap/gap.dart';
@@ -103,9 +104,24 @@ class OilPurchaseDetailView extends StatelessWidget {
                   ),
                 ),
                 Gap(pt(8)),
-                const CommonTextFormField(
+                CommonTextFormField(
                   name: 'purchaseTon',
                   hintText: '请输入购买量',
+                  keyboardType: TextInputType.number,
+                  inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                  validators: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '请输入购买量';
+                    }
+                    final intValue = int.tryParse(value);
+                    if (intValue == null) {
+                      return '购买量必须为整数';
+                    }
+                    if (intValue <= 0) {
+                      return '购买量必须大于0';
+                    }
+                    return null;
+                  },
                 ),
 
                 Gap(pt(16)),

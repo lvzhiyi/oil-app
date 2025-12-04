@@ -50,7 +50,7 @@ class _MainOilPayViewState extends State<MainOilPayView> {
       child: PullOrRefreshEasy(
         refreshController: _refreshController,
         onRefresh: () async {
-          context.read<OilPayCtrl>().onLoading();
+          context.read<OilPayCtrl>().onRefresh();
           _refreshController.finishRefresh();
         },
         onLoading: () async {
