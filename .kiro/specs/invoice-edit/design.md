@@ -98,7 +98,11 @@ class InvoiceEditState {
 
 ### 4. InvoiceEditForm (widgets/invoice_edit_form.dart)
 
-表单UI组件，包含所有输入字段和保存按钮。
+表单UI组件，包含所有输入字段和保存按钮。新增以下UI组件：
+
+- **StationRelationCard**: 显示关联加油站信息的卡片
+- **InvoiceTypeSegmentedControl**: 发票类型分段控制器
+- **ModernFormField**: 带有现代化样式的表单输入框
 
 ### 5. StationService 扩展
 
@@ -162,6 +166,79 @@ class UpdateInvoiceRequest {
 | special_vat | 增值税专用发票 |
 | normal_vat | 增值税普通发票 |
 
+### StationInfo (用于关联卡片显示)
+
+| 字段 | 类型 | 描述 |
+|------|------|------|
+| stationId | int | 加油站ID |
+| stationName | String | 加油站名称 |
+
+## UI Design Specifications
+
+### 颜色规范
+
+| 用途 | 颜色值 | 说明 |
+|------|--------|------|
+| 主色调 | #7165E3 | 紫色，用于按钮、链接、高亮 |
+| 页面背景 | #F5F7FA | 浅灰色 |
+| 卡片背景 | #FFFFFF | 白色 |
+| 输入框背景 | #F9FAFB | 浅灰色 |
+| 边框颜色 | #E5E7EB | 灰色 |
+| 主文本 | #1F2937 | 深灰色 |
+| 次要文本 | #6B7280 | 中灰色 |
+| 关联卡片背景 | #EEECFC | 浅紫色 |
+| 关联卡片边框 | rgba(113, 101, 227, 0.2) | 半透明紫色 |
+| 焦点阴影 | rgba(113, 101, 227, 0.1) | 半透明紫色 |
+
+### 字体规范
+
+| 用途 | 字体 | 说明 |
+|------|------|------|
+| 普通文本 | -apple-system, PingFang SC | 系统默认字体 |
+| 税号/账号 | DIN Alternate, monospace | 等宽字体，提高可读性 |
+
+### 组件样式规范
+
+#### 关联加油站卡片
+- 背景色: #EEECFC
+- 边框: 1px solid rgba(113, 101, 227, 0.2)
+- 圆角: 8px
+- 内边距: 12px 16px
+- 图标: 链接图标，紫色
+- 文字: 13px, 紫色, 加粗
+
+#### 发票类型切换器
+- 容器背景: #F3F4F6
+- 容器圆角: 8px
+- 容器内边距: 4px
+- 按钮圆角: 6px
+- 未选中: 透明背景，灰色文字(#6B7280)
+- 选中: 白色背景，紫色文字(#7165E3)，阴影 0 1px 3px rgba(0,0,0,0.1)
+
+#### 表单输入框
+- 背景色: #F9FAFB
+- 边框: 1px solid #E5E7EB
+- 圆角: 8px
+- 内边距: 12px
+- 字体大小: 15px
+- 焦点状态:
+  - 边框色: #7165E3
+  - 背景色: #FFFFFF
+  - 阴影: 0 0 0 3px rgba(113, 101, 227, 0.1)
+
+#### 分割线
+- 高度: 1px
+- 背景色: #F3F4F6
+- 标签: 12px, 紫色, 加粗
+
+#### 保存按钮
+- 背景色: #7165E3
+- 文字颜色: #FFFFFF
+- 圆角: 28px
+- 内边距: 14px
+- 字体大小: 16px, 加粗
+- 点击效果: opacity 0.9
+
 ## Correctness Properties
 
 *A property is a characteristic or behavior that should hold true across all valid executions of a system-essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
@@ -181,6 +258,10 @@ class UpdateInvoiceRequest {
 ### Property 4: API Request Data Integrity
 *For any* valid form state, when save is called, the API request body SHALL contain all form field values exactly as stored in the state.
 **Validates: Requirements 4.1**
+
+### Property 5: Invoice Type Selection State
+*For any* invoice type value (special_vat or normal_vat), when the user selects that type, the state SHALL be updated to reflect the selected type and the UI SHALL highlight only the selected option.
+**Validates: Requirements 7.2**
 
 ## Error Handling
 

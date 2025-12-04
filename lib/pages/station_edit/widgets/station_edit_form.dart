@@ -334,7 +334,10 @@ class _StationEditFormState extends State<StationEditForm> {
         onTap: () {
           BaseRouter.push(
             url: AppPage.invoiceEditPage.path,
-            extra: {'stationId': widget.state.station?.id},
+            extra: {
+              'stationId': widget.state.station?.id,
+              'stationName': widget.state.station?.stationName,
+            },
           );
         },
         child: Row(

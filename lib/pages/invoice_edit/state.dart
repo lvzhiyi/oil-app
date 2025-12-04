@@ -2,6 +2,7 @@ import 'package:oil_business_app/global/model/invoice_info.dart';
 
 class InvoiceEditState {
   final int stationId;
+  final String stationName;
   final String invoiceTitle;
   final String taxNumber;
   final String bankName;
@@ -16,13 +17,14 @@ class InvoiceEditState {
 
   InvoiceEditState({
     required this.stationId,
+    this.stationName = '',
     this.invoiceTitle = '',
     this.taxNumber = '',
     this.bankName = '',
     this.bankAccount = '',
     this.companyAddress = '',
     this.companyPhone = '',
-    this.invoiceType = '',
+    this.invoiceType = 'special_vat', // 默认选中增值税专用发票
     this.isLoading = false,
     this.hasError = false,
     this.errorMessage,
@@ -31,6 +33,7 @@ class InvoiceEditState {
 
   InvoiceEditState copyWith({
     int? stationId,
+    String? stationName,
     String? invoiceTitle,
     String? taxNumber,
     String? bankName,
@@ -45,6 +48,7 @@ class InvoiceEditState {
   }) {
     return InvoiceEditState(
       stationId: stationId ?? this.stationId,
+      stationName: stationName ?? this.stationName,
       invoiceTitle: invoiceTitle ?? this.invoiceTitle,
       taxNumber: taxNumber ?? this.taxNumber,
       bankName: bankName ?? this.bankName,

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:oil_business_app/pages/invoice_edit/controller.dart';
 import 'package:oil_business_app/pages/invoice_edit/state.dart';
+import 'package:oil_business_app/pages/invoice_edit/widgets/station_relation_card.dart';
+import 'package:oil_business_app/pages/invoice_edit/widgets/invoice_type_segmented_control.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
-import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dart';
 
 class InvoiceEditForm extends StatefulWidget {
   final InvoiceEditState state;
@@ -105,203 +106,45 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return SafeArea(
-      bottom: true,
-      top: false,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: AppSizes.setHeight(16)),
-              _buildFormSection(
-                context: context,
-                title: '发票信息',
-                children: [
-                  _buildInputWrapper(
-                    context: context,
-                    label: '发票抬头',
-                    child: CommonTextFormField(
-                      controller: _invoiceTitleController,
-                      borderColor: CustomAppColor.of(context).textFieldBorder,
-                      fillColor: const Color(0xFFF9FAFB),
-                      radius: 10,
-                      hintText: '请输入发票抬头',
-                      onChanged: (value) =>
-                          widget.controller.updateInvoiceTitle(value ?? ''),
-                    ),
-                  ),
-                  _buildInputWrapper(
-                    context: context,
-                    label: '税号',
-                    child: CommonTextFormField(
-                      controller: _taxNumberController,
-                      borderColor: CustomAppColor.of(context).textFieldBorder,
-                      fillColor: const Color(0xFFF9FAFB),
-                      radius: 10,
-                      hintText: '请输入税号',
-                      onChanged: (value) =>
-                          widget.controller.updateTaxNumber(value ?? ''),
-                    ),
-                  ),
-                  _buildInputWrapper(
-                    context: context,
-                    label: '开户银行',
-                    child: CommonTextFormField(
-                      controller: _bankNameController,
-                      borderColor: CustomAppColor.of(context).textFieldBorder,
-                      fillColor: const Color(0xFFF9FAFB),
-                      radius: 10,
-                      hintText: '请输入开户银行',
-                      onChanged: (value) =>
-                          widget.controller.updateBankName(value ?? ''),
-                    ),
-                  ),
-                  _buildInputWrapper(
-                    context: context,
-                    label: '银行账号',
-                    child: CommonTextFormField(
-                      controller: _bankAccountController,
-                      borderColor: CustomAppColor.of(context).textFieldBorder,
-                      fillColor: const Color(0xFFF9FAFB),
-                      radius: 10,
-                      hintText: '请输入银行账号',
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) =>
-                          widget.controller.updateBankAccount(value ?? ''),
-                    ),
-                  ),
-                  _buildInputWrapper(
-                    context: context,
-                    label: '公司地址',
-                    child: CommonTextFormField(
-                      controller: _companyAddressController,
-                      borderColor: CustomAppColor.of(context).textFieldBorder,
-                      fillColor: const Color(0xFFF9FAFB),
-                      radius: 10,
-                      hintText: '请输入公司地址',
-                      onChanged: (value) =>
-                          widget.controller.updateCompanyAddress(value ?? ''),
-                    ),
-                  ),
-                  _buildInputWrapper(
-                    context: context,
-                    label: '公司电话',
-                    child: CommonTextFormField(
-                      controller: _companyPhoneController,
-                      borderColor: CustomAppColor.of(context).textFieldBorder,
-                      fillColor: const Color(0xFFF9FAFB),
-                      radius: 10,
-                      hintText: '请输入公司电话',
-                      keyboardType: TextInputType.phone,
-                      onChanged: (value) =>
-                          widget.controller.updateCompanyPhone(value ?? ''),
-                    ),
-                  ),
-                  _buildInputWrapper(
-                    context: context,
-                    label: '发票类型',
-                    child: _buildInvoiceTypeDropdown(context),
-                  ),
-                ],
-              ),
-              if (widget.state.hasError && widget.state.errorMessage != null)
-                Container(
-                  padding: EdgeInsets.all(AppSizes.setWidth(12)),
-                  margin: EdgeInsets.only(top: AppSizes.setHeight(16)),
-                  decoration: BoxDecoration(
-                    color:
-                        CustomAppColor.of(context).red.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
-                  ),
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: AppSizes.setHeight(16)),
+                StationRelationCard(
+                  stationName: widget.state.stationName,
+                ),
+                SizedBox(height: AppSizes.setHeight(16)),
+                _buildFormCard(context),
+                SizedBox(height: AppSizes.setHeight(16)),
+                Center(
                   child: CommonText(
-                    text: widget.state.errorMessage!,
-                    fontSize: AppSizes.setFontSize(14),
-                    textColor: CustomAppColor.of(context).red,
-                    textAlign: TextAlign.left,
+                    text: '请确保信息与营业执照一致，否则可能导致无法开票',
+                    fontSize: AppSizes.setFontSize(12),
+                    textColor: const Color(0xFF9CA3AF),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-                child: CommonButton(
-                  isLoading: widget.state.isLoading,
-                  btnText: '保存',
-                  radius: 28,
-                  pVertical: AppSizes.setHeight(14),
-                  fontSize: AppSizes.setFontSize(16),
-                  onTap: () {
-                    widget.controller.save(context);
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInvoiceTypeDropdown(BuildContext context) {
-    final invoiceTypes = [
-      {'value': 'special_vat', 'label': '增值税专用发票'},
-      {'value': 'normal_vat', 'label': '增值税普通发票'},
-    ];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFF9FAFB),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: CustomAppColor.of(context).textFieldBorder,
-        ),
-      ),
-      child: DropdownButtonFormField<String>(
-        initialValue:
-            widget.state.invoiceType.isEmpty ? null : widget.state.invoiceType,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: AppSizes.setWidth(16),
-            vertical: AppSizes.setHeight(12),
-          ),
-          border: InputBorder.none,
-          hintText: '请选择发票类型',
-          hintStyle: TextStyle(
-            color: const Color(0xFF9CA3AF),
-            fontSize: AppSizes.setFontSize(14),
-          ),
-        ),
-        items: invoiceTypes.map((type) {
-          return DropdownMenuItem<String>(
-            value: type['value'],
-            child: CommonText(
-              text: type['label']!,
-              fontSize: AppSizes.setFontSize(14),
-              textColor: CustomAppColor.of(context).txtBlack,
+                SizedBox(height: AppSizes.setHeight(80)),
+              ],
             ),
-          );
-        }).toList(),
-        onChanged: (value) {
-          if (value != null) {
-            widget.controller.updateInvoiceType(value);
-          }
-        },
-      ),
+          ),
+        ),
+        _buildBottomButton(context),
+      ],
     );
   }
 
-  Widget _buildFormSection({
-    required BuildContext context,
-    required String title,
-    required List<Widget> children,
-  }) {
-    final colors = CustomAppColor.of(context);
+  Widget _buildFormCard(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
       padding: EdgeInsets.all(AppSizes.setWidth(20)),
       decoration: BoxDecoration(
-        color: colors.bgContainer,
-        borderRadius: BorderRadius.circular(AppSizes.setWidth(16)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.02),
@@ -313,50 +156,244 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                width: AppSizes.setWidth(4),
-                height: AppSizes.setHeight(14),
-                decoration: BoxDecoration(
-                  color: colors.btnPurple,
-                  borderRadius: BorderRadius.circular(AppSizes.setWidth(2)),
-                ),
-              ),
-              SizedBox(width: AppSizes.setWidth(6)),
-              CommonText(
-                text: title,
-                fontSize: AppSizes.setFontSize(15),
-                fontWeight: FontWeight.w700,
-                textColor: colors.txtBlack,
-              ),
-            ],
+          _buildLabel('发票类型', isRequired: true),
+          SizedBox(height: AppSizes.setHeight(8)),
+          InvoiceTypeSegmentedControl(
+            selectedType: widget.state.invoiceType.isEmpty
+                ? null
+                : widget.state.invoiceType,
+            onTypeChanged: (value) {
+              widget.controller.updateInvoiceType(value);
+            },
           ),
-          SizedBox(height: AppSizes.setHeight(16)),
-          ...children,
+          SizedBox(height: AppSizes.setHeight(24)),
+          _buildField('发票抬头 (公司名称)', _invoiceTitleController, '请输入单位全称',
+              (v) => widget.controller.updateInvoiceTitle(v ?? '')),
+          _buildField('纳税人识别号', _taxNumberController, '15-20位统一社会信用代码',
+              (v) => widget.controller.updateTaxNumber(v ?? ''),
+              isMonospace: true),
+          _buildDivider('银行及地址信息'),
+          _buildField('开户银行', _bankNameController, '如：招商银行成都分行',
+              (v) => widget.controller.updateBankName(v ?? '')),
+          _buildField('银行账号', _bankAccountController, '请输入对公账户号码',
+              (v) => widget.controller.updateBankAccount(v ?? ''),
+              keyboardType: TextInputType.number, isMonospace: true),
+          _buildField('公司地址', _companyAddressController, '请输入公司地址',
+              (v) => widget.controller.updateCompanyAddress(v ?? ''),
+              maxLines: 2),
+          _buildField('公司电话', _companyPhoneController, '请输入预留固定电话或手机号',
+              (v) => widget.controller.updateCompanyPhone(v ?? ''),
+              keyboardType: TextInputType.phone,
+              isMonospace: true,
+              isLast: true),
         ],
       ),
     );
   }
 
-  Widget _buildInputWrapper({
-    required BuildContext context,
-    required String label,
-    required Widget child,
+  Widget _buildField(
+    String label,
+    TextEditingController controller,
+    String hint,
+    Function(String?) onChanged, {
+    TextInputType? keyboardType,
+    bool isMonospace = false,
+    int maxLines = 1,
+    bool isLast = false,
   }) {
     return Container(
-      margin: EdgeInsets.only(bottom: AppSizes.setHeight(20)),
+      margin: EdgeInsets.only(bottom: isLast ? 0 : AppSizes.setHeight(20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CommonText(
-            text: label,
-            fontSize: AppSizes.setFontSize(14),
-            fontWeight: FontWeight.w500,
-            textColor: CustomAppColor.of(context).txtBlack,
-          ),
+          _buildLabel(label, isRequired: true),
           SizedBox(height: AppSizes.setHeight(8)),
-          child,
+          _buildTextField(controller, hint, onChanged,
+              keyboardType: keyboardType,
+              isMonospace: isMonospace,
+              maxLines: maxLines),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+    TextEditingController controller,
+    String hint,
+    Function(String?) onChanged, {
+    TextInputType? keyboardType,
+    bool isMonospace = false,
+    int maxLines = 1,
+  }) {
+    return Focus(
+      child: Builder(
+        builder: (context) {
+          final hasFocus = Focus.of(context).hasFocus;
+          return Container(
+            decoration: BoxDecoration(
+              color: hasFocus ? Colors.white : const Color(0xFFF9FAFB),
+              border: Border.all(
+                color: hasFocus
+                    ? const Color(0xFF7165E3)
+                    : const Color(0xFFE5E7EB),
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
+              boxShadow: hasFocus
+                  ? [
+                      BoxShadow(
+                        color: const Color(0xFF7165E3).withValues(alpha: 0.1),
+                        blurRadius: 0,
+                        spreadRadius: 3,
+                      ),
+                    ]
+                  : null,
+            ),
+            child: TextField(
+              controller: controller,
+              keyboardType: keyboardType,
+              maxLines: maxLines,
+              style: TextStyle(
+                fontSize: AppSizes.setFontSize(15),
+                color: const Color(0xFF1F2937),
+                fontFamily: isMonospace ? 'monospace' : null,
+                letterSpacing: isMonospace ? 0.5 : null,
+              ),
+              decoration: InputDecoration(
+                hintText: hint,
+                hintStyle: TextStyle(
+                  fontSize: AppSizes.setFontSize(15),
+                  color: const Color(0xFF9CA3AF),
+                ),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: AppSizes.setWidth(12),
+                  vertical: AppSizes.setHeight(12),
+                ),
+                border: InputBorder.none,
+              ),
+              onChanged: onChanged,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildBottomButton(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(
+        left: AppSizes.setWidth(16),
+        right: AppSizes.setWidth(16),
+        top: AppSizes.setHeight(12),
+        bottom: AppSizes.setHeight(12) + MediaQuery.of(context).padding.bottom,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(
+            color: const Color(0xFFE5E7EB),
+            width: 1,
+          ),
+        ),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (widget.state.hasError && widget.state.errorMessage != null)
+              Container(
+                padding: EdgeInsets.all(AppSizes.setWidth(12)),
+                margin: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
+                decoration: BoxDecoration(
+                  color: CustomAppColor.of(context).red.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: AppSizes.setWidth(16),
+                      color: CustomAppColor.of(context).red,
+                    ),
+                    SizedBox(width: AppSizes.setWidth(8)),
+                    Expanded(
+                      child: CommonText(
+                        text: widget.state.errorMessage!,
+                        fontSize: AppSizes.setFontSize(13),
+                        textColor: CustomAppColor.of(context).red,
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            CommonButton(
+              isLoading: widget.state.isLoading,
+              btnText: '保存配置',
+              radius: 28,
+              pVertical: AppSizes.setHeight(14),
+              fontSize: AppSizes.setFontSize(16),
+              onTap: () {
+                widget.controller.save(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLabel(String text, {bool isRequired = false}) {
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(
+          fontSize: AppSizes.setFontSize(13),
+          color: const Color(0xFF6B7280),
+          fontWeight: FontWeight.w400,
+        ),
+        children: [
+          TextSpan(text: text),
+          if (isRequired)
+            const TextSpan(
+              text: ' *',
+              style: TextStyle(color: Color(0xFFEF4444)),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDivider(String label) {
+    return Container(
+      margin: EdgeInsets.only(
+        top: AppSizes.setHeight(4),
+        bottom: AppSizes.setHeight(20),
+      ),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.center,
+              child: Container(
+                height: 1,
+                color: const Color(0xFFF3F4F6),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              padding: EdgeInsets.only(right: AppSizes.setWidth(8)),
+              color: Colors.white,
+              child: CommonText(
+                text: label,
+                fontSize: AppSizes.setFontSize(12),
+                fontWeight: FontWeight.w600,
+                textColor: const Color(0xFF7165E3),
+              ),
+            ),
+          ),
         ],
       ),
     );

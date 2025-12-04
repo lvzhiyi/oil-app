@@ -68,3 +68,37 @@
 4. WHEN 用户尝试保存空的开户银行 THEN InvoiceEditPage SHALL 显示"请输入开户银行"错误提示
 5. WHEN 用户尝试保存空的银行账号 THEN InvoiceEditPage SHALL 显示"请输入银行账号"错误提示
 6. WHEN 用户尝试保存非数字的银行账号 THEN InvoiceEditPage SHALL 显示"银行账号格式不正确"错误提示
+
+### Requirement 6
+
+**User Story:** As a 加油站管理员, I want to 看到关联的加油站信息, so that 我可以确认正在为哪个加油站配置发票信息。
+
+#### Acceptance Criteria
+
+1. WHEN InvoiceEditPage 显示时 THEN InvoiceEditPage SHALL 在页面顶部显示关联加油站信息卡片
+2. WHEN 关联加油站信息卡片显示时 THEN InvoiceEditPage SHALL 显示加油站名称
+3. WHEN 关联加油站信息卡片显示时 THEN InvoiceEditPage SHALL 使用紫色主题色和链接图标突出显示
+
+### Requirement 7
+
+**User Story:** As a 加油站管理员, I want to 通过切换按钮选择发票类型, so that 我可以更直观地选择增值税专用发票或普通发票。
+
+#### Acceptance Criteria
+
+1. WHEN InvoiceEditPage 显示发票类型选择时 THEN InvoiceEditPage SHALL 使用分段控制器样式而非下拉菜单
+2. WHEN 用户点击发票类型选项 THEN InvoiceEditPage SHALL 高亮选中的类型并更新状态
+3. WHEN 发票类型切换时 THEN InvoiceEditPage SHALL 提供平滑的视觉过渡效果
+
+### Requirement 8
+
+**User Story:** As a 加油站管理员, I want to 看到现代化的表单设计, so that 我可以获得更好的填写体验。
+
+#### Acceptance Criteria
+
+1. WHEN InvoiceEditPage 显示表单时 THEN InvoiceEditPage SHALL 使用浅灰色背景(#F5F7FA)和白色卡片容器
+2. WHEN 表单输入框获得焦点时 THEN InvoiceEditPage SHALL 显示紫色边框和浅紫色阴影效果
+3. WHEN 显示税号和银行账号字段时 THEN InvoiceEditPage SHALL 使用等宽字体以提高可读性
+4. WHEN 显示必填字段标签时 THEN InvoiceEditPage SHALL 在标签后显示红色星号标记
+5. WHEN 显示银行及地址信息分组时 THEN InvoiceEditPage SHALL 使用分割线和标签进行视觉分组
+6. WHEN 显示保存按钮时 THEN InvoiceEditPage SHALL 使用圆角按钮并固定在底部
+7. WHEN 显示表单底部提示时 THEN InvoiceEditPage SHALL 显示"请确保信息与营业执照一致，否则可能导致无法开票"的灰色提示文字

@@ -10,8 +10,14 @@ import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
 class InvoiceEditCtrl extends Cubit<InvoiceEditState> {
-  InvoiceEditCtrl({required int stationId, InvoiceInfo? invoice})
-      : super(InvoiceEditState(stationId: stationId)) {
+  InvoiceEditCtrl({
+    required int stationId,
+    String? stationName,
+    InvoiceInfo? invoice,
+  }) : super(InvoiceEditState(
+          stationId: stationId,
+          stationName: stationName ?? '',
+        )) {
     if (invoice != null) {
       _initFromInvoice(invoice);
     }
@@ -25,7 +31,7 @@ class InvoiceEditCtrl extends Cubit<InvoiceEditState> {
       bankAccount: invoice.bankAccount ?? '',
       companyAddress: invoice.companyAddress ?? '',
       companyPhone: invoice.companyPhone ?? '',
-      invoiceType: invoice.invoiceType ?? '',
+      invoiceType: invoice.invoiceType ?? 'special_vat', // 如果没有已有数据，默认选中增值税专用发票
       originalInvoice: invoice,
     ));
   }

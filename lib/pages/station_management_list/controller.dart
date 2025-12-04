@@ -123,7 +123,10 @@ class StationManagementListCtrl extends Cubit<StationManagementListState> {
   void navigateToInvoice(Station station, BuildContext context) async {
     final result = await BaseRouter.push(
       url: AppPage.invoiceEditPage.path,
-      extra: {'stationId': station.id},
+      extra: {
+        'stationId': station.id,
+        'stationName': station.stationName,
+      },
     );
 
     if (result is Map && result['refresh'] == true) {

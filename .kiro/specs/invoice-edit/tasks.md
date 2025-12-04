@@ -88,6 +88,60 @@
     - **Property 4: API Request Data Integrity**
     - **Validates: Requirements 4.1**
 
+- [ ] 9. Refactor UI with modern B2B design
+
+  - [ ] 9.1 Create StationRelationCard widget
+    - Create `lib/pages/invoice_edit/widgets/station_relation_card.dart`
+    - Display station name with link icon
+    - Use purple theme (#EEECFC background, #7165E3 text)
+    - Add rounded corners (8px) and proper padding
+    - _Requirements: 6.1, 6.2, 6.3_
+
+  - [ ] 9.2 Create InvoiceTypeSegmentedControl widget
+    - Create `lib/pages/invoice_edit/widgets/invoice_type_segmented_control.dart`
+    - Replace dropdown with segmented control UI
+    - Implement two options: "增值税专用发票" and "增值税普通发票"
+    - Add smooth transition animation on selection
+    - Use gray container (#F3F4F6) with white selected state
+    - _Requirements: 7.1, 7.2, 7.3_
+
+  - [ ]* 9.3 Write property test for invoice type selection
+    - **Property 5: Invoice Type Selection State**
+    - **Validates: Requirements 7.2**
+
+  - [ ] 9.4 Update form field styling
+    - Update input fields to use modern styling from design spec
+    - Add focus effects (purple border + shadow)
+    - Use monospace font for tax number and bank account fields
+    - Add required field markers (red asterisk)
+    - Update background colors (#F9FAFB for inputs, #F5F7FA for page)
+    - Update field labels: "公司地址" and "公司电话"
+    - _Requirements: 8.1, 8.2, 8.3, 8.4_
+
+  - [ ] 9.5 Add visual grouping with dividers
+    - Add divider with "银行及地址信息" label between form sections
+    - Style divider with #F3F4F6 background and purple label
+    - _Requirements: 8.5_
+
+  - [ ] 9.6 Update save button styling
+    - Move save button to fixed bottom position
+    - Use rounded button (28px border radius)
+    - Ensure proper safe area handling
+    - _Requirements: 8.6_
+
+  - [ ] 9.7 Add bottom warning text
+    - Add "请确保信息与营业执照一致，否则可能导致无法开票" text
+    - Style with gray color (#9CA3AF) and center alignment
+    - Position above save button
+    - _Requirements: 8.7_
+
+  - [ ] 9.8 Update InvoiceEditForm to use new components
+    - Integrate StationRelationCard at top
+    - Replace dropdown with InvoiceTypeSegmentedControl
+    - Apply all new styling to form fields
+    - Ensure proper layout and spacing
+    - _Requirements: 6.1, 7.1, 8.1-8.7_
+
 - [x] 5. Register route and add navigation entries
 
 
@@ -128,4 +182,7 @@
 - [x] 8. Final Checkpoint - Ensure all tests pass
 
 
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [ ] 10. Final Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
