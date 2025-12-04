@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:oil_business_app/pages/station_edit/controller.dart';
 import 'package:oil_business_app/pages/station_edit/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
-import 'package:oil_business_app/router/router.dart';
-import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
@@ -104,140 +102,157 @@ class _StationEditFormState extends State<StationEditForm> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return SafeArea(
-      bottom: true,
-      top: false,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: AppSizes.setHeight(16)),
-              _buildFormSection(
-                context: context,
-                title: '基础信息',
-                children: [
-                  _buildInputWrapper(
-                    context: context,
-                    label: '加油站名称',
-                    child: CommonTextFormField(
-                      controller: _nameController,
-                      borderColor: CustomAppColor.of(context).textFieldBorder,
-                      fillColor: const Color(0xFFF9FAFB),
-                      radius: 10,
-                      hintText: '请输入加油站名称',
-                      onChanged: (value) =>
-                          widget.controller.updateName(value ?? ''),
-                    ),
-                  ),
-                  _buildInputWrapper(
-                    context: context,
-                    label: '所在区域',
-                    child: CommonCityPickerFormField(
-                      controller: _cityController,
-                      name: 'city',
-                      hintText: '选择省/市/区',
-                      initialCityData: widget.state.provinceCode.isNotEmpty
-                          ? [
-                              widget.state.provinceCode,
-                              widget.state.cityCode,
-                              widget.state.areaCode,
-                            ]
-                          : null,
-                      onChanged: (cityData) {
-                        widget.controller.updateCityData(cityData);
-                        setState(() {
-                          _cityController.text = _buildCityText();
-                        });
-                      },
-                      borderColor: CustomAppColor.of(context).textFieldBorder,
-                      fillColor: const Color(0xFFF9FAFB),
-                      radius: 10,
-                      suffixIcon: Icon(
-                        Icons.keyboard_arrow_down,
-                        size: AppSizes.setFontSize(20),
-                        color: const Color(0xFF9CA3AF),
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: AppSizes.setHeight(16)),
+                _buildFormSection(
+                  context: context,
+                  title: '基础信息',
+                  children: [
+                    _buildInputWrapper(
+                      context: context,
+                      label: '加油站名称',
+                      child: CommonTextFormField(
+                        controller: _nameController,
+                        borderColor: CustomAppColor.of(context).textFieldBorder,
+                        fillColor: const Color(0xFFF9FAFB),
+                        radius: 10,
+                        hintText: '请输入加油站名称',
+                        onChanged: (value) =>
+                            widget.controller.updateName(value ?? ''),
                       ),
                     ),
-                  ),
-                  _buildInputWrapper(
-                    context: context,
-                    label: '详细地址',
-                    child: CommonTextFormField(
-                      controller: _addressDetailController,
-                      borderColor: CustomAppColor.of(context).textFieldBorder,
-                      fillColor: const Color(0xFFF9FAFB),
-                      radius: 10,
-                      hintText: '请输入详细地址（不含省市区）',
-                      onChanged: (value) =>
-                          widget.controller.updateAddressDetail(value ?? ''),
+                    _buildInputWrapper(
+                      context: context,
+                      label: '所在区域',
+                      child: CommonCityPickerFormField(
+                        controller: _cityController,
+                        name: 'city',
+                        hintText: '选择省/市/区',
+                        initialCityData: widget.state.provinceCode.isNotEmpty
+                            ? [
+                                widget.state.provinceCode,
+                                widget.state.cityCode,
+                                widget.state.areaCode,
+                              ]
+                            : null,
+                        onChanged: (cityData) {
+                          widget.controller.updateCityData(cityData);
+                          setState(() {
+                            _cityController.text = _buildCityText();
+                          });
+                        },
+                        borderColor: CustomAppColor.of(context).textFieldBorder,
+                        fillColor: const Color(0xFFF9FAFB),
+                        radius: 10,
+                        suffixIcon: Icon(
+                          Icons.keyboard_arrow_down,
+                          size: AppSizes.setFontSize(20),
+                          color: const Color(0xFF9CA3AF),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              _buildFormSection(
-                context: context,
-                title: '资质证照',
-                children: [
-                  _buildInputWrapper(
-                    context: context,
-                    label: '营业执照',
-                    child: QualificationImageUpload(
-                      imageUrl: widget.state.businessLicenseUrl,
-                      hintText: '点击上传照片',
-                      onChanged: (value) {
-                        widget.controller.updateBusinessLicenseUrl(value ?? '');
-                      },
+                    _buildInputWrapper(
+                      context: context,
+                      label: '详细地址',
+                      child: CommonTextFormField(
+                        controller: _addressDetailController,
+                        borderColor: CustomAppColor.of(context).textFieldBorder,
+                        fillColor: const Color(0xFFF9FAFB),
+                        radius: 10,
+                        hintText: '请输入详细地址（不含省市区）',
+                        onChanged: (value) =>
+                            widget.controller.updateAddressDetail(value ?? ''),
+                      ),
                     ),
-                  ),
-                  _buildInputWrapper(
-                    context: context,
-                    label: '成品油零售许可',
-                    child: QualificationImageUpload(
-                      imageUrl: widget.state.fuelRetailPermitUrl,
-                      hintText: '点击上传照片',
-                      onChanged: (value) {
-                        widget.controller
-                            .updateFuelRetailPermitUrl(value ?? '');
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              if (widget.state.hasError && widget.state.errorMessage != null)
-                Container(
-                  padding: EdgeInsets.all(AppSizes.setWidth(12)),
-                  margin: EdgeInsets.only(top: AppSizes.setHeight(16)),
-                  decoration: BoxDecoration(
-                    color:
-                        CustomAppColor.of(context).red.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
-                  ),
-                  child: CommonText(
-                    text: widget.state.errorMessage!,
-                    fontSize: AppSizes.setFontSize(14),
-                    textColor: CustomAppColor.of(context).red,
-                    textAlign: TextAlign.left,
-                  ),
+                  ],
                 ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
-                child: CommonButton(
-                  isLoading: widget.controller.state.isLoading,
-                  btnText: '保存提交',
-                  radius: 28,
-                  pVertical: AppSizes.setHeight(14),
-                  fontSize: AppSizes.setFontSize(16),
-                  onTap: () {
-                    widget.controller.save(context);
-                  },
+                _buildFormSection(
+                  context: context,
+                  title: '资质证照',
+                  children: [
+                    _buildInputWrapper(
+                      context: context,
+                      label: '营业执照',
+                      child: QualificationImageUpload(
+                        imageUrl: widget.state.businessLicenseUrl,
+                        hintText: '点击上传照片',
+                        onChanged: (value) {
+                          widget.controller
+                              .updateBusinessLicenseUrl(value ?? '');
+                        },
+                      ),
+                    ),
+                    _buildInputWrapper(
+                      context: context,
+                      label: '成品油零售许可',
+                      child: QualificationImageUpload(
+                        imageUrl: widget.state.fuelRetailPermitUrl,
+                        hintText: '点击上传照片',
+                        onChanged: (value) {
+                          widget.controller
+                              .updateFuelRetailPermitUrl(value ?? '');
+                        },
+                      ),
+                    ),
+                  ],
                 ),
+                if (widget.state.hasError && widget.state.errorMessage != null)
+                  Container(
+                    padding: EdgeInsets.all(AppSizes.setWidth(12)),
+                    margin: EdgeInsets.only(
+                      top: AppSizes.setHeight(16),
+                      bottom: AppSizes.setHeight(16),
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                          CustomAppColor.of(context).red.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
+                    ),
+                    child: CommonText(
+                      text: widget.state.errorMessage!,
+                      fontSize: AppSizes.setFontSize(14),
+                      textColor: CustomAppColor.of(context).red,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.all(AppSizes.setWidth(16)),
+          decoration: BoxDecoration(
+            color: CustomAppColor.of(context).bgContainer,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 8,
+                offset: const Offset(0, -2),
               ),
             ],
           ),
+          child: SafeArea(
+            top: false,
+            child: CommonButton(
+              isLoading: widget.controller.state.isLoading,
+              btnText: '保存提交',
+              radius: 28,
+              pVertical: AppSizes.setHeight(14),
+              fontSize: AppSizes.setFontSize(16),
+              onTap: () {
+                widget.controller.save(context);
+              },
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 
