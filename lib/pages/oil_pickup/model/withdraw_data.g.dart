@@ -26,46 +26,71 @@ Map<String, dynamic> _$WithdrawOrderListResponseToJson(
       'pageSize': instance.pageSize,
     };
 
-WithdrawOrderModel _$WithdrawOrderModelFromJson(Map<String, dynamic> json) =>
-    WithdrawOrderModel(
-      withdrawId: (json['withdrawId'] as num?)?.toInt(),
-      withdrawNo: json['withdrawNo'] as String?,
-      inventoryId: (json['inventoryId'] as num?)?.toInt(),
-      id: (json['id'] as num?)?.toInt(),
-      oilOrderId: (json['oilOrderId'] as num?)?.toInt(),
-      status: json['status'] as String?,
+StationInfo _$StationInfoFromJson(Map<String, dynamic> json) => StationInfo(
       stationId: (json['stationId'] as num?)?.toInt(),
       stationName: json['stationName'] as String?,
-      withdrawTon: (json['withdrawTon'] as num?)?.toDouble(),
-      vehicleInfo: json['vehicleInfo'] as String?,
-      createdAt: json['createdAt'] as String?,
-      updatedAt: json['updatedAt'] as String?,
       provinceName: json['provinceName'] as String?,
       cityName: json['cityName'] as String?,
       areaName: json['areaName'] as String?,
       addressDetail: json['addressDetail'] as String?,
+    );
+
+Map<String, dynamic> _$StationInfoToJson(StationInfo instance) =>
+    <String, dynamic>{
+      'stationId': instance.stationId,
+      'stationName': instance.stationName,
+      'provinceName': instance.provinceName,
+      'cityName': instance.cityName,
+      'areaName': instance.areaName,
+      'addressDetail': instance.addressDetail,
+    };
+
+DepotInfo _$DepotInfoFromJson(Map<String, dynamic> json) => DepotInfo(
+      depotId: (json['depotId'] as num?)?.toInt(),
       depotName: json['depotName'] as String?,
+      addressDetail: json['addressDetail'] as String?,
+    );
+
+Map<String, dynamic> _$DepotInfoToJson(DepotInfo instance) => <String, dynamic>{
+      'depotId': instance.depotId,
+      'depotName': instance.depotName,
+      'addressDetail': instance.addressDetail,
+    };
+
+WithdrawOrderModel _$WithdrawOrderModelFromJson(Map<String, dynamic> json) =>
+    WithdrawOrderModel(
+      withdrawId: (json['withdrawId'] as num?)?.toInt(),
+      withdrawNo: json['withdrawNo'] as String?,
+      withdrawTon: (json['withdrawTon'] as num?)?.toDouble(),
+      vehicleInfo: json['vehicleInfo'] as String?,
+      status: json['status'] as String?,
+      createdAt: json['createdAt'] as String?,
+      updatedAt: json['updatedAt'] as String?,
+      station: json['station'] == null
+          ? null
+          : StationInfo.fromJson(json['station'] as Map<String, dynamic>),
+      depot: json['depot'] == null
+          ? null
+          : DepotInfo.fromJson(json['depot'] as Map<String, dynamic>),
+      id: (json['id'] as num?)?.toInt(),
+      inventoryId: (json['inventoryId'] as num?)?.toInt(),
+      oilOrderId: (json['oilOrderId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$WithdrawOrderModelToJson(WithdrawOrderModel instance) =>
     <String, dynamic>{
       'withdrawId': instance.withdrawId,
       'withdrawNo': instance.withdrawNo,
-      'inventoryId': instance.inventoryId,
-      'id': instance.id,
-      'oilOrderId': instance.oilOrderId,
-      'status': instance.status,
-      'depotName': instance.depotName,
-      'stationId': instance.stationId,
-      'stationName': instance.stationName,
       'withdrawTon': instance.withdrawTon,
       'vehicleInfo': instance.vehicleInfo,
+      'status': instance.status,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
-      'provinceName': instance.provinceName,
-      'cityName': instance.cityName,
-      'areaName': instance.areaName,
-      'addressDetail': instance.addressDetail,
+      'station': instance.station,
+      'depot': instance.depot,
+      'id': instance.id,
+      'inventoryId': instance.inventoryId,
+      'oilOrderId': instance.oilOrderId,
     };
 
 WithdrawRequest _$WithdrawRequestFromJson(Map<String, dynamic> json) =>

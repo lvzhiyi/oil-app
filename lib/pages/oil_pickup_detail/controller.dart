@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/global/app_controller.dart';
+import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
 import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 import 'package:oil_business_app/pages/oil_pickup/service/oil_pickup_service.dart';
@@ -39,10 +40,23 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
     return null;
   }
 
-  void initState() {
+  void initState() async {
     final selectedStation = appController.state.selectedStation;
-    if (selectedStation != null) {
+    if (selectedStation != null && selectedStation.id != null) {
       emit(state.copyWith(selectedStation: selectedStation));
+    } else {
+      try {
+        final response = await appController.getStationStatus(1, 10, [
+          StationStatus.active,
+        ]);
+        if (response.list != null && response.list!.isNotEmpty) {
+          final firstStation = response.list!.first;
+          emit(state.copyWith(selectedStation: firstStation));
+          appController.setSelectedStation(firstStation);
+        }
+      } catch (e) {
+        l.e('OilPickupDetail', 'Failed to load default station: $e');
+      }
     }
   }
 

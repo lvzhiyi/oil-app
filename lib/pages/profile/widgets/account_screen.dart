@@ -26,11 +26,11 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen>
     implements TopBarClickListener {
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomAppColor.of(context).bgTopBar, // Light grey background
+      backgroundColor:
+          CustomAppColor.of(context).bgTopBar, // Light grey background
       body: Stack(
         children: [
           // Purple Header Background
@@ -39,36 +39,38 @@ class _AccountScreenState extends State<AccountScreen>
             width: double.infinity,
             color: CustomAppColor.of(context).btnPurple,
           ),
-          
+
           // Scrollable Content
           SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: AppSizes.setHeight(60)), // Top padding for status bar
-                
+                SizedBox(
+                    height:
+                        AppSizes.setHeight(60)), // Top padding for status bar
+
                 // User Info
                 _buildUserInfo(),
-                
+
                 SizedBox(height: AppSizes.setHeight(30)),
-                
+
                 // Floating Action Bar (Orders & Station)
                 _buildActionBar(),
-                
+
                 SizedBox(height: AppSizes.setHeight(16)),
-                
+
                 // Menu List (Password & Privacy)
                 _buildMenuCard(),
-                
+
                 SizedBox(height: AppSizes.setHeight(30)),
-                
+
                 // Logout Button
                 _buildLogoutButton(),
-                
+
                 SizedBox(height: AppSizes.setHeight(20)),
-                
+
                 // Version Info
                 _buildVersionInfo(),
-                
+
                 SizedBox(height: AppSizes.setHeight(50)), // Bottom padding
               ],
             ),
@@ -98,11 +100,35 @@ class _AccountScreenState extends State<AccountScreen>
             ),
           ),
           SizedBox(width: AppSizes.setWidth(16)),
-          CommonText(
-            text: context.read<AppController>().state.authResponse?.account?.phone ?? '',
-            fontWeight: FontWeight.w700,
-            textColor: Colors.white,
-            fontSize: AppSizes.setFontSize(20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CommonText(
+                text: context
+                        .read<AppController>()
+                        .state
+                        .authResponse
+                        ?.account
+                        ?.name ??
+                    '',
+                fontWeight: FontWeight.w700,
+                textColor: Colors.white,
+                fontSize: AppSizes.setFontSize(20),
+              ),
+              SizedBox(height: AppSizes.setHeight(4)),
+              CommonText(
+                text: context
+                        .read<AppController>()
+                        .state
+                        .authResponse
+                        ?.account
+                        ?.phone ??
+                    '',
+                fontWeight: FontWeight.w400,
+                textColor: Colors.white,
+                fontSize: AppSizes.setFontSize(14),
+              ),
+            ],
           ),
         ],
       ),
@@ -148,7 +174,8 @@ class _AccountScreenState extends State<AccountScreen>
             label: '加油站管理',
             iconColor: CustomAppColor.of(context).txtBlack,
             bgIconColor: CustomAppColor.of(context).txtBlack.withOpacity(0.05),
-            onTap: () => BaseRouter.push(url: AppPage.stationManagementListPage.path),
+            onTap: () =>
+                BaseRouter.push(url: AppPage.stationManagementListPage.path),
           ),
         ],
       ),
@@ -214,9 +241,14 @@ class _AccountScreenState extends State<AccountScreen>
             label: '修改密码',
             onTap: () => BaseRouter.push(url: AppPage.changePasswordPage.path),
           ),
-          Divider(height: 1, color: CustomAppColor.of(context).dividerGrey.withOpacity(0.5), indent: 50, endIndent: 16),
+          Divider(
+              height: 1,
+              color: CustomAppColor.of(context).dividerGrey.withOpacity(0.5),
+              indent: 50,
+              endIndent: 16),
           _buildMenuItem(
-            icon: AssetsIcon.IC_RATE, // Using IC_RATE as placeholder for Privacy Policy if specific icon missing
+            icon: AssetsIcon
+                .IC_RATE, // Using IC_RATE as placeholder for Privacy Policy if specific icon missing
             label: '隐私政策',
             onTap: () => BaseRouter.push(url: AppPage.privacyPolicyPage.path),
           ),
@@ -232,7 +264,8 @@ class _AccountScreenState extends State<AccountScreen>
   }) {
     return ListTile(
       onTap: onTap,
-      contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16), vertical: AppSizes.setHeight(4)),
+      contentPadding: EdgeInsets.symmetric(
+          horizontal: AppSizes.setWidth(16), vertical: AppSizes.setHeight(4)),
       leading: Image.asset(
         icon,
         height: AppSizes.setHeight(22),
@@ -267,7 +300,8 @@ class _AccountScreenState extends State<AccountScreen>
       child: TextButton(
         onPressed: () => logoutBottomSheet(context),
         style: TextButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
         child: CommonText(
           text: '退出登录',
@@ -300,7 +334,9 @@ class _AccountScreenState extends State<AccountScreen>
           GestureDetector(
             onTap: () => AppVersionUtil.showUpdateDialog(),
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(12), vertical: AppSizes.setHeight(4)),
+              padding: EdgeInsets.symmetric(
+                  horizontal: AppSizes.setWidth(12),
+                  vertical: AppSizes.setHeight(4)),
               decoration: BoxDecoration(
                 color: CustomAppColor.of(context).bgContainerRed,
                 borderRadius: BorderRadius.circular(20),
