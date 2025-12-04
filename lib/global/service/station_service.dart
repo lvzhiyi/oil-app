@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:oil_business_app/global/model/invoice_req_type.dart';
 import 'package:oil_business_app/global/model/station_req_type.dart';
 import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/net/net_manager.dart';
@@ -27,6 +28,13 @@ abstract class StationService {
   Future updateStation(
     @Path('id') String id,
     @Body() BindStationRequest request,
+  );
+
+  /// 更新加油站发票信息
+  @PUT('/stations/{id}/invoice')
+  Future updateStationInvoice(
+    @Path('id') int id,
+    @Body() UpdateInvoiceRequest request,
   );
 }
 

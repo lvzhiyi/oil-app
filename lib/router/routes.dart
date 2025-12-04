@@ -27,6 +27,7 @@ import 'package:oil_business_app/pages/oil_pickup/page.dart';
 import 'package:oil_business_app/pages/station_list/page.dart';
 import 'package:oil_business_app/pages/station_edit/page.dart';
 import 'package:oil_business_app/pages/station_management_list/page.dart';
+import 'package:oil_business_app/pages/invoice_edit/page.dart';
 import 'package:oil_business_app/pages/main_oil_pay/oil_purchase_detail/page.dart';
 import 'package:oil_business_app/router/pageTransition/bottom_to_top_page.dart';
 import 'package:oil_business_app/router/router.dart';
@@ -115,6 +116,9 @@ enum AppPage {
 
   /// 用户协议
   serviceAgreementPage('/serviceAgreement'),
+
+  /// 发票编辑页面
+  invoiceEditPage('/invoiceEdit'),
   ;
 
   const AppPage(this.path);
@@ -229,6 +233,9 @@ extension PageRoute on AppPage {
 
       case AppPage.serviceAgreementPage:
         return (context, state) => const ServiceAgreementPage();
+
+      case AppPage.invoiceEditPage:
+        return (context, state) => const InvoiceEditPage();
 
       default:
         return (context, state) => const Text('404');

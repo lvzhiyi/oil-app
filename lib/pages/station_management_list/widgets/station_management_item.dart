@@ -10,11 +10,13 @@ import 'package:oil_business_app/widgets/common/dashed_line.dart';
 class StationManagementItem extends StatelessWidget {
   final Station station;
   final VoidCallback onEdit;
+  final VoidCallback? onInvoice;
 
   const StationManagementItem({
     Key? key,
     required this.station,
     required this.onEdit,
+    this.onInvoice,
   }) : super(key: key);
 
   @override
@@ -254,7 +256,32 @@ class StationManagementItem extends StatelessWidget {
                     ),
                   ),
                 )
-              else
+              else ...[
+                if (onInvoice != null)
+                  GestureDetector(
+                    onTap: onInvoice,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.setWidth(16),
+                        vertical: AppSizes.setHeight(6),
+                      ),
+                      decoration: BoxDecoration(
+                        color: colors.bgContainer,
+                        border: Border.all(
+                          color: colors.containerBorder,
+                          width: 1,
+                        ),
+                        borderRadius:
+                            BorderRadius.circular(AppSizes.setWidth(16)),
+                      ),
+                      child: CommonText(
+                        text: '发票信息',
+                        fontSize: AppSizes.setFontSize(13),
+                        textColor: colors.txtBlack,
+                      ),
+                    ),
+                  ),
+                if (onInvoice != null) SizedBox(width: AppSizes.setWidth(8)),
                 GestureDetector(
                   onTap: onEdit,
                   child: Container(
@@ -278,6 +305,7 @@ class StationManagementItem extends StatelessWidget {
                     ),
                   ),
                 ),
+              ],
             ],
           ),
         ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:oil_business_app/pages/station_edit/controller.dart';
 import 'package:oil_business_app/pages/station_edit/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
@@ -203,6 +205,7 @@ class _StationEditFormState extends State<StationEditForm> {
                   ),
                 ],
               ),
+              if (widget.state.station != null) _buildInvoiceEntry(context),
               if (widget.state.hasError && widget.state.errorMessage != null)
                 Container(
                   padding: EdgeInsets.all(AppSizes.setWidth(12)),
@@ -311,4 +314,56 @@ class _StationEditFormState extends State<StationEditForm> {
     );
   }
 
+  Widget _buildInvoiceEntry(BuildContext context) {
+    final colors = CustomAppColor.of(context);
+    return Container(
+      margin: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
+      padding: EdgeInsets.all(AppSizes.setWidth(20)),
+      decoration: BoxDecoration(
+        color: colors.bgContainer,
+        borderRadius: BorderRadius.circular(AppSizes.setWidth(16)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: GestureDetector(
+        onTap: () {
+          BaseRouter.push(
+            url: AppPage.invoiceEditPage.path,
+            extra: {'stationId': widget.state.station?.id},
+          );
+        },
+        child: Row(
+          children: [
+            Container(
+              width: AppSizes.setWidth(4),
+              height: AppSizes.setHeight(14),
+              decoration: BoxDecoration(
+                color: colors.btnPurple,
+                borderRadius: BorderRadius.circular(AppSizes.setWidth(2)),
+              ),
+            ),
+            SizedBox(width: AppSizes.setWidth(6)),
+            Expanded(
+              child: CommonText(
+                text: '发票信息',
+                fontSize: AppSizes.setFontSize(15),
+                fontWeight: FontWeight.w700,
+                textColor: colors.txtBlack,
+              ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              size: AppSizes.setFontSize(20),
+              color: colors.txtGrey,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

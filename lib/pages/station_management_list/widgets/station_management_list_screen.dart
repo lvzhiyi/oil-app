@@ -293,6 +293,7 @@ class StationManagementListScreen extends StatelessWidget {
             child: StationManagementItem(
               station: station,
               onEdit: () => controller.navigateToEdit(station, context),
+              onInvoice: () => controller.navigateToInvoice(station, context),
             ),
           );
         },
