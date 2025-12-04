@@ -1,6 +1,5 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/station_res_type.dart';
@@ -11,8 +10,9 @@ import 'package:oil_business_app/pages/oil_pickup_success/widgets/save_share_she
 import 'package:oil_business_app/pages/pickup_order_detail/controller.dart';
 import 'package:oil_business_app/pages/pickup_order_detail/utils/certificate_image_saver.dart';
 import 'package:oil_business_app/pages/pickup_order_detail/utils/vehicle_info_parser.dart';
-import 'package:oil_business_app/pages/pickup_order_detail/widgets/action_buttons.dart';
-import 'package:oil_business_app/pages/pickup_order_detail/widgets/waybill_card.dart';
+import 'package:oil_business_app/pages/pickup_order_detail/widgets/order_detail_header.dart';
+import 'package:oil_business_app/pages/pickup_order_detail/widgets/order_detail_bottom_actions.dart';
+import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/popup/dialog.dart';
@@ -52,120 +52,154 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
     final bool isPendingPickup =
         widget.order!.status == WithdrawStatus.pendingPickup.value;
 
+    final double horizontalPadding = AppSizes.setWidth(16);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
-      appBar: _buildAppBar(),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              // 主内容区域
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSizes.setWidth(20),
-                  ),
-                  child: Column(
-                    children: [
-                      SizedBox(height: AppSizes.setHeight(20)),
-                      WaybillCard(
-                        order: widget.order!,
-                        vehicleModel: vehicleModel,
-                      ),
-                      SizedBox(height: AppSizes.setHeight(30)),
-                    ],
-                  ),
-                ),
-              ),
-
-              // 底部操作按钮（仅待提油状态显示）
-              if (isPendingPickup)
-                ActionButtons(
-                  onCancel: () => _handleCancel(context),
-                  onSaveCertificate: _saveCertificateImage,
-                  isSaving: _isSaving,
-                ),
-            ],
-          ),
-
-          // 隐藏的凭证卡片（用于生成图片）
-          _buildHiddenReceiptCard(vehicleModel),
-
-          // 保存中的加载遮罩
-          if (_isSaving) _buildLoadingOverlay(),
-        ],
+      appBar: _buildAppBar(context),
+      body: _buildBody(
+        horizontalPadding,
+        vehicleModel,
+        isPendingPickup,
       ),
     );
   }
 
   /// 构建 AppBar
-  PreferredSizeWidget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: CustomAppColor.of(context).bgScaffold,
       elevation: 0,
-      iconTheme: const IconThemeData(color: Color(0xFF1F2937)),
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          color: CustomAppColor.of(context).txtBlack,
+        ),
+        onPressed: () => Navigator.pop(context),
+      ),
       title: CommonText(
         text: '订单详情',
-        fontSize: AppSizes.setFontSize(17),
+        fontSize: AppSizes.setFontSize(18),
         fontWeight: FontWeight.w600,
-        textColor: const Color(0xFF1F2937),
+        textColor: CustomAppColor.of(context).txtBlack,
       ),
       centerTitle: true,
     );
+  }
+
+  /// 构建页面主体
+  Widget _buildBody(
+    double horizontalPadding,
+    VehicleModel? vehicleModel,
+    bool isPendingPickup,
+  ) {
+    final String dispatchContent = VehicleInfoParser.getDispatchContent(
+      vehicleModel,
+      vehicleInfo: widget.order!.vehicleInfo,
+    );
+
+    return Stack(
+      children: [
+        Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                    vertical: AppSizes.setHeight(16),
+                  ),
+                  child: Column(
+                    children: [
+                      OrderDetailHeader(status: widget.order!.status),
+                      SizedBox(height: AppSizes.setHeight(16)),
+                      OilPickupReceiptCard(
+                        response: WithdrawResponse(
+                          withdrawNo: widget.order!.withdrawNo,
+                          withdrawId: widget.order!.withdrawId,
+                          status: widget.order!.status,
+                        ),
+                        inventory: InventoryModel(
+                          inventoryId: widget.order!.inventoryId,
+                          depotName: widget.order!.depotName,
+                        ),
+                        station: Station(
+                          id: widget.order!.stationId,
+                          stationName: widget.order!.stationName,
+                        ),
+                        oilAmount: widget.order!.withdrawTon?.toString() ?? '0',
+                        dispatchContent: dispatchContent,
+                        onCopyWithdrawNo: _copyWithdrawNo,
+                        showCopyIcon: true,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // 底部操作按钮（仅待提油状态显示）
+            if (isPendingPickup)
+              OrderDetailBottomActions(
+                isSaving: _isSaving,
+                onCancel: () => _handleCancel(context),
+                onSave: _isSaving ? null : _saveCertificateImage,
+              ),
+          ],
+        ),
+        // 隐藏的凭证卡片（用于生成图片）
+        Positioned(
+          left: -10000,
+          top: -10000,
+          child: RepaintBoundary(
+            key: _cardKey,
+            child: SizedBox(
+              width: AppSizes.setWidth(375 - 32),
+              child: OilPickupReceiptCard(
+                response: WithdrawResponse(
+                  withdrawNo: widget.order!.withdrawNo,
+                  withdrawId: widget.order!.withdrawId,
+                  status: widget.order!.status,
+                ),
+                inventory: InventoryModel(
+                  inventoryId: widget.order!.inventoryId,
+                  depotName: widget.order!.depotName,
+                ),
+                station: Station(
+                  id: widget.order!.stationId,
+                  stationName: widget.order!.stationName,
+                ),
+                oilAmount: widget.order!.withdrawTon?.toString() ?? '0',
+                dispatchContent: dispatchContent,
+                onCopyWithdrawNo: (_) {},
+                showCopyIcon: false,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// 复制提油单号
+  Future<void> _copyWithdrawNo(String withdrawNo) async {
+    if (withdrawNo == '--') return;
+    await Clipboard.setData(ClipboardData(text: withdrawNo));
+    if (!mounted) return;
+    _showSnackBar('提油单号已复制');
   }
 
   /// 构建空状态页面
   Widget _buildEmptyState() {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
-      appBar: _buildAppBar(),
+      appBar: _buildAppBar(context),
       body: Center(
         child: CommonText(
           text: '订单信息不存在',
           fontSize: AppSizes.setFontSize(14),
           textColor: const Color(0xFF6B7280),
         ),
-      ),
-    );
-  }
-
-  /// 构建隐藏的凭证卡片（用于截图生成图片）
-  Widget _buildHiddenReceiptCard(VehicleModel? vehicleModel) {
-    return Positioned(
-      left: 9999,
-      child: RepaintBoundary(
-        key: _cardKey,
-        child: SizedBox(
-          width: AppSizes.setWidth(375 - 32),
-          child: OilPickupReceiptCard(
-            response: WithdrawResponse(
-              withdrawNo: widget.order!.withdrawNo,
-              withdrawId: widget.order!.withdrawId,
-              status: widget.order!.status,
-            ),
-            inventory: InventoryModel(
-              inventoryId: widget.order!.inventoryId,
-            ),
-            station: Station(
-              id: widget.order!.stationId,
-              stationName: widget.order!.stationName,
-            ),
-            oilAmount: widget.order!.withdrawTon?.toString() ?? '0',
-            dispatchContent: VehicleInfoParser.getDispatchContent(vehicleModel),
-            onCopyWithdrawNo: (_) {},
-            showCopyIcon: false,
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// 构建加载遮罩
-  Widget _buildLoadingOverlay() {
-    return Container(
-      color: Colors.black.withValues(alpha: 0.3),
-      child: const Center(
-        child: CircularProgressIndicator(),
       ),
     );
   }
@@ -212,7 +246,7 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
       await _showSaveShareSheet(pngBytes, filePath);
     } catch (e) {
       if (!mounted) return;
-      _showErrorSnackBar('保存失败，请重试');
+      _showSnackBar('保存失败，请重试');
       setState(() => _isSaving = false);
     }
   }
@@ -250,11 +284,11 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
       final dynamic filePath =
           result['filePath'] ?? result['filePathList']?.first;
 
-      _showSuccessSnackBar(
+      _showSnackBar(
         filePath != null ? '已保存到相册 $filePath' : '已保存到相册',
       );
     } catch (e) {
-      _showErrorSnackBar('保存到相册失败，请检查权限');
+      _showSnackBar('保存到相册失败，请检查权限');
     }
   }
 
@@ -265,26 +299,15 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
           await CertificateImageSaver.saveToDirectory(bytes);
 
       if (filePath != null) {
-        _showSuccessSnackBar('图片已保存：$filePath');
+        _showSnackBar('图片已保存：$filePath');
       }
     } catch (e) {
-      _showErrorSnackBar('保存失败，请重试');
+      _showSnackBar('保存失败，请重试');
     }
   }
 
-  /// 显示成功提示
-  void _showSuccessSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  /// 显示错误提示
-  void _showErrorSnackBar(String message) {
+  /// 显示提示
+  void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
