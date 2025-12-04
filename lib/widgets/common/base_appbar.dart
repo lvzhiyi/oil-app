@@ -94,7 +94,7 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
                     width: pt(44),
                     height: pt(44),
                     child: Icon(
-                      Icons.arrow_back_ios_rounded,
+                      Icons.arrow_back_rounded,
                       color: backIconColor,
                     ),
                   ),

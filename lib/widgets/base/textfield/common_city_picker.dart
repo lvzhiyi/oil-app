@@ -210,10 +210,15 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
       return pr;
     }).toList();
     Picker(
-      height: AppSizes.setHeight(280),
-      itemExtent: AppSizes.setHeight(28),
+      height: AppSizes.setHeight(270),
       confirmText: '确定',
       cancelText: '取消',
+      itemExtent: AppSizes.setHeight(40),
+      onBuilderItem: (BuildContext context, String? text, Widget? child,
+          bool isSelected, int index, int total) {
+        return Container(
+            padding: EdgeInsets.all(AppSizes.setWidth(10)), child: child);
+      },
       selecteds: selectedIndexes, // 设置默认选中的索引
       onConfirm: (Picker picker, List value) {
         final provinceCode = cityData[value[0]]['code'];
@@ -304,8 +309,7 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
                   fontSize: AppSizes.setFontSize(15),
                   fontWeight: FontWeight.w600),
               errorText: field.errorText,
-              fillColor:
-                  widget.fillColor ?? CustomAppColor.of(context).bgContainer,
+              fillColor: widget.fillColor ?? CustomAppColor.of(context).white,
               filled: true,
               hintText: !widget.showHint || hasText
                   ? null
