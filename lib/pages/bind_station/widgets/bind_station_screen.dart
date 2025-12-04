@@ -95,7 +95,7 @@ class BindStationScreen extends StatelessWidget {
                                   ctrl.areaCode = value[5];
                                 },
                                 borderColor: colors.textFieldBorder,
-                                fillColor: const Color(0xFFF9FAFB),
+                                fillColor: Colors.white,
                                 radius: 10,
                                 suffixIcon: Icon(
                                   Icons.keyboard_arrow_down,

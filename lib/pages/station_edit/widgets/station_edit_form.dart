@@ -149,7 +149,7 @@ class _StationEditFormState extends State<StationEditForm> {
                           });
                         },
                         borderColor: CustomAppColor.of(context).textFieldBorder,
-                        fillColor: const Color(0xFFF9FAFB),
+                        fillColor: Colors.white,
                         radius: 10,
                         suffixIcon: Icon(
                           Icons.keyboard_arrow_down,
