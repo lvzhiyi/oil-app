@@ -23,6 +23,66 @@ class WithdrawOrderListResponse {
   Map<String, dynamic> toJson() => _$WithdrawOrderListResponseToJson(this);
 }
 
+/// 加油站信息
+@JsonSerializable()
+class StationInfo {
+  @JsonKey(name: 'stationId')
+  final int? stationId;
+
+  @JsonKey(name: 'stationName')
+  final String? stationName;
+
+  @JsonKey(name: 'provinceName')
+  final String? provinceName;
+
+  @JsonKey(name: 'cityName')
+  final String? cityName;
+
+  @JsonKey(name: 'areaName')
+  final String? areaName;
+
+  @JsonKey(name: 'addressDetail')
+  final String? addressDetail;
+
+  StationInfo({
+    this.stationId,
+    this.stationName,
+    this.provinceName,
+    this.cityName,
+    this.areaName,
+    this.addressDetail,
+  });
+
+  factory StationInfo.fromJson(Map<String, dynamic> json) =>
+      _$StationInfoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StationInfoToJson(this);
+}
+
+/// 油库信息
+@JsonSerializable()
+class DepotInfo {
+  @JsonKey(name: 'depotId')
+  final int? depotId;
+
+  @JsonKey(name: 'depotName')
+  final String? depotName;
+
+  @JsonKey(name: 'addressDetail')
+  final String? addressDetail;
+
+  DepotInfo({
+    this.depotId,
+    this.depotName,
+    this.addressDetail,
+  });
+
+  factory DepotInfo.fromJson(Map<String, dynamic> json) =>
+      _$DepotInfoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DepotInfoToJson(this);
+}
+
 /// 提油订单模型
 @JsonSerializable()
 class WithdrawOrderModel {
@@ -34,31 +94,6 @@ class WithdrawOrderModel {
   @JsonKey(name: 'withdrawNo')
   final String? withdrawNo;
 
-  /// 库存ID
-  @JsonKey(name: 'inventoryId')
-  final int? inventoryId;
-
-  /// 订单ID（向后兼容字段，映射到withdrawId）
-  final int? id;
-
-  /// 油品订单ID
-  final int? oilOrderId;
-
-  /// 订单状态
-  final String? status;
-
-  /// 油库名称
-  @JsonKey(name: 'depotName')
-  final String? depotName;
-
-  /// 加油站ID
-  @JsonKey(name: 'stationId')
-  final int? stationId;
-
-  /// 加油站名称
-  @JsonKey(name: 'stationName')
-  final String? stationName;
-
   /// 提油吨数
   @JsonKey(name: 'withdrawTon')
   final double? withdrawTon;
@@ -67,47 +102,67 @@ class WithdrawOrderModel {
   @JsonKey(name: 'vehicleInfo')
   final String? vehicleInfo;
 
+  /// 订单状态
+  final String? status;
+
   /// 创建时间
   @JsonKey(name: 'createdAt')
   final String? createdAt;
 
   /// 更新时间
+  @JsonKey(name: 'updatedAt')
   final String? updatedAt;
 
-  /// 省份名称
-  @JsonKey(name: 'provinceName')
-  final String? provinceName;
+  /// 加油站信息
+  final StationInfo? station;
 
-  /// 城市名称
-  @JsonKey(name: 'cityName')
-  final String? cityName;
+  /// 油库信息
+  final DepotInfo? depot;
 
-  /// 区域名称
-  @JsonKey(name: 'areaName')
-  final String? areaName;
+  /// 订单ID（向后兼容字段，映射到withdrawId）
+  final int? id;
 
-  /// 详细地址
-  @JsonKey(name: 'addressDetail')
-  final String? addressDetail;
+  /// 库存ID（向后兼容）
+  @JsonKey(name: 'inventoryId')
+  final int? inventoryId;
+
+  /// 油品订单ID（向后兼容）
+  final int? oilOrderId;
+
+  /// 加油站ID（向后兼容，从station中获取）
+  int? get stationId => station?.stationId;
+
+  /// 加油站名称（向后兼容，从station中获取）
+  String? get stationName => station?.stationName;
+
+  /// 油库名称（向后兼容，从depot中获取）
+  String? get depotName => depot?.depotName;
+
+  /// 省份名称（向后兼容，从station中获取）
+  String? get provinceName => station?.provinceName;
+
+  /// 城市名称（向后兼容，从station中获取）
+  String? get cityName => station?.cityName;
+
+  /// 区域名称（向后兼容，从station中获取）
+  String? get areaName => station?.areaName;
+
+  /// 详细地址（向后兼容，从station中获取）
+  String? get addressDetail => station?.addressDetail;
 
   WithdrawOrderModel({
     this.withdrawId,
     this.withdrawNo,
-    this.inventoryId,
-    this.id,
-    this.oilOrderId,
-    this.status,
-    this.stationId,
-    this.stationName,
     this.withdrawTon,
     this.vehicleInfo,
+    this.status,
     this.createdAt,
     this.updatedAt,
-    this.provinceName,
-    this.cityName,
-    this.areaName,
-    this.addressDetail,
-    this.depotName,
+    this.station,
+    this.depot,
+    this.id,
+    this.inventoryId,
+    this.oilOrderId,
   });
 
   factory WithdrawOrderModel.fromJson(Map<String, dynamic> json) =>

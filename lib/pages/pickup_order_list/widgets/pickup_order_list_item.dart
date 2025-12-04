@@ -138,7 +138,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
 
   Widget _buildCardBody(BuildContext context, bool isCompleted) {
     final amount = widget.item.withdrawTon ?? 0.0;
-    final stationName = widget.item.stationName ?? '未知油站';
+    final stationName = widget.item.station?.stationName ?? '未知油站';
     final label = isCompleted ? '实提量' : '提油量';
 
     return Row(
@@ -154,7 +154,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
             ),
             SizedBox(height: AppSizes.setHeight(2)),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              // crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 CommonText(
                   text: amount.toStringAsFixed(1),
@@ -166,13 +166,18 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
                   fontFamily: 'DIN Alternate',
                 ),
                 SizedBox(width: AppSizes.setWidth(2)),
-                CommonText(
-                  text: '吨',
-                  fontSize: AppSizes.setFontSize(12),
-                  fontWeight: FontWeight.w500,
-                  textColor: isCompleted
-                      ? const Color(0xFF10B981)
-                      : const Color(0xFF1F2937),
+                Padding(
+                  padding: EdgeInsetsGeometry.only(
+                    top: AppSizes.setHeight(4),
+                  ),
+                  child: CommonText(
+                    text: '吨',
+                    fontSize: AppSizes.setFontSize(12),
+                    fontWeight: FontWeight.w500,
+                    textColor: isCompleted
+                        ? const Color(0xFF10B981)
+                        : const Color(0xFF1F2937),
+                  ),
                 ),
               ],
             ),
