@@ -33,7 +33,7 @@ class CreateNewAccountScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: Icon(
-            Icons.arrow_back_ios,
+            Icons.arrow_back,
             color: const Color(0xFF1F2937),
             size: AppSizes.setWidth(20),
           ),
@@ -56,39 +56,15 @@ class CreateNewAccountScreen extends StatelessWidget {
               Column(
                 children: [
                   // Logo 盒子
-                  Container(
-                    width: AppSizes.setWidth(64),
-                    height: AppSizes.setHeight(64),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFF7ED),
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color:
-                              const Color(0xFFF59E0B).withValues(alpha: 0.15),
-                          blurRadius: 16,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
+                  Center(
+                    child: Image.asset(
+                      AssetsImg.LOGO,
+                      width: AppSizes.setWidth(132),
+                      height: AppSizes.setHeight(132),
                     ),
-                    child: Center(
-                      child: Image.asset(
-                        AssetsImg.LOGO,
-                        width: AppSizes.setWidth(32),
-                        height: AppSizes.setHeight(32),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: AppSizes.setHeight(16)),
-                  CommonText(
-                    text: '创建您的账户',
-                    fontWeight: FontWeight.w700,
-                    fontSize: AppSizes.setFontSize(24),
-                    textColor: const Color(0xFF1F2937),
                   ),
                 ],
               ),
-              SizedBox(height: AppSizes.setHeight(32)),
               FormBuilder(
                 key: ctrl.formKey,
                 child: Column(
@@ -201,7 +177,7 @@ class CreateNewAccountScreen extends StatelessWidget {
                         width: AppSizes.setHeight(20),
                         height: AppSizes.setHeight(20),
                       ),
-                      hintText: '邀请码 (选填)',
+                      hintText: '业务员推荐码',
                       radius: 12,
                       validators: FormBuilderValidators.compose([]),
                     ),

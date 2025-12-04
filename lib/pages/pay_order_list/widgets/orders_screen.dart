@@ -77,7 +77,7 @@ class _OrdersScreenState extends State<OrdersScreen>
         elevation: 0,
         leading: IconButton(
           icon: Icon(
-            Icons.arrow_back_ios,
+            Icons.arrow_back,
             color: const Color(0xFF1F2937),
             size: AppSizes.setWidth(20),
           ),

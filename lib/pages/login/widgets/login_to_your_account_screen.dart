@@ -38,27 +38,11 @@ class LoginToYourAccountScreen extends StatelessWidget {
                 Column(
                   children: [
                     // Logo 盒子
-                    Container(
-                      width: AppSizes.setWidth(64),
-                      height: AppSizes.setHeight(64),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFF7ED),
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color:
-                                const Color(0xFFF59E0B).withValues(alpha: 0.15),
-                            blurRadius: 16,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Image.asset(
-                          AssetsImg.LOGO,
-                          width: AppSizes.setWidth(32),
-                          height: AppSizes.setHeight(32),
-                        ),
+                    Center(
+                      child: Image.asset(
+                        AssetsImg.LOGO,
+                        width: AppSizes.setWidth(132),
+                        height: AppSizes.setHeight(132),
                       ),
                     ),
                     SizedBox(height: AppSizes.setHeight(16)),
@@ -92,7 +76,7 @@ class LoginToYourAccountScreen extends StatelessWidget {
                           width: AppSizes.setHeight(20),
                           height: AppSizes.setHeight(20),
                         ),
-                        hintText: '请输入账号/手机号',
+                        hintText: '请输入手机号',
                         radius: 12,
                       ),
                       SizedBox(height: AppSizes.setHeight(16)),

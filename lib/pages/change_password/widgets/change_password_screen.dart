@@ -165,7 +165,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 child: Padding(
                   padding: EdgeInsets.all(AppSizes.setWidth(8)),
                   child: Icon(
-                    Icons.arrow_back_ios,
+                    Icons.arrow_back,
                     size: AppSizes.setFontSize(24),
                     color: const Color(0xFF1F2937),
                   ),

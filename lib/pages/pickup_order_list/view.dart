@@ -120,7 +120,7 @@ class _PickupOrderListViewState extends State<PickupOrderListView>
                   child: Container(
                     padding: EdgeInsets.all(AppSizes.setWidth(8)),
                     child: Icon(
-                      Icons.arrow_back_ios,
+                      Icons.arrow_back,
                       size: AppSizes.setFontSize(18),
                       color: const Color(0xFF1F2937),
                     ),
