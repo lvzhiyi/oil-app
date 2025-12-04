@@ -205,7 +205,6 @@ class _StationEditFormState extends State<StationEditForm> {
                   ),
                 ],
               ),
-              if (widget.state.station != null) _buildInvoiceEntry(context),
               if (widget.state.hasError && widget.state.errorMessage != null)
                 Container(
                   padding: EdgeInsets.all(AppSizes.setWidth(12)),
@@ -310,62 +309,6 @@ class _StationEditFormState extends State<StationEditForm> {
           SizedBox(height: AppSizes.setHeight(8)),
           child,
         ],
-      ),
-    );
-  }
-
-  Widget _buildInvoiceEntry(BuildContext context) {
-    final colors = CustomAppColor.of(context);
-    return Container(
-      margin: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
-      padding: EdgeInsets.all(AppSizes.setWidth(20)),
-      decoration: BoxDecoration(
-        color: colors.bgContainer,
-        borderRadius: BorderRadius.circular(AppSizes.setWidth(16)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: GestureDetector(
-        onTap: () {
-          BaseRouter.push(
-            url: AppPage.invoiceEditPage.path,
-            extra: {
-              'stationId': widget.state.station?.id,
-              'stationName': widget.state.station?.stationName,
-            },
-          );
-        },
-        child: Row(
-          children: [
-            Container(
-              width: AppSizes.setWidth(4),
-              height: AppSizes.setHeight(14),
-              decoration: BoxDecoration(
-                color: colors.btnPurple,
-                borderRadius: BorderRadius.circular(AppSizes.setWidth(2)),
-              ),
-            ),
-            SizedBox(width: AppSizes.setWidth(6)),
-            Expanded(
-              child: CommonText(
-                text: '发票信息',
-                fontSize: AppSizes.setFontSize(15),
-                fontWeight: FontWeight.w700,
-                textColor: colors.txtBlack,
-              ),
-            ),
-            Icon(
-              Icons.chevron_right,
-              size: AppSizes.setFontSize(20),
-              color: colors.txtGrey,
-            ),
-          ],
-        ),
       ),
     );
   }
