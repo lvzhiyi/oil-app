@@ -290,9 +290,9 @@ class StationManagementItem extends StatelessWidget {
                       vertical: AppSizes.setHeight(6),
                     ),
                     decoration: BoxDecoration(
-                      color: colors.bgContainer,
+                      color: const Color(0xFFF5F3FF),
                       border: Border.all(
-                        color: colors.containerBorder,
+                        color: colors.btnPurple,
                         width: 1,
                       ),
                       borderRadius:
@@ -301,7 +301,8 @@ class StationManagementItem extends StatelessWidget {
                     child: CommonText(
                       text: '修改信息',
                       fontSize: AppSizes.setFontSize(13),
-                      textColor: colors.txtBlack,
+                      fontWeight: FontWeight.w500,
+                      textColor: colors.btnPurple,
                     ),
                   ),
                 ),
