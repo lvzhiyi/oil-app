@@ -43,7 +43,7 @@ class RegisterCtrl extends Cubit<RegisterState> {
     final name = formData['name'] ?? '';
     final password = formData['password'] ?? '';
     final code = formData['code'] ?? '';
-
+    final referralCode = formData['referralCode'] ?? '';
     // 跳转到 OTP 发送验证码页面，传递表单数据
     BaseRouter.push(url: AppPage.otpPage.path, extra: {
       'type': 'register',
@@ -51,6 +51,7 @@ class RegisterCtrl extends Cubit<RegisterState> {
       'name': name,
       'password': password,
       'code': code,
+      'referralCode': referralCode,
     });
   }
 
@@ -67,6 +68,7 @@ class RegisterCtrl extends Cubit<RegisterState> {
       phone: phone,
       code: otpCode,
       password: formData['password'] ?? '',
+      referralCode: formData['referralCode'] ?? '',
     );
     l.d('Register', '开始注册: reqParams.toJson(): ${reqParams.toJson()}');
 

@@ -8,18 +8,21 @@ class RegisterRequest {
   final String password;
   final String code;
   final String name;
+  final String? referralCode;
 
   RegisterRequest(
       {required this.phone,
       required this.password,
       required this.code,
-      required this.name});
+      required this.name,
+      this.referralCode});
 
   Map<String, dynamic> toJson() => {
         'phone': phone,
         'password': password,
         'code': code,
         'name': name,
+        'referralCode': referralCode,
       };
 }
 

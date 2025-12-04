@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:oil_business_app/pages/bind_station/controller.dart';
 import 'package:oil_business_app/pages/bind_station/state.dart';
 import 'package:oil_business_app/router/router.dart';
@@ -12,11 +9,11 @@ import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/static/img.dart';
 import 'package:oil_business_app/widgets/base/textfield/common_city_picker.dart';
 
-import '../../../resources/colors.dart';
 import '../../../utils/sizer_utils.dart';
 import '../../../widgets/base/button/common_button.dart';
 import '../../../widgets/base/text/common_text.dart';
 import '../../../widgets/base/textfield/common_textformfield.dart';
+import '../../../widgets/common/qualification_image_upload.dart';
 
 class BindStationScreen extends StatelessWidget {
   const BindStationScreen({super.key, required this.extra});
@@ -134,40 +131,58 @@ class BindStationScreen extends StatelessWidget {
                                   radius: 12,
                                 ),
                                 SizedBox(height: AppSizes.setHeight(16)),
-                                // 上传营业执照卡片
-                                _buildUploadCard(
-                                  context: context,
-                                  title: '上传营业执照',
-                                  hint: '支持 JPG, PNG 格式，最大 5MB',
-                                  icon: Icons.image_outlined,
-                                  imageUrl: state.businessLicenseUrl,
-                                  onImageChanged: (value) {
-                                    ctrl.updateBusinessLicense(value ?? '');
-                                    // 同步更新表单字段
-                                    final formState = ctrl.formKey.currentState;
-                                    if (formState != null && value != null) {
-                                      formState.fields['businessLicenseUrl']
-                                          ?.didChange(value);
-                                    }
-                                  },
+                                // 上传营业执照
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CommonText(
+                                      text: '营业执照',
+                                      fontSize: AppSizes.setFontSize(14),
+                                      fontWeight: FontWeight.w500,
+                                      textColor: const Color(0xFF1F2937),
+                                    ),
+                                    SizedBox(height: AppSizes.setHeight(8)),
+                                    QualificationImageUpload(
+                                      imageUrl: state.businessLicenseUrl,
+                                      hintText: '点击上传照片',
+                                      onChanged: (value) {
+                                        ctrl.updateBusinessLicense(value ?? '');
+                                        // 同步更新表单字段
+                                        final formState = ctrl.formKey.currentState;
+                                        if (formState != null && value != null) {
+                                          formState.fields['businessLicenseUrl']
+                                              ?.didChange(value);
+                                        }
+                                      },
+                                    ),
+                                  ],
                                 ),
                                 SizedBox(height: AppSizes.setHeight(16)),
-                                // 上传成品油零售许可卡片
-                                _buildUploadCard(
-                                  context: context,
-                                  title: '上传成品油零售许可',
-                                  hint: '请确保文字清晰可见',
-                                  icon: Icons.description_outlined,
-                                  imageUrl: state.fuelRetailPermitUrl,
-                                  onImageChanged: (value) {
-                                    ctrl.updateFuelRetailPermit(value ?? '');
-                                    // 同步更新表单字段
-                                    final formState = ctrl.formKey.currentState;
-                                    if (formState != null && value != null) {
-                                      formState.fields['fuelRetailPermitUrl']
-                                          ?.didChange(value);
-                                    }
-                                  },
+                                // 上传成品油零售许可
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CommonText(
+                                      text: '成品油零售许可',
+                                      fontSize: AppSizes.setFontSize(14),
+                                      fontWeight: FontWeight.w500,
+                                      textColor: const Color(0xFF1F2937),
+                                    ),
+                                    SizedBox(height: AppSizes.setHeight(8)),
+                                    QualificationImageUpload(
+                                      imageUrl: state.fuelRetailPermitUrl,
+                                      hintText: '点击上传照片',
+                                      onChanged: (value) {
+                                        ctrl.updateFuelRetailPermit(value ?? '');
+                                        // 同步更新表单字段
+                                        final formState = ctrl.formKey.currentState;
+                                        if (formState != null && value != null) {
+                                          formState.fields['fuelRetailPermitUrl']
+                                              ?.didChange(value);
+                                        }
+                                      },
+                                    ),
+                                  ],
                                 ),
                                 SizedBox(height: AppSizes.setHeight(32)),
                               ],
@@ -195,152 +210,4 @@ class BindStationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildUploadCard({
-    required BuildContext context,
-    required String title,
-    required String hint,
-    required IconData icon,
-    required String imageUrl,
-    required ValueChanged<String?> onImageChanged,
-  }) {
-    final hasImage = imageUrl.isNotEmpty;
-
-    return GestureDetector(
-      onTap: () async {
-        // 直接调用图片选择器
-        final ImagePicker picker = ImagePicker();
-        final XFile? image = await picker.pickImage(
-          source: ImageSource.gallery,
-          maxWidth: 1920,
-          maxHeight: 1080,
-          imageQuality: 85,
-        );
-        if (image != null) {
-          onImageChanged(image.path);
-        }
-      },
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: hasImage ? const Color(0xFF7165E3) : const Color(0xFFD1D5DB),
-            width: 1,
-            style: BorderStyle.solid,
-          ),
-          borderRadius: BorderRadius.circular(16),
-          color: hasImage ? const Color(0xFFF0FDF4) : const Color(0xFFF9FAFB),
-        ),
-        padding: EdgeInsets.all(AppSizes.setWidth(24)),
-        child: hasImage
-            ? Row(
-                children: [
-                  // 图片预览
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.file(
-                      File(imageUrl),
-                      width: AppSizes.setWidth(80),
-                      height: AppSizes.setHeight(80),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  SizedBox(width: AppSizes.setWidth(16)),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CommonText(
-                          text: title,
-                          fontSize: AppSizes.setFontSize(14),
-                          fontWeight: FontWeight.w600,
-                          textColor: const Color(0xFF1F2937),
-                        ),
-                        SizedBox(height: AppSizes.setHeight(4)),
-                        CommonText(
-                          text: '已上传',
-                          fontSize: AppSizes.setFontSize(12),
-                          textColor: const Color(0xFF9CA3AF),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // 重新上传按钮
-                  GestureDetector(
-                    onTap: () async {
-                      final ImagePicker picker = ImagePicker();
-                      final XFile? image = await picker.pickImage(
-                        source: ImageSource.gallery,
-                        maxWidth: 1920,
-                        maxHeight: 1080,
-                        imageQuality: 85,
-                      );
-                      if (image != null) {
-                        onImageChanged(image.path);
-                      }
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppSizes.setWidth(12),
-                        vertical: AppSizes.setHeight(6),
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColor.txtPurple.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: CommonText(
-                        text: '重新上传',
-                        fontSize: AppSizes.setFontSize(12),
-                        fontWeight: FontWeight.w600,
-                        textColor: AppColor.txtPurple,
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            : Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        width: AppSizes.setWidth(48),
-                        height: AppSizes.setHeight(48),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(50),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.05),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          icon,
-                          color: AppColor.txtPurple,
-                          size: AppSizes.setWidth(24),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: AppSizes.setHeight(12)),
-                  CommonText(
-                    text: title,
-                    fontSize: AppSizes.setFontSize(14),
-                    fontWeight: FontWeight.w600,
-                    textColor: const Color(0xFF1F2937),
-                  ),
-                  SizedBox(height: AppSizes.setHeight(4)),
-                  CommonText(
-                    text: hint,
-                    fontSize: AppSizes.setFontSize(12),
-                    textColor: const Color(0xFF9CA3AF),
-                  ),
-                ],
-              ),
-      ),
-    );
-  }
 }

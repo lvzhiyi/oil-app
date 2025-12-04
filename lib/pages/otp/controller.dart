@@ -136,6 +136,7 @@ class OtpCtrl extends Cubit<OtpState> {
           phone: phone,
           code: otpCode,
           password: password,
+          referralCode: extra['referralCode'] ?? '',
         );
 
         final response = await authService.register(reqParams);
