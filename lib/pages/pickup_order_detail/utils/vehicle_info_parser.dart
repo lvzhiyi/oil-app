@@ -32,10 +32,37 @@ class VehicleInfoParser {
     }
   }
 
+  /// 从 vehicleInfo 字符串中提取原始调度明细
+  ///
+  /// vehicleInfo 格式: 原始字符串|||JSON字符串
+  /// 返回 ||| 前面的原始字符串，如果没有 ||| 则返回空字符串
+  static String getRawDispatchContent(String? vehicleInfo) {
+    if (vehicleInfo == null || vehicleInfo.isEmpty) {
+      return '';
+    }
+
+    if (vehicleInfo.contains('|||')) {
+      final parts = vehicleInfo.split('|||');
+      if (parts.isNotEmpty && parts[0].trim().isNotEmpty) {
+        return parts[0].trim();
+      }
+    }
+
+    return '';
+  }
+
   /// 生成调度信息文本内容
   ///
-  /// 用于生成凭证图片时的调度信息展示
-  static String getDispatchContent(VehicleModel? vehicleModel) {
+  /// 优先使用原始调度明细字符串，如果没有则从 VehicleModel 生成
+  static String getDispatchContent(VehicleModel? vehicleModel,
+      {String? vehicleInfo}) {
+    // 优先使用原始调度明细
+    final rawContent = getRawDispatchContent(vehicleInfo);
+    if (rawContent.isNotEmpty) {
+      return rawContent;
+    }
+
+    // 如果没有原始调度明细，则从 VehicleModel 生成
     if (vehicleModel == null) return '暂无调度信息';
 
     final List<String> lines = [];
