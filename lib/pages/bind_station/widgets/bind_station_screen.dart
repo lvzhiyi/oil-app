@@ -139,7 +139,7 @@ class BindStationScreen extends StatelessWidget {
                             ),
                             _buildInputWrapper(
                               context: context,
-                              label: '成品油零售许可',
+                              label: '成品油零售许可证',
                               child: QualificationImageUpload(
                                 imageUrl: state.fuelRetailPermitUrl,
                                 hintText: '点击上传照片',
