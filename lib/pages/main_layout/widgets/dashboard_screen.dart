@@ -59,7 +59,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     : selectedBottomIndex == 2
                         ? '我的'
                         : "",
-            isShowProfile: selectedBottomIndex == 0,
+            isShowProfile: false,
             isShowNotification: false,
             isShowLike: false,
             isShowSearchField: false,

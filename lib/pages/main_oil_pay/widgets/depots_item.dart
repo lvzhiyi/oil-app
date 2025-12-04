@@ -198,7 +198,7 @@ class _PriceItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
           ),
           child: CommonText(
-            text: fuelType,
+            text: fuelType + '#',
             fontSize: AppSizes.setFontSize(12),
             textColor: const Color(0xFF6B7280),
           ),
