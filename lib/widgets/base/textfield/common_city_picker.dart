@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -213,13 +214,17 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
       height: AppSizes.setHeight(270),
       confirmText: '确定',
       cancelText: '取消',
-      itemExtent: AppSizes.setHeight(40),
+      itemExtent: AppSizes.setHeight(44),
+      backgroundColor: Colors.white,
+      containerColor: Colors.white,
+      selecteds: selectedIndexes, // 设置默认选中的索引
+      textAlign: TextAlign.center,
       onBuilderItem: (BuildContext context, String? text, Widget? child,
           bool isSelected, int index, int total) {
-        return Container(
-            padding: EdgeInsets.all(AppSizes.setWidth(10)), child: child);
+        return Center(
+          child: child,
+        );
       },
-      selecteds: selectedIndexes, // 设置默认选中的索引
       onConfirm: (Picker picker, List value) {
         final provinceCode = cityData[value[0]]['code'];
         final provinceName = cityData[value[0]]['name'];
@@ -270,6 +275,11 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
         data: items,
       ),
       title: const Text("选择地址"),
+      selectionOverlay: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFcccccc).withValues(alpha: 0.5),
+        ),
+      ),
     ).showModal(context);
   }
 
