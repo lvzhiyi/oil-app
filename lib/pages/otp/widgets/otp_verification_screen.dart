@@ -39,6 +39,22 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     // 避免在页面销毁时关闭全局单例
     final ctrl = context.read<OtpCtrl>();
     return Scaffold(
+      appBar: widget.extra?['type'] == 'password_change'
+          ? AppBar(
+              centerTitle: true,
+              backgroundColor: CustomAppColor.of(context).white,
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: CustomAppColor.of(context).txtBlack,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            )
+          : null,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(22)),

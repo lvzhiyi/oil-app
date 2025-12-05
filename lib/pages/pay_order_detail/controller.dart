@@ -355,14 +355,12 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
               btnText: '取消订单',
               onTap: () async {
                 await cancelOrder(order.id?.toString() ?? '');
-                Navigator.of(context).pop();
+                BaseRouter.pop();
               },
             ),
           ),
         ],
       ),
-    ).whenComplete(() {
-      BaseRouter.popToRoot();
-    });
+    ).whenComplete(() {});
   }
 }

@@ -115,6 +115,7 @@ class HttpRespInterceptor extends InterceptorsWrapper {
           authResponse.copyWith(
             accessToken: authResponse.accessToken,
             refreshToken: refreshToken,
+            account: appController.state.authResponse?.account,
           ),
         );
 

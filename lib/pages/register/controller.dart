@@ -55,41 +55,6 @@ class RegisterCtrl extends Cubit<RegisterState> {
     });
   }
 
-  /// 提交注册（从 OTP 页面调用）
-  submit({required String phone, required String otpCode}) async {
-    if (!registerPrecheck()) return;
-
-    emit(state.copyWith(loading: true, errorMessage: null));
-
-    // 获取表单数据
-    final formData = formKey.currentState?.value ?? {};
-    final reqParams = RegisterRequest(
-      name: formData['name'] ?? '',
-      phone: phone,
-      code: otpCode,
-      password: formData['password'] ?? '',
-      referralCode: formData['referralCode'] ?? '',
-    );
-    l.d('Register', '开始注册: reqParams.toJson(): ${reqParams.toJson()}');
-
-    try {
-      // 调用注册接口
-      final response = await authService.register(reqParams);
-      BaseConfig.appContext
-          ?.read<AppController>()
-          .loginSucessProcess(response, type: AuthReqType.register);
-
-      l.d('Register', '注册成功 response: $response');
-      emit(state.copyWith(
-        loading: false,
-        registerSuccess: true,
-      ));
-    } catch (e) {
-      l.e('Register', '注册失败: $e');
-      emit(state.copyWith(loading: false));
-    }
-  }
-
   /// 注册成功后跳转到首页
   void navigateToHome(BuildContext context) {
     // 跳转到主布局页面（包含TabBar的首页）
