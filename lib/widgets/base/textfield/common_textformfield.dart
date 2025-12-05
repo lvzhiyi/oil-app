@@ -85,6 +85,17 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
     }
   }
 
+  /// 处理文本变化，过滤输入法组合状态
+  void _handleTextChanged(String? value) {
+    // 检查是否正在输入法组合中（拼音输入未确认状态）
+    final isComposing = widget.controller?.value.composing.isValid ?? false;
+
+    // 只在非组合状态时触发 onChanged 回调
+    if (!isComposing && widget.onChanged != null) {
+      widget.onChanged!(value);
+    }
+  }
+
   void _addControllerListener(TextEditingController? controller) {
     controller?.addListener(_onControllerChanged);
   }
@@ -244,7 +255,7 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
           textAlignVertical: widget.textAlignVertical ?? TextAlignVertical.top,
           maxLength: widget.maxLength,
           controller: widget.controller,
-          onChanged: widget.onChanged,
+          onChanged: _handleTextChanged,
           maxLines: widget.maxLines ?? 1,
           obscureText: _obscureText,
           keyboardType: widget.keyboardType,
