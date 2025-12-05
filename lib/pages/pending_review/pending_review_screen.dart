@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/station_res_type.dart';
+import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/static/img.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
+import 'package:oil_business_app/widgets/base/bottom_sheet/bottom_sheet.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
@@ -135,7 +139,6 @@ class _PendingReviewScreenState extends State<PendingReviewScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: AppSizes.setHeight(20)),
                 // 品牌头部
                 Column(
                   children: [
@@ -169,7 +172,7 @@ class _PendingReviewScreenState extends State<PendingReviewScreen> {
                 // 失败原因提示
                 if (isRejected && _currentStation?.rejectionReason != null)
                   Padding(
-                    padding: EdgeInsets.only(bottom: AppSizes.setHeight(24)),
+                    padding: EdgeInsets.only(bottom: AppSizes.setHeight(16)),
                     child: Container(
                       width: double.infinity,
                       padding: EdgeInsets.all(AppSizes.setWidth(16)),
@@ -221,7 +224,7 @@ class _PendingReviewScreenState extends State<PendingReviewScreen> {
                 // 中间的插图（不替换）
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    vertical: AppSizes.setHeight(24),
+                    vertical: AppSizes.setHeight(16),
                   ),
                   child: Image.asset(
                     AssetsImg.IMG_PENDING_REVIEW,
@@ -234,7 +237,7 @@ class _PendingReviewScreenState extends State<PendingReviewScreen> {
                   Padding(
                     padding: EdgeInsets.only(
                       top: AppSizes.setHeight(24),
-                      bottom: AppSizes.setHeight(20),
+                      bottom: AppSizes.setHeight(12),
                     ),
                     child: CommonButton(
                       btnText: '修改加油站信息',
@@ -257,10 +260,113 @@ class _PendingReviewScreenState extends State<PendingReviewScreen> {
                       },
                     ),
                   ),
+                // 退出登录按钮
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: AppSizes.setHeight(10),
+                    bottom: AppSizes.setHeight(16),
+                  ),
+                  child: CommonButton(
+                    radius: 26,
+                    buttonColor: CustomAppColor.of(context).white,
+                    borderColor: CustomAppColor.of(context).borderGrey,
+                    isButtonShadow: false,
+                    onTap: () {
+                      _showLogoutDialog(context);
+                    },
+                    child: CommonText(
+                      text: '退出登录',
+                      textColor: CustomAppColor.of(context).txtGrey,
+                      fontSize: AppSizes.setFontSize(16),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  /// 显示退出登录确认对话框
+  void _showLogoutDialog(BuildContext context) {
+    customBottomSheet(
+      isPaddingRequired: false,
+      isDone: false,
+      maxHeightRatio: 0.4,
+      context: context,
+      title: '退出登录',
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Center(
+            child: CommonText(
+              text: '您确定要退出登录吗？',
+              fontSize: AppSizes.setFontSize(18),
+              fontWeight: FontWeight.w500,
+              textColor: CustomAppColor.of(context).txtGrey,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(height: AppSizes.setHeight(24)),
+          Container(
+            decoration: BoxDecoration(
+              color: CustomAppColor.of(context).btnWhite,
+              border: Border(
+                top: BorderSide(
+                  color: CustomAppColor.of(context)
+                      .borderGrey
+                      .withValues(alpha: 0.4),
+                ),
+              ),
+            ),
+            padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(6)),
+            margin: EdgeInsets.zero,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: AppSizes.setWidth(20),
+                      vertical: AppSizes.setHeight(12)),
+                  child: CommonButton(
+                    height: AppSizes.setHeight(44),
+                    btnText: '取消',
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    buttonColor: CustomAppColor.of(context).btnWhite,
+                    isButtonShadow: false,
+                    borderColor: CustomAppColor.of(context).borderPurple,
+                    radius: 3,
+                    child: CommonText(
+                      text: '取消',
+                      textColor: CustomAppColor.of(context).txtPurple,
+                      fontSize: AppSizes.setFontSize(16),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: AppSizes.setWidth(20),
+                      vertical: AppSizes.setHeight(6)),
+                  child: CommonButton(
+                      radius: 3,
+                      height: AppSizes.setHeight(44),
+                      btnText: '退出登录',
+                      onTap: () {
+                        BaseConfig.appContext?.read<AppController>().logout();
+                        Navigator.pop(context);
+                      }),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -173,7 +173,7 @@ class AppVersionUtil {
 
   /// 是否有更新新版本
   static bool? hasNewVersionUpdate() {
-    if (newVersion?.version == '') {
+    if (newVersion?.version.isEmpty ?? true) {
       return false;
     }
     return AppVersionUtil.compareVersion(
