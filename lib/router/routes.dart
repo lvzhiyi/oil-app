@@ -19,6 +19,7 @@ import 'package:oil_business_app/pages/register/page.dart';
 import 'package:oil_business_app/pages/change_password/page.dart';
 import 'package:oil_business_app/pages/privacy_feedback/page.dart';
 import 'package:oil_business_app/pages/service_agreement/page.dart';
+import 'package:oil_business_app/pages/forgot_password/page.dart';
 
 import 'package:oil_business_app/pages/profile/page.dart';
 import 'package:oil_business_app/pages/main_layout/page.dart';
@@ -115,6 +116,9 @@ enum AppPage {
 
   /// 发票编辑页面
   invoiceEditPage('/invoiceEdit'),
+
+  /// 找回密码页面
+  forgotPasswordPage('/forgotPassword'),
   ;
 
   const AppPage(this.path);
@@ -232,6 +236,9 @@ extension PageRoute on AppPage {
 
       case AppPage.invoiceEditPage:
         return (context, state) => const InvoiceEditPage();
+
+      case AppPage.forgotPasswordPage:
+        return (context, state) => const ForgotPasswordPage();
 
       default:
         return (context, state) => const Text('404');

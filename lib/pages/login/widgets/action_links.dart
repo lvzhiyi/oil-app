@@ -44,8 +44,7 @@ class ActionLinks extends StatelessWidget {
         // 忘记密码链接
         InkWell(
           onTap: () {
-            // TODO: 实现忘记密码功能
-            // BaseRouter.push(url: AppPage.forgotPasswordPage.path);
+            BaseRouter.push(url: AppPage.forgotPasswordPage.path);
           },
           child: CommonText(
             text: '忘记密码?',

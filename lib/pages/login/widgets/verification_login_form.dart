@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:oil_business_app/resources/colors.dart';
-import 'package:oil_business_app/static/icon.dart';
+import 'package:oil_business_app/static/svg.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/utils/validators/verification_code_validator.dart';
 import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dart';
+import 'package:oil_business_app/widgets/common/svg_asset.dart';
 
 /// 验证码登录表单组件（仅包含验证码字段）
 class VerificationLoginForm extends StatelessWidget {
@@ -23,10 +24,11 @@ class VerificationLoginForm extends StatelessWidget {
       name: 'verificationCode',
       borderColor: const Color(0xFFE5E7EB),
       fillColor: const Color(0xFFF9FAFB),
-      leadingIcon: Image.asset(
-        AssetsIcon.IC_PASSWORD,
+      leadingIcon: SvgAsset(
+        assetName: AssetsSvg.SMSCODE,
         width: AppSizes.setHeight(20),
         height: AppSizes.setHeight(20),
+        color: const Color(0xFF9CA3AF),
       ),
       hintText: '请输入4位验证码',
       keyboardType: TextInputType.number,
