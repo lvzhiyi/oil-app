@@ -355,7 +355,7 @@ enum LoginTabType {
 **Authentication Failures**:
 - Invalid credentials: Display "手机号或密码错误" (Incorrect phone or password)
 - Account not found: Display "账户不存在，请先注册" (Account does not exist, please register)
-- Account locked: Display "账户已被锁定，请联系客服" (Account locked, contact support)
+- Account locked: Display "账号已被锁定，请联系您的业务员" (Account locked, contact support)
 - Verification code expired: Display "验证码已过期，请重新获取" (Verification code expired)
 - Verification code incorrect: Display "验证码错误" (Incorrect verification code)
 
