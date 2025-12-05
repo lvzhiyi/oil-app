@@ -37,8 +37,25 @@ class StationEditCtrl extends Cubit<StationEditState> {
     emit(state.copyWith(isLoading: true));
     try {
       final response = await stationService.getStationDetail(stationId);
-      if (response.station != null) {
-        initState(response.station!);
+      if (response.id != null) {
+        // 从 response 构建 Station 对象
+        final station = Station(
+          id: response.id,
+          stationName: response.stationName,
+          provinceCode: response.provinceCode,
+          provinceName: response.provinceName,
+          cityCode: response.cityCode,
+          cityName: response.cityName,
+          areaCode: response.areaCode,
+          areaName: response.areaName,
+          addressDetail: response.addressDetail,
+          businessLicenseUrl: response.businessLicenseUrl,
+          fuelRetailPermitUrl: response.fuelRetailPermitUrl,
+          status: response.status,
+          createdAt: response.createdAt,
+          updatedAt: response.updatedAt,
+        );
+        initState(station);
       }
     } catch (e) {
       l.e('StationEditCtrl', '加载加油站详情失败: $e');

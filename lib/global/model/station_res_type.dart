@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oil_business_app/global/enum/common.dart';
-import 'package:oil_business_app/global/model/invoice_info.dart';
 
 part 'station_res_type.g.dart';
 
@@ -105,12 +104,56 @@ class Station {
 
 @JsonSerializable()
 class StationDetailResponse {
-  final Station? station;
-  final InvoiceInfo? invoice;
+  final int? id;
+  final String? stationName;
+  final String? provinceCode;
+  final String? provinceName;
+  final String? cityCode;
+  final String? cityName;
+  final String? areaCode;
+  final String? areaName;
+  final String? addressDetail;
+  final String? businessLicenseUrl;
+  final String? fuelRetailPermitUrl;
+  final String? invoiceTitle;
+  final String? taxNumber;
+  final String? bankName;
+  final String? bankAccount;
+  final String? companyAddress;
+  final String? companyPhone;
+  final String? invoiceType;
+  final StationStatus? status;
+  final String? statusRemark;
+  final int? reviewedBy;
+  final String? reviewedAt;
+  final String? createdAt;
+  final String? updatedAt;
 
   StationDetailResponse({
-    this.station,
-    this.invoice,
+    this.id,
+    this.stationName,
+    this.provinceCode,
+    this.provinceName,
+    this.cityCode,
+    this.cityName,
+    this.areaCode,
+    this.areaName,
+    this.addressDetail,
+    this.businessLicenseUrl,
+    this.fuelRetailPermitUrl,
+    this.invoiceTitle,
+    this.taxNumber,
+    this.bankName,
+    this.bankAccount,
+    this.companyAddress,
+    this.companyPhone,
+    this.invoiceType,
+    this.status,
+    this.statusRemark,
+    this.reviewedBy,
+    this.reviewedAt,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory StationDetailResponse.fromJson(Map<String, dynamic> json) =>

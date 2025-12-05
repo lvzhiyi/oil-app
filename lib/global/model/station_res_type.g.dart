@@ -72,17 +72,57 @@ const _$StationStatusEnumMap = {
 StationDetailResponse _$StationDetailResponseFromJson(
         Map<String, dynamic> json) =>
     StationDetailResponse(
-      station: json['station'] == null
-          ? null
-          : Station.fromJson(json['station'] as Map<String, dynamic>),
-      invoice: json['invoice'] == null
-          ? null
-          : InvoiceInfo.fromJson(json['invoice'] as Map<String, dynamic>),
+      id: (json['id'] as num?)?.toInt(),
+      stationName: json['stationName'] as String?,
+      provinceCode: json['provinceCode'] as String?,
+      provinceName: json['provinceName'] as String?,
+      cityCode: json['cityCode'] as String?,
+      cityName: json['cityName'] as String?,
+      areaCode: json['areaCode'] as String?,
+      areaName: json['areaName'] as String?,
+      addressDetail: json['addressDetail'] as String?,
+      businessLicenseUrl: json['businessLicenseUrl'] as String?,
+      fuelRetailPermitUrl: json['fuelRetailPermitUrl'] as String?,
+      invoiceTitle: json['invoiceTitle'] as String?,
+      taxNumber: json['taxNumber'] as String?,
+      bankName: json['bankName'] as String?,
+      bankAccount: json['bankAccount'] as String?,
+      companyAddress: json['companyAddress'] as String?,
+      companyPhone: json['companyPhone'] as String?,
+      invoiceType: json['invoiceType'] as String?,
+      status: $enumDecodeNullable(_$StationStatusEnumMap, json['status']),
+      statusRemark: json['statusRemark'] as String?,
+      reviewedBy: (json['reviewedBy'] as num?)?.toInt(),
+      reviewedAt: json['reviewedAt'] as String?,
+      createdAt: json['createdAt'] as String?,
+      updatedAt: json['updatedAt'] as String?,
     );
 
 Map<String, dynamic> _$StationDetailResponseToJson(
         StationDetailResponse instance) =>
     <String, dynamic>{
-      'station': instance.station,
-      'invoice': instance.invoice,
+      'id': instance.id,
+      'stationName': instance.stationName,
+      'provinceCode': instance.provinceCode,
+      'provinceName': instance.provinceName,
+      'cityCode': instance.cityCode,
+      'cityName': instance.cityName,
+      'areaCode': instance.areaCode,
+      'areaName': instance.areaName,
+      'addressDetail': instance.addressDetail,
+      'businessLicenseUrl': instance.businessLicenseUrl,
+      'fuelRetailPermitUrl': instance.fuelRetailPermitUrl,
+      'invoiceTitle': instance.invoiceTitle,
+      'taxNumber': instance.taxNumber,
+      'bankName': instance.bankName,
+      'bankAccount': instance.bankAccount,
+      'companyAddress': instance.companyAddress,
+      'companyPhone': instance.companyPhone,
+      'invoiceType': instance.invoiceType,
+      'status': _$StationStatusEnumMap[instance.status],
+      'statusRemark': instance.statusRemark,
+      'reviewedBy': instance.reviewedBy,
+      'reviewedAt': instance.reviewedAt,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
