@@ -14,8 +14,8 @@ class InvoiceTypeSegmentedControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final types = [
-      {'value': 'normal_vat', 'label': '增值税普通发票'},
       {'value': 'special_vat', 'label': '增值税专用发票'},
+      {'value': 'general_vat', 'label': '增值税普通发票'},
     ];
 
     return Container(

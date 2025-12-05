@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/commom/upload.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/station_req_type.dart';
@@ -17,16 +16,56 @@ import 'package:oil_business_app/widgets/popup/dialog.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
 class StationEditCtrl extends Cubit<StationEditState> {
-  StationEditCtrl({Station? station, bool isFromPendingReview = false})
-      : super(StationEditState()) {
+  StationEditCtrl({
+    Station? station,
+    int? stationId,
+    bool isFromPendingReview = false,
+  }) : super(StationEditState()) {
     _isFromPendingReview = isFromPendingReview;
     if (station != null) {
       initState(station);
+    } else if (stationId != null) {
+      loadStationDetail(stationId);
     }
   }
 
   String? _stationId;
   bool _isFromPendingReview = false;
+
+  /// 加载加油站详情
+  Future<void> loadStationDetail(int stationId) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      final response = await stationService.getStationDetail(stationId);
+      if (response.id != null) {
+        // 从 response 构建 Station 对象
+        final station = Station(
+          id: response.id,
+          stationName: response.stationName,
+          provinceCode: response.provinceCode,
+          provinceName: response.provinceName,
+          cityCode: response.cityCode,
+          cityName: response.cityName,
+          areaCode: response.areaCode,
+          areaName: response.areaName,
+          addressDetail: response.addressDetail,
+          businessLicenseUrl: response.businessLicenseUrl,
+          fuelRetailPermitUrl: response.fuelRetailPermitUrl,
+          status: response.status,
+          createdAt: response.createdAt,
+          updatedAt: response.updatedAt,
+        );
+        initState(station);
+      }
+    } catch (e) {
+      l.e('StationEditCtrl', '加载加油站详情失败: $e');
+      emit(state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: '加载失败，请稍后重试',
+      ));
+    }
+  }
 
   void initState(Station station) {
     _stationId = station.idString;

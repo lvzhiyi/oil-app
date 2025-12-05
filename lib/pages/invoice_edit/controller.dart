@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oil_business_app/global/model/invoice_info.dart';
 import 'package:oil_business_app/global/model/invoice_req_type.dart';
 import 'package:oil_business_app/global/service/station_service.dart';
 import 'package:oil_business_app/pages/invoice_edit/state.dart';
@@ -13,27 +12,39 @@ class InvoiceEditCtrl extends Cubit<InvoiceEditState> {
   InvoiceEditCtrl({
     required int stationId,
     String? stationName,
-    InvoiceInfo? invoice,
   }) : super(InvoiceEditState(
           stationId: stationId,
           stationName: stationName ?? '',
         )) {
-    if (invoice != null) {
-      _initFromInvoice(invoice);
-    }
+    // 始终从接口加载发票信息
+    loadStationDetail(stationId);
   }
 
-  void _initFromInvoice(InvoiceInfo invoice) {
-    emit(state.copyWith(
-      invoiceTitle: invoice.invoiceTitle ?? '',
-      taxNumber: invoice.taxNumber ?? '',
-      bankName: invoice.bankName ?? '',
-      bankAccount: invoice.bankAccount ?? '',
-      companyAddress: invoice.companyAddress ?? '',
-      companyPhone: invoice.companyPhone ?? '',
-      invoiceType: invoice.invoiceType ?? 'normal_vat', // 默认选中增值税普通发票
-      originalInvoice: invoice,
-    ));
+  /// 加载加油站详情（包含发票信息）
+  Future<void> loadStationDetail(int stationId) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      final response = await stationService.getStationDetail(stationId);
+
+      emit(state.copyWith(
+        stationName: response.stationName ?? '',
+        invoiceTitle: response.invoiceTitle ?? '',
+        taxNumber: response.taxNumber ?? '',
+        bankName: response.bankName ?? '',
+        bankAccount: response.bankAccount ?? '',
+        companyAddress: response.companyAddress ?? '',
+        companyPhone: response.companyPhone ?? '',
+        invoiceType: response.invoiceType ?? 'special_vat', // 默认选中增值税专用发票
+        isLoading: false,
+      ));
+    } catch (e) {
+      l.e('InvoiceEditCtrl', '加载加油站详情失败: $e');
+      emit(state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: '加载失败，请稍后重试',
+      ));
+    }
   }
 
   void updateInvoiceTitle(String value) {

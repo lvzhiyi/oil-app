@@ -19,6 +19,10 @@ abstract class StationService {
     @Query('statuses') List<String> statuses,
   );
 
+  /// 获取加油站详情（包含发票信息）
+  @GET('/stations/{id}')
+  Future<StationDetailResponse> getStationDetail(@Path('id') int id);
+
   /// 新增加油站
   @POST('/stations')
   Future bindStation(@Body() BindStationRequest request);

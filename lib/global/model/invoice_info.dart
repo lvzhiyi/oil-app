@@ -6,7 +6,7 @@ part 'invoice_info.g.dart';
 enum InvoiceType {
   @JsonValue('special_vat')
   specialVat, // 增值税专用发票
-  @JsonValue('normal_vat')
+  @JsonValue('general_vat')
   normalVat, // 增值税普通发票
 }
 
@@ -26,7 +26,7 @@ extension InvoiceTypeExtension on InvoiceType {
       case InvoiceType.specialVat:
         return 'special_vat';
       case InvoiceType.normalVat:
-        return 'normal_vat';
+        return 'general_vat';
     }
   }
 
@@ -35,7 +35,7 @@ extension InvoiceTypeExtension on InvoiceType {
     switch (value) {
       case 'special_vat':
         return InvoiceType.specialVat;
-      case 'normal_vat':
+      case 'general_vat':
         return InvoiceType.normalVat;
       default:
         return null;
