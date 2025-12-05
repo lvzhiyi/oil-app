@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
+import 'package:oil_business_app/global/app_state.dart';
 import 'package:oil_business_app/interfaces/top_bar_click_listener.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
@@ -81,58 +82,48 @@ class _AccountScreenState extends State<AccountScreen>
   }
 
   Widget _buildUserInfo() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(24)),
-      child: Row(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
-            ),
-            child: ClipOval(
-              child: Image.asset(
-                AssetsIcon.IC_AVATAR,
-                height: AppSizes.setHeight(64),
-                width: AppSizes.setWidth(64),
-                fit: BoxFit.cover,
+    return BlocBuilder<AppController, AppState>(builder: (context, state) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(24)),
+        child: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 2),
+              ),
+              child: ClipOval(
+                child: Image.asset(
+                  AssetsIcon.IC_AVATAR,
+                  height: AppSizes.setHeight(64),
+                  width: AppSizes.setWidth(64),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          SizedBox(width: AppSizes.setWidth(16)),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CommonText(
-                text: context
-                        .read<AppController>()
-                        .state
-                        .authResponse
-                        ?.account
-                        ?.name ??
-                    '',
-                fontWeight: FontWeight.w700,
-                textColor: Colors.white,
-                fontSize: AppSizes.setFontSize(20),
-              ),
-              SizedBox(height: AppSizes.setHeight(4)),
-              CommonText(
-                text: context
-                        .read<AppController>()
-                        .state
-                        .authResponse
-                        ?.account
-                        ?.phone ??
-                    '',
-                fontWeight: FontWeight.w400,
-                textColor: Colors.white,
-                fontSize: AppSizes.setFontSize(14),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+            SizedBox(width: AppSizes.setWidth(16)),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CommonText(
+                  text: state.authResponse?.account?.name ?? '11',
+                  fontWeight: FontWeight.w700,
+                  textColor: Colors.white,
+                  fontSize: AppSizes.setFontSize(20),
+                ),
+                SizedBox(height: AppSizes.setHeight(4)),
+                CommonText(
+                  text: state.authResponse?.account?.phone ?? '22',
+                  fontWeight: FontWeight.w400,
+                  textColor: Colors.white,
+                  fontSize: AppSizes.setFontSize(14),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildActionBar() {

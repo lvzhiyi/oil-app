@@ -22,13 +22,14 @@ class _PayOrderDetailPage extends BaseState<PayOrderDetailPage>
   Widget body(context) {
     final order = widget.extra?['order'] as OrderModel?;
     final orderId = widget.extra?['orderId'] as int?;
-
+    final from = widget.extra?['from'] as String?;
     return BlocProvider(
       create: (BuildContext context) =>
           PayOrderDetailCtrl(order, orderId: orderId),
       child: BlocBuilder<PayOrderDetailCtrl, PayOrderDetailState>(
           builder: (context, state) {
-        return PayOrderDetailView(state: state, order: state.order ?? order);
+        return PayOrderDetailView(
+            state: state, order: state.order ?? order, from: from);
       }),
     );
   }

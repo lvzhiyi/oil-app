@@ -214,7 +214,7 @@ class _PriceItem extends StatelessWidget {
               fontFamily: 'DIN Alternate',
             ),
             children: [
-              TextSpan(text: formattedPrice),
+              TextSpan(text: price.toString()),
               TextSpan(
                 text: '元/吨',
                 style: TextStyle(

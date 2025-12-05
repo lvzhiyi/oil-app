@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/pages/pay_order_list/controller.dart';
 import 'package:oil_business_app/pages/pay_order_list/model/orders_data.dart';
+import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/widgets/common/base_appbar.dart';
 import 'package:oil_business_app/widgets/popup/dialog.dart';
 import 'widgets/upload_voucher_dialog.dart';
@@ -21,8 +22,9 @@ import 'controller.dart';
 class PayOrderDetailView extends HookWidget {
   final PayOrderDetailState state;
   final OrderModel? order;
-
-  const PayOrderDetailView({Key? key, required this.state, this.order})
+  final String? from;
+  const PayOrderDetailView(
+      {Key? key, required this.state, this.order, this.from})
       : super(key: key);
 
   @override
@@ -47,10 +49,17 @@ class PayOrderDetailView extends HookWidget {
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      appBar: const BaseAppBar(
+      appBar: BaseAppBar(
         title: '支付订单详情',
         backgroundColor: Colors.transparent,
         centerTitle: true,
+        leadingOnClick: () {
+          if (from == 'oilPurchaseDetail') {
+            BaseRouter.popToRoot();
+          } else {
+            BaseRouter.pop();
+          }
+        },
       ),
       body: Column(
         children: [
@@ -78,7 +87,8 @@ class PayOrderDetailView extends HookWidget {
             ),
           ),
           // 只有未支付的订单才显示操作按钮
-          if (orderDetail?.status != OrderStatus.Completed)
+          if (orderDetail?.status != OrderStatus.Completed &&
+              orderDetail?.status != OrderStatus.Cancelled)
             _buildBottomActions(context, controller),
         ],
       ),

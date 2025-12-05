@@ -297,6 +297,11 @@ class _OrdersScreenState extends State<OrdersScreen>
               children: [
                 Row(
                   children: [
+                    // CommonText(
+                    //   text: 'SN: ',
+                    //   fontSize: AppSizes.setFontSize(12),
+                    //   textColor: const Color(0xFF6B7280),
+                    // ),
                     CommonText(
                       text: order.orderNo ?? '',
                       fontSize: AppSizes.setFontSize(12),

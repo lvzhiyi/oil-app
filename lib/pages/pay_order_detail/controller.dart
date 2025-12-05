@@ -296,6 +296,8 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
 
   Future<void> cancelOrder(String id) async {
     await payOrderListService.cancelOrder(id, cancelOrderReasonController.text);
+    SportsToast.showSuccess('取消订单成功');
+    loadOrderDetail();
     cancelOrderReasonController.clear();
   }
 
@@ -355,14 +357,12 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
               btnText: '取消订单',
               onTap: () async {
                 await cancelOrder(order.id?.toString() ?? '');
-                Navigator.of(context).pop();
+                BaseRouter.pop();
               },
             ),
           ),
         ],
       ),
-    ).whenComplete(() {
-      BaseRouter.popToRoot();
-    });
+    ).whenComplete(() {});
   }
 }

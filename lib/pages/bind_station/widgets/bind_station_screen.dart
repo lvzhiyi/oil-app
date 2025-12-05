@@ -6,6 +6,7 @@ import 'package:oil_business_app/pages/bind_station/controller.dart';
 import 'package:oil_business_app/pages/bind_station/state.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
+import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
@@ -29,15 +30,19 @@ class BindStationScreen extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: colors.bgScaffold,
             elevation: 0,
-            leading: extra?['isFromLogin'] == true
-                ? IconButton(
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: colors.txtBlack,
-                    ),
-                    onPressed: () => BaseRouter.pop(),
-                  )
-                : null,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: colors.txtBlack,
+              ),
+              onPressed: () {
+                if (extra?['isFromLogin'] == true) {
+                  BaseRouter.popToRoot();
+                } else {
+                  BaseRouter.push(url: AppPage.loginPage.path);
+                }
+              },
+            ),
             title: CommonText(
               text: '绑定加油站',
               fontSize: AppSizes.setFontSize(18),
@@ -48,6 +53,13 @@ class BindStationScreen extends StatelessWidget {
           ),
           body: Column(
             children: [
+              SizedBox(height: AppSizes.setHeight(18)),
+              CommonText(
+                text: '请完善加油站信息以完成企业入驻',
+                fontSize: AppSizes.setFontSize(14),
+                fontWeight: FontWeight.w400,
+                textColor: colors.hintText,
+              ),
               Expanded(
                 child: SingleChildScrollView(
                   padding:
