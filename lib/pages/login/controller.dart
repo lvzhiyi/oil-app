@@ -126,7 +126,7 @@ class LoginCtrl extends Cubit<LoginState> {
         errorStr.contains('disabled') ||
         errorStr.contains('锁定') ||
         errorStr.contains('禁用')) {
-      return '账号已被锁定，请联系客服';
+      return '账号已被锁定，请联系您的业务员';
     }
 
     // 默认错误
