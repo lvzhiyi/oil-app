@@ -4,5 +4,6 @@
   "github.copilot.chat.scopeSelection": true,
   "github.copilot.chat.startDebugging.enabled": true,
   "github.copilot.chat.editor.temporalContext.enabled": true,
-  "editor.wordWrapColumn": 500
+  "editor.wordWrapColumn": 500,
+  "java.configuration.updateBuildConfiguration": "automatic"
 }
