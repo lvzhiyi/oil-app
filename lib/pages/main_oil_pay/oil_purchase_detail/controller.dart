@@ -72,7 +72,7 @@ class OilPurchaseDetailCtrl extends Cubit<OilPurchaseDetailState> {
         if (latestOrder != null) {
           BaseRouter.push(
             url: AppPage.payOrderDetailPage.path,
-            extra: {'order': latestOrder},
+            extra: {'order': latestOrder, 'from': 'oilPurchaseDetail'},
           );
         } else {
           // 如果获取不到最新订单，跳转到订单列表页

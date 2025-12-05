@@ -25,7 +25,7 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? widgetTitle;
   final Widget? leading;
   final void Function()? leadingOnClick;
-  final void Function(Function? backHandler)? onBack;
+  final void Function()? onBack;
   final bool centerTitle;
   final List<Widget>? actions;
   final Color backgroundColor;

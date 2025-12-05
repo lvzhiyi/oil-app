@@ -65,16 +65,8 @@ class _DashboardScreenState extends State<DashboardScreen>
             isShowSearchField: false,
             height: 120,
             isShowCart: selectedBottomIndex == 0 || selectedBottomIndex == 1,
-            topBarColor: selectedBottomIndex == 0
-                ? CustomAppColor(context).bgTopBar
-                : selectedBottomIndex == 1
-                    ? CustomAppColor(context).bgScaffold
-                    : CustomAppColor(context).bgBlackWhiteScaffold,
-            isShowShadow: selectedBottomIndex == 0 ||
-                    selectedBottomIndex == 1 ||
-                    selectedBottomIndex == 3
-                ? false
-                : true,
+            topBarColor: CustomAppColor(context).bgBlackWhiteScaffold,
+            isShowShadow: true,
             textColor: selectedBottomIndex == 0
                 ? CustomAppColor.of(context).txtAppBar
                 : CustomAppColor.of(context).txtBlack,

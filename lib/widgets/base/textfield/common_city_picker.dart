@@ -327,7 +327,6 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
               hintStyle: widget.hintStyle ??
                   TextStyle(
                       color: CustomAppColor.of(context).hintText,
-                      fontWeight: FontWeight.w400,
                       fontSize: AppSizes.setFontSize(14)),
               prefixIcon: widget.leadingIcon != null
                   ? Padding(

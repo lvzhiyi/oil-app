@@ -296,6 +296,8 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
 
   Future<void> cancelOrder(String id) async {
     await payOrderListService.cancelOrder(id, cancelOrderReasonController.text);
+    SportsToast.showSuccess('取消订单成功');
+    loadOrderDetail();
     cancelOrderReasonController.clear();
   }
 
