@@ -31,7 +31,7 @@ class InvoiceEditCtrl extends Cubit<InvoiceEditState> {
       bankAccount: invoice.bankAccount ?? '',
       companyAddress: invoice.companyAddress ?? '',
       companyPhone: invoice.companyPhone ?? '',
-      invoiceType: invoice.invoiceType ?? 'special_vat', // 如果没有已有数据，默认选中增值税专用发票
+      invoiceType: invoice.invoiceType ?? 'normal_vat', // 默认选中增值税普通发票
       originalInvoice: invoice,
     ));
   }
@@ -79,20 +79,25 @@ class InvoiceEditCtrl extends Cubit<InvoiceEditState> {
     error = InvoiceValidator.validateTaxNumber(state.taxNumber);
     if (error != null) return error;
 
-    error = InvoiceValidator.validateBankName(state.bankName);
-    if (error != null) return error;
-
-    error = InvoiceValidator.validateBankAccount(state.bankAccount);
-    if (error != null) return error;
-
-    error = InvoiceValidator.validateCompanyAddress(state.companyAddress);
-    if (error != null) return error;
-
-    error = InvoiceValidator.validateCompanyPhone(state.companyPhone);
-    if (error != null) return error;
-
     error = InvoiceValidator.validateInvoiceType(state.invoiceType);
     if (error != null) return error;
+
+    // 专票必填银行及地址信息，普票可选
+    final isSpecialVat = state.invoiceType == 'special_vat';
+
+    if (isSpecialVat) {
+      error = InvoiceValidator.validateBankName(state.bankName);
+      if (error != null) return error;
+
+      error = InvoiceValidator.validateBankAccount(state.bankAccount);
+      if (error != null) return error;
+
+      error = InvoiceValidator.validateCompanyAddress(state.companyAddress);
+      if (error != null) return error;
+
+      error = InvoiceValidator.validateCompanyPhone(state.companyPhone);
+      if (error != null) return error;
+    }
 
     return null;
   }
@@ -124,7 +129,11 @@ class InvoiceEditCtrl extends Cubit<InvoiceEditState> {
 
       emit(state.copyWith(isLoading: false, hasError: false));
 
-      SportsToast.showSuccess('保存成功');
+      // 显示成功提示
+      if (context.mounted) {
+        SportsToast.showSuccess('保存成功');
+      }
+
       BaseRouter.pop(result: {'refresh': true});
       return true;
     } catch (e) {

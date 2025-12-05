@@ -41,7 +41,7 @@ class StationRelationCard extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
                 children: [
-                  const TextSpan(text: '关联站点：'),
+                  const TextSpan(text: '关联加油站：'),
                   TextSpan(
                     text: stationName,
                     style: const TextStyle(
