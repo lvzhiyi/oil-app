@@ -22,13 +22,11 @@ class _InvoiceEditPageState extends BaseState<InvoiceEditPage>
     final extra = GoRouterState.of(context).extra as Map<String, dynamic>?;
     final stationId = extra?['stationId'] as int? ?? 0;
     final stationName = extra?['stationName'] as String?;
-    final invoice = extra?['invoice'] as InvoiceInfo?;
 
     return BlocProvider(
       create: (BuildContext context) => InvoiceEditCtrl(
         stationId: stationId,
         stationName: stationName,
-        invoice: invoice,
       ),
       child: BlocBuilder<InvoiceEditCtrl, InvoiceEditState>(
         builder: (context, state) {

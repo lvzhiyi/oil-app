@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:oil_business_app/global/enum/common.dart';
+import 'package:oil_business_app/global/model/invoice_info.dart';
 
 part 'station_res_type.g.dart';
 
@@ -100,4 +101,20 @@ class Station {
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
+}
+
+@JsonSerializable()
+class StationDetailResponse {
+  final Station? station;
+  final InvoiceInfo? invoice;
+
+  StationDetailResponse({
+    this.station,
+    this.invoice,
+  });
+
+  factory StationDetailResponse.fromJson(Map<String, dynamic> json) =>
+      _$StationDetailResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StationDetailResponseToJson(this);
 }

@@ -68,3 +68,21 @@ const _$StationStatusEnumMap = {
   StationStatus.rejected: 'rejected',
   StationStatus.disabled: 'disabled',
 };
+
+StationDetailResponse _$StationDetailResponseFromJson(
+        Map<String, dynamic> json) =>
+    StationDetailResponse(
+      station: json['station'] == null
+          ? null
+          : Station.fromJson(json['station'] as Map<String, dynamic>),
+      invoice: json['invoice'] == null
+          ? null
+          : InvoiceInfo.fromJson(json['invoice'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$StationDetailResponseToJson(
+        StationDetailResponse instance) =>
+    <String, dynamic>{
+      'station': instance.station,
+      'invoice': instance.invoice,
+    };

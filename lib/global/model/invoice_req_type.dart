@@ -18,15 +18,20 @@ class UpdateInvoiceRequest {
     required this.invoiceType,
   });
 
-  Map<String, dynamic> toJson() => {
-        'invoiceTitle': invoiceTitle,
-        'taxNumber': taxNumber,
-        'bankName': bankName,
-        'bankAccount': bankAccount,
-        'companyAddress': companyAddress,
-        'companyPhone': companyPhone,
-        'invoiceType': invoiceType,
-      };
+  Map<String, dynamic> toJson() {
+    final json = <String, dynamic>{};
+
+    // 只添加非空字段
+    if (invoiceTitle.isNotEmpty) json['invoiceTitle'] = invoiceTitle;
+    if (taxNumber.isNotEmpty) json['taxNumber'] = taxNumber;
+    if (bankName.isNotEmpty) json['bankName'] = bankName;
+    if (bankAccount.isNotEmpty) json['bankAccount'] = bankAccount;
+    if (companyAddress.isNotEmpty) json['companyAddress'] = companyAddress;
+    if (companyPhone.isNotEmpty) json['companyPhone'] = companyPhone;
+    if (invoiceType.isNotEmpty) json['invoiceType'] = invoiceType;
+
+    return json;
+  }
 
   UpdateInvoiceRequest copyWith({
     String? invoiceTitle,

@@ -20,11 +20,15 @@ class _StationEditPage extends BaseState<StationEditPage> with BasicInitPage {
   Widget body(context) {
     final extra = GoRouterState.of(context).extra as Map<String, dynamic>?;
     final station = extra?['station'] as Station?;
+    final stationId = extra?['stationId'] as int?;
     final isFromPendingReview = extra?['isFromPendingReview'] as bool?;
 
     return BlocProvider(
       create: (BuildContext context) => StationEditCtrl(
-          station: station, isFromPendingReview: isFromPendingReview ?? false),
+        station: station,
+        stationId: stationId,
+        isFromPendingReview: isFromPendingReview ?? false,
+      ),
       child: BlocBuilder<StationEditCtrl, StationEditState>(
         builder: (context, state) {
           return StationEditView(state: state);

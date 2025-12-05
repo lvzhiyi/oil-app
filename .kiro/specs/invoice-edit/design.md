@@ -157,14 +157,14 @@ class UpdateInvoiceRequest {
 | bankAccount | String | 银行账号 | 非空，纯数字 |
 | companyAddress | String | 公司地址 | 非空 |
 | companyPhone | String | 公司电话 | 非空，有效电话格式 |
-| invoiceType | String | 发票类型 | 枚举值：special_vat, normal_vat |
+| invoiceType | String | 发票类型 | 枚举值：special_vat, general_vat |
 
 ### InvoiceType 枚举
 
 | 值 | 显示名称 |
 |----|----------|
 | special_vat | 增值税专用发票 |
-| normal_vat | 增值税普通发票 |
+| general_vat | 增值税普通发票 |
 
 ### StationInfo (用于关联卡片显示)
 
@@ -260,7 +260,7 @@ class UpdateInvoiceRequest {
 **Validates: Requirements 4.1**
 
 ### Property 5: Invoice Type Selection State
-*For any* invoice type value (special_vat or normal_vat), when the user selects that type, the state SHALL be updated to reflect the selected type and the UI SHALL highlight only the selected option.
+*For any* invoice type value (special_vat or general_vat), when the user selects that type, the state SHALL be updated to reflect the selected type and the UI SHALL highlight only the selected option.
 **Validates: Requirements 7.2**
 
 ## Error Handling

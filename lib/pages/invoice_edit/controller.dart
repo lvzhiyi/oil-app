@@ -13,13 +13,37 @@ class InvoiceEditCtrl extends Cubit<InvoiceEditState> {
   InvoiceEditCtrl({
     required int stationId,
     String? stationName,
-    InvoiceInfo? invoice,
   }) : super(InvoiceEditState(
           stationId: stationId,
           stationName: stationName ?? '',
         )) {
-    if (invoice != null) {
-      _initFromInvoice(invoice);
+    // 始终从接口加载发票信息
+    loadStationDetail(stationId);
+  }
+
+  /// 加载加油站详情（包含发票信息）
+  Future<void> loadStationDetail(int stationId) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      final response = await stationService.getStationDetail(stationId);
+      if (response.invoice != null) {
+        _initFromInvoice(response.invoice!);
+      }
+      if (response.station?.stationName != null) {
+        emit(state.copyWith(
+          stationName: response.station!.stationName!,
+          isLoading: false,
+        ));
+      } else {
+        emit(state.copyWith(isLoading: false));
+      }
+    } catch (e) {
+      l.e('InvoiceEditCtrl', '加载加油站详情失败: $e');
+      emit(state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: '加载失败，请稍后重试',
+      ));
     }
   }
 
@@ -31,7 +55,7 @@ class InvoiceEditCtrl extends Cubit<InvoiceEditState> {
       bankAccount: invoice.bankAccount ?? '',
       companyAddress: invoice.companyAddress ?? '',
       companyPhone: invoice.companyPhone ?? '',
-      invoiceType: invoice.invoiceType ?? 'normal_vat', // 默认选中增值税普通发票
+      invoiceType: invoice.invoiceType ?? 'general_vat', // 默认选中增值税普通发票
       originalInvoice: invoice,
     ));
   }
