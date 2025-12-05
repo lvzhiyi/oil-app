@@ -373,7 +373,7 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
                     style: TextStyle(
                       color: colors.txtBlack,
                       fontSize: AppSizes.setFontSize(14),
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w400,
                     ),
                   )
                 : null,
