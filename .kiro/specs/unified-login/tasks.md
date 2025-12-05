@@ -233,7 +233,7 @@
   - No unused imports found
   - _Requirements: 8.1_
 
-- [ ] 18. Write integration tests for complete authentication flows
+- [x] 18. Write integration tests for complete authentication flows
   - Test password login flow from input to home navigation
   - Test verification code login flow from input to home navigation
   - Test tab switching during authentication
