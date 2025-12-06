@@ -81,7 +81,7 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
               onPressed: () => Navigator.of(context).pop(),
             ),
             title: CommonText(
-              text: '提油详情',
+              text: '提油',
               fontSize: AppSizes.setFontSize(18),
               fontWeight: FontWeight.w600,
               textColor: CustomAppColor.of(context).txtBlack,
