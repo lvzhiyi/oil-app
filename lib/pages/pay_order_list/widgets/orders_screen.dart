@@ -34,7 +34,7 @@ class _OrdersScreenState extends State<OrdersScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
         print('tabController: ${_tabController.index}');
@@ -42,6 +42,7 @@ class _OrdersScreenState extends State<OrdersScreen>
           null,
           OrderStatus.PendingPayment.value,
           OrderStatus.PaymentUploaded.value,
+          OrderStatus.Completed.value,
           OrderStatus.Cancelled.value
         ];
         context
@@ -64,6 +65,7 @@ class _OrdersScreenState extends State<OrdersScreen>
       '全部',
       '待支付',
       '已支付',
+      '已完成',
       '已取消',
     ];
   }
@@ -223,6 +225,8 @@ class _OrdersScreenState extends State<OrdersScreen>
         padding: EdgeInsets.all(AppSizes.setWidth(4)),
         child: TabBar(
           controller: _tabController,
+          isScrollable: true,
+          tabAlignment: TabAlignment.center,
           indicator: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(6),
@@ -246,6 +250,7 @@ class _OrdersScreenState extends State<OrdersScreen>
             fontSize: AppSizes.setFontSize(14),
             fontWeight: FontWeight.w400,
           ),
+          labelPadding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(12)),
           tabs: tabList.map((tab) {
             return Tab(
               text: tab,
@@ -524,6 +529,10 @@ class _OrdersScreenState extends State<OrdersScreen>
       case OrderStatus.PaymentUploaded:
         bgColor = const Color(0xFFEFF6FF);
         textColor = const Color(0xFF3B82F6);
+        break;
+      case OrderStatus.Completed:
+        bgColor = const Color(0xFFF0FDF4);
+        textColor = const Color(0xFF22C55E);
         break;
       case OrderStatus.Cancelled:
         bgColor = const Color(0xFFF3F4F6);
