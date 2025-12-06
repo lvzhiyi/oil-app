@@ -1,11 +1,14 @@
-﻿{
+{
   "mcpServers": {
     "dart-mcp-server": {
       "command": "dart",
       "args": [
         "mcp-server"
       ],
-      "autoApprove": [],
+      "autoApprove": [
+        "add_roots",
+        "run_tests"
+      ],
       "disabled": false
     }
   }
