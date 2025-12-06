@@ -1,139 +1,181 @@
 # Project Context
 
 ## Purpose
-娑旂増琛ラ崨妤嬬礄Oil Business App閿涘妲告稉鈧▎楣冩桨閸氭垵濮炲▽鍦彲閻ㄥ嫭琛ュ鏃堝櫚鐠愵厾顓搁悶鍡櫺╅崝銊ョ安閻㈩煉绱濇稉鏄忣洣閸旂喕鍏橀弰顖氬簻閸斺晛濮炲▽鍦彲閸氭垶琛ユ惔鎾诲櫚鐠愵厾鐓跺▽骞库偓鍌炪€嶉惄顔芥暜閹?Android 閸?iOS 閸欏苯閽╅崣鑸偓?
+Oil Business App 是一个油品业务管理应用，帮助加油站管理人员进行油品采购、提货、订单管理等业务操作。支持 Android 和 iOS 双平台。
+
 ## Tech Stack
-- **濡楀棙鐏?*: Flutter 3.4+ (鐠恒劌閽╅崣鎵╅崝銊ョ安閻劌绱戦崣?
-- **鐠囶叀鈻?*: Dart 3.4+
-- **閻樿埖鈧胶顓搁悶?*: BLOC Pattern (bloc ^9.0.0 + flutter_bloc ^9.1.1 + hydrated_bloc ^10.1.1)
-- **缂冩垹绮剁拠閿嬬湴**: Dio ^5.2.1 + Retrofit (娴狅絿鐖滈悽鐔稿灇)
-- **鐠侯垳鏁辩粻锛勬倞**: Go Router ^16.0.0
-- **閸ヤ粙妾崠?*: Easy Localization (閺€顖涘瘮娑擃厽鏋冮崪宀冨閺?
-- **娴狅絿鐖滈悽鐔稿灇**: Freezed ^3.2.3 + JSON Serializable ^6.9.0 + Build Runner ^2.5.4
-- **閺堫剙婀寸€涙ê鍋?*: Hive ^2.2.3 + Shared Preferences ^2.5.3
-- **娓氭繆绂嗗▔銊ュ弳**: Get It ^8.2.0
-- **UI缂佸嫪娆㈡惔?*: TDesign Flutter ^0.1.5
-- **閸栧懐顓搁悶鍡楁珤**: pnpm (闁俺绻?rps 瀹搞儱鍙?^0.8.0)
+- **框架**: Flutter 3.4+ (跨平台移动应用开发)
+- **语言**: Dart 3.4+
+- **状态管理**: BLOC Pattern (bloc ^9.0.0 + flutter_bloc ^9.1.1 + hydrated_bloc ^10.1.1)
+- **网络请求**: Dio ^5.2.1 + Retrofit (代码生成)
+- **路由导航**: Go Router ^16.0.0
+- **国际化**: Easy Localization (支持中英文切换)
+- **代码生成**: Freezed ^3.2.3 + JSON Serializable ^6.9.0 + Build Runner ^2.5.4
+- **本地存储**: Hive ^2.2.3 + Shared Preferences ^2.5.3
+- **依赖注入**: Get It ^8.2.0
+- **UI组件库**: TDesign Flutter ^0.1.5
+- **包管理器**: Flutter Pub (Dart/Flutter 官方包管理器)
+- **脚本工具**: rps (Run Pub Scripts ^0.8.0，在 pubspec.yaml 中定义脚本命令)
 
 ## Project Conventions
 
 ### Code Style
-- **娴狅絿鐖滈弽鐓庣础**: 闁潧鎯?Flutter/Dart 鐎规ɑ鏌熸禒锝囩垳妞嬪孩鐗搁幐鍥у础
-- **鐞涘矂鏆辨惔锕傛閸?*: 120娑擃亜鐡х粭锔肩礄瀹告彃婀?analysis_options.yaml 娑擃參鍘ょ純顕嗙礆
-- **缂傗晞绻?*: 2娑擃亞鈹栭弽?- **鐎涙顑佹稉?*: 娴ｈ法鏁ら崡鏇炵穿閸欏嚖绱?string'閿?- **閸涜棄鎮曠憴鍕灟**:
-  - 缁鎮? PascalCase (婢堆団敇瀹?
-  - 閺傝纭?閸欐﹢鍣?閸欏倹鏆? camelCase (鐏忓繘鈹樺畡?
-  - 鐢悂鍣? UPPER_SNAKE_CASE (婢堆冨晸娑撳鍨濈痪?
-  - 閺傚洣娆㈤崥?鎼存挸鎮? lowercase_with_underscores (鐏忓繐鍟撴稉瀣灊缁?
-- **閺嬪嫰鈧姴鍤遍弫?*: 娴兼ê鍘涙担璺ㄦ暏 const 閺嬪嫰鈧姴鍤遍弫?- **鐎涙顔屾竟鐗堟**: 娴兼ê鍘涙担璺ㄦ暏 final 鐎涙顔?
-- **Widget**: 闁灝鍘ら崷?createState 閺傝纭舵稉顓犵椽閸愭瑩鈧槒绶敍瀹慼ildren 鐏炵偞鈧勬杹閸︺劍娓堕崥?- **濞夈劑鍣寸憴鍕瘱**: 娴ｈ法鏁?/// 鏉╂稖顢戦弬鍥ㄣ€傚▔銊╁櫞閿涘奔濞囬悽?// 鏉╂稖顢戠悰灞藉敶濞夈劑鍣?
+- **代码风格**: 遵循 Flutter/Dart 官方编码规范和最佳实践
+- **最大行宽**: 120字符（在 analysis_options.yaml 中配置）
+- **缩进**: 2个空格
+- **字符串**: 优先使用单引号 'string'
+- **命名约定**:
+  - 类名: PascalCase (首字母大写)
+  - 变量、方法、参数: camelCase (驼峰式)
+  - 常量: UPPER_SNAKE_CASE (全大写下划线)
+  - 文件名、包名: lowercase_with_underscores (小写下划线)
+- **不可变对象**: 尽可能使用 const 构造函数
+- **变量声明**: 尽可能使用 final 变量
+- **Widget**: 将独立 createState 方法提取为单独 children 组件或静态方法
+- **注释规范**: 使用 /// 添加文档注释，用 // 添加行内注释
 
 ### Architecture Patterns
 
-#### 妞ゅ湱娲扮紒鎾寸€?
-**Feature-first 缂佸嫮绮愰弬鐟扮础**閿涘本瀵滈崝鐔诲厴濡€虫健閸掓帒鍨庨敍?
+#### 目录结构
+**Feature-first 组织结构**，按功能模块组织代码：
 ```
 lib/
-閳规壕鏀㈤埞鈧?pages/              # 妞ょ敻娼板Ο鈥虫健閿涘湗eature-first閿?閳?  閳规柡鏀㈤埞鈧?[feature]/
-閳?      閳规壕鏀㈤埞鈧?page.dart         # 鐠侯垳鏁遍崗銉ュ經閿涘牏鎴烽幍?BasePage閿?閳?      閳规壕鏀㈤埞鈧?controller.dart   # Cubit/Bloc 閹貉冨煑閸?閳?      閳规壕鏀㈤埞鈧?state.dart        # 閻樿埖鈧胶琚敍鍫濆瘶閸?copyWith閿?閳?      閳规壕鏀㈤埞鈧?view.dart         # 鐟欏棗娴樼紒鍕棅鐏?閳?      閳规壕鏀㈤埞鈧?model/            # 妞ょ敻娼伴悧鐟扮暰閺佺増宓佸Ο鈥崇€烽敍鍫濆讲闁绱?
-閳?      閳规柡鏀㈤埞鈧?widgets/          # 妞ょ敻娼扮粔浣规箒缂佸嫪娆?
-閳?          閳规柡鏀㈤埞鈧?[feature]_screen.dart  # 鐎圭偤妾?UI 鐎圭偟骞?
-閳规壕鏀㈤埞鈧?widgets/            # 闁氨鏁ら崣顖氼槻閻劎绮嶆禒?閳?  閳规壕鏀㈤埞鈧?base/          # 閸╄櫣顢呯紒鍕閿涘湑ommonButton閵嗕竼ommonText 缁涘绱?
-閳?  閳规壕鏀㈤埞鈧?common/        # 娑撴艾濮熼柅姘辨暏缂佸嫪娆?
-閳?  閳规柡鏀㈤埞鈧?popup/         # 瀵湱鐛ョ紒鍕
-閳规壕鏀㈤埞鈧?global/            # 閸忋劌鐪仦?閳?  閳规壕鏀㈤埞鈧?app_controller.dart   # 閸忋劌鐪?HydratedCubit
-閳?  閳规壕鏀㈤埞鈧?app_state.dart        # 閸忋劌鐪悩鑸碘偓?閳?  閳规壕鏀㈤埞鈧?service/              # 閸忋劌鐪?API 閺堝秴濮熼敍鍦trofit閿?閳?  閳规壕鏀㈤埞鈧?model/                # 閸忋劌鐪弫鐗堝祦濡€崇€?
-閳?  閳规壕鏀㈤埞鈧?storage.dart          # 閺堫剙婀寸€涙ê鍋嶇粻锛勬倞
-閳?  閳规柡鏀㈤埞鈧?events.dart           # 閸忋劌鐪禍瀣╂閹崵鍤?
-閳规壕鏀㈤埞鈧?net/               # 缂冩垹绮剁仦?閳?  閳规壕鏀㈤埞鈧?net_manager.dart             # Dio 缁狅紕鎮婇崳?閳?  閳规壕鏀㈤埞鈧?base_interceptor.dart        # 閸╄櫣顢呴幏锔藉焻閸?閳?  閳规壕鏀㈤埞鈧?http_header_interceptor.dart # 鐠囬攱鐪版径瀛樺閹搭亜娅?
-閳?  閳规壕鏀㈤埞鈧?http_resp_interceptor.dart   # 閸濆秴绨查幏锔藉焻閸?閳?  閳规壕鏀㈤埞鈧?http_log_interceptor.dart    # 閺冦儱绻旈幏锔藉焻閸?閳?  閳规柡鏀㈤埞鈧?response.dart                # 閸濆秴绨查崺铏硅
-閳规壕鏀㈤埞鈧?router/            # 鐠侯垳鏁遍柊宥囩枂
-閳?  閳规壕鏀㈤埞鈧?router.dart           # GoRouter 闁板秶鐤?
-閳?  閳规壕鏀㈤埞鈧?routes.dart           # 鐠侯垳鏁遍弸姘閸滃本鐎鍝勬珤
-閳?  閳规柡鏀㈤埞鈧?pageTransition/       # 妞ょ敻娼版潪顒€婧€閸斻劎鏁?
-閳规壕鏀㈤埞鈧?config/            # 鎼存梻鏁ら柊宥囩枂
-閳?  閳规壕鏀㈤埞鈧?config.dart           # 閸╄櫣顢呴柊宥囩枂閿涘牏骞嗘晶鍐︹偓浣筋啎婢跺洣淇婇幁顖ょ礆
-閳?  閳规壕鏀㈤埞鈧?env.dart              # 閻滎垰顣ㄩ弸姘
-閳?  閳规壕鏀㈤埞鈧?channel.dart          # 濞撶娀浜鹃柊宥囩枂
-閳?  閳规柡鏀㈤埞鈧?address.dart          # 閸︽澘娼冮柊宥囩枂
-閳规壕鏀㈤埞鈧?resources/         # 鐠у嫭绨粻锛勬倞
-閳?  閳规壕鏀㈤埞鈧?colors.dart           # 妫版粏澹婃稉濠氼暯閿涘牊鏁幐浣峰瘨/閺嗘膩瀵骏绱?
-閳?  閳规壕鏀㈤埞鈧?size.dart             # 鐏忓搫顕敮鎼佸櫤
-閳?  閳规壕鏀㈤埞鈧?style.dart            # 閺嶅嘲绱＄€规矮绠?
-閳?  閳规柡鏀㈤埞鈧?theme.dart            # 娑撳顣介柊宥囩枂
-閳规壕鏀㈤埞鈧?static/            # 闂堟瑦鈧浇绁┃鎰穿閻㈩煉绱欓懛顏勫З閻㈢喐鍨氶敍?閳?  閳规壕鏀㈤埞鈧?img.dart              # 閸ュ墽澧栫挧鍕爱鐢悂鍣?
-閳?  閳规壕鏀㈤埞鈧?icon.dart             # 閸ョ偓鐖ｇ挧鍕爱鐢悂鍣?
-閳?  閳规柡鏀㈤埞鈧?svg.dart              # SVG 鐠у嫭绨敮鎼佸櫤
-閳规壕鏀㈤埞鈧?utils/             # 瀹搞儱鍙跨猾?閳?  閳规壕鏀㈤埞鈧?sizer_utils.dart      # 閸濆秴绨插蹇撴槀鐎电浼愰崗鍑ょ礄AppSizes閿?閳?  閳规壕鏀㈤埞鈧?log.dart              # 閺冦儱绻斿銉ュ徔
-閳?  閳规壕鏀㈤埞鈧?validators.dart       # 鐞涖劌宕熸宀冪槈閸?閳?  閳规柡鏀㈤埞鈧?...                   # 閸忔湹绮銉ュ徔
-閳规柡鏀㈤埞鈧?models/            # 鐠恒劍膩閸ф鍙℃禍顐ゆ畱閺佺増宓佸Ο鈥崇€?
+├── pages/              # 页面模块（feature-first），每个 feature 包含：
+│   ├── [feature]/
+│   │   ├── page.dart         # 路由定义文件（继承 BasePage）
+│   │   ├── controller.dart   # Cubit/Bloc 控制器
+│   │   ├── state.dart        # 状态定义（包含 copyWith）
+│   │   ├── view.dart         # 视图实现文件
+│   │   ├── model/            # 页面特有的数据模型和请求类
+│   │   └── widgets/          # 页面特有组件
+│   │       └── [feature]_screen.dart  # 具体 UI 布局
+├── widgets/            # 公共组件（可复用）
+│   ├── base/          # 基础组件（CommonButton、CommonText 等）
+│   ├── common/        # 通用组件
+│   └── popup/         # 弹窗组件
+├── global/            # 全局状态
+│   ├── app_controller.dart   # 全局状态 HydratedCubit
+│   ├── app_state.dart        # 全局状态定义
+│   ├── service/              # 全局 API 接口（Retrofit）
+│   ├── model/                # 全局数据模型
+│   ├── storage.dart          # 本地存储管理
+│   └── events.dart           # 全局事件总线
+├── net/               # 网络层
+│   ├── net_manager.dart             # Dio 管理器
+│   ├── base_interceptor.dart        # 基础拦截器
+│   ├── http_header_interceptor.dart # 请求头拦截器
+│   ├── http_resp_interceptor.dart   # 响应拦截器
+│   ├── http_log_interceptor.dart    # 日志拦截器
+│   └── response.dart                # 响应模型
+├── router/            # 路由配置
+│   ├── router.dart           # GoRouter 配置
+│   ├── routes.dart           # 路由枚举和路径定义
+│   └── pageTransition/       # 页面过渡动画
+├── config/            # 配置文件
+│   ├── config.dart           # 基础配置（设备信息、版本号等）
+│   ├── env.dart              # 环境变量
+│   ├── channel.dart          # 渠道配置
+│   └── address.dart          # 接口配置
+├── resources/         # 资源文件
+│   ├── colors.dart           # 颜色定义（浅色/深色主题）
+│   ├── size.dart             # 尺寸常量
+│   ├── style.dart            # 样式定义
+│   └── theme.dart            # 主题配置
+├── static/            # 静态资源引用（代码生成文件）
+│   ├── img.dart              # 图片路径常量
+│   ├── icon.dart             # 图标路径常量
+│   └── svg.dart              # SVG 资源路径
+├── utils/             # 工具类（纯函数）
+│   ├── sizer_utils.dart      # 响应式布局工具（AppSizes）
+│   ├── log.dart              # 日志工具
+│   ├── validators.dart       # 表单验证器
+│   └── ...                   # 其他工具
+└── models/            # 非全局、跨页面共享的数据模型
 ```
 
-#### 妞ょ敻娼伴弸鑸电€Ο鈥崇础閿涘牆绻€妞よ寮楅弽濂镐紥鐎瑰牞绱?
+#### 页面结构标准（每个功能模块包含以下文件）
 
-**閺嶅洤鍣崶娑樼湴閺嬭埖鐎?*閿?1. **page.dart** - 鐠侯垳鏁遍柊宥囩枂閸忋儱褰?
-   - 缂佈勫 `BasePage`
-   - 濞ｅ嘲鍙?`BasicInitPage` 婢跺嫮鎮婇崚婵嗩潗閸?   - 娴ｈ法鏁?`BlocProvider` 濞夈劌鍙?Controller
-   - 娴ｈ法鏁?`BlocBuilder` 閸濆秴绨查悩鑸碘偓浣稿綁閸?
-2. **controller.dart** - 娑撴艾濮熼柅鏄忕帆閹貉冨煑閸?   - 缂佈勫 `Cubit<State>` 閹?`Bloc<Event, State>`
-   - 妞ょ敻娼扮痪褏濮搁幀浣峰▏閻?Cubit閿涘牏鐣濋崡鏇礆
-   - 閸忋劌鐪悩鑸碘偓浣峰▏閻?HydratedCubit閿涘牊瀵旀稊鍛閿?   - 閸栧懎鎯堢悰銊ュ礋 Key閵嗕椒绗熼崝鈩冩煙濞夋洏鈧胶濮搁幀浣规纯閺?
-3. **state.dart** - 閻樿埖鈧礁鐣炬稊?   - 娑撳秴褰查崣妯煎Ц閹胶琚?
-   - 韫囧懘銆忛崠鍛儓 `copyWith` 閺傝纭?
-   - 娴ｈ法鏁ら崨钘夋倳閸欏倹鏆熼弸鍕偓鐘插毐閺?   - 閸欘垶鈧濞囬悽?Freezed 閻㈢喐鍨?
+**必须包含的文件**：
+1. **page.dart** - 路由配置文件
+   - 继承 `BasePage`
+   - 实现 `BasicInitPage` 初始化生命周期
+   - 使用 `BlocProvider` 注册 Controller
+   - 使用 `BlocBuilder` 响应状态变化
 
-4. **view.dart** - 鐟欏棗娴樼紒鍕棅鐏?   - `StatefulWidget` 閹?`StatelessWidget`
-   - 娴ｈ法鏁?`BlocListener` 婢跺嫮鎮婇崜顖欑稊閻㈩煉绱欑€佃壈鍩呴妴涔€oast閿?   - 鐠嬪啰鏁?widgets/ 娑撳娈戠€圭偤妾?UI 缂佸嫪娆?
-   - 娣囨繃瀵旀潪濠氬櫤閿涘奔绗夐崠鍛儓婢跺秵娼呴柅鏄忕帆
+2. **controller.dart** - 业务逻辑控制器
+   - 继承 `Cubit<State>` 或 `Bloc<Event, State>`
+   - 页面局部状态使用 Cubit（简单场景）
+   - 全局状态或持久化使用 HydratedCubit（复用存储）
+   - 命名格式 Key 命名必须以 _storage 为后缀
 
-5. **widgets/[feature]_screen.dart** - 鐎圭偤妾?UI 鐎圭偟骞?
-   - 鐎圭偟骞囬崗铚傜秼閻ㄥ嫰銆夐棃銏犵鐏炩偓
-   - 娴ｈ法鏁ら柅姘辨暏缂佸嫪娆㈤弸鍕紦 UI
-   - 闁俺绻?`context.read<Ctrl>()` 鐠嬪啰鏁ゆ稉姘閺傝纭?
+3. **state.dart** - 状态定义类
+   - 不可变数据类
+   - 必须包含 `copyWith` 方法
+   - 使用不可变集合（如 List 用 UnmodifiableListView）
+   - 推荐使用 Freezed 生成
 
-#### 閻樿埖鈧胶顓搁悶鍡欑摜閻?
-**1. 妞ょ敻娼扮痪褏濮搁幀?- Cubit**
+4. **view.dart** - 视图实现文件
+   - `StatefulWidget` 或 `StatelessWidget`
+   - 使用 `BlocListener` 监听副作用（如显示 Toast）
+   - 调用 widgets/ 下的具体 UI 组件
+   - 保持简洁，只负责组装和传递数据
+
+5. **widgets/[feature]_screen.dart** - 具体 UI 布局
+   - 布局和样式实现的主要位置
+   - 使用公共组件构建 UI
+   - 通过 `context.read<Ctrl>()` 调用方法
+
+#### 状态管理模式
+
+**1. 页面局部状态 - Cubit**
 ```dart
-// 闁倻鏁ゆ禍搴ｇ暆閸楁洜娈戞い鐢告桨閻樿埖鈧胶顓搁悶?class LoginCtrl extends Cubit<LoginState> {
+// 适用于简单场景，如表单页面的状态管理
+class LoginCtrl extends Cubit<LoginState> {
   LoginCtrl() : super(LoginState(loginLoading: false));
   
   submit() async {
     emit(state.copyWith(loginLoading: true));
-    // 娑撴艾濮熼柅鏄忕帆
+    // 业务逻辑
   }
 }
 ```
 
-**2. 閸忋劌鐪幐浣风畽閸栨牜濮搁幀?- HydratedCubit**
+**2. 全局持久化状态 - HydratedCubit**
 ```dart
-// 闁倻鏁ゆ禍搴ㄦ付鐟曚焦瀵旀稊鍛閻ㄥ嫬鍙忕仦鈧悩鑸碘偓渚婄礄婵″倻鏁ら幋铚備繆閹垽绱?
+// 适用于需要持久化存储的状态，如用户信息、应用配置
 class AppController extends HydratedCubit<AppState> {
   AppController() : super(AppState());
   
   @override
   AppState? fromJson(Map<String, dynamic> json) {
-    // 閸欏秴绨崚妤€瀵?
+    // 反序列化
   }
   
   @override
   Map<String, dynamic>? toJson(AppState state) {
-    // 鎼村繐鍨崠?  }
+    // 序列化
+  }
 }
 ```
 
-**3. 閸忋劌鐪禍瀣╂闁矮淇?- EventBus**
+**3. 全局事件通信 - EventBus**
 ```dart
-// 閻劋绨捄銊┿€夐棃?鐠恒劍膩閸ф鈧矮淇?
+// 非全局、跨页面事件通信
 globalTabChangeEventBus.fire(index);
 globalTabChangeEventBus.on<int>().listen((index) {
-  // 婢跺嫮鎮婃禍瀣╂
+  // 监听事件
 });
 ```
 
-#### 缂冩垹绮剁仦鍌涚仸閺?
-**閹凤附鍩呴崳銊╂懠**閿?1. `HttpHeaderInterceptor` - 濞ｈ濮為柅姘辨暏鐠囬攱鐪版径杈剧礄Token閵嗕箒ser-Agent閿?2. `BaseInterceptor` - Token 閼奉亜濮╅崚閿嬫煀閵嗕線鏁婄拠顖炲櫢鐠?3. `HttpLogInterceptor` - 鐠囬攱鐪?閸濆秴绨查弮銉ョ箶鐠佹澘缍?
-4. `HttpRespInterceptor` - 缂佺喍绔撮崫宥呯安婢跺嫮鎮婇妴渚€鏁婄拠顖氼槱閻?
-**API 閺堝秴濮熺€规矮绠?*閿涘湩etrofit閿涘绱?
+#### 网络请求架构
+
+**拦截器链路**：
+1. `HttpHeaderInterceptor` - 添加公共请求头（如 Token、User-Agent）
+2. `BaseInterceptor` - Token 过期刷新和重试逻辑
+3. `HttpLogInterceptor` - 请求/响应日志打印
+4. `HttpRespInterceptor` - 统一错误处理和状态码处理
+
+**API 接口定义**：使用 Retrofit 生成
 ```dart
 @RestApi()
 abstract class AuthService {
@@ -146,61 +188,68 @@ abstract class AuthService {
 
 ### UI Component Standards
 
-#### 鐠佹崘顓搁崢鐔峰灟
-- 閻滈鍞崠鏍ф櫌娑撴艾绨查悽銊ф櫕闂堛垼顔曠拋?- 閺€顖涘瘮濞村懓澹?濞ｈ精澹婃稉濠氼暯閸掑洦宕?
-- 閸濆秴绨插蹇撶鐏炩偓閿涘本鏁幐浣瑰閺堟亽鈧礁閽╅弶瑁も偓浣瑰閸欑姴鐫?
-- Material Design 3 鐠佹崘顓哥拠顓♀枅
-- 妤傛ê鍞撮懕姘モ偓浣风秵閼帮箑鎮庨惃鍕矋娴犺泛瀵茬拋鎹愵吀
+#### 设计规范
+- 现代化电商应用界面设计
+- 支持浅色/深色主题切换
+- 响应式布局，支持手机、平板、折叠屏
+- Material Design 3 设计语言
+- 高内聚、低耦合的组件化设计
 
-#### 闁氨鏁ょ紒鍕鎼存搫绱檂widgets/base/`閿?
-##### **CommonText** - 缂佺喍绔撮弬鍥ㄦ拱缂佸嫪娆?
+#### 公共组件库（`widgets/base/`）
 
-**鐏炵偞鈧嗩潐閼?*閿?| 鐏炵偞鈧?| 缁鐎?| 姒涙顓婚崐?| 鐠囧瓨妲?|
+##### **CommonText** - 统一文本组件
+
+**属性参数**：
+| 属性 | 类型 | 默认值 | 说明 |
 |-----|------|--------|------|
-| text | String | 韫囧懎锝?| 閺傚洦婀伴崘鍛啇 |
-| fontSize | double? | 14 | 鐎涙ぞ缍嬫径褍鐨敍鍫濈箑妞よ濞囬悽?setFontSize閿?|
-| fontWeight | FontWeight | w400 | 鐎涙鍣?|
-| textColor | Color? | txtBlack | 閺傚洤鐡ф０婊嗗 |
-| textAlign | TextAlign | center | 鐎靛綊缍堥弬鐟扮础 |
-| fontFamily | String | Urbanist | 鐎涙ぞ缍嬬€硅埖妫?|
-| maxLines | int? | null | 閺堚偓婢堆嗩攽閺?|
-| overflow | TextOverflow? | null | 濠с垹鍤径鍕倞 |
-| letterSpacing | double? | null | 鐎涙妫跨捄?|
+| text | String | 必填 | 文本内容 |
+| fontSize | double? | 14 | 字体大小（需通过 setFontSize） |
+| fontWeight | FontWeight | w400 | 字体粗细 |
+| textColor | Color? | txtBlack | 文本颜色 |
+| textAlign | TextAlign | center | 对齐方式 |
+| fontFamily | String | Urbanist | 字体家族 |
+| maxLines | int? | null | 最大行数 |
+| overflow | TextOverflow? | null | 溢出处理 |
+| letterSpacing | double? | null | 字符间距 |
 
-**娴ｈ法鏁ょ憴鍕瘱**閿?```dart
+**使用示例**：
+```dart
 CommonText(
-  text: '閺傚洦婀伴崘鍛啇',
+  text: '文本内容',
   fontSize: AppSizes.setFontSize(14),
   fontWeight: FontWeight.w600,
   textColor: CustomAppColor.of(context).txtBlack,
 )
 ```
 
-- 閴?韫囧懘銆忔担璺ㄦ暏 `AppSizes.setFontSize()` 鐠佸墽鐤嗙€涙褰?
-- 閴?韫囧懘銆忔担璺ㄦ暏 `CustomAppColor.of(context)` 閼惧嘲褰囨０婊嗗
-- 閴?閸ュ搫鐣剧悰宀勭彯 1.2
-- 閴?姒涙顓荤€涙ぞ缍嬮敍姝巖banist
+- ✅ 必须使用 `AppSizes.setFontSize()` 设置尺寸
+- ✅ 必须使用 `CustomAppColor.of(context)` 获取颜色
+- ✅ 默认行高 1.2
+- ✅ 默认字体家族 Urbanist
 
-##### **CommonButton** - 缂佺喍绔撮幐澶愭尦缂佸嫪娆?
+##### **CommonButton** - 统一按钮组件
 
-**鐏炵偞鈧嗩潐閼?*閿?| 鐏炵偞鈧?| 缁鐎?| 姒涙顓婚崐?| 鐠囧瓨妲?|
+**属性参数**：
+| 属性 | 类型 | 默认值 | 说明 |
 |-----|------|--------|------|
-| btnText | String? | null | 閹稿鎸抽弬鍥х摟 |
-| child | Widget? | null | 閼奉亜鐣炬稊澶婄摍缂佸嫪娆?|
-| onTap | Function()? | null | 閻愮懓鍤崶鐐剁殶 |
-| buttonColor | Color? | btnPurple | 閹稿鎸抽懗灞炬珯閼?|
-| borderColor | Color? | transparent | 鏉堣顢嬫０婊嗗 |
-| height | double? | 52 | 閹稿鎸虫妯哄 |
-| width | double? | fullWidth | 閹稿鎸崇€硅棄瀹?|
-| radius | double | 8 | 閸﹀棜顫楅崡濠傜窞 |
-| fontSize | double? | 15 | 閺傚洤鐡ф径褍鐨?|
-| isButtonShadow | bool? | true | 閺勵垰鎯侀弰鍓с仛闂冩潙濂?|
-| isLoading | bool? | false | 閺勵垰鎯侀弰鍓с仛閸旂姾娴?|
+| btnText | String? | null | 按钮文字 |
+| child | Widget? | null | 自定义内容组件 |
+| onTap | Function()? | null | 点击回调 |
+| buttonColor | Color? | btnPurple | 按钮背景色 |
+| borderColor | Color? | transparent | 边框颜色 |
+| height | double? | 52 | 按钮高度 |
+| width | double? | fullWidth | 按钮宽度 |
+| radius | double | 8 | 圆角半径 |
+| fontSize | double? | 15 | 文字大小 |
+| isButtonShadow | bool? | true | 是否显示阴影 |
+| isLoading | bool? | false | 是否显示加载 |
 
-**閹稿鎸崇猾璇茬€?*閿?
-*娑撴槒顩﹂幐澶愭尦閿涘湧rimary閿?閿?```dart
+**按钮样式类型**：
+
+*主要按钮（Primary）：*
+```dart
 CommonButton(
-  btnText: '娑撴槒顩﹂幙宥勭稊',
+  btnText: '提交表单',
   buttonColor: CustomAppColor.of(context).btnPurple,
   height: AppSizes.buttonHeight,  // 52
   radius: 8,
@@ -208,177 +257,214 @@ CommonButton(
   isLoading: state.loading,
 )
 ```
-- 閼冲本娅欓懝璇х窗缁鳖偉澹?#7165E3
-- 閺傚洤鐡ф０婊嗗閿涙氨娅ч懝?- 闂冩潙濂栭敍姘变紶閼?40% 闁繑妲?
-- 妤傛ê瀹抽敍?2閿涘苯娓剧憴鎺炵窗8
+- 背景色为品牌紫色 #7165E3
+- 文本颜色为白色
+- 阴影透明度 40% 向下偏移
+- 高度固定 52，圆角 8
 
-*濞喡ゎ洣閹稿鎸抽敍鍦玡condary閿?閿?```dart
+*次要按钮（Secondary）：*
+```dart
 CommonButton(
-  btnText: '濞喡ゎ洣閹垮秳缍?,
+  btnText: '次要操作',
   buttonColor: CustomAppColor.of(context).btnWhite,
   borderColor: CustomAppColor.of(context).borderGrey,
   isButtonShadow: false,
 )
 ```
-- 閼冲本娅欓懝璇х窗閻у€熷/濞ｈ精澹婇懗灞炬珯
-- 鏉堣顢嬮敍?px 閻忔媽澹?
-- 閺冪娀妲捐ぐ?
-*鐏忓繑瀵滈柦?閿?```dart
+- 背景色为白色/浅色背景
+- 边框 1px 灰色
+- 无阴影
+
+*小按钮：*
+```dart
 CommonButton(
-  btnText: '鐏忓繑瀵滈柦?,
+  btnText: '小按钮',
   height: AppSizes.setHeight(34),
   width: AppSizes.setWidth(93),
   radius: 3,
 )
 ```
-- 妤傛ê瀹抽敍?4閿涘苯娓剧憴鎺炵窗3
+- 高度 34，圆角 3
 
-##### **CommonTextFormField** - 鐞涖劌宕熸潏鎾冲弳缂佸嫪娆?
+##### **CommonTextFormField** - 表单输入组件
 
-**鐏炵偞鈧嗩潐閼?*閿?| 鐏炵偞鈧?| 缁鐎?| 姒涙顓婚崐?| 鐠囧瓨妲?|
+**属性参数**：
+| 属性 | 类型 | 默认值 | 说明 |
 |-----|------|--------|------|
-| name | String? | null | 鐎涙顔岄崥宥忕礄FormBuilder閿?|
-| hintText | String? | null | 閸楃姳缍呴弬鍥х摟 |
-| labelText | String? | null | 閺嶅洨顒烽弬鍥х摟 |
-| controller | TextEditingController? | null | 鏉堟挸鍙嗛幒褍鍩楅崳?|
-| leadingIcon | Widget? | null | 閸撳秶鐤嗛崶鐐垼 |
-| suffixIcon | Widget? | null | 閸氬海鐤嗛崶鐐垼 |
-| borderColor | Color? | borderGrey | 鏉堣顢嬫０婊嗗 |
-| radius | double? | 12 | 閸﹀棜顫楅崡濠傜窞 |
-| isPasswordField | bool | false | 閺勵垰鎯佺€靛棛鐖滃?|
-| isPhoneNumberField | bool | false | 閺勵垰鎯侀幍瀣簚閸欓鐖滃?|
-| validators | Function? | null | 妤犲矁鐦夐崳?|
+| name | String? | null | 字段名称（FormBuilder 用）|
+| hintText | String? | null | 占位文字 |
+| labelText | String? | null | 标签文字 |
+| controller | TextEditingController? | null | 控制器 |
+| leadingIcon | Widget? | null | 前置图标 |
+| suffixIcon | Widget? | null | 后置图标 |
+| borderColor | Color? | borderGrey | 边框颜色 |
+| radius | double? | 12 | 圆角半径 |
+| isPasswordField | bool | false | 是否为密码框 |
+| isPhoneNumberField | bool | false | 是否为手机号框 |
+| validators | Function? | null | 表单验证器 |
 
-**鏉堟挸鍙嗗鍡欏Ц閹?*閿?- 姒涙顓婚悩鑸碘偓渚婄窗閻忔媽澹婃潏瑙勵攱 1px閿涘苯娓剧憴?12
-- 閼辨氨鍔嶉悩鑸碘偓渚婄窗缁鳖偉澹婃潏瑙勵攱 2px閿涘本鐖ｇ粵鐐癁閸斻劍妯夌粈?- 鐎靛棛鐖滃鍡窗閼奉亜濮╅弰楣冩鐎靛棛鐖滈崶鐐垼
-- 閹靛婧€閸欏嚖绱伴崶浠嬫閻絻鐦介崣椋庣垳鏉堟挸鍙嗛敍鍦沶tlPhoneField閿?
-**娴ｈ法鏁ょ粈杞扮伐**閿?```dart
+**控制器特性**：
+- 默认情况下边框灰色 1px，圆角 12
+- 聚焦时边框变为紫色 2px，标签上浮显示
+- 密码框右侧显示密码切换图标
+- 手机号框使用专用的手机号输入格式（IntlPhoneField）
+
+**使用示例**：
+```dart
 CommonTextFormField(
   name: 'phone',
-  hintText: '閹靛婧€閸?,
+  hintText: '请输入手机号',
   leadingIcon: Image.asset(AssetsIcon.IC_PROFILE),
   borderColor: CustomAppColor.of(context).textFieldBorder,
   validators: FormBuilderValidators.compose([
-    FormBuilderValidators.required(errorText: '閹靛婧€閸欒渹绗夐懗鎴掕礋缁?),
+    FormBuilderValidators.required(errorText: '请输入手机号'),
   ]),
 )
 ```
 
-##### **TopBar** - 妞ゅ爼鍎寸€佃壈鍩呴弽蹇曠矋娴?
-**鐏炵偞鈧嗩潐閼?*閿?| 鐏炵偞鈧?| 缁鐎?| 姒涙顓婚崐?| 鐠囧瓨妲?|
+##### **TopBar** - 页面顶部栏组件
+
+**属性参数**：
+| 属性 | 类型 | 默认值 | 说明 |
 |-----|------|--------|------|
-| clickListener | TopBarClickListener | 韫囧懎锝?| 閻愮懓鍤禍瀣╂閻╂垵鎯夐崳?|
-| title | String? | null | 閺嶅洭顣介弬鍥х摟 |
-| isShowBack | bool | false | 閺勵垰鎯侀弰鍓с仛鏉╂柨娲栭幐澶愭尦 |
-| isShowProfile | bool | false | 閺勵垰鎯侀弰鍓с仛婢舵潙鍎?|
-| isShowNotification | bool | false | 閺勵垰鎯侀弰鍓с仛闁氨鐓￠崶鐐垼 |
-| isShowSearch | bool | false | 閺勵垰鎯侀弰鍓с仛閹兼粎鍌ㄩ崶鐐垼 |
-| isShowCart | bool | false | 閺勵垰鎯侀弰鍓с仛鐠愵厾澧挎潪?|
-| topBarColor | Color? | white | 閼冲本娅欐０婊嗗 |
-| textColor | Color | txtBlack | 閺傚洤鐡ф０婊嗗 |
-| height | double | 100 | 妤傛ê瀹?|
+| clickListener | TopBarClickListener | 必填 | 点击事件监听器 |
+| title | String? | null | 标题文字 |
+| isShowBack | bool | false | 是否显示返回按钮 |
+| isShowProfile | bool | false | 是否显示头像 |
+| isShowNotification | bool | false | 是否显示通知图标 |
+| isShowSearch | bool | false | 是否显示搜索图标 |
+| isShowCart | bool | false | 是否显示购物车 |
+| topBarColor | Color? | white | 背景颜色 |
+| textColor | Color | txtBlack | 文本颜色 |
+| height | double | 100 | 高度 |
 
-**鐢啫鐪憴鍕瘱**閿?- 閸ュ搫鐣炬妯哄閿?00閿涘牆瀵橀崥?SafeArea閿?- 濮樻潙閽╅崘鍛扮珶鐠烘繐绱?8
-- 閸ョ偓鐖ｇ亸鍝勵嚟閿?4x24
-- 閸忓啰绀屾い鍝勭碍閿涙俺绻戦崶?閳?婢舵潙鍎?閳?閺嶅洭顣?閳?Spacer 閳?閹垮秳缍旈崶鐐垼
+**样式说明**：
+- 默认高度为 100（包含 SafeArea）
+- 内部内容间距 18
+- 图标大小 24x24
+- 从左到右排列：返回 → 头像 → 标题 → Spacer → 操作图标
 
-##### **CommonContainer** - 鐎圭懓娅掔紒鍕
+##### **CommonContainer** - 容器组件
 
-**鐏炵偞鈧嗩潐閼?*閿?| 鐏炵偞鈧?| 缁鐎?| 姒涙顓婚崐?| 鐠囧瓨妲?|
+**属性参数**：
+| 属性 | 类型 | 默认值 | 说明 |
 |-----|------|--------|------|
-| width | double | 韫囧懎锝?| 鐎圭懓娅掔€硅棄瀹?|
-| height | double | 韫囧懎锝?| 鐎圭懓娅掓妯哄 |
-| child | Widget | 韫囧懎锝?| 鐎涙劗绮嶆禒?|
-| borderColor | Color? | containerBorder | 鏉堣顢嬫０婊嗗 |
-| borderWidth | double? | 1 | 鏉堣顢嬬€硅棄瀹?|
-| borderRadius | double? | 15 | 閸﹀棜顫楅崡濠傜窞 |
+| width | double | 必填 | 容器宽度 |
+| height | double | 必填 | 容器高度 |
+| child | Widget | 必填 | 子组件 |
+| borderColor | Color? | containerBorder | 边框颜色 |
+| borderWidth | double? | 1 | 边框宽度 |
+| borderRadius | double? | 15 | 圆角半径 |
 
-##### **Heading** - 閺嶅洭顣界紒鍕
+##### **Heading** - 标题组件
 
-**娴ｈ法鏁ょ粈杞扮伐**閿?```dart
+**使用示例**：
+```dart
 Heading(
-  title: '娑撶粯鐖ｆ０?,
-  navigationTitle: '閺屻儳婀呴弴鏉戭樋',
+  title: '左侧标题',
+  navigationTitle: '查看更多',
   onTap: () {},
 )
 ```
 
-**閺嶅嘲绱＄憴鍕瘱**閿?- 娑撶粯鐖ｆ０姗堢窗鐎涙褰?18閿涘苯鐡ч柌?800
-- 鐎佃壈鍩呴弬鍥х摟閿涙艾鐡ч崣?14閿涘苯鐡ч柌?700閿涘瞼浼犻懝?- 濮樻潙閽╅崘鍛扮珶鐠烘繐绱?0
+**样式说明**：
+- 左侧标题字体大小 18，粗细 800
+- 导航文字右侧字号 14，粗细 700 带箭头
+- 内部内容间距 0
 
-#### 妫版粏澹婄化鑽ょ埠
+#### 颜色规范
 
-**閸濅胶澧濋懝?*閿?```dart
-AppColor.btnPurple = #7165E3      // 娑撹鎼ч悧宀冨閿涘牊瀵滈柦顔衡偓浣稿繁鐠嬪啫鍘撶槐鐙呯礆
-AppColor.txtPurple = #7165E3      // 閺傚洦婀板楦跨殶閼?AppColor.icPurple = #7165E3       // 閸ョ偓鐖ｅ楦跨殶閼?AppColor.borderPurple = #7165E3   // 瀵缚鐨熸潏瑙勵攱
+**品牌色**：
+```dart
+AppColor.btnPurple = #7165E3      // 主按钮、强调色、品牌标识
+AppColor.txtPurple = #7165E3      // 文本强调色
+AppColor.icPurple = #7165E3       // 图标强调色
+AppColor.borderPurple = #7165E3   // 边框颜色
 ```
 
-**娑擃厽鈧嗗**閿?```dart
-AppColor.white = #FFFFFF          // 缁绢垳娅?
-AppColor.black = #000000          // 缁绢垶绮?
-AppColor.txtBlack = #000000       // 姒涙垼澹婇弬鍥ㄦ拱
-AppColor.txtGrey = #9EA6BE        // 閻忔媽澹婇弬鍥ㄦ拱
-AppColor.hintGrey = #AFB0B6       // 閹绘劗銇氶弬鍥ㄦ拱閻忔媽澹?
-AppColor.borderGrey = #9EA6BE     // 鏉堣顢嬮悘鎷屽
+**中性色**：
+```dart
+AppColor.white = #FFFFFF          // 纯白
+AppColor.black = #000000          // 纯黑
+AppColor.txtBlack = #000000       // 黑色文本
+AppColor.txtGrey = #9EA6BE        // 灰色文本
+AppColor.hintGrey = #AFB0B6       // 提示文本灰色
+AppColor.borderGrey = #9EA6BE     // 边框灰色
 ```
 
-**閸旂喕鍏橀懝?*閿?```dart
-AppColor.green = #2AB126          // 閹存劕濮涢悩鑸碘偓?AppColor.txtRed = #FF4141         // 闁挎瑨顕?閸楅亶娅?
-AppColor.txtOrange = #FF9B00      // 濮楁瑨澹婇幓鎰仛
-AppColor.txtBlue = #383EAF        // 閽冩繆澹婇柧鐐复
+**状态色**：
+```dart
+AppColor.green = #2AB126          // 成功状态
+AppColor.txtRed = #FF4141         // 错误/警告
+AppColor.txtOrange = #FF9B00      // 橙色提示
+AppColor.txtBlue = #383EAF        // 蓝色链接
 ```
 
-**閼冲本娅欓懝?*閿?```dart
-// 濞村懓澹婃稉濠氼暯
-AppColor.white = #FFFFFF          // 娑撴槒鍎楅弲?AppColor.bgTopBar = #F9F9FB       // TopBar閼冲本娅?
+**背景色**：
+```dart
+// 浅色主题
+AppColor.white = #FFFFFF          // 主背景
+AppColor.bgTopBar = #F9F9FB       // TopBar背景
 
-// 濞ｈ精澹婃稉濠氼暯
-AppColor.bgScaffold = #181A20     // 濞ｈ精澹婃稉鏄忓剹閺?AppColor.containerGrey = #1F222A  // 濞ｈ精澹婄€圭懓娅掗懗灞炬珯
+// 深色主题
+AppColor.bgScaffold = #181A20     // 深色主背景
+AppColor.containerGrey = #1F222A  // 深色容器背景
 ```
 
-**娑撳顣介柅鍌炲帳閿涘牆绻€妞よ濞囬悽顭掔礆**閿?```dart
-// 閴?濮濓絿鈥橀敍姘▏閻?CustomAppColor 閸斻劍鈧椒瀵屾０?CustomAppColor.of(context).bgScaffold       // 妞ょ敻娼伴懗灞炬珯
-CustomAppColor.of(context).txtBlack         // 姒涙垼澹婇弬鍥х摟
-CustomAppColor.of(context).txtPurple        // 缁鳖偉澹婂楦跨殶
-CustomAppColor.of(context).btnPurple        // 缁鳖偉澹婇幐澶愭尦
-CustomAppColor.of(context).borderGrey       // 鏉堣顢?
-CustomAppColor.of(context).textFieldBorder  // 鏉堟挸鍙嗗鍡氱珶濡?
-// 閴?闁挎瑨顕ら敍姘扁€栫紓鏍垳妫版粏澹?
+**主题适配（重要！必须遵守）**：
+```dart
+// ✅ 正确：使用主题适配自动切换浅色/深色
+backgroundColor: CustomAppColor.of(context).bgScaffold       // 页面背景
+textColor: CustomAppColor.of(context).txtBlack         // 文本颜色（自动反色）
+buttonColor: CustomAppColor.of(context).btnPurple        // 品牌色按钮
+borderColor: CustomAppColor.of(context).borderGrey       // 边框
+textFieldBorder: CustomAppColor.of(context).textFieldBorder  // 输入框边框
+
+// ❌ 错误：直接硬编码颜色
 backgroundColor: Colors.white
 textColor: Color(0xFF000000)
 ```
 
-#### 鐎涙ぞ缍嬬化鑽ょ埠
+#### 字体规范
 
-**鐎涙ぞ缍嬬€硅埖妫?*閿?```dart
-Constant.fontFamilyUrbanist = 'Urbanist'    // 娑撹鐡ф担?```
+**字体家族**：
+```dart
+Constant.fontFamilyUrbanist = 'Urbanist'    // 主字体
+```
 
-**鐎涙鍣哥€规矮绠?*閿?- Light: 300
+**字体粗细**：
+- Light: 300
 - Regular: 400
 - Medium: 500
 - SemiBold: 600
 - Bold: 700
 
-**鐎涙褰跨憴鍕瘱**閿?| 閻劑鈧?| 鐎涙褰?| 鐎涙鍣?| 娴ｈ法鏁ら崷鐑樻珯 |
+**字体使用场景**：
+| 场景 | 字体大小 | 字体粗细 | 使用场景 |
 |-----|------|------|---------|
-| 婢堆勭垼妫?| 35 | 800 | 妞ょ敻娼版稉缁樼垼妫版﹫绱欐俊?鐠愶附鍩涢崚娑樼紦閹存劕濮?閿?|
-| 閺嶅洭顣?| 24 | 700 | 妞ょ敻娼伴弽鍥暯閿涘牆顩?閻ц缍嶉崚鐗堝亶閻ㄥ嫯澶勯幋?閿?|
-| 娴滃瞼楠囬弽鍥暯 | 18 | 800 | 閸掑棛琚弽鍥暯閵嗕笭eading缂佸嫪娆?|
-| 閹稿鎸抽弬鍥х摟 | 15 | 500 | 娑撴槒顩﹂幐澶愭尦閺傚洤鐡?|
-| 濮濓絾鏋?| 14 | 400-700 | 閺咁噣鈧碍鏋冮張顑锯偓浣界翻閸忋儲顢嬮弬鍥ㄦ拱 |
-| 閸擃垱鐖ｆ０?| 12 | 500 | 鏉堝懎濮穱鈩冧紖閵嗕焦鐖ｇ粵?|
-| 鐏忓繐褰块弬鍥х摟 | 10 | 500 | 閹绘劗銇氭穱鈩冧紖 |
+| 大标题 | 35 | 800 | 页面主标题、欢迎页、启动页等 |
+| 标题 | 24 | 700 | 页面标题、区块标题、对话框标题等 |
+| 小标题 | 18 | 800 | 卡片标题、Heading组件 |
+| 按钮文字 | 15 | 500 | 主按钮文本 |
+| 正文 | 14 | 400-700 | 主内容、列表项、表单输入等 |
+| 辅助文字 | 12 | 500 | 提示信息、副标题 |
+| 小文字 | 10 | 500 | 占位提示 |
 
-**鐞涘矂鐝憴鍕瘱**閿?- 閹碘偓閺堝鏋冮張顒傜埠娑撯偓鐞涘矂鐝敍姝歨eight: 1.2`
+**行高规范**：
+- 所有文本默认行高为 `height: 1.2`
 
-**閸濆秴绨插蹇撶摟娴ｆ挾缂夐弨?*閿?- 閹靛婧€閿涙岸绮拋銈囩級閺€?1.0
-- 楠炶櫕婢橀敍姘辩級閺€?0.6
-- 閹舵ê褰旂仦蹇ョ窗缂傗晜鏂?0.6
-- 閻劍鍩涢弬鍥х摟缂傗晜鏂侀梽鎰煑閿涙碍娓舵径?1.2
+**响应式透明度使用规范**：
+- 禁用状态文本透明度 1.0
+- 次要文本使用透明度 0.6
+- 占位文字使用透明度 0.6
+- 辅助信息文字使用透明度更高 1.2
 
-#### 閸濆秴绨插蹇氼啎鐠伮ゎ潐閼煎喛绱欒箛鍛淬€忔稉銉︾壐闁潧鐣ч敍?
-**鐏忓搫顕柅鍌炲帳 - AppSizes**閿?```dart
-// 閴?濮濓絿鈥橀敍姘▏閻?AppSizes 瀹搞儱鍙跨猾?width: AppSizes.setWidth(80)
+#### 响应式布局工具（避免硬编码尺寸）
+
+**尺寸适配 - AppSizes**：
+```dart
+// ✅ 正确：使用工具方法
+width: AppSizes.setWidth(80)
 height: AppSizes.setHeight(60)
 fontSize: AppSizes.setFontSize(14)
 padding: EdgeInsets.symmetric(
@@ -386,85 +472,97 @@ padding: EdgeInsets.symmetric(
   vertical: AppSizes.setHeight(16),
 )
 
-// 鐢摜鏁ょ敮鎼佸櫤
-AppSizes.fullWidth        // 鐏炲繐绠风€硅棄瀹?
-AppSizes.fullHeight       // 鐏炲繐绠锋妯哄
-AppSizes.buttonHeight     // 閺嶅洤鍣幐澶愭尦妤傛ê瀹?52
-AppSizes.topBarHeight     // 妞ゅ爼鍎撮弽蹇涚彯鎼?60
+// 常用固定尺寸
+AppSizes.fullWidth        // 全屏宽度
+AppSizes.fullHeight       // 全屏高度
+AppSizes.buttonHeight     // 标准按钮高度 52
+AppSizes.topBarHeight     // 顶部栏高度 60
 
-// 閴?闁挎瑨顕ら敍姘扁€栫紓鏍垳鐏忓搫顕?
+// ❌ 错误：直接硬编码尺寸
 width: 80
 height: 60
 fontSize: 14
 ```
 
-**闂傜绐涚憴鍕瘱**閿?
-*濮樻潙閽╅梻纾嬬獩*閿?| 闂傜绐涢崐?| 娴ｈ法鏁ら崷鐑樻珯 |
-|-------|---------|
-| 8 | 閺嬩礁鐨梻纾嬬獩 |
-| 10 | 鐏忓繘妫跨捄?|
-| 12 | 閸ョ偓鐖ｉ梻纾嬬獩 |
-| 15 | 閺嶅洤鍣梻纾嬬獩 |
-| 18-20 | 妞ょ敻娼板锕€褰告潏纭呯獩 |
-| 22 | 婢堆囨？鐠?|
-| 24 | 閻楃懓銇囬梻纾嬬獩 |
+**间距规范**：
 
-*閸ㄥ倻娲块梻纾嬬獩*閿?| 闂傜绐涢崐?| 娴ｈ法鏁ら崷鐑樻珯 |
+*水平间距*：
+| 间距值 | 使用场景 |
 |-------|---------|
-| 5 | 閺嬩礁鐨梻纾嬬獩 |
-| 10 | 鐏忓繘妫跨捄?|
-| 12 | 閺嶅洤鍣亸蹇涙？鐠?|
-| 15 | 閺嶅洤鍣梻纾嬬獩 |
-| 16 | 鐞涖劌宕熸い褰掓？鐠?|
-| 20 | 婢堆囨？鐠烘縿鈧礁鍨庣紒鍕？鐠?|
-| 25 | 閹绘劗銇氶弬鍥ㄦ拱娑撳﹣绗呴梻纾嬬獩 |
-| 32 | 鐞涖劌宕熼幓鎰唉閹稿鎸虫稉濠呯珶鐠?|
-| 58 | 妞ょ敻娼伴弽鍥暯闂傜绐?|
-| 61 | 閻ц缍嶆い鐢搞€婇柈銊╂？鐠?|
-| 88 | 婢堆嗗Ν闂傜绐?|
+| 8 | 最小间距 |
+| 10 | 小间距 |
+| 12 | 图标间距 |
+| 15 | 标准间距 |
+| 18-20 | 页面左右边距 |
+| 22 | 大间距 |
+| 24 | 块间距 |
 
-**閸﹀棜顫楃憴鍕瘱**閿?| 閸﹀棜顫楅崐?| 娴ｈ法鏁ら崷鐑樻珯 |
+*垂直间距*：
+| 间距值 | 使用场景 |
 |-------|---------|
-| 3 | 鐏忓繑瀵滈柦顔兼妇鐟?|
-| 5 | 閸熷棗鎼ч崡锛勫閸﹀棜顫?|
-| 8 | 閺嶅洤鍣崷鍡氼潡閿涘牐绶崗銉︻攱閵嗕焦瀵滈柦顔衡偓浣割啇閸ｎ煉绱?|
-| 12 | 閺嶅洤鍣€圭懓娅掗崷鍡氼潡閿涘牐绶崗銉︻攱閿?|
-| 15 | 婢堆冩妇鐟?|
-| 20 | BottomSheet閸﹀棜顫?|
+| 5 | 最小间距 |
+| 10 | 小间距 |
+| 12 | 标签与内容间距 |
+| 15 | 标准间距 |
+| 16 | 表单元素间距 |
+| 20 | 大间距、组块间距 |
+| 25 | 提示文本上方间距 |
+| 32 | 表单与输入框顶部间距 |
+| 58 | 页面顶部间距 |
+| 61 | 对话框内容间距 |
+| 88 | 大块间距 |
 
-**妫版粏澹婃稉濠氼暯 - CustomAppColor**閿?```dart
-// 閴?濮濓絿鈥橀敍姘▏閻劌濮╅幀浣峰瘜妫版﹫绱欓弨顖涘瘮娴?閺嗘膩瀵骏绱?
+**圆角规范**：
+| 圆角值 | 使用场景 |
+|-------|---------|
+| 3 | 小按钮圆角 |
+| 5 | 标签圆角 |
+| 8 | 标准卡片、容器、主按钮圆角 |
+| 12 | 标准容器、输入框圆角 |
+| 15 | 大圆角 |
+| 20 | BottomSheet圆角 |
+
+**颜色主题 - CustomAppColor**：
+```dart
+// ✅ 正确：使用主题适配自动切换 浅色/深色
 backgroundColor: CustomAppColor.of(context).bgScaffold
 textColor: CustomAppColor.of(context).txtBlack
 borderColor: CustomAppColor.of(context).borderPurple
 
-// 鐢摜鏁ゆ０婊嗗
-.bgScaffold          // 妞ょ敻娼伴懗灞炬珯閿涘牏娅ч懝?濞ｈ精澹婇敍?.txtBlack / .txtWhite // 閺傚洤鐡ф０婊嗗閿涘牐鍤滈崝銊ュ冀鏉烆剨绱?
-.txtGrey / .txtPurple // 閻忔媽澹?缁鳖偉澹婇弬鍥х摟
-.btnPurple           // 閹稿鎸崇槐顐ュ閿涘牅瀵屾０妯垮 #7165E3閿?.borderGrey / .borderPurple // 鏉堣顢嬫０婊嗗
-.textFieldBorder     // 鏉堟挸鍙嗗鍡氱珶濡?
-// 閴?闁挎瑨顕ら敍姘扁€栫紓鏍垳妫版粏澹?
+// 常用颜色
+.bgScaffold          // 页面背景（自动适配）
+.txtBlack / .txtWhite // 文本颜色（自动反色）
+.txtGrey / .txtPurple // 灰色/紫色文字
+.btnPurple           // 按钮颜色（固定色值 #7165E3）
+.borderGrey / .borderPurple // 边框颜色
+.textFieldBorder     // 输入框边框
+
+// ❌ 错误：直接硬编码颜色
 backgroundColor: Colors.white
 textColor: Color(0xFF000000)
 ```
 
-**鐠佹儳顦猾璇茬€烽崚銈嗘焽**閿?```dart
-AppSizes.isTablet(context)         // 楠炶櫕婢橀崚銈嗘焽
-AppSizes.isFoldablePhone(size)     // 閹舵ê褰旂仦蹇撳灲閺?```
+**设备类型判断**：
+```dart
+AppSizes.isTablet(context)         // 平板设备
+AppSizes.isFoldablePhone(size)     // 折叠屏设备
+```
 
-**闂堟瑦鈧浇绁┃鎰穿閻?*閿?```dart
-// 閴?濮濓絿鈥橀敍姘垛偓姘崇箖闂堟瑦鈧礁鐖堕柌蹇曡瀵洜鏁?
+**静态资源引用**：
+```dart
+// ✅ 正确：使用代码生成的资源常量
 Image.asset(AssetsImg.LOGO)
 Image.asset(AssetsIcon.IC_PROFILE)
 SvgAsset(assetName: AssetsSvg.IC_HOME)
 
-// 閴?闁挎瑨顕ら敍姘扁€栫紓鏍垳鐠侯垰绶?
+// ❌ 错误：直接硬编码路径
 Image.asset('assets/img/logo.webp')
 ```
 
-#### 妞ょ敻娼扮敮鍐ㄧ湰鐟欏嫯瀵?
+#### 页面框架模板
 
-**閸╃儤婀版い鐢告桨缂佹挻鐎?*閿?```dart
+**顶层结构**：
+```dart
 SafeArea(
   bottom: true,
   top: false,
@@ -475,24 +573,29 @@ SafeArea(
 )
 ```
 
-**妞ょ敻娼扮猾璇茬€?*閿?
-*1. 閺嶅洤鍣い鐢告桨鐢啫鐪?閿?- TopBar閿涘牆褰查柅澶涚礆
-- 娑撹鍞寸€圭懓灏崺?- 鎼存洟鍎寸€佃壈鍩呴弽蹇ョ礄閸欘垶鈧绱?
+**页面类型**：
 
-*2. 濠婃艾濮╂い鐢告桨鐢啫鐪?閿?```dart
+*1. 标准静态页面*：
+- TopBar（可选）
+- 主内容
+- 底部操作栏（可选）
+
+*2. 滚动内容页面*：
+```dart
 SingleChildScrollView(
   padding: EdgeInsets.symmetric(
     horizontal: AppSizes.setWidth(20),
   ),
   child: Column(
     children: [
-      // 妞ょ敻娼伴崘鍛啇
+      // 页面内容
     ],
   ),
 )
 ```
 
-*3. 閸掓銆冩い鐢告桨鐢啫鐪?閿?```dart
+*3. 列表页面*：
+```dart
 ListView.builder(
   padding: EdgeInsets.symmetric(
     horizontal: AppSizes.setWidth(20),
@@ -503,43 +606,51 @@ ListView.builder(
 )
 ```
 
-**妞ょ敻娼版潏纭呯獩鐟欏嫯瀵?*閿?- 閺嶅洤鍣い鐢告桨瀹革箑褰告潏纭呯獩閿?0
-- TopBar 瀹革箑褰告潏纭呯獩閿?8
-- 閸掓銆冩い鐟颁箯閸欏疇绔熺捄婵撶窗18-20
-- 閸楋紕澧栭崘鍛扮珶鐠烘繐绱?5-18
+**页面边距约束**：
+- 标准静态页面左右边距：20
+- TopBar 左右间距：18
+- 列表页面顶部间距：18-20
+- 块之间垂直间距：15-18
 
-**鐎瑰鍙忛崠鍝勭厵婢跺嫮鎮?*閿?- 妞ゅ爼鍎撮敍姘垛偓姘埗 `top: false`閿涘牏鏁?TopBar 婢跺嫮鎮婇敍?- 鎼存洟鍎撮敍姘垛偓姘埗 `bottom: true`
+**SafeArea 管理**：
+- 顶部导航栏设置 `top: false`，由 TopBar 自行管理
+- 底部操作栏设置 `bottom: true`
 
-#### 閸ョ偓鐖ｇ挧鍕爱鐟欏嫯瀵?
+#### 图标规范
 
-**閸ョ偓鐖ｉ弽鐓庣础**閿?- 閺嶇厧绱￠敍姝恊bP
-- 閺€顖涘瘮閺嗘澹婃稉濠氼暯閸掑洦宕?
+**图标格式**：
+- 主要格式：webp
+- 支持浅色/深色主题切换
 
-**閸ョ偓鐖ｇ亸鍝勵嚟鐟欏嫯瀵?*閿?| 娴ｈ法鏁ら崷鐑樻珯 | 鐏忓搫顕?| 鐠囧瓨妲?|
+**图标大小约束**：
+| 使用场景 | 尺寸 | 说明 |
 |---------|------|------|
-| TopBar 閸ョ偓鐖?| 24x24 | 鐎佃壈鍩呴弽蹇撴禈閺?|
-| 閹稿鎸抽崶鐐垼 | 18-22 | 閹稿鎸抽崘鍛禈閺?|
-| 閸掓銆冮崶鐐垼 | 20x20 | 閸掓銆冩い鐟版禈閺?|
-| 鏉堟挸鍙嗗鍡楁禈閺?| 20x20 | 鐞涖劌宕熼崶鐐垼 |
-| 鐏忓繐娴橀弽?| 10-14 | 閺嶅洨顒烽妴浣筋潡閺嶅洤娴橀弽?|
-| 婢舵潙鍎?| 35x35 | 閻劍鍩涙径鏉戝剼 |
+| TopBar 图标 | 24x24 | 导航栏图标 |
+| 按钮图标 | 18-22 | 按钮内图标 |
+| 列表图标 | 20x20 | 列表项图标 |
+| 输入框前缀图标 | 20x20 | 表单图标 |
+| 小标识 | 10-14 | 标签、徽章图标 |
+| 头像 | 35x35 | 用户头像 |
 
-**閸ョ偓鐖ｆ担璺ㄦ暏鐟欏嫯瀵?*閿?```dart
-// 閴?濮濓絿鈥橀敍姘▏閻劑娼ら幀浣界カ濠ф劗琚?
+**图标使用约束**：
+```dart
+// ✅ 正确：使用主题自适应和缓存优化
 Image.asset(
   AssetsIcon.IC_SEARCH,
   width: AppSizes.setWidth(24),
   height: AppSizes.setHeight(24),
   color: CustomAppColor.of(context).icBlack,
-  gaplessPlayback: true,  // 閹恒劏宕樻担璺ㄦ暏閿涘矂浼╅崗宥呮禈閻楀洭妫悜?)
+  gaplessPlayback: true,  // 使用无缝切换避免闪烁
+)
 
-// 閴?闁挎瑨顕ら敍姘扁€栫紓鏍垳鐠侯垰绶?
+// ❌ 错误：直接硬编码路径
 Image.asset('assets/icon/ic_search.webp')
 ```
 
-#### 闂冩潙濂栫憴鍕瘱
+#### 阴影规范
 
-**閹稿鎸抽梼鏉戝**閿?```dart
+**按钮阴影**：
+```dart
 BoxShadow(
   color: AppColor.btnPurple.withOpacity(0.4),
   spreadRadius: 1,
@@ -548,7 +659,8 @@ BoxShadow(
 )
 ```
 
-**TopBar 闂冩潙濂?*閿?```dart
+**TopBar 阴影**：
+```dart
 BoxShadow(
   color: CustomAppColor.of(context).txtBlack.withOpacity(0.01),
   blurRadius: 3,
@@ -557,7 +669,8 @@ BoxShadow(
 )
 ```
 
-**閸楋紕澧栭梼鏉戝**閿?```dart
+**卡片阴影**：
+```dart
 BoxShadow(
   color: Color(0xff000000).withOpacity(0.10),
   blurRadius: 8,
@@ -594,11 +707,10 @@ BaseRouter.pop(context)
 - 命名建议：`xxx_header.dart`、`xxx_card.dart`、`xxx_actions.dart`、`xxx_sheet.dart`，职责清晰。
 - 需截图/保存的页面使用 `RepaintBoundary` 包裹目标组件，主页面负责图片生成与存储逻辑，子组件保持纯 UI。
 
+#### 主题切换
 
-
-#### 娑撳顣介崚鍥ㄥ床
-
-**娑撳顣介柊宥囩枂**閿?```dart
+**主题配置**：
+```dart
 ThemeData(
   brightness: isLightTheme ? Brightness.light : Brightness.dark,
   fontFamily: Constant.fontFamilyUrbanist,
@@ -609,47 +721,60 @@ ThemeData(
 )
 ```
 
-**娑撳顣介悩鑸碘偓浣侯吀閻?*閿?```dart
-// 娴ｈ法鏁ら崗銊ョ湰閻樿埖鈧?Constant.isLightThemeGlobal = true/false
+**主题切换实现**：
+```dart
+// 使用全局状态切换主题
+Constant.isLightThemeGlobal = true/false
 ```
 
-**妫版粏澹婇懛顏堚偓鍌氱安**閿?- 閴?韫囧懘銆忔担璺ㄦ暏 `CustomAppColor.of(context)` 閼惧嘲褰囨０婊嗗
-- 閴?閼奉亜濮╅柅鍌炲帳濞村懓澹?濞ｈ精澹婃稉濠氼暯
+**颜色适配方案**：
+- ✅ 必须使用 `CustomAppColor.of(context)` 获取颜色
+- ✅ 自动适配浅色/深色主题
 
-#### 閹嗗厴娴兼ê瀵茬憴鍕瘱
+#### 性能优化规范
 
-**閸ュ墽澧栭崝鐘烘祰**閿?- 娴ｈ法鏁?`gaplessPlayback: true` 闁灝鍘ら崶鍓у闂傤亞鍎?
-- WebP 閺嶇厧绱℃导妯哄閺傚洣娆㈡径褍鐨?
-- 娴ｈ法鏁?`CachedNetworkImage` 閸旂姾娴囩純鎴犵捕閸ュ墽澧?
+**图片优化**：
+- 使用 `gaplessPlayback: true` 避免图片闪烁
+- WebP 格式优先，体积更小
+- 使用 `CachedNetworkImage` 缓存网络图片
 
-**閸掓銆冩导妯哄**閿?- 娴ｈ法鏁?`ListView.builder` 閹稿娓堕弸鍕紦
-- `physics: NeverScrollableScrollPhysics()` 瑜版挸绁垫總妤€婀姘З鐎圭懓娅掓稉?- `shrinkWrap: true` 瑜版捇娓剁憰浣藉殰闁倸绨叉妯哄
+**列表优化**：
+- 使用 `ListView.builder` 懒加载
+- `physics: NeverScrollableScrollPhysics()` 禁用嵌套滚动
+- `shrinkWrap: true` 禁用自动高度
 
-**閻樿埖鈧胶顓搁悶?*閿?- 娴ｈ法鏁?`setState` 缁狅紕鎮婄仦鈧柈銊уЦ閹?- 娴ｈ法鏁?Cubit 缁狅紕鎮婃い鐢告桨缁狙呭Ц閹?- 娴ｈ法鏁?HydratedCubit 缁狅紕鎮婇崗銊ョ湰閹镐椒绠欓崠鏍Ц閹?
-**鐢悂鍣烘导妯哄**閿?- 娴ｈ法鏁?`const` 閺嬪嫰鈧姴鍤遍弫?- 闁灝鍘ゆ稉宥呯箑鐟曚胶娈?Widget 闁插秴缂?
+**状态管理**：
+- 使用 `setState` 管理局部轻量状态
+- 使用 Cubit 管理静态复杂状态
+- 使用 HydratedCubit 管理全局需存储状态
 
-#### 閸欘垵顔栭梻顔解偓?
-**閺傚洤鐡х紓鈺傛杹**閿?- 閺堚偓婢堆勬瀮鐎涙缂夐弨鍓ч兇閺佷即妾洪崚璁圭窗1.2
-- 娴ｈ法鏁?`MediaQuery.textScaler` 閼惧嘲褰囬悽銊﹀煕鐠佸墽鐤?
+**常量优化**：
+- 使用 `const` 构造函数
+- 避免频繁创建 Widget 实例
 
-**妫版粏澹婄€佃鐦惔?*閿?- 娑撴槒顩﹂弬鍥ㄦ拱鐎佃鐦惔锔肩窗閳?4.5:1
-- 婢堆冨娇閺傚洦婀扮€佃鐦惔锔肩窗閳?3:1
-- 閸濅胶澧濋懝鑼紶閼?(#7165E3) 閸︺劎娅ч懝鑼跺剹閺咁垯绗傜€佃鐦惔锔肩窗4.79:1
+**文本缩放**：
+- 所有文本行高比率固定为 1.2
+- 使用 `MediaQuery.textScaler` 获取系统缩放
+
+**颜色对比度**：
+- 主按钮文字对比度至少 4.5:1
+- 大字号内容对比度至少 3:1
+- 品牌紫色 (#7165E3) 与白色背景对比度 4.79:1
 
 ### Form Handling Standards
 
-#### FormBuilder 闂嗗棙鍨?
+#### FormBuilder 集成
 ```dart
 FormBuilder(
   key: ctrl.formKey,
   child: Column(
     children: [
       CommonTextFormField(
-        name: 'phone',              // 韫囧懘銆忛敍姘摟濞堥潧鎮?
-        hintText: '閹靛婧€閸?,
+        name: 'phone',              // 必须指定唯一字段名
+        hintText: '请输入手机号',
         leadingIcon: Image.asset(AssetsIcon.IC_PROFILE),
         validators: FormBuilderValidators.compose([
-          FormBuilderValidators.required(errorText: '閹靛婧€閸欒渹绗夐懗鎴掕礋缁?),
+          FormBuilderValidators.required(errorText: '请输入手机号'),
           FormBuilderValidators.numeric(),
         ]),
       ),
@@ -658,8 +783,9 @@ FormBuilder(
 )
 ```
 
-#### 鐞涖劌宕熸宀冪槈閸滃本褰佹禍?```dart
-// Controller 娑擃厾娈戦弽鍥у櫙濡€崇础
+#### 表单验证流程
+```dart
+// Controller 中定义预检查方法
 bool formPrecheck() {
   if (state.loading) return false;
   return formKey.currentState?.saveAndValidate() ?? false;
@@ -672,13 +798,14 @@ submit() async {
   
   final formData = formKey.currentState?.value ?? {};
   final phone = formData['phone'] ?? '';
-  // 婢跺嫮鎮婃稉姘闁槒绶?
+  // 处理表单提交
 }
 ```
 
 ### Router Management
 
-#### 鐠侯垳鏁辩€规矮绠熼敍鍧剅outer/routes.dart`閿?```dart
+#### 路由定义（`router/routes.dart`）
+```dart
 enum AppPage {
   loginPage('/login'),
   registerPage('/register'),
@@ -696,20 +823,20 @@ enum AppPage {
 }
 ```
 
-#### 鐠侯垳鏁辩€佃壈鍩?
+#### 路由导航
 ```dart
-// 閴?閹恒劏宕橀敍姘▏閻?BaseRouter
+// ✅ 推荐：使用工具方法
 BaseRouter.push(url: AppPage.loginPage.path)
 BaseRouter.push(url: AppPage.otpPage.path, extra: {'type': 'register'})
 BaseRouter.replace(url: AppPage.mainLayoutPage.path)
 BaseRouter.pop()
 
-// 閹存牔濞囬悽?GoRouter
+// 可用：直接使用 GoRouter
 context.go('/login')
 context.push('/register')
 ```
 
-#### 妞ょ敻娼版潪顒€婧€閸斻劎鏁鹃敍鍫濆讲闁绱?
+#### 页面过渡动画配置
 ```dart
 extension PageRoute on AppPage {
   GoRouterPageBuilder? get pageBuilder {
@@ -726,66 +853,82 @@ extension PageRoute on AppPage {
 ```
 
 ### Testing Strategy
-- 娑撶儤澧嶉張澶夌瑹閸旓繝鈧槒绶紓鏍у晸閸楁洖鍘撳ù瀣槸
-- 娑?Widget 缂傛牕鍟撶紒鍕濞村鐦?
-- 娑撴椽鍣哥憰浣圭ウ缁嬪绱崘娆撴肠閹存劖绁寸拠?- 娴ｈ法鏁?mockito 鏉╂稖顢戝Ο鈩冨珯
+- 业务逻辑单元测试（API 接口、数据模型）
+- Widget 组件测试
+- 端到端集成测试（关键业务流程）
+- 使用 mockito 模拟依赖
 
 ### Git Workflow
-- **閸掑棙鏁粵鏍殣**: Git Flow
-  - `main/master`: 閻㈢喍楠囬悳顖氼暔閸掑棙鏁?
-  - `develop`: 瀵偓閸欐垳瀵岄崚鍡樻暜
-  - `feature/*`: 閸旂喕鍏橀崚鍡樻暜
-- **閹绘劒姘︾憴鍕瘱**: 濞撳懏娅氶幓蹇氬牚閸欐ɑ娲块崘鍛啇
-- **娴狅絿鐖滅€光剝鐓?*: 閸氬牆鑻熼崜宥呯箑妞ゆ槒绻樼悰灞煎敩閻礁顓搁弻?- **Pre-commit**: 瀹告煡鍘ょ純?pre-commit hook (scripts/pre-commit.sh)
+- **分支策略**: Git Flow
+  - `main/master`: 生产环境分支
+  - `develop`: 开发集成分支
+  - `feature/*`: 功能分支
+- **提交规范**: 清晰描述变更内容
+- **代码审查**: 所有代码必须经过审查
+- **Pre-commit**: 执行 Lint 检查 (scripts/pre-commit.sh)
 
 ## Domain Context
 
-### 閻劍鍩涚憴鎺曞
-妞ゅ湱娲伴弨顖涘瘮娑撳顫掗悽銊﹀煕鐟欐帟澹婇敍灞炬綀闂勬劙鈧帒顤冮敍?1. **閺咁噣鈧艾鎲冲?*: 閸╄櫣顢呴崝鐔诲厴鐠佸潡妫堕敍灞肩瑝閸欘垰鍘栭崐鐓庢嫲鐎电厧鍤?
-2. **缁狅紕鎮婇崨?*: 閸涙ê浼愰弶鍐 + 缁備胶鏁ら崨妯轰紣閺夊啴妾?
-3. **閼颁焦婢?*: 鐎瑰本鏆ｉ弶鍐閿涘苯瀵橀幏顒€鎲冲銉ь吀閻炲棗鎷扮化鑽ょ埠闁板秶鐤?
+### 业务场景
+本项目是一个油品业务应用，主要包含以下功能模块：
+1. **用户认证**: 基础的登录注册流程（手机号 + 验证码）
+2. **管理系统**: 加油站管理 + 油品订单管理
+3. **订单流程**: 支付订单、提货订单、证件管理
 
-### 閺嶇绺炬稉姘閸︾儤娅?
-- 閻劍鍩涚拋銈堢槈閿涘牏娅ヨぐ鏇樷偓浣规暈閸愬被鈧副TP妤犲矁鐦夐敍?- 閸旂姵琛ョ粩娆戠拨鐎?- 閻櫕琛ラ柌鍥枠鐠併垹宕熺粻锛勬倞
-- 鐠愶附鍩涚粻锛勬倞
-- 閺佺増宓佺€电厧鍤敍鍫ユ付缁狅紕鎮婇崨?閼颁焦婢橀弶鍐閿?
-### API 閺佺増宓佺憴鍕瘱
-- **鐠囬攱鐪伴弽鐓庣础**: 閺嶅洤鍣?JSON (Content-Type: application/json;charset=UTF-8)
-- **閸濆秴绨查弽鐓庣础**: 缂佺喍绔寸紒鎾寸€?`{ code: number, message: string, data: any }`
-  - code=200 鐞涖劎銇氶幋鎰
-- **鐠併倛鐦夐張鍝勫煑**: 閸?Token 閺堝搫鍩?
-  - `access_token`: 閻厽婀℃禒銈囧閿涘瞼鏁ゆ禍?API 鐠佸潡妫?
-  - `refresh_token`: 闂€鎸庢埂娴犮倗澧濋敍宀€鏁ゆ禍搴″煕閺?access_token
-  - 閼奉亜濮╅崚閿嬫煀閺堝搫鍩楅崷?access_token 鏉╁洦婀￠弮鎯靶曢崣?- **Base URL**: 
-  - 瀵偓閸?濞村鐦? https://test.maiyoubei.com/api/app
-  - 閻㈢喍楠? 瀵板懘鍘ょ純?
+### 数据模型主要实体
+- 用户信息、登录状态
+- 加油站信息
+- 油品订单
+- 支付订单
+- 提货证件（车牌号码、司机信息等）
+
+### API 数据规范
+- **请求格式**: 统一 JSON (Content-Type: application/json;charset=UTF-8)
+- **响应格式**: 统一对象 `{ code: number, message: string, data: any }`
+  - code=200 表示成功
+- **鉴权机制**: 基于 Token 双令牌
+  - `access_token`: 用于认证的短期 API 访问令牌
+  - `refresh_token`: 用于刷新 access_token 的长期令牌
+  - 自动过期刷新：当 access_token 过期时自动刷新
+- **Base URL**: 
+  - 开发环境（测试）: https://test.maiyoubei.com/api/app
+  - 生产环境: 待配置
+
 ## Important Constraints
-- **婢舵碍绗柆鎾存暜閹?*: 閺€顖涘瘮 oppo閵嗕箍ivo閵嗕簛iaomi 缁涘顦挎稉顏呯闁挻澧﹂崠?- **閹嗗厴鐟曚焦鐪?*: 
-  - 娴ｈ法鏁?const 閺嬪嫰鈧姴鍤遍弫鏉垮櫤鐏忔垿鍣稿?  - 闂€鍨灙鐞涖劋濞囬悽?ListView.builder
-  - 缂冩垹绮堕崶鍓у娴ｈ法鏁?CachedNetworkImage
-  - 闁灝鍘ゆ稉宥呯箑鐟曚胶娈?Widget 闁插秴缂?
-- **鐎涙顑佺紓鏍垳**: 缂佺喍绔存担璺ㄦ暏 UTF-8
-- **閻滎垰顣ㄩ崚鍥ㄥ床**: 閺€顖涘瘮瀵偓閸?qa)閸滃瞼鏁撴禍?pro)閻滎垰顣ㄩ崚鍥ㄥ床
-- **鐠佹儳顦崗鐓庮啇**: 閺€顖涘瘮閹靛婧€閸滃苯閽╅弶鍖＄礄閺嶈宓佺仦蹇撶鐎硅棄瀹抽崚銈嗘焽閿?- **缁傝崵鍤庨弨顖涘瘮**: 闁劌鍨庨弫鐗堝祦闂団偓鐟曚焦婀伴崷鎵处鐎?
+- **厂商兼容性**: 支持 oppo、vivo、xiaomi 等国产手机
+- **性能优化**: 
+  - 使用 const 构造函数减少重建
+  - 列表使用 ListView.builder
+  - 网络图片使用 CachedNetworkImage
+  - 避免频繁创建 Widget 实例
+- **字符编码**: 统一使用 UTF-8
+- **环境配置**: 支持开发环境（qa）、生产环境（pro）环境切换
+- **设备要求**: 支持手机号登录、平板设备，数据自动响应式适配
+- **安全性要求**: 敏感信息加密存储，防止内存泄漏
+
 ## External Dependencies
-- **API 閺堝秴濮?*: 閸氬海顏?REST API (濞村鐦悳顖氼暔: test.maiyoubei.com)
-- **鐠併倛鐦夐張宥呭**: 
-  - POST /auths/login - 閻劍鍩涢惂璇茬秿
-  - POST /auths/refresh - Token 閸掗攱鏌?
-  - POST /auths/logout - 闁偓閸戣櫣娅ヨぐ?- **鐠佹儳顦穱鈩冧紖**: Device Info Plus (閼惧嘲褰囩拋鎯ь槵閺嶅洩鐦?
-- **OSS**: 闂冨潡鍣锋禍?OSS (閻劋绨?APK 娑撳﹣绱堕敍灞藉棘鐟?scripts/upload_oss.sh)
-- **閸栧懍淇婇幁?*: Package Info Plus (閼惧嘲褰囨惔鏃傛暏閻楀牊婀版穱鈩冧紖)
+- **API 接口**: 后端 REST API (测试域名: test.maiyoubei.com)
+- **鉴权接口**: 
+  - POST /auths/login - 用户登录
+  - POST /auths/refresh - Token 刷新
+  - POST /auths/logout - 用户退出
+- **设备信息**: Device Info Plus (获取设备型号、系统版本)
+- **OSS**: 阿里云 OSS (上传 APK 和日志文件，见 scripts/upload_oss.sh)
+- **版本信息**: Package Info Plus (获取应用版本号信息)
 
 ### Code Generation
 
-#### 閺佺増宓佸Ο鈥崇€烽悽鐔稿灇閿涘湗reezed + JSON Serializable閿?```bash
-# 閻㈢喐鍨氶幍鈧張?.g.dart 閸?.freezed.dart 閺傚洣娆?
+#### 数据模型生成（Freezed + JSON Serializable）
+```bash
+# 生成所有 .g.dart 和 .freezed.dart 文件
 pnpm gen_model
 
-# 閹存牜娲块幒銉ㄧ箥鐞?flutter pub run build_runner build --delete-conflicting-outputs
+# 或直接运行
+flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
-**閺佺増宓佸Ο鈥崇€风€规矮绠熺憴鍕瘱**閿?```dart
+**数据模型定义规范**：
+```dart
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'auth_req_type.freezed.dart';
@@ -804,168 +947,213 @@ class LoginRequest with _$LoginRequest {
 }
 ```
 
-#### 闂堟瑦鈧浇绁┃鎰晸閹?```bash
-# 閻㈢喐鍨?static/ 閻╊喖缍嶆稉瀣畱鐠у嫭绨敮鎼佸櫤缁?pnpm gen_assets
-
-# 閹存牜娲块幒銉ㄧ箥鐞?dart ./scripts/gen_assets.dart
-```
-
-閼奉亜濮╅悽鐔稿灇 `AssetsImg`閵嗕梗AssetsIcon`閵嗕梗AssetsSvg` 缁涘娼ら幀浣鸿閵?
-#### 妞ょ敻娼板Ο鈩冩緲閻㈢喐鍨?
+#### 静态资源代码生成
 ```bash
-# 娴ｈ法鏁ら懘姘閺嬪墎鏁撻幋鎰暚閺佹挳銆夐棃銏㈢波閺?pnpm gen_page
+# 生成 static/ 目录下的资源路径常量
+pnpm gen_assets
 
-# 閹存牜娲块幒銉ㄧ箥鐞?dart ./scripts/create_page.dart
+# 或直接运行
+dart ./scripts/gen_assets.dart
 ```
 
-閻㈢喐鍨氶弽鍥у櫙閻?page閵嗕恭ontroller閵嗕够tate閵嗕箍iew 閸ユ稐娆㈡總妞尖偓?
+自动生成 `AssetsImg`、`AssetsIcon`、`AssetsSvg` 常量类
+
+#### 页面模块快速生成
+```bash
+# 使用脚手架快速生成页面模板
+pnpm gen_page
+
+# 或直接运行
+dart ./scripts/create_page.dart
+```
+
+生成包含 page、controller、state、view 的完整文件
+
 ### Logging Standards
 
-#### 閺冦儱绻斿銉ュ徔閿涘潉utils/log.dart`閿?```dart
+#### 日志工具（`utils/log.dart`）
+```dart
 import 'package:oil_business_app/utils/log.dart';
 
-// 鐠嬪啳鐦弮銉ョ箶
-l.d('Login', '瀵偓婵娅ヨぐ? 閹靛婧€閸?$phone');
+// 调试日志
+l.d('Login', '用户登录: 手机号 $phone');
 
-// 娣団剝浼呴弮銉ョ箶
-l.i('Init', '######################## 妞ょ敻娼伴崚婵嗩潗閸?########################');
+// 普通信息日志
+l.i('Init', '######################## 页面初始化 ########################');
 
-// 闁挎瑨顕ら弮銉ョ箶
-l.e('Register', '濞夈劌鍞芥径杈Е: $e');
+// 错误日志
+l.e('Register', '注册失败: $e');
 
-// 鐠€锕€鎲￠弮銉ョ箶
-l.w('Network', '缂冩垹绮剁拠閿嬬湴鐡掑懏妞?);
+// 警告日志
+l.w('Network', '网络请求超时');
 ```
 
-**閺冦儱绻旂憴鍕瘱**閿?- 缁楊兛绔存稉顏勫棘閺佸府绱板Ο鈥虫健/閸旂喕鍏橀弽鍥槕
-- 缁楊兛绨╂稉顏勫棘閺佸府绱伴崗铚傜秼閺冦儱绻旈崘鍛啇
-- 闁灝鍘ら崷銊ф晸娴溠呭箚婢у啯澧﹂崡鐗堟櫛閹扮喍淇婇幁?- 閸忔娊鏁稉姘濞翠胶鈻艰箛鍛淬€忕拋鏉跨秿閺冦儱绻?
+**日志规范**：
+- 第一参数填写模块名/页面名
+- 第二参数填写具体日志内容
+- 避免打印敏感信息（如密码、Token）
+- 关键业务节点必须添加日志
 
 ### Error Handling
 
-#### 缂冩垹绮堕柨娆掝嚖婢跺嫮鎮?
+#### 网络请求错误处理
 ```dart
 try {
   final response = await authService.login(request);
-  // 婢跺嫮鎮婇幋鎰閸濆秴绨?
+  // 处理成功响应
 } on DioException catch (e) {
-  // Dio 缂冩垹绮堕柨娆掝嚖
+  // Dio 网络错误
   l.e('Login', 'DioException: ${e.message}');
   emit(state.copyWith(loading: false, errorMessage: e.message));
 } catch (e) {
-  // 閸忔湹绮柨娆掝嚖
-  l.e('Login', '閻ц缍嶆径杈Е: $e');
+  // 其他错误
+  l.e('Login', '未知错误: $e');
   emit(state.copyWith(loading: false));
 }
 ```
 
-#### 缂佺喍绔撮柨娆掝嚖婢跺嫮鎮婇敍鍫熷閹搭亜娅掔仦鍌︾礆
-缂冩垹绮堕柨娆掝嚖闁俺绻?`HttpRespInterceptor` 缂佺喍绔存径鍕倞閿?- 401: Token 婢惰鲸鏅ラ敍宀冨殰閸斻劌鍩涢弬鐗堝灗鐠哄疇娴嗛惂璇茬秿
-- 403: 閺夊啴妾烘稉宥堝喕
-- 500: 閺堝秴濮熼崳銊╂晩鐠?- 缂冩垹绮剁搾鍛/閺冪姷缍夌紒?
+#### 统一错误处理（响应拦截器）
+网络错误通过 `HttpRespInterceptor` 统一处理：
+- 401: Token 过期，自动刷新重试
+- 403: 权限不足
+- 500: 接口服务器错误
+- 网络超时/断网
+
 ### Performance Optimization
 
-#### 韫囧懘銆忛柆闈涚暓閻ㄥ嫪绱崠鏍у斧閸?1. **娴ｈ法鏁?const 閺嬪嫰鈧姴鍤遍弫?*
+#### 必须遵守的性能规范
+
+1. **使用 const 构造函数**
    ```dart
-   // 閴?濮濓絿鈥?
+   // ✅ 正确
    const Text('Hello')
    const SizedBox(height: 10)
    
-   // 閴?闁挎瑨顕?
+   // ❌ 错误
    Text('Hello')
    SizedBox(height: 10)
    ```
 
-2. **闂€鍨灙鐞涖劋濞囬悽?Builder**
+2. **列表使用 Builder**
    ```dart
-   // 閴?濮濓絿鈥?
+   // ✅ 正确
    ListView.builder(
      itemCount: items.length,
      itemBuilder: (context, index) => ItemWidget(items[index]),
    )
    
-   // 閴?闁挎瑨顕ら敍姘濞嗏剝鈧冨灡瀵ょ儤澧嶉張?Widget
+   // ❌ 错误（一次性创建所有 Widget）
    ListView(children: items.map((e) => ItemWidget(e)).toList())
    ```
 
-3. **缂冩垹绮堕崶鍓у娴ｈ法鏁ょ紓鎾崇摠**
+3. **网络图片使用缓存**
    ```dart
-   // 閴?濮濓絿鈥?
+   // ✅ 正确
    CachedNetworkImage(
      imageUrl: imageUrl,
      placeholder: (context, url) => CircularProgressIndicator(),
    )
    
-   // 閴?闁挎瑨顕ら敍姘槨濞嗭繝鍣搁弬棰佺瑓鏉?   Image.network(imageUrl)
+   // ❌ 错误（每次重新下载）
+   Image.network(imageUrl)
    ```
 
-4. **闁灝鍘ゆ稉宥呯箑鐟曚胶娈戦柌宥呯紦**
-   - 娴ｈ法鏁?`const` 閺嬪嫰鈧姴鍤遍弫?   - 閸氬牏鎮婃担璺ㄦ暏 `BlocBuilder` 閻?`buildWhen`
-   - 娴ｈ法鏁?`RepaintBoundary` 闂呮梻顬囨径宥嗘絽缂佸嫪娆?
+4. **避免频繁重建组件**
+   - 使用 `const` 构造函数
+   - 合理使用 `BlocBuilder` 的 `buildWhen`
+   - 使用 `RepaintBoundary` 隔离不需要更新的组件
 
-#### 鐠佹儳顦柅鍌炲帳
-- 閺€顖涘瘮閹靛婧€閸滃苯閽╅弶鍖＄礄鐏炲繐绠风€硅棄瀹?> 600 娑撳搫閽╅弶鍖＄礆
-- 閺€顖涘瘮閹舵ê褰旂仦蹇氼啎婢跺洦顥呭ù?- 鐎涙ぞ缍嬫径褍鐨梽鎰煑閺堚偓婢堆呯級閺€?1.2 閸?- 濡亞鐝仦蹇撳瀼閹广垼鍤滈崝銊╁櫢閺傛媽顓哥粻妤€鏄傜€?
+#### 设备适配
+- 支持手机号登录、平板设备
+- 屏幕宽度 > 600 时启用平板布局
+- 字体大小根据系统缩放比例自动调整
+- 所有文本行高比例固定 1.2
+
 ### Best Practices
 
-#### 娴狅絿鐖滅紒鍕矏
-1. **鐎电厧鍙嗘い鍝勭碍**閿涙art SDK 閳?Flutter 閳?缁楊兛绗侀弬鐟板瘶 閳?妞ゅ湱娲伴崘鍛村劥
-2. **閺傚洣娆㈤崨钘夋倳**閿涙艾鐨崘娆庣瑓閸掓帞鍤庨崚鍡涙閿涘潉login_controller.dart`閿?3. **缁鎳￠崥?*閿涙艾銇囨す鐓庡槻閿涘潉LoginController`閿?4. **閺傝纭?閸欐﹢鍣洪崨钘夋倳**閿涙艾鐨す鐓庡槻閿涘潉submitForm`閿?5. **鐢悂鍣洪崨钘夋倳**閿涙艾銇囬崘娆庣瑓閸掓帞鍤庨敍鍧凪AX_LENGTH`閿?
-#### 缂佸嫪娆㈢拋鎹愵吀
-1. **閸楁洑绔撮懕宀冪煑**閿涙碍鐦℃稉顏嗙矋娴犺泛褰ч崑姘娴犳湹绨?
-2. **閸欘垰顦查悽銊︹偓?*閿涙岸鈧氨鏁ょ紒鍕閺€?`widgets/base/`
-3. **閸欏倹鏆熺拋鎹愵吀**閿涙艾绻€闂団偓閸欏倹鏆熼悽?`required`閿涘苯褰查柅澶婂棘閺佺増褰佹笟娑㈢帛鐠併倕鈧?4. **閻㈢喎鎳￠崨銊︽埂**閿涙碍顒滅涵顔碱槱閻?`initState`閵嗕梗dispose`
+#### 代码组织
+1. **导入排序**：Dart SDK → Flutter → 第三方包 → 项目文件
+2. **文件命名**：小写下划线格式（login_controller.dart）
+3. **类命名**：大驼峰格式（LoginController）
+4. **方法命名**：小驼峰格式（submitForm）
+5. **常量命名**：大写下划线格式（MAX_LENGTH）
 
-#### 閻樿埖鈧胶顓搁悶?1. **妞ょ敻娼伴悩鑸碘偓?*閿涙矮濞囬悽?Cubit閿涘奔绻氶幐浣虹暆閸?2. **閸忋劌鐪悩鑸碘偓?*閿涙矮濞囬悽?HydratedCubit閿涘矁鍤滈崝銊﹀瘮娑斿懎瀵?
-3. **娴滃娆㈤柅姘繆**閿涙矮濞囬悽?EventBus閿涘矁袙閼帮附膩閸?4. **閻樿埖鈧椒绗夐崣顖氬綁**閿涙艾顫愮紒鍫滃▏閻?`copyWith` 閺囧瓨鏌婇悩鑸碘偓?
-#### 娴狅絿鐖滅拹銊╁櫤
-1. **Linter 鐟欏嫬鍨?*閿涙矮寮楅弽濂镐紥鐎?`analysis_options.yaml` 闁板秶鐤?
-2. **缁鐎风€瑰鍙?*閿涙岸浼╅崗宥勫▏閻?`dynamic`閿涘本妲戠涵顔捐閸?3. **缁屽搫鐣ㄩ崗?*閿涙碍顒滅涵顔诲▏閻?`?` 閸?`!`
-4. **濞夈劑鍣撮弬鍥ㄣ€?*閿涙艾鍙曢崗?API 韫囧懘銆忛張澶嬫瀮濡楋絾鏁為柌?
+#### 组件设计
+1. **单一职责**：每个组件只做一件事
+2. **可复用性**：通用组件放入 `widgets/base/`
+3. **参数清晰**：使用 `required` 标记必填参数，可选参数提供合理默认值
+4. **生命周期**：正确管理 `initState` 和 `dispose`
+
+#### 状态管理
+1. **页面局部状态**：使用 Cubit（简单场景）
+2. **全局持久状态**：使用 HydratedCubit（需存储）
+3. **事件通信**：使用 EventBus（跨页面）
+4. **状态不可变**：通过 `copyWith` 创建新状态
+
+#### 代码质量
+1. **Linter 检查**：遵循 `analysis_options.yaml` 配置
+2. **类型安全**：避免使用 `dynamic`，显式声明类型
+3. **空安全**：正确使用 `?` 和 `!`
+4. **注释完整**：为公共 API 必须添加文档注释
+
 ## Build & Deployment
 
-### 瀵偓閸欐垹骞嗘晶?```bash
-# 鐎瑰顥婃笟婵婄
+### 开发环境启动
+```bash
+# 依赖安装
 flutter pub get
 
-# 閸氼垰濮╁鈧崣鎴炴箛閸斺槄绱欐径姘闁挻鏁幐渚婄礆
-pnpm dev                      # 姒涙顓?oppo 濞撶娀浜?
+# 运行到连接的设备（根据渠道启用不同配置）
+rps dev                       # 使用 rps 脚本命令（默认 oppo 渠道）
+# 或直接使用 Flutter 命令
 flutter run --flavor oppo
 flutter run --flavor vivo
 flutter run --flavor xiaomi
 ```
 
-### 娴狅絿鐖滈悽鐔稿灇
+### 代码生成
 ```bash
-pnpm gen_model    # 閻㈢喐鍨氶弫鐗堝祦濡€崇€?
-pnpm gen_assets   # 閻㈢喐鍨氶棃娆愨偓浣界カ濠ф劕鐖堕柌?pnpm gen_page     # 閻㈢喐鍨氭い鐢告桨濡剝婢?
+# 使用 rps 脚本命令
+rps gen_model    # 生成数据模型
+rps gen_assets   # 生成静态资源引用
+rps gen_page     # 生成静态页面模板
+
+# 或直接使用原始命令
+flutter pub run build_runner build --delete-conflicting-outputs  # 生成数据模型
+dart ./scripts/gen_assets.dart   # 生成静态资源
+dart ./scripts/create_page.dart  # 生成页面模板
 ```
 
-### 閺嬪嫬缂撻幍鎾冲瘶
+### 打包构建
 ```bash
-# Android APK
-pnpm build_android
+# 使用 rps 脚本命令
+rps build_android   # 打包 Android APK
+rps build_ios       # 打包 iOS IPA
+rps upload_app      # 上传到 OSS
 
-# iOS IPA
-pnpm build_ios
-
-# 娑撳﹣绱堕崚?OSS
-pnpm upload_app
+# 这些命令实际执行的是 scripts/ 目录下的 shell 脚本
 ```
 
-### 濞撳懐鎮婇崪宀勫櫢缂?```bash
-pnpm reset        # flutter clean + pub get
-flutter clean     # 濞撳懐鎮婇弸鍕紦缂傛挸鐡?
+### 清理重置
+```bash
+rps reset           # 使用 rps 脚本：flutter clean + flutter pub get
+flutter clean       # 或直接清理构建缓存
 ```
 
-### 閻滎垰顣ㄩ崣姗€鍣?
-- `HTTP_ENV`: 閻滎垰顣ㄩ崚鍥ㄥ床閿?=瀵偓閸欐埊绱?=閻㈢喍楠囬敍?- `BUILD_NUMBER`: 閺嬪嫬缂撻崣鍑ょ礄CI/CD 濞夈劌鍙嗛敍?
+### 环境变量
+- `HTTP_ENV`: 环境切换（1=开发环境，2=生产环境）
+- `BUILD_NUMBER`: 构建编号，CI/CD 自动注入
+
 ### Git Hooks
-妞ゅ湱娲伴柊宥囩枂娴?pre-commit hook閿?```bash
-# 鐎瑰顥?hook
-pnpm install
-# 閹?sh ./scripts/install.sh
+本项目配置了 pre-commit hook：
+```bash
+# 安装 Git hooks
+rps install         # 使用 rps 脚本
+# 或直接执行
+sh ./scripts/install.sh
 ```
 
-Hook 娴兼艾婀幓鎰唉閸撳秷鍤滈崝顭掔窗
-- 鏉╂劘顢?Linter 濡偓閺?- 閺嶇厧绱￠崠鏍﹀敩閻?- 閹笛嗩攽韫囶偊鈧喐绁寸拠?
+Hook 会在提交前自动执行：
+- 运行 Linter 检查
+- 格式化代码
+- 禁止提交调试代码
