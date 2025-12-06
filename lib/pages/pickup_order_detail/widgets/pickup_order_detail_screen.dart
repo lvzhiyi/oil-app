@@ -276,11 +276,7 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
       onOk: () async {
         await SportsDialog.dismiss();
         if (context.mounted) {
-          final success =
-              await context.read<PickupOrderDetailCtrl>().cancelOrder();
-          if (success && context.mounted) {
-            Navigator.pop(context, true);
-          }
+          context.read<PickupOrderDetailCtrl>().cancelOrder();
         }
       },
     );

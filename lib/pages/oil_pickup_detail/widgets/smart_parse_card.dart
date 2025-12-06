@@ -61,7 +61,7 @@ class _SmartParseCardState extends State<SmartParseCard> {
     final template = _getTemplateText();
     await Clipboard.setData(ClipboardData(text: template));
     if (mounted) {
-      SportsToast.showSuccess('模板已复制到剪贴板');
+      SportsToast.showSuccess('模板已复制到剪贴板', duration: 1000);
     }
   }
 

@@ -3,6 +3,7 @@ import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 import 'package:oil_business_app/pages/pickup_order_detail/state.dart';
 
 import 'package:oil_business_app/pages/oil_pickup/service/oil_pickup_service.dart';
+import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
 class PickupOrderDetailCtrl extends Cubit<PickupOrderDetailState> {
@@ -39,17 +40,17 @@ class PickupOrderDetailCtrl extends Cubit<PickupOrderDetailState> {
     emit(state.copyWith(order: order));
   }
 
-  Future<bool> cancelOrder() async {
+  Future<void> cancelOrder() async {
     emit(state.copyWith(isLoading: true));
     try {
       await oilPickupService.cancelWithdraw(withdrawId);
       SportsToast.showSuccess('订单已取消');
       emit(state.copyWith(isLoading: false));
-      return true;
+      await Future.delayed(const Duration(milliseconds: 1000));
+      BaseRouter.pop(result: {'refresh': true});
     } catch (e) {
       emit(state.copyWith(isLoading: false));
       SportsToast.showWarning('取消失败，请重试');
-      return false;
     }
   }
 }
