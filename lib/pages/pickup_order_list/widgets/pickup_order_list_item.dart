@@ -269,35 +269,8 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
         borderRadius: BorderRadius.circular(AppSizes.setWidth(6)),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Row(
-            children: [
-              if (plateNumber.isNotEmpty)
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSizes.setWidth(4),
-                    vertical: AppSizes.setHeight(1),
-                  ),
-                  decoration: BoxDecoration(
-                    color: plateNumberBgColor,
-                    borderRadius: BorderRadius.circular(AppSizes.setWidth(3)),
-                  ),
-                  margin: EdgeInsets.only(right: AppSizes.setWidth(6)),
-                  child: CommonText(
-                    text: plateNumber,
-                    fontSize: AppSizes.setFontSize(11),
-                    fontWeight: FontWeight.w600,
-                    textColor: plateNumberTextColor,
-                  ),
-                ),
-              CommonText(
-                text: driverName.isNotEmpty ? driverName : '--',
-                fontSize: AppSizes.setFontSize(11),
-                textColor: const Color(0xFF6B7280),
-              ),
-            ],
-          ),
           CommonText(
             text: dateStr,
             fontSize: AppSizes.setFontSize(11),
