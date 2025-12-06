@@ -34,7 +34,7 @@ class InvoiceEditCtrl extends Cubit<InvoiceEditState> {
         bankAccount: response.bankAccount ?? '',
         companyAddress: response.companyAddress ?? '',
         companyPhone: response.companyPhone ?? '',
-        invoiceType: response.invoiceType ?? 'special_vat', // 默认选中增值税专用发票
+        invoiceType: response.invoiceType ?? 'general_vat', // 默认选中增值税普通发票
         isLoading: false,
       ));
     } catch (e) {
