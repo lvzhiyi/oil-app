@@ -68,19 +68,17 @@ class UnifiedLoginScreen extends StatelessWidget {
                     // 根据Tab显示不同的额外字段（带动画切换）
                     BlocBuilder<LoginCtrl, LoginState>(
                       builder: (context, state) {
-                        return AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 300),
-                          child: state.activeTab == LoginTabType.password
-                              ? const PasswordLoginForm(
-                                  key: ValueKey('password'),
-                                )
-                              : VerificationLoginForm(
-                                  key: const ValueKey('verification'),
-                                  countdown: state.verificationCountdown,
-                                  onSendCode: () =>
-                                      _handleSendCode(context, ctrl),
-                                ),
-                        );
+                        final isPassword = state.activeTab == LoginTabType.password;
+                        return isPassword
+                            ? const PasswordLoginForm(
+                                key: ValueKey('password'),
+                              )
+                            : VerificationLoginForm(
+                                key: const ValueKey('verification'),
+                                countdown: state.verificationCountdown,
+                                onSendCode: () =>
+                                    _handleSendCode(context, ctrl),
+                              );
                       },
                     ),
 
