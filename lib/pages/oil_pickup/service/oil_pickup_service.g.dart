@@ -85,6 +85,33 @@ class _OilPickupService implements OilPickupService {
   }
 
   @override
+  Future<WithdrawOrderModel> getWithdrawDetail(int withdrawId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<WithdrawOrderModel>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/inventories/withdraws/${withdrawId}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late WithdrawOrderModel _value;
+    try {
+      _value = WithdrawOrderModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<InventoryListResponse> getInventories({
     required int page,
     required int pageSize,

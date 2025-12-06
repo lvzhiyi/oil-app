@@ -9,6 +9,28 @@ class PickupOrderDetailCtrl extends Cubit<PickupOrderDetailState> {
   PickupOrderDetailCtrl({WithdrawOrderModel? order})
       : super(PickupOrderDetailState(order: order));
 
+  Future<void> loadOrderDetail(int withdrawId) async {
+    emit(state.copyWith(isLoading: true, errorMessage: null));
+    try {
+      final detail = await oilPickupService.getWithdrawDetail(withdrawId);
+      emit(
+        state.copyWith(
+          order: detail,
+          isLoading: false,
+          errorMessage: null,
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: '获取订单详情失败',
+        ),
+      );
+      SportsToast.showWarning('获取订单详情失败，请重试');
+    }
+  }
+
   void setOrder(WithdrawOrderModel order) {
     emit(state.copyWith(order: order));
   }

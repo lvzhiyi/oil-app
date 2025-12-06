@@ -13,7 +13,7 @@ class PickupOrderDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PickupOrderDetailScreen(
-      order: state.order,
+      state: state,
     );
   }
 }

@@ -25,6 +25,12 @@ abstract class OilPickupService {
     @Body() WithdrawRequest request,
   );
 
+  /// 获取提油订单详情
+  @GET('/inventories/withdraws/{withdrawId}')
+  Future<WithdrawOrderModel> getWithdrawDetail(
+    @Path('withdrawId') int withdrawId,
+  );
+
   /// 查询用户可用库存油
   @GET('/inventories')
   Future<InventoryListResponse> getInventories({

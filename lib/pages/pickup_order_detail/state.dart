@@ -14,12 +14,16 @@ class PickupOrderDetailState {
   PickupOrderDetailState copyWith({
     WithdrawOrderModel? order,
     bool? isLoading,
-    String? errorMessage,
+    Object? errorMessage = _copyWithPlaceholder,
   }) {
     return PickupOrderDetailState(
       order: order ?? this.order,
       isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: errorMessage == _copyWithPlaceholder
+          ? this.errorMessage
+          : errorMessage as String?,
     );
   }
 }
+
+const Object _copyWithPlaceholder = Object();

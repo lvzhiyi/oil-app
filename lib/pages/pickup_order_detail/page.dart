@@ -23,9 +23,17 @@ class _PickupOrderDetailPage extends BaseState<PickupOrderDetailPage>
   @override
   Widget body(context) {
     return BlocProvider(
-      create: (BuildContext context) => PickupOrderDetailCtrl(
-        order: widget.order,
-      ),
+      create: (BuildContext context) {
+        final ctrl = PickupOrderDetailCtrl(
+          order: widget.order,
+        );
+        final int? withdrawId =
+            widget.order?.withdrawId ?? widget.order?.id;
+        if (withdrawId != null) {
+          ctrl.loadOrderDetail(withdrawId);
+        }
+        return ctrl;
+      },
       child: BlocBuilder<PickupOrderDetailCtrl, PickupOrderDetailState>(
         builder: (context, state) {
           return PickupOrderDetailView(state: state);
