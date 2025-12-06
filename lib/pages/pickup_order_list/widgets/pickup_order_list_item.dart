@@ -51,7 +51,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
               borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
               border: Border.all(
                 color: _isPressed
-                    ? const Color(0xFF7165E3)
+                    ? AppColor.primaryColor
                     : Colors.black.withValues(alpha: 0.02),
                 width: 1,
               ),
@@ -255,8 +255,8 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
       plateNumberBgColor = const Color(0xFFF3F4F6);
       plateNumberTextColor = const Color(0xFF6B7280);
     } else {
-      plateNumberBgColor = const Color(0xFFEEECFC);
-      plateNumberTextColor = const Color(0xFF7165E3);
+      plateNumberBgColor = AppColor.secondaryLight;
+      plateNumberTextColor = AppColor.primaryColor;
     }
 
     return Container(
@@ -365,7 +365,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
           padding: EdgeInsets.symmetric(
             vertical: AppSizes.setHeight(10),
           ),
-          side: const BorderSide(color: Color(0xFF7165E3), width: 1),
+          side: BorderSide(color: AppColor.primaryColor, width: 1),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSizes.setWidth(20)),
           ),
@@ -374,7 +374,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
         child: CommonText(
           text: '查看详情',
           fontSize: AppSizes.setFontSize(13),
-          textColor: const Color(0xFF7165E3),
+          textColor: AppColor.primaryColor,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -390,9 +390,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
           'withdrawId': widget.item.withdrawId,
         },
       );
-      if (context.mounted &&
-          result is Map &&
-          result['refresh'] == true) {
+      if (context.mounted && result is Map && result['refresh'] == true) {
         final ctrl = context.read<PickupOrderListCtrl>();
         await ctrl.onRefresh();
       }

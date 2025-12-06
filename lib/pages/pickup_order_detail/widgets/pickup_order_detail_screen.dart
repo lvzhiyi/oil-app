@@ -82,8 +82,10 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: _buildAppBar(context),
-      body: const Center(
-        child: CircularProgressIndicator(),
+      body: Center(
+        child: CircularProgressIndicator(
+          color: AppColor.primaryColor,
+        ),
       ),
     );
   }
@@ -235,7 +237,9 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
             child: Container(
               color: Colors.black.withValues(alpha: 0.05),
               alignment: Alignment.center,
-              child: const CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: AppColor.primaryColor,
+              ),
             ),
           ),
       ],

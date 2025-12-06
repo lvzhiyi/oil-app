@@ -205,12 +205,12 @@ class _PickupOrderListViewState extends State<PickupOrderListView>
           vertical: AppSizes.setHeight(8),
         ),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF7165E3) : Colors.transparent,
+          color: isSelected ? AppColor.primaryColor : Colors.transparent,
           borderRadius: BorderRadius.circular(AppSizes.setWidth(6)),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: const Color(0xFF7165E3).withValues(alpha: 0.2),
+                    color: AppColor.primaryColor.withValues(alpha: 0.2),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),

@@ -56,8 +56,8 @@ class OrderDetailHeader extends StatelessWidget {
     if (status == WithdrawStatus.pendingPickup.value) {
       return _HeaderConfig(
         icon: Icons.access_time_rounded,
-        iconColor: const Color(0xFF7165E3),
-        backgroundColor: const Color(0xFFEDE9FE),
+        iconColor: AppColor.primaryColor,
+        backgroundColor: AppColor.secondaryLight,
         title: '待提油',
         subtitle: '请保存凭证图片发送给司机',
       );

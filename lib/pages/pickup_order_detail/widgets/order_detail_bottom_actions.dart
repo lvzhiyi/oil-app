@@ -22,6 +22,7 @@ class OrderDetailBottomActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final BorderRadius borderRadius =
         BorderRadius.circular(AppSizes.setWidth(12));
+    final Color primary = CustomAppColor.of(context).primaryColor;
 
     return Container(
       padding: EdgeInsets.only(
@@ -71,22 +72,27 @@ class OrderDetailBottomActions extends StatelessWidget {
           SizedBox(width: AppSizes.setWidth(12)),
           Expanded(
             child: Material(
-              color: CustomAppColor.of(context).btnPurple,
+              color: primary,
               borderRadius: borderRadius,
               child: InkWell(
                 borderRadius: borderRadius,
-                onTap: onSave,
+                onTap: isSaving ? null : onSave,
                 child: Container(
                   height: AppSizes.setHeight(52),
                   alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: primary,
+                    borderRadius: borderRadius,
+                  ),
                   child: isSaving
                       ? SizedBox(
                           width: AppSizes.setWidth(20),
                           height: AppSizes.setWidth(20),
-                          child: const CircularProgressIndicator(
+                          child: CircularProgressIndicator(
                             strokeWidth: 2,
                             valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
+                                const AlwaysStoppedAnimation<Color>(Colors.white),
+                            backgroundColor: Colors.white.withOpacity(0.25),
                           ),
                         )
                       : Row(
