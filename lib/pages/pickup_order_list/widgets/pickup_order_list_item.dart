@@ -160,13 +160,9 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
     final stationName = widget.item.station?.stationName ?? '未知油站';
     final label = isCompleted ? '实提量' : '提油量';
 
-    Color amountColor;
+    Color amountColor = const Color(0xFF1F2937);
     if (isCancelled) {
       amountColor = const Color(0xFF9CA3AF);
-    } else if (isCompleted) {
-      amountColor = const Color(0xFF10B981);
-    } else {
-      amountColor = const Color(0xFF1F2937);
     }
 
     return Row(
