@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/pages/bind_station/page.dart';
-import 'package:oil_business_app/pages/login/widgets/verification_login.dart';
 import 'package:oil_business_app/pages/otp/page.dart';
 import 'package:oil_business_app/pages/otp/widgets/otp_verification_screen.dart';
 import 'package:oil_business_app/models/vehicle_model.dart';
@@ -20,6 +19,7 @@ import 'package:oil_business_app/pages/register/page.dart';
 import 'package:oil_business_app/pages/change_password/page.dart';
 import 'package:oil_business_app/pages/privacy_feedback/page.dart';
 import 'package:oil_business_app/pages/service_agreement/page.dart';
+import 'package:oil_business_app/pages/forgot_password/page.dart';
 
 import 'package:oil_business_app/pages/profile/page.dart';
 import 'package:oil_business_app/pages/main_layout/page.dart';
@@ -47,9 +47,6 @@ enum AppPage {
 
   /// 登录
   loginPage("/login"),
-
-  /// 验证码登录
-  verificationLoginPage("/verificationLogin"),
 
   /// 验证码登录
   otpPage("/otp"),
@@ -119,6 +116,9 @@ enum AppPage {
 
   /// 发票编辑页面
   invoiceEditPage('/invoiceEdit'),
+
+  /// 找回密码页面
+  forgotPasswordPage('/forgotPassword'),
   ;
 
   const AppPage(this.path);
@@ -224,8 +224,11 @@ extension PageRoute on AppPage {
       case AppPage.pickupOrderDetailPage:
         return (context, state) {
           final extra = state.extra as Map<String, dynamic>? ?? {};
-          final order = extra['order'] as WithdrawOrderModel?;
-          return PickupOrderDetailPage(order: order);
+          final withdrawId = extra['withdrawId'] as int?;
+          if (withdrawId == null) {
+            return const Text('参数缺失：withdrawId');
+          }
+          return PickupOrderDetailPage(withdrawId: withdrawId);
         };
 
       case AppPage.privacyPolicyPage:
@@ -237,6 +240,9 @@ extension PageRoute on AppPage {
       case AppPage.invoiceEditPage:
         return (context, state) => const InvoiceEditPage();
 
+      case AppPage.forgotPasswordPage:
+        return (context, state) => const ForgotPasswordPage();
+
       default:
         return (context, state) => const Text('404');
     }
@@ -246,13 +252,6 @@ extension PageRoute on AppPage {
     if (this == AppPage.loginPage) {
       return (context, state) => bottomToTopPageTransition(
           context: context, state: state, child: const LoginPage());
-    }
-
-    if (this == AppPage.verificationLoginPage) {
-      return (context, state) => bottomToTopPageTransition(
-          context: context,
-          state: state,
-          child: const VerificationLoginScreen());
     }
 
     return null;

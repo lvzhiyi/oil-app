@@ -8,6 +8,7 @@ import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 import 'package:oil_business_app/pages/oil_pickup_success/widgets/receipt_card.dart';
 import 'package:oil_business_app/pages/oil_pickup_success/widgets/save_share_sheet.dart';
 import 'package:oil_business_app/pages/pickup_order_detail/controller.dart';
+import 'package:oil_business_app/pages/pickup_order_detail/state.dart';
 import 'package:oil_business_app/pages/pickup_order_detail/utils/certificate_image_saver.dart';
 import 'package:oil_business_app/pages/pickup_order_detail/utils/vehicle_info_parser.dart';
 import 'package:oil_business_app/pages/pickup_order_detail/widgets/order_detail_header.dart';
@@ -21,11 +22,11 @@ import 'package:oil_business_app/widgets/popup/dialog.dart';
 ///
 /// 展示订单的完整信息，包括运单卡片和操作按钮
 class PickupOrderDetailScreen extends StatefulWidget {
-  final WithdrawOrderModel? order;
+  final PickupOrderDetailState state;
 
   const PickupOrderDetailScreen({
     Key? key,
-    this.order,
+    required this.state,
   }) : super(key: key);
 
   @override
@@ -39,18 +40,28 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final WithdrawOrderModel? order = widget.state.order;
+
+    if (widget.state.isLoading && order == null) {
+      return _buildLoadingState();
+    }
+
+    if (widget.state.errorMessage != null && order == null) {
+      return _buildErrorState(widget.state.errorMessage!);
+    }
+
     // 空订单处理
-    if (widget.order == null) {
+    if (order == null) {
       return _buildEmptyState();
     }
 
     // 解析车辆信息
     final VehicleModel? vehicleModel =
-        VehicleInfoParser.parse(widget.order!.vehicleInfo);
+        VehicleInfoParser.parse(order.vehicleInfo);
 
     // 判断订单状态
     final bool isPendingPickup =
-        widget.order!.status == WithdrawStatus.pendingPickup.value;
+        order.status == WithdrawStatus.pendingPickup.value;
 
     final double horizontalPadding = AppSizes.setWidth(16);
 
@@ -61,6 +72,47 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
         horizontalPadding,
         vehicleModel,
         isPendingPickup,
+        order,
+      ),
+    );
+  }
+
+  /// 构建加载状态
+  Widget _buildLoadingState() {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FA),
+      appBar: _buildAppBar(context),
+      body: const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  /// 构建错误状态
+  Widget _buildErrorState(String message) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FA),
+      appBar: _buildAppBar(context),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CommonText(
+              text: message,
+              fontSize: AppSizes.setFontSize(14),
+              textColor: const Color(0xFF6B7280),
+            ),
+            SizedBox(height: AppSizes.setHeight(12)),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: CommonText(
+                text: '返回',
+                fontSize: AppSizes.setFontSize(14),
+                textColor: CustomAppColor.of(context).txtPurple,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -92,10 +144,11 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
     double horizontalPadding,
     VehicleModel? vehicleModel,
     bool isPendingPickup,
+    WithdrawOrderModel order,
   ) {
     final String dispatchContent = VehicleInfoParser.getDispatchContent(
       vehicleModel,
-      vehicleInfo: widget.order!.vehicleInfo,
+      vehicleInfo: order.vehicleInfo,
     );
 
     return Stack(
@@ -112,23 +165,23 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
                   ),
                   child: Column(
                     children: [
-                      OrderDetailHeader(status: widget.order!.status),
+                      OrderDetailHeader(status: order.status),
                       SizedBox(height: AppSizes.setHeight(16)),
                       OilPickupReceiptCard(
                         response: WithdrawResponse(
-                          withdrawNo: widget.order!.withdrawNo,
-                          withdrawId: widget.order!.withdrawId,
-                          status: widget.order!.status,
+                          withdrawNo: order.withdrawNo,
+                          withdrawId: order.withdrawId,
+                          status: order.status,
                         ),
                         inventory: InventoryModel(
-                          inventoryId: widget.order!.inventoryId,
-                          depotName: widget.order!.depotName,
+                          depotName: order.depot?.depotName,
+                          fuelType: order.fuelType,
                         ),
                         station: Station(
-                          id: widget.order!.stationId,
-                          stationName: widget.order!.stationName,
+                          id: order.station?.stationId,
+                          stationName: order.station?.stationName,
                         ),
-                        oilAmount: widget.order!.withdrawTon?.toString() ?? '0',
+                        oilAmount: order.withdrawTon?.toString() ?? '0',
                         dispatchContent: dispatchContent,
                         onCopyWithdrawNo: _copyWithdrawNo,
                         showCopyIcon: true,
@@ -157,19 +210,19 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
               width: AppSizes.setWidth(375 - 32),
               child: OilPickupReceiptCard(
                 response: WithdrawResponse(
-                  withdrawNo: widget.order!.withdrawNo,
-                  withdrawId: widget.order!.withdrawId,
-                  status: widget.order!.status,
+                  withdrawNo: order.withdrawNo,
+                  withdrawId: order.withdrawId,
+                  status: order.status,
                 ),
                 inventory: InventoryModel(
-                  inventoryId: widget.order!.inventoryId,
-                  depotName: widget.order!.depotName,
+                  depotName: order.depot?.depotName,
+                  fuelType: order.fuelType,
                 ),
                 station: Station(
-                  id: widget.order!.stationId,
-                  stationName: widget.order!.stationName,
+                  id: order.station?.stationId,
+                  stationName: order.station?.stationName,
                 ),
-                oilAmount: widget.order!.withdrawTon?.toString() ?? '0',
+                oilAmount: order.withdrawTon?.toString() ?? '0',
                 dispatchContent: dispatchContent,
                 onCopyWithdrawNo: (_) {},
                 showCopyIcon: false,
@@ -177,6 +230,14 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
             ),
           ),
         ),
+        if (widget.state.isLoading)
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withValues(alpha: 0.05),
+              alignment: Alignment.center,
+              child: const CircularProgressIndicator(),
+            ),
+          ),
       ],
     );
   }
@@ -206,6 +267,8 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
 
   /// 处理取消订单
   void _handleCancel(BuildContext context) {
+    if (widget.state.isLoading) return;
+
     SportsDialog.show(
       title: '取消订单',
       bodyText: '确定要取消该提油订单吗？取消后无法恢复。',
@@ -213,11 +276,7 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
       onOk: () async {
         await SportsDialog.dismiss();
         if (context.mounted) {
-          final success =
-              await context.read<PickupOrderDetailCtrl>().cancelOrder();
-          if (success && context.mounted) {
-            Navigator.pop(context, true);
-          }
+          context.read<PickupOrderDetailCtrl>().cancelOrder();
         }
       },
     );

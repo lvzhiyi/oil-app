@@ -92,7 +92,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
 
   Widget _buildCardHeader(
       BuildContext context, bool isCompleted, bool isCancelled) {
-    final orderNo = widget.item.withdrawNo ?? widget.item.id?.toString() ?? '';
+    final orderNo = widget.item.withdrawNo ?? '';
 
     return Column(
       children: [
@@ -381,15 +381,21 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
     );
   }
 
-  void _handleViewDetail(BuildContext context) {
-    if (widget.item.withdrawId != null || widget.item.id != null) {
-      BaseRouter.push(
+  Future<void> _handleViewDetail(BuildContext context) async {
+    if (widget.item.withdrawId != null) {
+      final result = await BaseRouter.push(
         context: context,
         url: AppPage.pickupOrderDetailPage.path,
         extra: {
-          'order': widget.item,
+          'withdrawId': widget.item.withdrawId,
         },
       );
+      if (context.mounted &&
+          result is Map &&
+          result['refresh'] == true) {
+        final ctrl = context.read<PickupOrderListCtrl>();
+        await ctrl.onRefresh();
+      }
     } else {
       l.w('PickupOrderListItem', '订单ID为空，无法跳转到详情页');
       SportsToast.showError('订单信息异常，无法查看详情');

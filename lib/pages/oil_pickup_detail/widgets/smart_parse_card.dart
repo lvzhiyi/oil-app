@@ -61,7 +61,7 @@ class _SmartParseCardState extends State<SmartParseCard> {
     final template = _getTemplateText();
     await Clipboard.setData(ClipboardData(text: template));
     if (mounted) {
-      SportsToast.showSuccess('模板已复制到剪贴板');
+      SportsToast.showSuccess('模板已复制到剪贴板', duration: 1000);
     }
   }
 
@@ -173,7 +173,9 @@ class _SmartParseCardState extends State<SmartParseCard> {
                   height: AppSizes.setHeight(160),
                   padding: EdgeInsets.all(AppSizes.setWidth(12)),
                   decoration: BoxDecoration(
-                    color: CustomAppColor.of(context).bgScaffold,
+                    color: _hasFocus
+                        ? Colors.white
+                        : const Color(0xFFF3F4F6),
                     borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
                     border: Border.all(
                       color: _hasFocus
@@ -186,9 +188,10 @@ class _SmartParseCardState extends State<SmartParseCard> {
                             BoxShadow(
                               color: CustomAppColor.of(context)
                                   .btnPurple
-                                  .withValues(alpha: 0.1),
-                              blurRadius: 3,
+                                  .withValues(alpha: 0.08),
+                              blurRadius: 4,
                               spreadRadius: 0,
+                              offset: const Offset(0, 1),
                             ),
                           ]
                         : null,

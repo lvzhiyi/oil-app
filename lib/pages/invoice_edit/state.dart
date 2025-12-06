@@ -14,6 +14,12 @@ class InvoiceEditState {
   final bool hasError;
   final String? errorMessage;
   final InvoiceInfo? originalInvoice;
+  final String? invoiceTitleError;
+  final String? taxNumberError;
+  final String? bankNameError;
+  final String? bankAccountError;
+  final String? companyAddressError;
+  final String? companyPhoneError;
 
   InvoiceEditState({
     required this.stationId,
@@ -24,11 +30,17 @@ class InvoiceEditState {
     this.bankAccount = '',
     this.companyAddress = '',
     this.companyPhone = '',
-    this.invoiceType = 'special_vat', // 默认选中增值税专用发票
+    this.invoiceType = 'general_vat', // 默认选中增值税专用发票
     this.isLoading = false,
     this.hasError = false,
     this.errorMessage,
     this.originalInvoice,
+    this.invoiceTitleError,
+    this.taxNumberError,
+    this.bankNameError,
+    this.bankAccountError,
+    this.companyAddressError,
+    this.companyPhoneError,
   });
 
   InvoiceEditState copyWith({
@@ -45,6 +57,12 @@ class InvoiceEditState {
     bool? hasError,
     String? errorMessage,
     InvoiceInfo? originalInvoice,
+    String? invoiceTitleError,
+    String? taxNumberError,
+    String? bankNameError,
+    String? bankAccountError,
+    String? companyAddressError,
+    String? companyPhoneError,
   }) {
     return InvoiceEditState(
       stationId: stationId ?? this.stationId,
@@ -60,6 +78,12 @@ class InvoiceEditState {
       hasError: hasError ?? this.hasError,
       errorMessage: errorMessage,
       originalInvoice: originalInvoice ?? this.originalInvoice,
+      invoiceTitleError: invoiceTitleError,
+      taxNumberError: taxNumberError,
+      bankNameError: bankNameError,
+      bankAccountError: bankAccountError,
+      companyAddressError: companyAddressError,
+      companyPhoneError: companyPhoneError,
     );
   }
 }

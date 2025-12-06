@@ -136,6 +136,8 @@ dependencies:
   get_it: ^8.2.0
   rename_app: ^1.6.5
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   flutter_flavorizr: ^2.2.3
   flutter_lints: ^6.0.0
   freezed: ^3.2.3

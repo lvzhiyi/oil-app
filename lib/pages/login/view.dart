@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/pages/login/state.dart';
 
 import 'controller.dart';
-import 'widgets/login_to_your_account_screen.dart';
+import 'widgets/unified_login_screen.dart';
 
 class LoginView extends StatefulWidget {
   final LoginState state;
@@ -15,8 +15,6 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  FocusNode passwordFocusNode = FocusNode();
-
   @override
   void initState() {
     super.initState();
@@ -24,7 +22,6 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   void dispose() {
-    passwordFocusNode.dispose();
     super.dispose();
   }
 
@@ -43,7 +40,7 @@ class _LoginViewState extends State<LoginView> {
           });
         }
       },
-      child: const LoginToYourAccountScreen(),
+      child: const UnifiedLoginScreen(),
     );
   }
 }
