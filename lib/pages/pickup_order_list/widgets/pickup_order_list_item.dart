@@ -239,25 +239,25 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
     bool isCompleted,
     bool isCancelled,
   ) {
-    final plateNumber = vehicle?.plateNumber ?? '';
-    final driverName = vehicle?.driverName ?? '';
+    // final plateNumber = vehicle?.plateNumber ?? '';
+    // final driverName = vehicle?.driverName ?? '';
     final dateStr = _getDateString(
-      isCompleted ? widget.item.updatedAt : widget.item.createdAt,
+      !isCompleted && !isCancelled ? widget.item.createdAt : widget.item.updatedAt,
     );
 
-    Color plateNumberBgColor;
-    Color plateNumberTextColor;
+    // Color plateNumberBgColor;
+    // Color plateNumberTextColor;
 
-    if (isCancelled) {
-      plateNumberBgColor = const Color(0xFFF3F4F6);
-      plateNumberTextColor = const Color(0xFF9CA3AF);
-    } else if (isCompleted) {
-      plateNumberBgColor = const Color(0xFFF3F4F6);
-      plateNumberTextColor = const Color(0xFF6B7280);
-    } else {
-      plateNumberBgColor = AppColor.secondaryLight;
-      plateNumberTextColor = AppColor.primaryColor;
-    }
+    // if (isCancelled) {
+    //   plateNumberBgColor = const Color(0xFFF3F4F6);
+    //   plateNumberTextColor = const Color(0xFF9CA3AF);
+    // } else if (isCompleted) {
+    //   plateNumberBgColor = const Color(0xFFF3F4F6);
+    //   plateNumberTextColor = const Color(0xFF6B7280);
+    // } else {
+    //   plateNumberBgColor = AppColor.secondaryLight;
+    //   plateNumberTextColor = AppColor.primaryColor;
+    // }
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -269,12 +269,22 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
         borderRadius: BorderRadius.circular(AppSizes.setWidth(6)),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          CommonText(
-            text: dateStr,
-            fontSize: AppSizes.setFontSize(11),
-            textColor: const Color(0xFF6B7280),
+          Icon(
+            Icons.access_time_rounded,
+            size: AppSizes.setWidth(16),
+            color: const Color(0xFF6B7280),
+          ),
+          SizedBox(width: AppSizes.setWidth(4)),
+          Expanded(
+            child: CommonText(
+              text: '${isCompleted ? '完成时间：' : isCancelled ? '取消时间：' : '申请时间：'}$dateStr',
+              fontSize: AppSizes.setFontSize(11),
+              textColor: const Color(0xFF6B7280),
+              textAlign: TextAlign.left,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),
