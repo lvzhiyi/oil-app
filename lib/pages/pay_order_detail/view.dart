@@ -597,6 +597,9 @@ class PayOrderDetailView extends HookWidget {
 
   void _showUploadDialog(
       BuildContext context, PayOrderDetailCtrl controller, bool hasUploaded) {
+    // 初始化弹窗状态
+    controller.initUploadDialog();
+
     showDialog(
       context: context,
       barrierDismissible: false, // 防止点击外部关闭弹窗
@@ -604,12 +607,17 @@ class PayOrderDetailView extends HookWidget {
         return BlocBuilder<PayOrderDetailCtrl, PayOrderDetailState>(
           bloc: controller, // 直接传入 controller 实例
           builder: (context, dialogState) {
-            // final hasImages = dialogState.selectedImagePaths.isNotEmpty;
+            final hasChanges = dialogState.selectedImagePaths.isNotEmpty ||
+                (dialogState.currentProofUrls.length !=
+                    (dialogState.order?.paymentProofUrls?.length ?? 0)) ||
+                // 检查凭证内容是否有变化（简单比较长度，实际应该比较内容）
+                !_listsEqual(dialogState.currentProofUrls,
+                    dialogState.order?.paymentProofUrls ?? []);
 
             return PopScope(
               canPop: !dialogState.isUploading &&
                   !dialogState.isSavingProof &&
-                  dialogState.selectedImagePaths.isEmpty,
+                  !hasChanges,
               child: AlertDialog(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -636,7 +644,11 @@ class PayOrderDetailView extends HookWidget {
                         onRemoveImage: (index) {
                           controller.removeSelectedImage(index);
                         },
+                        onRemoveUploadedImage: (index) {
+                          controller.removeUploadedProof(index);
+                        },
                         selectedImagePaths: dialogState.selectedImagePaths,
+                        uploadedImageUrls: dialogState.currentProofUrls,
                         maxUploadCount: 5,
                       ),
                     ),
@@ -648,19 +660,17 @@ class PayOrderDetailView extends HookWidget {
                     btnText:
                         (dialogState.isUploading || dialogState.isSavingProof)
                             ? '上传中...'
-                            : (dialogState.selectedImagePaths.isEmpty
-                                ? '取消'
-                                : '确认上传'),
+                            : (!hasChanges ? '取消' : '确认上传'),
                     onTap:
                         (dialogState.isUploading || dialogState.isSavingProof)
                             ? null
                             : () async {
-                                if (dialogState.selectedImagePaths.isEmpty) {
-                                  // 没有选择图片，直接关闭
+                                if (!hasChanges) {
+                                  // 没有变更，直接关闭
                                   controller.clearSelectedImages();
                                   Navigator.of(dialogContext).pop();
                                 } else {
-                                  // 有选择的图片，统一上传并保存
+                                  // 有变更，统一上传并保存
                                   final success =
                                       await controller.uploadAndSaveProof();
                                   if (success && dialogContext.mounted) {
@@ -676,5 +686,14 @@ class PayOrderDetailView extends HookWidget {
         );
       },
     );
+  }
+
+  /// 比较两个列表是否相等
+  bool _listsEqual(List<String> list1, List<String> list2) {
+    if (list1.length != list2.length) return false;
+    for (int i = 0; i < list1.length; i++) {
+      if (list1[i] != list2[i]) return false;
+    }
+    return true;
   }
 }

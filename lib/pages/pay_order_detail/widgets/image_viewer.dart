@@ -65,16 +65,37 @@ class _ImageViewerState extends State<ImageViewer> {
               });
             },
             itemBuilder: (context, index) {
+              final imageUrl = widget.imageUrls[index];
+              // 自动判断是网络图片还是本地图片
+              // 如果isLocalImages为true，则所有图片都是本地图片
+              // 否则，检查URL是否以http://或https://开头来判断
+              final isNetworkImage = !widget.isLocalImages &&
+                  (imageUrl.startsWith('http://') ||
+                      imageUrl.startsWith('https://'));
+
               return Center(
                 child: InteractiveViewer(
                   panEnabled: true,
                   boundaryMargin: const EdgeInsets.all(20),
                   minScale: 0.5,
                   maxScale: 4.0,
-                  child: widget.isLocalImages
-                      ? Image.file(
-                          File(widget.imageUrls[index]),
+                  child: isNetworkImage
+                      ? Image.network(
+                          imageUrl,
                           fit: BoxFit.contain,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                                color: Colors.white,
+                              ),
+                            );
+                          },
                           errorBuilder: (context, error, stackTrace) {
                             return Container(
                               width: pt(200),
@@ -104,22 +125,9 @@ class _ImageViewerState extends State<ImageViewer> {
                             );
                           },
                         )
-                      : Image.network(
-                          widget.imageUrls[index],
+                      : Image.file(
+                          File(imageUrl),
                           fit: BoxFit.contain,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes !=
-                                        null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
-                                color: Colors.white,
-                              ),
-                            );
-                          },
                           errorBuilder: (context, error, stackTrace) {
                             return Container(
                               width: pt(200),

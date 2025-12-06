@@ -61,12 +61,16 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
         bankBranchNumber: 'XXXX',
       );
 
+      // 初始化已上传的凭证列表
+      final proofUrls = orderDetail.paymentProofUrls ?? [];
+
       emit(state.copyWith(
         order: orderDetail,
         isLoading: false,
         hasUploaded: orderDetail.status == OrderStatus.PaymentUploaded,
         selectedImagePaths: const [], // 初始化时清空选中的图片
         lastSavedProofUrls: const [], // 初始化时清空上次保存的凭证列表
+        currentProofUrls: proofUrls, // 初始化当前凭证列表
       ));
 
       // 如果已有凭证路径，获取可访问的URL
@@ -128,6 +132,18 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
     }
   }
 
+  /// 删除已上传的凭证
+  void removeUploadedProof(int index) {
+    final currentProofs = List<String>.from(state.currentProofUrls);
+    if (index >= 0 && index < currentProofs.length) {
+      currentProofs.removeAt(index);
+
+      emit(state.copyWith(
+        currentProofUrls: currentProofs,
+      ));
+    }
+  }
+
   /// 清除所有选中的图片
   void clearSelectedImages() {
     emit(state.copyWith(
@@ -135,76 +151,95 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
     ));
   }
 
+  /// 初始化弹窗状态（打开弹窗时调用）
+  void initUploadDialog() {
+    // 将订单中的凭证URL列表复制到currentProofUrls，用于弹窗编辑
+    final proofUrls = state.order?.paymentProofUrls ?? [];
+    emit(state.copyWith(
+      currentProofUrls: List<String>.from(proofUrls),
+      selectedImagePaths: const [], // 清空新选择的图片
+    ));
+  }
+
   /// 统一上传并保存凭证（在确认按钮点击时调用）
   Future<bool> uploadAndSaveProof() async {
     final imagePaths = state.selectedImagePaths;
+    final currentProofs = state.currentProofUrls;
+
+    // 合并已上传的凭证和新上传的凭证
+    final totalCount = currentProofs.length + imagePaths.length;
 
     // 验证至少需要1张凭证
-    if (imagePaths.isEmpty) {
-      SportsToast.showWarning('请至少选择1张转账凭证');
+    if (totalCount == 0) {
+      SportsToast.showWarning('请至少保留1张转账凭证');
       return false;
     }
 
     // 验证凭证数量：后端要求1-5张之间
-    if (imagePaths.length > 5) {
+    if (totalCount > 5) {
       SportsToast.showError('凭证数量不能超过5张，请删除多余的凭证');
       return false;
     }
 
     try {
-      emit(state.copyWith(
-        isUploading: true,
-        uploadingImageIndices:
-            List.generate(imagePaths.length, (index) => index),
-      ));
-
-      final List<String> uploadedUrls = [];
-
-      // 顺序上传所有图片
-      for (int index = 0; index < imagePaths.length; index++) {
-        final imagePath = imagePaths[index];
-        try {
-          final file = File(imagePath);
-          if (!await file.exists()) {
-            continue;
-          }
-
-          final uploadUrl = await uploadImage(imagePath);
-          if (uploadUrl != null && uploadUrl.isNotEmpty) {
-            uploadedUrls.add(uploadUrl);
-          }
-        } catch (e) {
-          // 单个图片上传失败，继续上传其他图片
-        }
-      }
-
-      // 检查是否至少上传成功1张
-      if (uploadedUrls.isEmpty) {
+      // 如果有新选择的图片，需要上传
+      if (imagePaths.isNotEmpty) {
         emit(state.copyWith(
-          isUploading: false,
-          uploadingImageIndices: [],
+          isUploading: true,
+          uploadingImageIndices:
+              List.generate(imagePaths.length, (index) => index),
         ));
-        SportsToast.showError('上传失败，请重试');
-        return false;
-      }
 
-      // 更新状态
-      emit(state.copyWith(
-        selectedImagePaths: [],
-        uploadedImageUrls: uploadedUrls,
-        uploadingImageIndices: [],
-        isUploading: false,
-        hasUploaded: true,
-      ));
+        final List<String> uploadedUrls = [];
 
-      // 保存凭证列表
-      await savePaymentProof(uploadedUrls);
+        // 顺序上传所有新选择的图片
+        for (int index = 0; index < imagePaths.length; index++) {
+          final imagePath = imagePaths[index];
+          try {
+            final file = File(imagePath);
+            if (!await file.exists()) {
+              continue;
+            }
 
-      if (uploadedUrls.length < imagePaths.length) {
-        SportsToast.showWarning(
-            '${uploadedUrls.length}张图片上传成功，${imagePaths.length - uploadedUrls.length}张图片上传失败');
+            final uploadUrl = await uploadImage(imagePath);
+            if (uploadUrl != null && uploadUrl.isNotEmpty) {
+              uploadedUrls.add(uploadUrl);
+            }
+          } catch (e) {
+            // 单个图片上传失败，继续上传其他图片
+          }
+        }
+
+        // 合并已上传的凭证和新上传的凭证
+        final finalProofUrls = [...currentProofs, ...uploadedUrls];
+
+        // 更新状态
+        emit(state.copyWith(
+          selectedImagePaths: [],
+          uploadedImageUrls: uploadedUrls,
+          uploadingImageIndices: [],
+          isUploading: false,
+          hasUploaded: true,
+          currentProofUrls: finalProofUrls,
+        ));
+
+        // 保存凭证列表
+        await savePaymentProof(finalProofUrls);
+
+        if (uploadedUrls.length < imagePaths.length) {
+          SportsToast.showWarning(
+              '${uploadedUrls.length}张图片上传成功，${imagePaths.length - uploadedUrls.length}张图片上传失败');
+        } else if (imagePaths.length > 0) {
+          SportsToast.showSuccess('凭证上传成功');
+        }
       } else {
-        SportsToast.showSuccess('凭证上传成功');
+        // 没有新选择的图片，只保存当前已上传的凭证列表
+        await savePaymentProof(currentProofs);
+        if (currentProofs.isEmpty) {
+          SportsToast.showSuccess('已删除所有凭证');
+        } else {
+          SportsToast.showSuccess('凭证已更新');
+        }
       }
 
       return true;
@@ -226,14 +261,7 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
       return;
     }
 
-    // 验证凭证数量：后端要求1-5张之间
-    if (proofUrls.isEmpty) {
-      // 如果凭证数量为0，不调用保存接口（删除所有凭证的情况）
-      // 更新上次保存的凭证列表为空，避免重复保存
-      emit(state.copyWith(lastSavedProofUrls: []));
-      return;
-    }
-
+    // 验证凭证数量：后端要求1-5张之间（允许空列表以支持删除所有凭证）
     if (proofUrls.length > 5) {
       SportsToast.showError('凭证数量不能超过5张，请删除多余的凭证');
       return;

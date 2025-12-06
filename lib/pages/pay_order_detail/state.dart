@@ -12,6 +12,7 @@ class PayOrderDetailState {
   final String? errorMessage; // 错误信息
   final bool isSavingProof; // 是否正在保存支付凭证
   final List<String> lastSavedProofUrls; // 上次保存的凭证URL列表
+  final List<String> currentProofUrls; // 当前编辑中的凭证URL列表（用于弹窗显示）
 
   PayOrderDetailState({
     this.order,
@@ -25,6 +26,7 @@ class PayOrderDetailState {
     this.errorMessage,
     this.isSavingProof = false,
     this.lastSavedProofUrls = const [],
+    this.currentProofUrls = const [],
   });
 
   PayOrderDetailState copyWith({
@@ -40,6 +42,8 @@ class PayOrderDetailState {
     String? errorMessage,
     bool? isSavingProof,
     List<String>? lastSavedProofUrls,
+    List<String>? currentProofUrls,
+    bool clearCurrentProofUrls = false,
   }) {
     return PayOrderDetailState(
       order: order ?? this.order,
@@ -56,6 +60,9 @@ class PayOrderDetailState {
       errorMessage: errorMessage ?? this.errorMessage,
       isSavingProof: isSavingProof ?? this.isSavingProof,
       lastSavedProofUrls: lastSavedProofUrls ?? this.lastSavedProofUrls,
+      currentProofUrls: clearCurrentProofUrls
+          ? []
+          : (currentProofUrls ?? this.currentProofUrls),
     );
   }
 }
