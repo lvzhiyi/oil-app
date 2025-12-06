@@ -8,9 +8,11 @@ import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dar
 /// 共享的手机号输入框组件
 class PhoneInputField extends StatelessWidget {
   final String name;
+  final TextEditingController? controller;
 
   const PhoneInputField({
     this.name = 'phone',
+    this.controller,
     Key? key,
   }) : super(key: key);
 
@@ -18,6 +20,7 @@ class PhoneInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return CommonTextFormField(
       name: name,
+      controller: controller,
       borderColor: const Color(0xFFE5E7EB),
       fillColor: const Color(0xFFF9FAFB),
       leadingIcon: Image.asset(

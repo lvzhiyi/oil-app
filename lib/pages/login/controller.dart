@@ -10,8 +10,11 @@ import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/pages/login/state.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:oil_business_app/utils/log.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginCtrl extends Cubit<LoginState> {
+  static const _lastLoginPhoneKey = 'last_login_phone';
+
   LoginCtrl()
       : super(
           LoginState(loginLoading: false),
@@ -25,11 +28,14 @@ class LoginCtrl extends Cubit<LoginState> {
 
   Timer? _countdownTimer;
 
-  initState() async {}
+  initState() async {
+    await _loadLastPhone();
+  }
 
   @override
   Future<void> close() {
     _countdownTimer?.cancel();
+    phoneController.dispose();
     return super.close();
   }
 
@@ -136,7 +142,7 @@ class LoginCtrl extends Cubit<LoginState> {
   /// 密码登录
   Future<void> _passwordLogin() async {
     final formData = formKey.currentState?.value ?? {};
-    final phone = formData['phone'] ?? '';
+    final phone = (formData['phone'] ?? '').toString();
     final password = formData['password'] ?? '';
 
     l.d('Login', '开始密码登录: 手机号=$phone');
@@ -144,13 +150,14 @@ class LoginCtrl extends Cubit<LoginState> {
     final response =
         await authService.login(LoginRequest(phone: phone, password: password));
     BaseConfig.appContext?.read<AppController>().loginSucessProcess(response);
+    await _saveLastPhone(phone);
     emit(state.copyWith(loginLoading: false, loginSuccess: true));
   }
 
   /// 验证码登录
   Future<void> _verificationLogin() async {
     final formData = formKey.currentState?.value ?? {};
-    final phone = formData['phone'] ?? '';
+    final phone = (formData['phone'] ?? '').toString();
     final code = formData['verificationCode'] ?? '';
 
     l.d('Login', '开始验证码登录: 手机号=$phone');
@@ -164,6 +171,7 @@ class LoginCtrl extends Cubit<LoginState> {
     );
     BaseConfig.appContext?.read<AppController>().loginSucessProcess(response);
 
+    await _saveLastPhone(phone);
     emit(state.copyWith(loginLoading: false, loginSuccess: true));
   }
 
@@ -318,5 +326,28 @@ class LoginCtrl extends Cubit<LoginState> {
       verificationCountdown: 0,
       verificationCodeSent: false,
     ));
+  }
+
+  Future<void> _loadLastPhone() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final cachedPhone = prefs.getString(_lastLoginPhoneKey);
+      if (cachedPhone != null && cachedPhone.isNotEmpty) {
+        phoneController.text = cachedPhone;
+      }
+    } catch (_) {
+      // 读取失败时静默处理，不影响登录流程
+    }
+  }
+
+  Future<void> _saveLastPhone(String phone) async {
+    final trimmed = phone.trim();
+    if (trimmed.isEmpty) return;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_lastLoginPhoneKey, trimmed);
+    } catch (_) {
+      // 写入失败时忽略，不阻塞登录
+    }
   }
 }

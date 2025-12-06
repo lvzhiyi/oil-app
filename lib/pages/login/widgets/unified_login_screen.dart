@@ -61,7 +61,7 @@ class UnifiedLoginScreen extends StatelessWidget {
                     SizedBox(height: AppSizes.setHeight(32)),
 
                     // 共享的手机号输入框（不会因为Tab切换而重新渲染）
-                    const PhoneInputField(),
+                    PhoneInputField(controller: ctrl.phoneController),
 
                     SizedBox(height: AppSizes.setHeight(16)),
 
