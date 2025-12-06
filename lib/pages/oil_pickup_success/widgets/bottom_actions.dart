@@ -20,6 +20,9 @@ class OilPickupSuccessBottomActions extends StatelessWidget {
     final BorderRadius borderRadius =
         BorderRadius.circular(AppSizes.setWidth(12));
     final Color primary = CustomAppColor.of(context).primaryColor;
+    final Color backOverlay =
+        CustomAppColor.of(context).containerBorder.withValues(alpha: 0.12);
+    final Color primaryOverlay = primary.withValues(alpha: 0.12);
 
     return Container(
       padding: EdgeInsets.only(
@@ -46,6 +49,10 @@ class OilPickupSuccessBottomActions extends StatelessWidget {
               borderRadius: borderRadius,
               child: InkWell(
                 borderRadius: borderRadius,
+                overlayColor: MaterialStateProperty.resolveWith(
+                  (states) =>
+                      states.contains(MaterialState.pressed) ? backOverlay : null,
+                ),
                 onTap: onBack,
                 child: Container(
                   height: AppSizes.setHeight(52),
@@ -73,6 +80,10 @@ class OilPickupSuccessBottomActions extends StatelessWidget {
               borderRadius: borderRadius,
               child: InkWell(
                 borderRadius: borderRadius,
+                overlayColor: MaterialStateProperty.resolveWith(
+                  (states) =>
+                      states.contains(MaterialState.pressed) ? primaryOverlay : null,
+                ),
                 onTap: isSaving ? null : onSave,
                 child: Container(
                   height: AppSizes.setHeight(52),

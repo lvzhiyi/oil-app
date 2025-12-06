@@ -127,6 +127,9 @@ class _AccountScreenState extends State<AccountScreen>
   }
 
   Widget _buildActionBar() {
+    final Color primary = CustomAppColor.of(context).primaryColor;
+    final Color iconBg = primary.withOpacity(0.1);
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
       padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(20)),
@@ -147,24 +150,24 @@ class _AccountScreenState extends State<AccountScreen>
           _buildActionItem(
             icon: AssetsIcon.IC_BUY,
             label: '买油订单',
-            iconColor: CustomAppColor.of(context).btnPurple,
-            bgIconColor: CustomAppColor.of(context).btnPurple.withOpacity(0.1),
+            iconColor: primary,
+            bgIconColor: iconBg,
             onTap: () => BaseRouter.push(url: AppPage.payOrderListPage.path),
           ),
           _buildVerticalDivider(),
           _buildActionItem(
             icon: AssetsIcon.IC_BAG,
             label: '提油订单',
-            iconColor: CustomAppColor.of(context).txtOrange,
-            bgIconColor: CustomAppColor.of(context).txtOrange.withOpacity(0.1),
+            iconColor: primary,
+            bgIconColor: iconBg,
             onTap: () => BaseRouter.push(url: AppPage.pickupListPage.path),
           ),
           _buildVerticalDivider(),
           _buildActionItem(
             icon: AssetsIcon.IC_CATEGORY,
             label: '加油站管理',
-            iconColor: CustomAppColor.of(context).txtBlack,
-            bgIconColor: CustomAppColor.of(context).txtBlack.withOpacity(0.05),
+            iconColor: primary,
+            bgIconColor: iconBg,
             onTap: () =>
                 BaseRouter.push(url: AppPage.stationManagementListPage.path),
           ),

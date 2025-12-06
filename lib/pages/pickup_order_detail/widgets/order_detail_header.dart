@@ -72,8 +72,8 @@ class OrderDetailHeader extends StatelessWidget {
     } else if (status == WithdrawStatus.cancelled.value) {
       return _HeaderConfig(
         icon: Icons.close,
-        iconColor: const Color(0xFF9CA3AF),
-        backgroundColor: const Color(0xFFF3F4F6),
+        iconColor: const Color(0xFFEF4444),
+        backgroundColor: const Color(0xFFFEF2F2),
         title: '已取消',
         subtitle: '提油订单已取消',
       );

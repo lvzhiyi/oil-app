@@ -317,7 +317,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
         children: [
           _buildCancelButton(context),
           SizedBox(width: AppSizes.setWidth(8)),
-          _buildDetailButton(context),
+          _buildDetailButton(context, isCancelled: isCancelled),
         ],
       );
     } else {
@@ -325,7 +325,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          _buildDetailButton(context),
+          _buildDetailButton(context, isCancelled: isCancelled),
         ],
       );
     }
@@ -356,7 +356,14 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
     );
   }
 
-  Widget _buildDetailButton(BuildContext context) {
+  Widget _buildDetailButton(BuildContext context,
+      {required bool isCancelled}) {
+    final Color detailColor = isCancelled
+        ? const Color(0xFF9CA3AF)
+        : AppColor.primaryColor;
+    final Color borderColor =
+        isCancelled ? const Color(0xFFE5E7EB) : AppColor.primaryColor;
+
     return SizedBox(
       width: AppSizes.setWidth(90),
       child: OutlinedButton(
@@ -365,7 +372,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
           padding: EdgeInsets.symmetric(
             vertical: AppSizes.setHeight(10),
           ),
-          side: BorderSide(color: AppColor.primaryColor, width: 1),
+          side: BorderSide(color: borderColor, width: 1),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSizes.setWidth(20)),
           ),
@@ -374,7 +381,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
         child: CommonText(
           text: '查看详情',
           fontSize: AppSizes.setFontSize(13),
-          textColor: AppColor.primaryColor,
+          textColor: detailColor,
           fontWeight: FontWeight.w500,
         ),
       ),
