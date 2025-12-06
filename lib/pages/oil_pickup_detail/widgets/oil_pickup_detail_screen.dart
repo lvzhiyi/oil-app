@@ -117,7 +117,7 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
                               onParse: (text) =>
                                   widget.controller.onVehicleInfoPasted(text),
                             ),
-                            SizedBox(height: AppSizes.setHeight(100)),
+                            SizedBox(height: AppSizes.setHeight(24)),
                           ],
                         ),
                       ),
