@@ -4,16 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:oil_business_app/global/enum/common.dart';
-import 'package:oil_business_app/pages/pay_order_list/controller.dart';
 import 'package:oil_business_app/pages/pay_order_list/model/orders_data.dart';
 import 'package:oil_business_app/router/router.dart';
-import 'package:oil_business_app/widgets/common/base_appbar.dart';
-import 'package:oil_business_app/widgets/popup/dialog.dart';
 import 'widgets/upload_voucher_dialog.dart';
 import 'widgets/image_viewer.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
+import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
 import 'state.dart';
@@ -33,10 +32,30 @@ class PayOrderDetailView extends HookWidget {
 
     if (state.isLoading) {
       return Scaffold(
-        backgroundColor: Colors.grey[50],
-        appBar: const BaseAppBar(
-          title: '支付订单详情',
-          backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFFF5F7FA),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: const Color(0xFF1F2937),
+              size: AppSizes.setWidth(20),
+            ),
+            onPressed: () {
+              if (from == 'oilPurchaseDetail') {
+                BaseRouter.popToRoot();
+              } else {
+                BaseRouter.pop();
+              }
+            },
+          ),
+          title: CommonText(
+            text: '支付订单详情',
+            fontWeight: FontWeight.w600,
+            fontSize: AppSizes.setFontSize(17),
+            textColor: const Color(0xFF1F2937),
+          ),
           centerTitle: true,
         ),
         body: const Center(
@@ -48,45 +67,58 @@ class PayOrderDetailView extends HookWidget {
     final orderDetail = state.order;
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: BaseAppBar(
-        title: '支付订单详情',
-        backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFFF5F7FA),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: const Color(0xFF1F2937),
+            size: AppSizes.setWidth(20),
+          ),
+          onPressed: () {
+            if (from == 'oilPurchaseDetail') {
+              BaseRouter.popToRoot();
+            } else {
+              BaseRouter.pop();
+            }
+          },
+        ),
+        title: CommonText(
+          text: '支付订单详情',
+          fontWeight: FontWeight.w600,
+          fontSize: AppSizes.setFontSize(17),
+          textColor: const Color(0xFF1F2937),
+        ),
         centerTitle: true,
-        leadingOnClick: () {
-          if (from == 'oilPurchaseDetail') {
-            BaseRouter.popToRoot();
-          } else {
-            BaseRouter.pop();
-          }
-        },
       ),
       body: Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.all(pt(16)),
+                padding: EdgeInsets.all(AppSizes.setWidth(16)),
                 child: Column(
                   children: [
-                    _buildOrderInfoCard(orderDetail, context),
-                    SizedBox(height: pt(16)),
-                    if (orderDetail?.status !=
-                        OrderStatus.Completed) // 只有未完成的订单才显示转账信息
+                    _buildStatusCard(orderDetail, context),
+                    SizedBox(height: AppSizes.setHeight(16)),
+                    if (orderDetail?.status != OrderStatus.Completed)
                       _buildTransferInfoCard(orderDetail, context),
                     if (orderDetail?.status != OrderStatus.Completed)
-                      SizedBox(height: pt(16)),
+                      SizedBox(height: AppSizes.setHeight(16)),
+                    _buildOrderDetailCard(orderDetail, context),
                     if (orderDetail?.paymentProofUrls?.isNotEmpty ?? false) ...[
+                      SizedBox(height: AppSizes.setHeight(16)),
                       _buildUploadedImages(
                           orderDetail?.paymentProofUrls ?? [], context),
                     ],
-                    SizedBox(height: pt(100)), // 为底部按钮留出空间
+                    SizedBox(height: AppSizes.setHeight(100)),
                   ],
                 ),
               ),
             ),
           ),
-          // 只有未支付的订单才显示操作按钮
           if (orderDetail?.status != OrderStatus.Completed &&
               orderDetail?.status != OrderStatus.Cancelled)
             _buildBottomActions(context, controller),
@@ -95,101 +127,172 @@ class PayOrderDetailView extends HookWidget {
     );
   }
 
-  /// 构建订单信息卡片
-  Widget _buildOrderInfoCard(OrderModel? orderDetail, BuildContext context) {
+  /// 构建状态卡片
+  Widget _buildStatusCard(OrderModel? orderDetail, BuildContext context) {
     if (orderDetail == null) return const SizedBox.shrink();
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(pt(16)),
+      padding: EdgeInsets.all(AppSizes.setWidth(16)),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(pt(12)),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: pt(10),
-            offset: Offset(0, pt(2)),
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _buildStatusBadge(orderDetail.status),
+          SizedBox(height: AppSizes.setHeight(16)),
+          CommonText(
+            text: '需支付金额(元)',
+            fontSize: AppSizes.setFontSize(14),
+            textColor: const Color(0xFF6B7280),
+          ),
+          SizedBox(height: AppSizes.setHeight(8)),
+          CommonText(
+            text: '¥${_formatPrice(orderDetail.totalAmount ?? 0)}',
+            fontSize: AppSizes.setFontSize(24),
+            fontWeight: FontWeight.w700,
+            textColor: const Color(0xFF1F2937),
+            fontFamily: 'DIN Alternate',
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建状态徽章
+  Widget _buildStatusBadge(OrderStatus? status) {
+    String text = status?.displayName ?? '';
+    Color bgColor;
+    Color textColor;
+    Widget? icon;
+
+    switch (status) {
+      case OrderStatus.PendingPayment:
+        bgColor = const Color(0xFFFFF7ED);
+        textColor = const Color(0xFFF59E0B);
+        icon = Icon(
+          Icons.access_time,
+          size: AppSizes.setWidth(20),
+          color: textColor,
+        );
+        break;
+      case OrderStatus.PaymentUploaded:
+        bgColor = const Color(0xFFEFF6FF);
+        textColor = const Color(0xFF3B82F6);
+        break;
+      case OrderStatus.Completed:
+        bgColor = const Color(0xFFF0FDF4);
+        textColor = const Color(0xFF22C55E);
+        break;
+      case OrderStatus.Cancelled:
+        bgColor = const Color(0xFFF3F4F6);
+        textColor = const Color(0xFF9CA3AF);
+        break;
+      default:
+        bgColor = const Color(0xFFF3F4F6);
+        textColor = const Color(0xFF9CA3AF);
+    }
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.setWidth(8),
+        vertical: AppSizes.setHeight(4),
+      ),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (icon != null) ...[
+            icon,
+            SizedBox(width: AppSizes.setWidth(4)),
+          ],
+          CommonText(
+            text: text,
+            fontSize: AppSizes.setFontSize(16),
+            fontWeight: FontWeight.w600,
+            textColor: textColor,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建订单详情卡片
+  Widget _buildOrderDetailCard(OrderModel? orderDetail, BuildContext context) {
+    if (orderDetail == null) return const SizedBox.shrink();
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(AppSizes.setWidth(16)),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                padding:
-                    EdgeInsets.symmetric(horizontal: pt(8), vertical: pt(4)),
-                decoration: BoxDecoration(
-                  color:
-                      CustomAppColor.of(context).white.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(pt(4)),
-                ),
-                child: Text(
-                  orderDetail.status?.displayName ?? '',
-                  style: TextStyle(
-                    color: CustomAppColor.of(context).btnPurple,
-                    fontSize: pt(12, isFontSize: true),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              const Spacer(),
-              Text(
-                '¥${orderDetail.totalAmount}',
-                style: TextStyle(
-                  fontSize: pt(20, isFontSize: true),
-                  fontWeight: FontWeight.bold,
-                  color: CustomAppColor.of(context).white,
-                ),
-              ),
-            ],
+          _buildDetailRow('订单编号', orderDetail.orderNo ?? '-'),
+          _buildDetailRow(
+            '提交时间',
+            DateFormat('yyyy-MM-dd HH:mm:ss')
+                .format(DateTime.parse(orderDetail.createdAt ?? '')),
           ),
-          SizedBox(height: pt(16)),
-          _buildOrderInfoRow('订单编号', orderDetail.orderNo ?? '-'),
-          _buildOrderInfoRow('购买金额', '¥${orderDetail.totalAmount}'),
-          _buildOrderInfoRow('订单状态', orderDetail.status?.displayName ?? ''),
-          _buildOrderInfoRow(
-              '提交时间',
-              DateFormat('yyyy-MM-dd HH:mm:ss')
-                  .format(DateTime.parse(orderDetail.createdAt ?? ''))),
-          if (orderDetail.status != OrderStatus.Completed)
-            _buildOrderInfoRow(
-                orderDetail.status == OrderStatus.Completed ? '完成时间' : '更新时间',
-                DateFormat('yyyy-MM-dd HH:mm:ss')
-                    .format(DateTime.parse(orderDetail.updatedAt ?? ''))),
-          _buildOrderInfoRow('备注', orderDetail.remark ?? ''),
+          _buildDetailRow(
+            orderDetail.status == OrderStatus.Completed ? '完成时间' : '更新时间',
+            DateFormat('yyyy-MM-dd HH:mm:ss')
+                .format(DateTime.parse(orderDetail.updatedAt ?? '')),
+          ),
+          _buildDetailRow('备注信息', orderDetail.remark ?? '无'),
         ],
       ),
     );
   }
 
-  /// 构建订单信息行
-  Widget _buildOrderInfoRow(String label, String value) {
+  String _formatPrice(double price) {
+    final formatter = NumberFormat('#,###.00');
+    return formatter.format(price);
+  }
+
+  /// 构建详情行
+  Widget _buildDetailRow(String label, String value) {
     return Padding(
-      padding: EdgeInsets.only(bottom: pt(12)),
+      padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: pt(80),
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: pt(14, isFontSize: true),
-                color: Colors.grey[600],
-              ),
+            width: AppSizes.setWidth(80),
+            child: CommonText(
+              text: label,
+              fontSize: AppSizes.setFontSize(14),
+              textColor: const Color(0xFF6B7280),
             ),
           ),
           Expanded(
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: pt(14, isFontSize: true),
-                color: Colors.black87,
-                fontWeight: FontWeight.w500,
-              ),
+            child: CommonText(
+              text: value,
+              fontSize: AppSizes.setFontSize(14),
+              fontWeight: FontWeight.w500,
+              textColor: const Color(0xFF1F2937),
             ),
           ),
         ],
@@ -202,15 +305,15 @@ class PayOrderDetailView extends HookWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(pt(16)),
+      padding: EdgeInsets.all(AppSizes.setWidth(16)),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(pt(12)),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: pt(10),
-            offset: Offset(0, pt(2)),
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -221,69 +324,76 @@ class PayOrderDetailView extends HookWidget {
             children: [
               Icon(
                 Icons.account_balance,
-                color: CustomAppColor.of(context).btnPurple,
-                size: pt(20),
+                color: AppColor.txtPurple,
+                size: AppSizes.setWidth(20),
               ),
-              SizedBox(width: pt(8)),
-              Text(
-                '转账信息',
-                style: TextStyle(
-                  fontSize: pt(16, isFontSize: true),
-                  fontWeight: FontWeight.bold,
-                ),
+              SizedBox(width: AppSizes.setWidth(8)),
+              CommonText(
+                text: '对公转账信息',
+                fontSize: AppSizes.setFontSize(16),
+                fontWeight: FontWeight.w700,
+                textColor: const Color(0xFF1F2937),
               ),
             ],
           ),
-          SizedBox(height: pt(16)),
-          Text(
-            '请使用对公账号向以下账户转账',
-            style: TextStyle(
-              fontSize: pt(14, isFontSize: true),
-              color: Colors.grey[600],
-            ),
+          SizedBox(height: AppSizes.setHeight(16)),
+          _buildTransferInfoRow(
+            context,
+            '收款户名',
+            orderDetail.accountName ?? '',
+            canCopy: true,
           ),
-          SizedBox(height: pt(16)),
-          _buildInfoRow(context, '收款账户名称', orderDetail.accountName ?? '',
-              canCopy: true),
-          _buildInfoRow(context, '银行账号', orderDetail.bankAccount ?? '',
-              canCopy: true),
-          _buildInfoRow(context, '开户银行', orderDetail.bankName ?? '',
-              canCopy: true),
-          _buildInfoRow(context, '联行号', orderDetail.bankBranchNumber ?? '',
-              canCopy: true),
+          _buildTransferInfoRow(
+            context,
+            '银行账号',
+            orderDetail.bankAccount ?? '',
+            canCopy: true,
+          ),
+          _buildTransferInfoRow(
+            context,
+            '开户银行',
+            orderDetail.bankName ?? '',
+            canCopy: true,
+          ),
+          _buildTransferInfoRow(
+            context,
+            '联行号',
+            orderDetail.bankBranchNumber ?? '',
+            canCopy: true,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildInfoRow(BuildContext context, String label, String value,
-      {bool canCopy = false}) {
+  Widget _buildTransferInfoRow(
+    BuildContext context,
+    String label,
+    String value, {
+    bool canCopy = false,
+  }) {
     return Padding(
-      padding: EdgeInsets.only(bottom: pt(12)),
+      padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: pt(100),
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: pt(14, isFontSize: true),
-                color: Colors.grey[600],
-              ),
+            width: AppSizes.setWidth(80),
+            child: CommonText(
+              text: label,
+              fontSize: AppSizes.setFontSize(14),
+              textColor: const Color(0xFF6B7280),
             ),
           ),
           Expanded(
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: pt(14, isFontSize: true),
-                color: Colors.black87,
-                fontWeight: FontWeight.w500,
-              ),
+            child: CommonText(
+              text: value,
+              fontSize: AppSizes.setFontSize(14),
+              fontWeight: FontWeight.w500,
+              textColor: const Color(0xFF1F2937),
             ),
           ),
-          SizedBox(width: pt(10)),
+          SizedBox(width: AppSizes.setWidth(8)),
           if (canCopy)
             GestureDetector(
               onTap: () {
@@ -291,20 +401,18 @@ class PayOrderDetailView extends HookWidget {
                 SportsToast.showSuccess('已复制到剪贴板');
               },
               child: Container(
-                padding:
-                    EdgeInsets.symmetric(horizontal: pt(8), vertical: pt(4)),
-                decoration: BoxDecoration(
-                  color: CustomAppColor.of(context)
-                      .btnPurple
-                      .withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(pt(4)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSizes.setWidth(12),
+                  vertical: AppSizes.setHeight(4),
                 ),
-                child: Text(
-                  '复制',
-                  style: TextStyle(
-                    color: CustomAppColor.of(context).btnPurple,
-                    fontSize: pt(12, isFontSize: true),
-                  ),
+                decoration: BoxDecoration(
+                  color: AppColor.txtPurple.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: CommonText(
+                  text: '复制',
+                  fontSize: AppSizes.setFontSize(12),
+                  textColor: AppColor.txtPurple,
                 ),
               ),
             ),
@@ -318,15 +426,15 @@ class PayOrderDetailView extends HookWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(pt(16)),
+      padding: EdgeInsets.all(AppSizes.setWidth(16)),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(pt(8)),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: pt(10),
-            offset: Offset(0, pt(2)),
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -335,31 +443,28 @@ class PayOrderDetailView extends HookWidget {
         children: [
           Row(
             children: [
-              Text(
-                '转账凭证',
-                style: TextStyle(
-                  fontSize: pt(16, isFontSize: true),
-                  fontWeight: FontWeight.bold,
-                ),
+              CommonText(
+                text: '转账凭证',
+                fontSize: AppSizes.setFontSize(16),
+                fontWeight: FontWeight.w700,
+                textColor: const Color(0xFF1F2937),
               ),
               const Spacer(),
-              Text(
-                '${imageUrls.length}张',
-                style: TextStyle(
-                  fontSize: pt(14, isFontSize: true),
-                  color: Colors.grey[600],
-                ),
+              CommonText(
+                text: '${imageUrls.length}张',
+                fontSize: AppSizes.setFontSize(14),
+                textColor: const Color(0xFF6B7280),
               ),
             ],
           ),
-          SizedBox(height: pt(12)),
+          SizedBox(height: AppSizes.setHeight(12)),
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              crossAxisSpacing: pt(8),
-              mainAxisSpacing: pt(8),
+              crossAxisSpacing: AppSizes.setWidth(8),
+              mainAxisSpacing: AppSizes.setHeight(8),
               childAspectRatio: 1.0,
             ),
             itemCount: imageUrls.length,
@@ -369,7 +474,7 @@ class PayOrderDetailView extends HookWidget {
                   _showImageViewer(context, imageUrls, index);
                 },
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(pt(8)),
+                  borderRadius: BorderRadius.circular(8),
                   child: Image.network(
                     imageUrls[index],
                     fit: BoxFit.cover,
@@ -377,40 +482,33 @@ class PayOrderDetailView extends HookWidget {
                       if (loadingProgress == null) return child;
                       return Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(pt(8)),
+                          color: const Color(0xFFF3F4F6),
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
-                          ),
+                        child: const Center(
+                          child: CircularProgressIndicator(),
                         ),
                       );
                     },
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(pt(8)),
+                          color: const Color(0xFFF3F4F6),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
                               Icons.error_outline,
-                              size: pt(24),
-                              color: Colors.grey[400],
+                              size: AppSizes.setWidth(24),
+                              color: const Color(0xFF9CA3AF),
                             ),
-                            SizedBox(height: pt(4)),
-                            Text(
-                              '加载失败',
-                              style: TextStyle(
-                                color: Colors.grey[400],
-                                fontSize: pt(10, isFontSize: true),
-                              ),
+                            SizedBox(height: AppSizes.setHeight(4)),
+                            CommonText(
+                              text: '加载失败',
+                              fontSize: AppSizes.setFontSize(10),
+                              textColor: const Color(0xFF9CA3AF),
                             ),
                           ],
                         ),
@@ -443,51 +541,48 @@ class PayOrderDetailView extends HookWidget {
   Widget _buildBottomActions(
       BuildContext context, PayOrderDetailCtrl controller) {
     return Container(
-      padding: EdgeInsets.all(pt(16)),
+      padding: EdgeInsets.all(AppSizes.setWidth(16)),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: pt(10),
-            offset: Offset(0, -pt(2)),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
           ),
         ],
       ),
       child: SafeArea(
         child: Row(
           children: [
-            // 取消按钮
             Expanded(
-              flex: 1,
-              child: TextButton(
-                onPressed: () {
+              child: GestureDetector(
+                onTap: () {
                   context
                       .read<PayOrderDetailCtrl>()
                       .reasonOfCancellation(context, order ?? OrderModel());
                 },
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: pt(12)),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(pt(8)),
-                    side: BorderSide(color: Colors.grey[300]!),
+                child: Container(
+                  height: AppSizes.setHeight(48),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF3F4F6),
+                    borderRadius: BorderRadius.circular(24),
                   ),
-                ),
-                child: Text(
-                  '取消',
-                  style: TextStyle(
-                    fontSize: pt(16, isFontSize: true),
-                    color: Colors.grey[600],
+                  alignment: Alignment.center,
+                  child: CommonText(
+                    text: '取消订单',
+                    fontSize: AppSizes.setFontSize(16),
+                    fontWeight: FontWeight.w500,
+                    textColor: const Color(0xFF6B7280),
                   ),
                 ),
               ),
             ),
-            SizedBox(width: pt(12)),
-            // 上传凭证按钮
+            SizedBox(width: AppSizes.setWidth(12)),
             Expanded(
               flex: 2,
               child: CommonButton(
-                height: pt(48),
+                height: AppSizes.setHeight(48),
                 btnText: state.hasUploaded ? '修改凭证' : '上传转账凭证',
                 onTap: () {
                   _showUploadDialog(context, controller, state.hasUploaded);

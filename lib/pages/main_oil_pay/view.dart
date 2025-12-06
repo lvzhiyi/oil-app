@@ -45,9 +45,9 @@ class _MainOilPayViewState extends State<MainOilPayView> {
     final state = widget.state;
 
     // 列表内容
-    return Scaffold(
-      backgroundColor: CustomAppColor.of(context).bgTopBar,
-      body: OilPageLoading(
+    return Container(
+      color: CustomAppColor.of(context).bgTopBar,
+      child: OilPageLoading(
         status: state.pageStatus,
         child: PullOrRefreshEasy(
           refreshController: _refreshController,
