@@ -36,6 +36,11 @@ class OilPurchaseDetailView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark, // 黑色图标
+          statusBarBrightness: Brightness.light, // iOS 白色背景
+        ),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
