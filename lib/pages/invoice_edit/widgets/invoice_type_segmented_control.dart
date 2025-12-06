@@ -33,7 +33,7 @@ class InvoiceTypeSegmentedControl extends StatelessWidget {
               child: InkWell(
                 onTap: () => onTypeChanged(type['value']!),
                 splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
+                // highlightColor: Colors.transparent,
                 borderRadius: BorderRadius.circular(AppSizes.setWidth(6)),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 150),

@@ -141,6 +141,7 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
   }
 
   Widget _buildFormCard(BuildContext context) {
+    final isSpecialVat = widget.state.invoiceType == 'special_vat';
     return Container(
       padding: EdgeInsets.all(AppSizes.setWidth(20)),
       decoration: BoxDecoration(
@@ -168,32 +169,63 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
             },
           ),
           SizedBox(height: AppSizes.setHeight(24)),
-          _buildField('发票抬头 (公司名称)', _invoiceTitleController, '请输入单位全称',
-              (v) => widget.controller.updateInvoiceTitle(v ?? ''),
-              isRequired: true),
-          _buildField('纳税人识别号', _taxNumberController, '15-20位统一社会信用代码',
-              (v) => widget.controller.updateTaxNumber(v ?? ''),
-              isMonospace: true, isRequired: true),
+          _buildField(
+            '发票抬头 (公司名称)',
+            _invoiceTitleController,
+            '请输入单位全称',
+            (v) => widget.controller.updateInvoiceTitle(v ?? ''),
+            isRequired: true,
+            errorText: widget.state.invoiceTitleError,
+          ),
+          _buildField(
+            '纳税人识别号',
+            _taxNumberController,
+            '15-20位统一社会信用代码',
+            (v) => widget.controller.updateTaxNumber(v ?? ''),
+            isMonospace: true,
+            isRequired: true,
+            errorText: widget.state.taxNumberError,
+          ),
           _buildDivider(
-              '银行及地址信息${widget.state.invoiceType == 'special_vat' ? '' : '（选填）'}'),
-          _buildField('开户银行', _bankNameController, '如：招商银行成都分行',
-              (v) => widget.controller.updateBankName(v ?? ''),
-              isRequired: widget.state.invoiceType == 'special_vat'),
-          _buildField('银行账号', _bankAccountController, '请输入对公账户号码',
-              (v) => widget.controller.updateBankAccount(v ?? ''),
-              keyboardType: TextInputType.number,
-              isMonospace: true,
-              isRequired: widget.state.invoiceType == 'special_vat'),
-          _buildField('公司地址', _companyAddressController, '请输入公司地址',
-              (v) => widget.controller.updateCompanyAddress(v ?? ''),
-              maxLines: 2,
-              isRequired: widget.state.invoiceType == 'special_vat'),
-          _buildField('公司电话', _companyPhoneController, '请输入预留固定电话或手机号',
-              (v) => widget.controller.updateCompanyPhone(v ?? ''),
-              keyboardType: TextInputType.phone,
-              isMonospace: true,
-              isLast: true,
-              isRequired: widget.state.invoiceType == 'special_vat'),
+              '银行及地址信息${isSpecialVat ? '' : '（选填）'}'),
+          _buildField(
+            '开户银行',
+            _bankNameController,
+            '如：招商银行成都分行',
+            (v) => widget.controller.updateBankName(v ?? ''),
+            isRequired: isSpecialVat,
+            errorText: widget.state.bankNameError,
+          ),
+          _buildField(
+            '银行账号',
+            _bankAccountController,
+            '请输入对公账户号码',
+            (v) => widget.controller.updateBankAccount(v ?? ''),
+            keyboardType: TextInputType.number,
+            isMonospace: true,
+            isRequired: isSpecialVat,
+            errorText: widget.state.bankAccountError,
+          ),
+          _buildField(
+            '公司地址',
+            _companyAddressController,
+            '请输入公司地址',
+            (v) => widget.controller.updateCompanyAddress(v ?? ''),
+            maxLines: 2,
+            isRequired: isSpecialVat,
+            errorText: widget.state.companyAddressError,
+          ),
+          _buildField(
+            '公司电话',
+            _companyPhoneController,
+            '请输入预留固定电话或手机号',
+            (v) => widget.controller.updateCompanyPhone(v ?? ''),
+            keyboardType: TextInputType.phone,
+            isMonospace: true,
+            isLast: true,
+            isRequired: isSpecialVat,
+            errorText: widget.state.companyPhoneError,
+          ),
         ],
       ),
     );
@@ -209,6 +241,7 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
     int maxLines = 1,
     bool isLast = false,
     bool isRequired = true,
+    String? errorText,
   }) {
     return Container(
       margin: EdgeInsets.only(bottom: isLast ? 0 : AppSizes.setHeight(20)),
@@ -220,7 +253,17 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
           _buildTextField(controller, hint, onChanged,
               keyboardType: keyboardType,
               isMonospace: isMonospace,
-              maxLines: maxLines),
+              maxLines: maxLines,
+              hasError: errorText != null),
+          if (errorText != null) ...[
+            SizedBox(height: AppSizes.setHeight(6)),
+            CommonText(
+              text: errorText,
+              fontSize: AppSizes.setFontSize(12),
+              textColor: CustomAppColor.of(context).red,
+              textAlign: TextAlign.left,
+            ),
+          ],
         ],
       ),
     );
@@ -233,18 +276,23 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
     TextInputType? keyboardType,
     bool isMonospace = false,
     int maxLines = 1,
+    bool hasError = false,
   }) {
     return Focus(
       child: Builder(
         builder: (context) {
           final hasFocus = Focus.of(context).hasFocus;
+          final borderColor = hasError
+              ? const Color(0xFFEF4444)
+              : hasFocus
+                  ? const Color(0xFF7165E3)
+                  : const Color(0xFFE5E7EB);
+
           return Container(
             decoration: BoxDecoration(
               color: hasFocus ? Colors.white : const Color(0xFFF9FAFB),
               border: Border.all(
-                color: hasFocus
-                    ? const Color(0xFF7165E3)
-                    : const Color(0xFFE5E7EB),
+                color: borderColor,
                 width: 1,
               ),
               borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
@@ -309,33 +357,6 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (widget.state.hasError && widget.state.errorMessage != null)
-              Container(
-                padding: EdgeInsets.all(AppSizes.setWidth(12)),
-                margin: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
-                decoration: BoxDecoration(
-                  color: CustomAppColor.of(context).red.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: AppSizes.setWidth(16),
-                      color: CustomAppColor.of(context).red,
-                    ),
-                    SizedBox(width: AppSizes.setWidth(8)),
-                    Expanded(
-                      child: CommonText(
-                        text: widget.state.errorMessage!,
-                        fontSize: AppSizes.setFontSize(13),
-                        textColor: CustomAppColor.of(context).red,
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             CommonButton(
               isLoading: widget.state.isLoading,
               btnText: '保存配置',
