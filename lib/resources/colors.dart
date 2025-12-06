@@ -15,8 +15,45 @@ class CustomAppColor {
 
   Color get bgScaffold {
     return (Theme.of(context).brightness == Brightness.light)
-        ? AppColor.white
+        ? AppColor.secondaryColor
         : AppColor.bgScaffold;
+  }
+
+  // ===== 琥珀金主题 - 语义化颜色 getter =====
+  Color get primaryColor {
+    return (Theme.of(context).brightness == Brightness.light)
+        ? AppColor.primaryColor
+        : AppColor.primaryColor;
+  }
+
+  Color get secondaryColor {
+    return (Theme.of(context).brightness == Brightness.light)
+        ? AppColor.secondaryColor
+        : AppColor.containerGrey;
+  }
+
+  Color get accentColor {
+    return (Theme.of(context).brightness == Brightness.light)
+        ? AppColor.accentColor
+        : AppColor.accentColor;
+  }
+
+  Color get primaryLight {
+    return (Theme.of(context).brightness == Brightness.light)
+        ? AppColor.primaryLight
+        : AppColor.primaryLight;
+  }
+
+  Color get primaryDark {
+    return (Theme.of(context).brightness == Brightness.light)
+        ? AppColor.primaryDark
+        : AppColor.primaryDark;
+  }
+
+  Color get secondaryLight {
+    return (Theme.of(context).brightness == Brightness.light)
+        ? AppColor.secondaryLight
+        : AppColor.containerGrey;
   }
 
   Color get bgBlackWhiteScaffold {
@@ -237,19 +274,45 @@ class CustomAppColor {
 
   Color get bgPurpleBlack {
     return (Theme.of(context).brightness == Brightness.light)
-        ? AppColor.btnPurple.withValues(alpha: 0.2)
+        ? AppColor.primaryColor.withValues(alpha: 0.2)
+        : AppColor.bgScaffold;
+  }
+
+  // 向后兼容的别名 getter (指向新的语义化颜色)
+  Color get bgPrimaryLight {
+    return (Theme.of(context).brightness == Brightness.light)
+        ? AppColor.primaryColor.withValues(alpha: 0.1)
         : AppColor.bgScaffold;
   }
 }
 
 class AppColor {
+  // ===== 琥珀金主题 - 语义化颜色定义 =====
+  // 主色系 - 深琥珀色 (用于按钮、选中态、边框)
+  static const primaryColor = Color(0xFFD97706);
+  static const primaryLight = Color(0xFFF59E0B);
+  static const primaryDark = Color(0xFFB45309);
+
+  // 辅色系 - 暖黄 (用于背景)
+  static const secondaryColor = Color(0xFFFFFBEB);
+  static const secondaryLight = Color(0xFFFEF3C7);
+
+  // 强调色 - Logo呼应色
+  static const accentColor = Color(0xFFF59E0B);
+
+  // ===== 向后兼容的别名 (指向新的语义化颜色) =====
+  static const btnPurple = primaryColor;
+  static const txtPurple = accentColor;
+  static const borderPurple = primaryColor;
+  static const icPurple = accentColor;
+
+  // ===== 基础颜色 =====
   static const primary = Color(0xFFFFFFFF);
   static const txtSecondary = Color(0xffFFFFFF);
   static const bgScaffold = Color(0xff181A20);
   static const txtWhite = Color(0xffFFFFFF);
   static const txtGrey = Color(0xff9EA6BE);
   static const txtBlue = Color(0xff383EAF);
-  static const txtPurple = Color(0xff7165E3);
   static const txtRed = Color(0xffFF4141);
   static const txtOrange = Color(0xffFF9B00);
   static const txtBlack = Color(0xff000000);
@@ -268,13 +331,10 @@ class AppColor {
   static const red = Color(0xffEF3A10);
   static const orange = Color(0xffF7A521);
 
-  static const btnPurple = Color(0xff7165E3);
-  static const indicator = Color(0xffABBBFF);
+  static const indicator = Color(0xFFFCD34D);
   static const borderGrey = Color(0xff9EA6BE);
-  static const borderPurple = Color(0xff7165E3);
   static const containerBorder = Color(0xffEEEEEE);
   static const textFieldBorder = Color(0xffEEEEEE);
-  static const icPurple = Color(0xff7165E3);
   static const icGrey = Color(0xffEEEEEE);
 
   static const containerGreen = Color(0xffCAFFCA);
@@ -288,11 +348,11 @@ class AppColor {
   static const cardPink = Color(0xffFBE9F1);
   static const cardYellow = Color(0xffFDF4E6);
 
-  // 油品颜色主题
-  static const dieselBg = Color(0xffEEECFC);
-  static const dieselText = Color(0xff7165E3);
+  // 油品颜色主题 - 与琥珀金主题协调
+  static const dieselBg = Color(0xFFFEF3C7);
+  static const dieselText = Color(0xFFB45309);
   static const gasBg = Color(0xffFFF7ED);
-  static const gasText = Color(0xffF59E0B);
+  static const gasText = Color(0xFFF59E0B);
 
   // 库存状态颜色
   static const stockSufficient = Color(0xff10B981);

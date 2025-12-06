@@ -67,7 +67,7 @@ class ToggleButtonWidgetState extends State<ToggleButtonWidget> {
                 height: AppSizes.setHeight(36),
                 decoration: BoxDecoration(
                   color: !isEmailSelected
-                      ? const Color(0xFF7A58FF)
+                      ? CustomAppColor.of(context).btnPurple
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(25),
                 ),

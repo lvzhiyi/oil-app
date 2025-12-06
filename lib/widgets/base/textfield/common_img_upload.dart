@@ -219,6 +219,7 @@ class CommonImgUploadState extends State<CommonImgUpload> {
                         child: Center(
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
+                            color: AppColor.primaryColor,
                           ),
                         ),
                       ),

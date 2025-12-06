@@ -254,7 +254,7 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
         onSelected(text);
       },
       confirmTextStyle: TextStyle(
-        color: CustomAppColor.of(context).txtBlue,
+        color: CustomAppColor.of(context).primaryColor,
         fontSize: AppSizes.setFontSize(18),
         fontWeight: FontWeight.normal,
       ),

@@ -39,7 +39,7 @@ class _DepotsItemWidgetState extends State<DepotsItemWidget> {
             color: _isPressed ? const Color(0xFFFAFAFA) : Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: _isPressed ? AppColor.txtPurple : Colors.transparent,
+              color: _isPressed ? AppColor.primaryColor : Colors.transparent,
               width: 1,
             ),
             boxShadow: [
@@ -100,7 +100,7 @@ class _DepotsItemWidgetState extends State<DepotsItemWidget> {
                           vertical: AppSizes.setHeight(6),
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEEECFC),
+                          color: AppColor.secondaryLight,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
