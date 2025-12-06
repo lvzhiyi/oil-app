@@ -342,6 +342,7 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
         left: AppSizes.setWidth(16),
         right: AppSizes.setWidth(16),
         top: AppSizes.setHeight(12),
+        bottom: AppSizes.setHeight(12),
       ),
       decoration: const BoxDecoration(
         color: Colors.white,
