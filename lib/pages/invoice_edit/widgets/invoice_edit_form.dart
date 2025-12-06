@@ -4,6 +4,7 @@ import 'package:oil_business_app/pages/invoice_edit/state.dart';
 import 'package:oil_business_app/pages/invoice_edit/widgets/station_relation_card.dart';
 import 'package:oil_business_app/pages/invoice_edit/widgets/invoice_type_segmented_control.dart';
 import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
@@ -91,7 +92,7 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
             Icons.arrow_back,
             color: CustomAppColor.of(context).txtBlack,
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => BaseRouter.pop(result: {'refresh': true}),
         ),
         title: CommonText(
           text: '发票信息',
@@ -129,7 +130,7 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                SizedBox(height: AppSizes.setHeight(80)),
+                SizedBox(height: AppSizes.setHeight(24)),
               ],
             ),
           ),
@@ -293,13 +294,12 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
         left: AppSizes.setWidth(16),
         right: AppSizes.setWidth(16),
         top: AppSizes.setHeight(12),
-        bottom: AppSizes.setHeight(12) + MediaQuery.of(context).padding.bottom,
       ),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         border: Border(
           top: BorderSide(
-            color: const Color(0xFFE5E7EB),
+            color: Color(0xFFE5E7EB),
             width: 1,
           ),
         ),

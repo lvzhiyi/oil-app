@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/global/model/invoice_req_type.dart';
 import 'package:oil_business_app/global/service/station_service.dart';
 import 'package:oil_business_app/pages/invoice_edit/state.dart';
-import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/utils/invoice_validator.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
@@ -145,7 +144,6 @@ class InvoiceEditCtrl extends Cubit<InvoiceEditState> {
         SportsToast.showSuccess('保存成功');
       }
 
-      BaseRouter.pop(result: {'refresh': true});
       return true;
     } catch (e) {
       l.e('InvoiceEditCtrl', '保存发票信息失败: $e');
