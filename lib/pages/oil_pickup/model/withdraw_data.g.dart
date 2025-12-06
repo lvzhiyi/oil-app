@@ -62,6 +62,7 @@ WithdrawOrderModel _$WithdrawOrderModelFromJson(Map<String, dynamic> json) =>
       withdrawId: (json['withdrawId'] as num?)?.toInt(),
       withdrawNo: json['withdrawNo'] as String?,
       withdrawTon: (json['withdrawTon'] as num?)?.toDouble(),
+      fuelType: json['fuelType'] as String?,
       vehicleInfo: json['vehicleInfo'] as String?,
       status: json['status'] as String?,
       createdAt: json['createdAt'] as String?,
@@ -72,9 +73,6 @@ WithdrawOrderModel _$WithdrawOrderModelFromJson(Map<String, dynamic> json) =>
       depot: json['depot'] == null
           ? null
           : DepotInfo.fromJson(json['depot'] as Map<String, dynamic>),
-      id: (json['id'] as num?)?.toInt(),
-      inventoryId: (json['inventoryId'] as num?)?.toInt(),
-      oilOrderId: (json['oilOrderId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$WithdrawOrderModelToJson(WithdrawOrderModel instance) =>
@@ -82,15 +80,13 @@ Map<String, dynamic> _$WithdrawOrderModelToJson(WithdrawOrderModel instance) =>
       'withdrawId': instance.withdrawId,
       'withdrawNo': instance.withdrawNo,
       'withdrawTon': instance.withdrawTon,
+      'fuelType': instance.fuelType,
       'vehicleInfo': instance.vehicleInfo,
       'status': instance.status,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
       'station': instance.station,
       'depot': instance.depot,
-      'id': instance.id,
-      'inventoryId': instance.inventoryId,
-      'oilOrderId': instance.oilOrderId,
     };
 
 WithdrawRequest _$WithdrawRequestFromJson(Map<String, dynamic> json) =>

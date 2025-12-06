@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oil_business_app/pages/oil_pickup/model/withdraw_data.dart';
 import 'package:oil_business_app/pages/pickup_order_detail/controller.dart';
 import 'package:oil_business_app/pages/pickup_order_detail/state.dart';
 import 'package:oil_business_app/pages/pickup_order_detail/view.dart';
 import 'package:oil_business_app/widgets/common/base_page.dart';
 
 class PickupOrderDetailPage extends BasePage {
-  final WithdrawOrderModel? order;
+  final int withdrawId;
 
   const PickupOrderDetailPage({
     Key? key,
-    this.order,
+    required this.withdrawId,
   }) : super(key: key);
 
   @override
@@ -24,15 +23,9 @@ class _PickupOrderDetailPage extends BaseState<PickupOrderDetailPage>
   Widget body(context) {
     return BlocProvider(
       create: (BuildContext context) {
-        final ctrl = PickupOrderDetailCtrl(
-          order: widget.order,
+        return PickupOrderDetailCtrl(
+          withdrawId: widget.withdrawId,
         );
-        final int? withdrawId =
-            widget.order?.withdrawId ?? widget.order?.id;
-        if (withdrawId != null) {
-          ctrl.loadOrderDetail(withdrawId);
-        }
-        return ctrl;
       },
       child: BlocBuilder<PickupOrderDetailCtrl, PickupOrderDetailState>(
         builder: (context, state) {

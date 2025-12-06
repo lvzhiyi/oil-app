@@ -92,7 +92,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
 
   Widget _buildCardHeader(
       BuildContext context, bool isCompleted, bool isCancelled) {
-    final orderNo = widget.item.withdrawNo ?? widget.item.id?.toString() ?? '';
+    final orderNo = widget.item.withdrawNo ?? '';
 
     return Column(
       children: [
@@ -382,12 +382,12 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
   }
 
   void _handleViewDetail(BuildContext context) {
-    if (widget.item.withdrawId != null || widget.item.id != null) {
+    if (widget.item.withdrawId != null) {
       BaseRouter.push(
         context: context,
         url: AppPage.pickupOrderDetailPage.path,
         extra: {
-          'order': widget.item,
+          'withdrawId': widget.item.withdrawId,
         },
       );
     } else {

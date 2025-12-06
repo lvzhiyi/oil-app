@@ -224,8 +224,11 @@ extension PageRoute on AppPage {
       case AppPage.pickupOrderDetailPage:
         return (context, state) {
           final extra = state.extra as Map<String, dynamic>? ?? {};
-          final order = extra['order'] as WithdrawOrderModel?;
-          return PickupOrderDetailPage(order: order);
+          final withdrawId = extra['withdrawId'] as int?;
+          if (withdrawId == null) {
+            return const Text('参数缺失：withdrawId');
+          }
+          return PickupOrderDetailPage(withdrawId: withdrawId);
         };
 
       case AppPage.privacyPolicyPage:

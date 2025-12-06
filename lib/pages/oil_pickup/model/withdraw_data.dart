@@ -98,6 +98,10 @@ class WithdrawOrderModel {
   @JsonKey(name: 'withdrawTon')
   final double? withdrawTon;
 
+  /// 油品类型
+  @JsonKey(name: 'fuelType')
+  final String? fuelType;
+
   /// 车辆信息（JSON字符串）
   @JsonKey(name: 'vehicleInfo')
   final String? vehicleInfo;
@@ -119,50 +123,17 @@ class WithdrawOrderModel {
   /// 油库信息
   final DepotInfo? depot;
 
-  /// 订单ID（向后兼容字段，映射到withdrawId）
-  final int? id;
-
-  /// 库存ID（向后兼容）
-  @JsonKey(name: 'inventoryId')
-  final int? inventoryId;
-
-  /// 油品订单ID（向后兼容）
-  final int? oilOrderId;
-
-  /// 加油站ID（向后兼容，从station中获取）
-  int? get stationId => station?.stationId;
-
-  /// 加油站名称（向后兼容，从station中获取）
-  String? get stationName => station?.stationName;
-
-  /// 油库名称（向后兼容，从depot中获取）
-  String? get depotName => depot?.depotName;
-
-  /// 省份名称（向后兼容，从station中获取）
-  String? get provinceName => station?.provinceName;
-
-  /// 城市名称（向后兼容，从station中获取）
-  String? get cityName => station?.cityName;
-
-  /// 区域名称（向后兼容，从station中获取）
-  String? get areaName => station?.areaName;
-
-  /// 详细地址（向后兼容，从station中获取）
-  String? get addressDetail => station?.addressDetail;
-
   WithdrawOrderModel({
     this.withdrawId,
     this.withdrawNo,
     this.withdrawTon,
+    this.fuelType,
     this.vehicleInfo,
     this.status,
     this.createdAt,
     this.updatedAt,
     this.station,
     this.depot,
-    this.id,
-    this.inventoryId,
-    this.oilOrderId,
   });
 
   factory WithdrawOrderModel.fromJson(Map<String, dynamic> json) =>

@@ -174,12 +174,12 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
                           status: order.status,
                         ),
                         inventory: InventoryModel(
-                          inventoryId: order.inventoryId,
-                          depotName: order.depotName,
+                          depotName: order.depot?.depotName,
+                          fuelType: order.fuelType,
                         ),
                         station: Station(
-                          id: order.stationId,
-                          stationName: order.stationName,
+                          id: order.station?.stationId,
+                          stationName: order.station?.stationName,
                         ),
                         oilAmount: order.withdrawTon?.toString() ?? '0',
                         dispatchContent: dispatchContent,
@@ -215,12 +215,12 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
                   status: order.status,
                 ),
                 inventory: InventoryModel(
-                  inventoryId: order.inventoryId,
-                  depotName: order.depotName,
+                  depotName: order.depot?.depotName,
+                  fuelType: order.fuelType,
                 ),
                 station: Station(
-                  id: order.stationId,
-                  stationName: order.stationName,
+                  id: order.station?.stationId,
+                  stationName: order.station?.stationName,
                 ),
                 oilAmount: order.withdrawTon?.toString() ?? '0',
                 dispatchContent: dispatchContent,

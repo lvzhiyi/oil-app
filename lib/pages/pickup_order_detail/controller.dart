@@ -6,10 +6,14 @@ import 'package:oil_business_app/pages/oil_pickup/service/oil_pickup_service.dar
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
 class PickupOrderDetailCtrl extends Cubit<PickupOrderDetailState> {
-  PickupOrderDetailCtrl({WithdrawOrderModel? order})
-      : super(PickupOrderDetailState(order: order));
+  PickupOrderDetailCtrl({required this.withdrawId})
+      : super(PickupOrderDetailState(isLoading: true)) {
+    loadOrderDetail();
+  }
 
-  Future<void> loadOrderDetail(int withdrawId) async {
+  final int withdrawId;
+
+  Future<void> loadOrderDetail() async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
     try {
       final detail = await oilPickupService.getWithdrawDetail(withdrawId);
@@ -36,11 +40,9 @@ class PickupOrderDetailCtrl extends Cubit<PickupOrderDetailState> {
   }
 
   Future<bool> cancelOrder() async {
-    if (state.order?.withdrawId == null) return false;
-
     emit(state.copyWith(isLoading: true));
     try {
-      await oilPickupService.cancelWithdraw(state.order!.withdrawId!);
+      await oilPickupService.cancelWithdraw(withdrawId);
       SportsToast.showSuccess('订单已取消');
       emit(state.copyWith(isLoading: false));
       return true;
