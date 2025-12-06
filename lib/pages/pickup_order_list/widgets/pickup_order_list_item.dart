@@ -239,25 +239,9 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
     bool isCompleted,
     bool isCancelled,
   ) {
-    // final plateNumber = vehicle?.plateNumber ?? '';
-    // final driverName = vehicle?.driverName ?? '';
     final dateStr = _getDateString(
       !isCompleted && !isCancelled ? widget.item.createdAt : widget.item.updatedAt,
     );
-
-    // Color plateNumberBgColor;
-    // Color plateNumberTextColor;
-
-    // if (isCancelled) {
-    //   plateNumberBgColor = const Color(0xFFF3F4F6);
-    //   plateNumberTextColor = const Color(0xFF9CA3AF);
-    // } else if (isCompleted) {
-    //   plateNumberBgColor = const Color(0xFFF3F4F6);
-    //   plateNumberTextColor = const Color(0xFF6B7280);
-    // } else {
-    //   plateNumberBgColor = AppColor.secondaryLight;
-    //   plateNumberTextColor = AppColor.primaryColor;
-    // }
 
     return Container(
       padding: EdgeInsets.symmetric(
