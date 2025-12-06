@@ -32,7 +32,7 @@ class OilPickupSuccessBottomActions extends StatelessWidget {
         bottom: AppSizes.setHeight(12) + MediaQuery.of(context).padding.bottom,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: CustomAppColor(context).white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -49,9 +49,9 @@ class OilPickupSuccessBottomActions extends StatelessWidget {
               borderRadius: borderRadius,
               child: InkWell(
                 borderRadius: borderRadius,
-                overlayColor: MaterialStateProperty.resolveWith(
+                overlayColor: WidgetStateProperty.resolveWith(
                   (states) =>
-                      states.contains(MaterialState.pressed) ? backOverlay : null,
+                      states.contains(WidgetState.pressed) ? backOverlay : null,
                 ),
                 onTap: onBack,
                 child: Container(
@@ -80,9 +80,10 @@ class OilPickupSuccessBottomActions extends StatelessWidget {
               borderRadius: borderRadius,
               child: InkWell(
                 borderRadius: borderRadius,
-                overlayColor: MaterialStateProperty.resolveWith(
-                  (states) =>
-                      states.contains(MaterialState.pressed) ? primaryOverlay : null,
+                overlayColor: WidgetStateProperty.resolveWith(
+                  (states) => states.contains(WidgetState.pressed)
+                      ? primaryOverlay
+                      : null,
                 ),
                 onTap: isSaving ? null : onSave,
                 child: Container(

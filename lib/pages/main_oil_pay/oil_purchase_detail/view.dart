@@ -10,6 +10,8 @@ import 'package:oil_business_app/resources/size.dart';
 import 'package:oil_business_app/resources/style.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/utils/sizer_utils.dart';
+import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dart';
 
 import 'state.dart';
@@ -32,9 +34,16 @@ class OilPurchaseDetailView extends StatelessWidget {
     final ctrl = context.read<OilPurchaseDetailCtrl>();
 
     return Scaffold(
-      backgroundColor: CustomAppColor.of(context).bgScaffold,
+      backgroundColor: const Color(0xffF5F7FA),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        title: CommonText(
+          text: '买油',
+          fontSize: AppSizes.setFontSize(18),
+          fontWeight: FontWeight.w600,
+          textColor: CustomAppColor.of(context).txtBlack,
+        ),
+        centerTitle: true,
+        backgroundColor: CustomAppColor(context).white,
         elevation: 0,
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
@@ -138,54 +147,71 @@ class OilPurchaseDetailView extends StatelessWidget {
                   ),
                 ),
                 Gap(pt(8)),
-                const CommonTextFormField(
+                CommonTextFormField(
                   name: 'remark',
                   hintText: '请输入备注信息',
                   maxLines: 4,
+                  validators: (_) => null,
                 ),
 
-                Gap(pt(32)),
-                // 立刻购买按钮
-                SizedBox(
-                  width: double.infinity,
-                  height: pt(48),
-                  child: ElevatedButton(
-                    onPressed: state.isLoading
-                        ? null
-                        : () {
-                            context
-                                .read<OilPurchaseDetailCtrl>()
-                                .submitPurchase(context);
-                          },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.btnPurple,
-                      disabledBackgroundColor:
-                          CustomAppColor.of(context).txtGrey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(pt(12)),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: state.isLoading
-                        ? SizedBox(
-                            width: pt(20),
-                            height: pt(20),
-                            child: const CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                          )
-                        : Text(
-                            '立刻购买',
-                            style: SportsTextStyle.baseBold.copyWith(
-                              fontSize: pt(16),
-                              color: Colors.white,
-                            ),
-                          ),
-                  ),
-                ),
               ],
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: pt(16),
+          vertical: pt(12),
+        ),
+        decoration: BoxDecoration(
+          color: CustomAppColor(context).white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 4,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: SafeArea(
+          top: false,
+          minimum: EdgeInsets.only(bottom: pt(4)),
+          child: SizedBox(
+            width: double.infinity,
+            height: pt(48),
+            child: ElevatedButton(
+              onPressed: state.isLoading
+                  ? null
+                  : () {
+                      context
+                          .read<OilPurchaseDetailCtrl>()
+                          .submitPurchase(context);
+                    },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColor.btnPurple,
+                disabledBackgroundColor: CustomAppColor.of(context).txtGrey,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(pt(12)),
+                ),
+                elevation: 0,
+              ),
+              child: state.isLoading
+                  ? SizedBox(
+                      width: pt(20),
+                      height: pt(20),
+                      child: const CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                  : Text(
+                      '立刻购买',
+                      style: SportsTextStyle.baseBold.copyWith(
+                        fontSize: pt(16),
+                        color: Colors.white,
+                      ),
+                    ),
             ),
           ),
         ),

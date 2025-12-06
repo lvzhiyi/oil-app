@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 
 class StationRelationCard extends StatelessWidget {
@@ -17,9 +18,9 @@ class StationRelationCard extends StatelessWidget {
         vertical: AppSizes.setHeight(12),
       ),
       decoration: BoxDecoration(
-        color: const Color(0xFFEEECFC),
+        color: CustomAppColor(context).primaryColor.withValues(alpha: 0.1),
         border: Border.all(
-          color: const Color(0xFF7165E3).withValues(alpha: 0.2),
+          color: CustomAppColor(context).primaryColor.withValues(alpha: 0.2),
           width: 1,
         ),
         borderRadius: BorderRadius.circular(AppSizes.setWidth(8)),
@@ -29,7 +30,7 @@ class StationRelationCard extends StatelessWidget {
           Icon(
             Icons.link,
             size: AppSizes.setWidth(16),
-            color: const Color(0xFF7165E3),
+            color: CustomAppColor(context).primaryColor,
           ),
           SizedBox(width: AppSizes.setWidth(8)),
           Expanded(
@@ -37,7 +38,7 @@ class StationRelationCard extends StatelessWidget {
               text: TextSpan(
                 style: TextStyle(
                   fontSize: AppSizes.setFontSize(13),
-                  color: const Color(0xFF7165E3),
+                  color: CustomAppColor(context).primaryColor,
                   fontWeight: FontWeight.w500,
                 ),
                 children: [

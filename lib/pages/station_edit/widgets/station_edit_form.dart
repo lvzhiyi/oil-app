@@ -80,7 +80,7 @@ class _StationEditFormState extends State<StationEditForm> {
     return Scaffold(
       backgroundColor: const Color(0xffF5F7FA),
       appBar: AppBar(
-        backgroundColor: CustomAppColor.of(context).bgScaffold,
+        backgroundColor: CustomAppColor(context).white,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
@@ -229,7 +229,7 @@ class _StationEditFormState extends State<StationEditForm> {
         Container(
           padding: EdgeInsets.all(AppSizes.setWidth(16)),
           decoration: BoxDecoration(
-            color: CustomAppColor.of(context).bgContainer,
+            color: CustomAppColor(context).white,
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.05),

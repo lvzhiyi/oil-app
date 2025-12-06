@@ -19,7 +19,7 @@ Future<T?> customBottomSheet<T>({
   return showModalBottomSheet<T>(
     scrollControlDisabledMaxHeightRatio: maxHeightRatio ?? 0.6,
     context: context,
-    backgroundColor: CustomAppColor.of(context).bgScaffold,
+    backgroundColor: CustomAppColor(context).white,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),

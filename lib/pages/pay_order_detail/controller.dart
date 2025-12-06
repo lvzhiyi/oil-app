@@ -368,12 +368,10 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
           SizedBox(height: AppSizes.setHeight(10)),
           Container(
             decoration: BoxDecoration(
-              color: CustomAppColor.of(context).bgBlackWhiteScaffold,
+              color: CustomAppColor(context).white,
               border: Border(
                 top: BorderSide(
-                    color: CustomAppColor.of(context)
-                        .txtGrey
-                        .withValues(alpha: 0.5)),
+                    color: CustomAppColor(context).borderGrey.withValues(alpha: 0.5)),
               ),
             ),
             padding: EdgeInsets.symmetric(

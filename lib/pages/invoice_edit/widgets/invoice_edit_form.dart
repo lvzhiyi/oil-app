@@ -85,7 +85,7 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
     return Scaffold(
       backgroundColor: const Color(0xffF5F7FA),
       appBar: AppBar(
-        backgroundColor: CustomAppColor.of(context).bgScaffold,
+        backgroundColor: CustomAppColor(context).white,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
@@ -145,7 +145,7 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
     return Container(
       padding: EdgeInsets.all(AppSizes.setWidth(20)),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: CustomAppColor(context).white,
         borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
         boxShadow: [
           BoxShadow(
@@ -285,7 +285,7 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
           final borderColor = hasError
               ? const Color(0xFFEF4444)
               : hasFocus
-                  ? const Color(0xFF7165E3)
+                  ? CustomAppColor(context).primaryColor
                   : const Color(0xFFE5E7EB);
 
           return Container(
@@ -299,7 +299,7 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
               boxShadow: hasFocus
                   ? [
                       BoxShadow(
-                        color: const Color(0xFF7165E3).withValues(alpha: 0.1),
+                        color: CustomAppColor(context).primaryColor.withValues(alpha: 0.1),
                         blurRadius: 0,
                         spreadRadius: 3,
                       ),
@@ -338,15 +338,13 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
 
   Widget _buildBottomButton(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(
-        left: AppSizes.setWidth(16),
-        right: AppSizes.setWidth(16),
-        top: AppSizes.setHeight(12),
-        bottom: AppSizes.setHeight(12),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.setWidth(16),
+        vertical: AppSizes.setHeight(12),
       ),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
+      decoration: BoxDecoration(
+        color: CustomAppColor(context).white,
+        border: const Border(
           top: BorderSide(
             color: Color(0xFFE5E7EB),
             width: 1,
@@ -420,7 +418,7 @@ class _InvoiceEditFormState extends State<InvoiceEditForm> {
                 text: label,
                 fontSize: AppSizes.setFontSize(12),
                 fontWeight: FontWeight.w600,
-                textColor: const Color(0xFF7165E3),
+                textColor: CustomAppColor(context).primaryColor,
               ),
             ),
           ),

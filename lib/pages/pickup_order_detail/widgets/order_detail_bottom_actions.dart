@@ -34,7 +34,7 @@ class OrderDetailBottomActions extends StatelessWidget {
         bottom: AppSizes.setHeight(12) + MediaQuery.of(context).padding.bottom,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: CustomAppColor(context).white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),

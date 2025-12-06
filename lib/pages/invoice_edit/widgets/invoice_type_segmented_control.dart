@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 
 class InvoiceTypeSegmentedControl extends StatelessWidget {
@@ -57,7 +58,7 @@ class InvoiceTypeSegmentedControl extends StatelessWidget {
                       fontWeight:
                           isSelected ? FontWeight.w600 : FontWeight.w500,
                       color: isSelected
-                          ? const Color(0xFF7165E3)
+                          ? CustomAppColor(context).primaryColor
                           : const Color(0xFF6B7280),
                     ),
                     child: Text(type['label']!),
