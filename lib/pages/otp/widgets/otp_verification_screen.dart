@@ -81,7 +81,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 padding: EdgeInsets.only(top: AppSizes.setHeight(7)),
                 child: CommonText(
                   text: widget.extra?["phone"] ?? '',
-                  fontSize: AppSizes.setFontSize(15),
+                  fontSize: AppSizes.setFontSize(14),
                   fontWeight: FontWeight.w600,
                   textColor: CustomAppColor.of(context).txtBlack,
                 ),
@@ -173,7 +173,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       padding: EdgeInsets.only(top: AppSizes.setHeight(7)),
                       child: CommonText(
                         text: canResend ? '重新发送' : '${countdownSeconds}s 后重新发送',
-                        fontSize: AppSizes.setFontSize(15),
+                        fontSize: AppSizes.setFontSize(14),
                         fontWeight: FontWeight.w600,
                         textColor: canResend
                             ? CustomAppColor.of(context).txtPurple
