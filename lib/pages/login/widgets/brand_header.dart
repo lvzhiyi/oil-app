@@ -28,7 +28,7 @@ class BrandHeader extends StatelessWidget {
         ),
         SizedBox(height: AppSizes.setHeight(8)),
         CommonText(
-          text: '更专业的B2B成品油交易平台',
+          text: '专业的B2B成品油交易平台',
           fontWeight: FontWeight.w400,
           fontSize: AppSizes.setFontSize(13),
           textColor: const Color(0xFF6B7280),

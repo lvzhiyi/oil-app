@@ -66,7 +66,7 @@ class AgreementFooter extends StatelessWidget {
                     const TextSpan(text: '登录即代表您同意 '),
                     TextSpan(
                       text: '《用户服务协议》',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColor.txtPurple,
                       ),
                       recognizer: TapGestureRecognizer()
@@ -78,7 +78,7 @@ class AgreementFooter extends StatelessWidget {
                     const TextSpan(text: ' 和 '),
                     TextSpan(
                       text: '《隐私政策》',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColor.txtPurple,
                       ),
                       recognizer: TapGestureRecognizer()
