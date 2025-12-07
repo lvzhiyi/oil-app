@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
@@ -31,7 +32,7 @@ class ContactSupport extends StatelessWidget {
               text: '联系人工客服',
               fontSize: AppSizes.setFontSize(13),
               fontWeight: FontWeight.w600,
-              textColor: const Color(0xFF7165E3),
+              textColor: CustomAppColor.of(context).primaryColor,
             ),
           ),
         ),

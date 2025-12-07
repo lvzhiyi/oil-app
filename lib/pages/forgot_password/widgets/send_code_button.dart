@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
@@ -51,7 +52,7 @@ class SendCodeButton extends StatelessWidget {
               fontSize: AppSizes.setFontSize(13),
               fontWeight: FontWeight.w600,
               textColor: _isEnabled
-                  ? const Color(0xFF7165E3)
+                  ? CustomAppColor.of(context).primaryColor
                   : const Color(0xFF9CA3AF),
             ),
           ),
