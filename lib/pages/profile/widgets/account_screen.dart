@@ -353,8 +353,8 @@ class _AccountScreenState extends State<AccountScreen>
   void logoutBottomSheet(BuildContext context) {
 
     SportsDialog.show(
-      title: '取消订单',
-      bodyText: '确定要取消该提油订单吗？取消后无法恢复。',
+      title: '退出登录',
+      bodyText: '确定要退出登录吗？退出后将返回登录页面。',
       onCancel: () {},
       onOk: () async {
         await SportsDialog.dismiss();
