@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:oil_business_app/pages/change_password/controller.dart';
+import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/static/svg.dart';
 import 'package:oil_business_app/widgets/common/svg_asset.dart';
@@ -56,13 +57,13 @@ class _PasswordFieldContainerState extends State<_PasswordFieldContainer> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.setWidth(10)),
         border: Border.all(
-          color: _isFocused ? const Color(0xFF7165E3) : const Color(0xFFE5E7EB),
+          color: _isFocused ? CustomAppColor.of(context).primaryColor : CustomAppColor.of(context).containerBorder,
           width: 1,
         ),
         boxShadow: _isFocused
             ? [
                 BoxShadow(
-                  color: const Color(0xFF7165E3).withValues(alpha: 0.1),
+                  color: CustomAppColor.of(context).primaryColor.withValues(alpha: 0.1),
                   blurRadius: 3,
                   spreadRadius: 0,
                 ),
@@ -261,8 +262,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           Container(
             width: AppSizes.setWidth(56),
             height: AppSizes.setHeight(56),
-            decoration: const BoxDecoration(
-              color: Color(0xFFEEECFC),
+            decoration: BoxDecoration(
+              color: CustomAppColor.of(context).bgPrimaryLight,
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -270,7 +271,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 assetName: AssetsSvg.LOCK,
                 width: AppSizes.setWidth(28),
                 height: AppSizes.setHeight(28),
-                color: const Color(0xFF7165E3),
+                color: CustomAppColor.of(context).primaryColor,
               ),
             ),
           ),

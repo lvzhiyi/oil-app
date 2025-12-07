@@ -116,13 +116,13 @@ class _HtmlWebViewContainerState extends State<HtmlWebViewContainer> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CustomAppColor.of(context).btnPurple,
+                ),
                 child: CommonText(
                   text: '返回',
                   fontSize: AppSizes.setFontSize(14),
                   textColor: Colors.white,
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: CustomAppColor.of(context).btnPurple,
                 ),
               ),
             ],
@@ -135,6 +135,7 @@ class _HtmlWebViewContainerState extends State<HtmlWebViewContainer> {
       return const SizedBox.shrink();
     }
 
+    // ignore: prefer_conditional_assignment
     if (_controller == null) {
       _controller = WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -158,7 +159,7 @@ class _HtmlWebViewContainerState extends State<HtmlWebViewContainer> {
     }
 
     return Scaffold(
-      backgroundColor: CustomAppColor.of(context).bgScaffold,
+      backgroundColor: CustomAppColor.of(context).white,
       appBar: AppBar(
         backgroundColor: CustomAppColor.of(context).bgTopBar,
         elevation: 0,

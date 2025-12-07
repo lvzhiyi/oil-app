@@ -560,7 +560,7 @@ class PayOrderDetailView extends HookWidget {
                 child: Container(
                   height: AppSizes.setHeight(48),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF3F4F6),
+                    // color: const Color(0xFFF3F4F6),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: CustomAppColor(context).red,
