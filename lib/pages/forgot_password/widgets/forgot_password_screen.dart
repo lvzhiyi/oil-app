@@ -9,6 +9,7 @@ import 'package:oil_business_app/pages/forgot_password/widgets/contact_support.d
 import 'package:oil_business_app/pages/forgot_password/widgets/header_area.dart';
 import 'package:oil_business_app/pages/forgot_password/widgets/password_rules.dart';
 import 'package:oil_business_app/pages/forgot_password/widgets/send_code_button.dart';
+import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/static/svg.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
@@ -32,7 +33,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final ctrl = context.read<ForgotPasswordCtrl>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: CustomAppColor.of(context).white,
       body: SafeArea(
         child: Column(
           children: [
@@ -76,14 +77,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           return _buildSubmitButton(ctrl, state);
                         },
                       ),
-                      SizedBox(height: AppSizes.setHeight(24)),
-                      // 联系客服
-                      ContactSupport(
-                        onContactSupport: () {
-                          // TODO: 实现联系客服功能
-                          SportsToast.showWarning('客服功能开发中');
-                        },
-                      ),
+                      // SizedBox(height: AppSizes.setHeight(24)),
+                      // // 联系客服
+                      // ContactSupport(
+                      //   onContactSupport: () {
+                      //     // TODO: 实现联系客服功能
+                      //     SportsToast.showWarning('客服功能开发中');
+                      //   },
+                      // ),
                     ],
                   ),
                 ),

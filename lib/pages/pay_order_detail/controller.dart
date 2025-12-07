@@ -358,6 +358,7 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
       title: '取消订单',
       content: ListView(
         physics: const AlwaysScrollableScrollPhysics(),
+        shrinkWrap: true,
         children: [
           // Padding(
           //   padding:

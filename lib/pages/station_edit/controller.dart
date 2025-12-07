@@ -124,32 +124,6 @@ class StationEditCtrl extends Cubit<StationEditState> {
   }
 
   Future<bool> save(BuildContext context) async {
-    if (state.name.isEmpty) {
-      emit(state.copyWith(
-        hasError: true,
-        errorMessage: '请输入加油站名称',
-      ));
-      return false;
-    }
-
-    if (state.provinceCode.isEmpty ||
-        state.cityCode.isEmpty ||
-        state.areaCode.isEmpty) {
-      emit(state.copyWith(
-        hasError: true,
-        errorMessage: '请选择省市区',
-      ));
-      return false;
-    }
-
-    if (state.addressDetail.isEmpty) {
-      emit(state.copyWith(
-        hasError: true,
-        errorMessage: '请输入详细地址',
-      ));
-      return false;
-    }
-
     if (_stationId != null && state.station?.status == StationStatus.active) {
       final completer = Completer<bool>();
 
@@ -237,6 +211,7 @@ class StationEditCtrl extends Cubit<StationEditState> {
       emit(state.copyWith(
         isLoading: false,
         hasError: false,
+        errorMessage: null,
       ));
 
       SportsToast.showSuccess('保存成功');

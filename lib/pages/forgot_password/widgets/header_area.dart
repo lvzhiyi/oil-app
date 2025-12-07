@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/static/svg.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
@@ -26,7 +27,7 @@ class HeaderArea extends StatelessWidget {
               assetName: AssetsSvg.LOCK,
               width: AppSizes.setWidth(32),
               height: AppSizes.setHeight(32),
-              color: const Color(0xFF7165E3),
+              color: CustomAppColor.of(context).primaryColor,
             ),
           ),
         ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 
-import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
 Future<T?> customBottomSheet<T>({
@@ -17,6 +16,7 @@ Future<T?> customBottomSheet<T>({
   String? catalogCount,
 }) {
   return showModalBottomSheet<T>(
+    isScrollControlled: true,
     scrollControlDisabledMaxHeightRatio: 0.5,
     context: context,
     useSafeArea: true,
@@ -25,104 +25,117 @@ Future<T?> customBottomSheet<T>({
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
     builder: (BuildContext context) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(
-                vertical: AppSizes.setHeight(18),
-                horizontal: AppSizes.setWidth(24)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CommonText(
-                  text: title.toUpperCase(),
-                  fontWeight: FontWeight.w700,
-                  fontSize: AppSizes.setFontSize(18),
+      final maxHeight =
+          MediaQuery.of(context).size.height * (maxHeightRatio ?? 0.8);
+      final viewInsets = MediaQuery.of(context).viewInsets;
+
+      return AnimatedPadding(
+        padding: EdgeInsets.only(bottom: viewInsets.bottom),
+        duration: const Duration(milliseconds: 180),
+        curve: Curves.easeOut,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: maxHeight),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: AppSizes.setHeight(18),
+                    horizontal: AppSizes.setWidth(24)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CommonText(
+                      text: title.toUpperCase(),
+                      fontWeight: FontWeight.w700,
+                      fontSize: AppSizes.setFontSize(18),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Icon(
+                        Icons.clear,
+                        weight: AppSizes.setWidth(24),
+                        color: CustomAppColor.of(context).txtGrey,
+                      ),
+                    ),
+                  ],
                 ),
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Icon(
-                    Icons.clear,
-                    weight: AppSizes.setWidth(24),
-                    color: CustomAppColor.of(context).txtGrey,
-                  ),
+              ),
+              Divider(
+                color:
+                    CustomAppColor.of(context).borderGrey.withValues(alpha: 0.3),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: AppSizes.setHeight(4),
+                  horizontal: isPaddingRequired ?? false
+                      ? AppSizes.setWidth(14)
+                      : AppSizes.setWidth(0),
                 ),
-              ],
-            ),
+                child: content,
+              ),
+              // Visibility(
+              //   visible: isDone ?? false,
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //         border: Border(
+              //       top: BorderSide(
+              //         color: CustomAppColor.of(context)
+              //             .borderGrey
+              //             .withValues(alpha: 0.5),
+              //         width: 1,
+              //       ),
+              //     )),
+              //     child: Container(
+              //       color: CustomAppColor.of(context).bgScaffold,
+              //       padding: EdgeInsets.symmetric(
+              //           vertical: AppSizes.setHeight(20),
+              //           horizontal: AppSizes.setWidth(18)),
+              //       child: Row(
+              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: [
+              //           CommonText(
+              //             text: catalogCount ?? '',
+              //             textColor: CustomAppColor.of(context).txtGrey,
+              //             fontWeight: FontWeight.w600,
+              //             fontSize: AppSizes.setFontSize(15),
+              //           ),
+              //           Visibility(
+              //             visible: isClearVisible ?? false,
+              //             child: Padding(
+              //               padding: EdgeInsets.only(
+              //                   left: AppSizes.setWidth(33),
+              //                   right: AppSizes.setWidth(15)),
+              //               child: CommonButton(
+              //                 width: AppSizes.setWidth(93),
+              //                 height: AppSizes.setHeight(34),
+              //                 radius: 3,
+              //                 borderColor:
+              //                     CustomAppColor.of(context).bgContainerGrey,
+              //                 onTap: onDone,
+              //                 buttonColor: CustomAppColor.of(context).btnWhite,
+              //                 child: const CommonText(
+              //                   text: 'clearFilter',
+              //                 ),
+              //               ),
+              //             ),
+              //           ),
+              //           CommonButton(
+              //             width: AppSizes.setWidth(93),
+              //             height: AppSizes.setHeight(34),
+              //             btnText: 'done',
+              //             radius: 3,
+              //             onTap: onDone,
+              //           )
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // )
+            ],
           ),
-          Divider(
-            color: CustomAppColor.of(context).borderGrey.withValues(alpha: 0.3),
-          ),
-          Expanded(
-              child: Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: AppSizes.setHeight(4),
-              horizontal: isPaddingRequired ?? false
-                  ? AppSizes.setWidth(14)
-                  : AppSizes.setWidth(0),
-            ),
-            child: content,
-          )),
-          // Visibility(
-          //   visible: isDone ?? false,
-          //   child: Container(
-          //     decoration: BoxDecoration(
-          //         border: Border(
-          //       top: BorderSide(
-          //         color: CustomAppColor.of(context)
-          //             .borderGrey
-          //             .withValues(alpha: 0.5),
-          //         width: 1,
-          //       ),
-          //     )),
-          //     child: Container(
-          //       color: CustomAppColor.of(context).bgScaffold,
-          //       padding: EdgeInsets.symmetric(
-          //           vertical: AppSizes.setHeight(20),
-          //           horizontal: AppSizes.setWidth(18)),
-          //       child: Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //         children: [
-          //           CommonText(
-          //             text: catalogCount ?? '',
-          //             textColor: CustomAppColor.of(context).txtGrey,
-          //             fontWeight: FontWeight.w600,
-          //             fontSize: AppSizes.setFontSize(15),
-          //           ),
-          //           Visibility(
-          //             visible: isClearVisible ?? false,
-          //             child: Padding(
-          //               padding: EdgeInsets.only(
-          //                   left: AppSizes.setWidth(33),
-          //                   right: AppSizes.setWidth(15)),
-          //               child: CommonButton(
-          //                 width: AppSizes.setWidth(93),
-          //                 height: AppSizes.setHeight(34),
-          //                 radius: 3,
-          //                 borderColor:
-          //                     CustomAppColor.of(context).bgContainerGrey,
-          //                 onTap: onDone,
-          //                 buttonColor: CustomAppColor.of(context).btnWhite,
-          //                 child: const CommonText(
-          //                   text: 'clearFilter',
-          //                 ),
-          //               ),
-          //             ),
-          //           ),
-          //           CommonButton(
-          //             width: AppSizes.setWidth(93),
-          //             height: AppSizes.setHeight(34),
-          //             btnText: 'done',
-          //             radius: 3,
-          //             onTap: onDone,
-          //           )
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // )
-        ],
+        ),
       );
     },
   );
