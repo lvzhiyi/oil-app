@@ -35,6 +35,7 @@ class OilPurchaseDetailView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xffF5F7FA),
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: CommonText(
           text: '买油',
@@ -153,7 +154,6 @@ class OilPurchaseDetailView extends StatelessWidget {
                   maxLines: 4,
                   validators: (_) => null,
                 ),
-
               ],
             ),
           ),
