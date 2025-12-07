@@ -96,6 +96,9 @@ class BindStationScreen extends StatelessWidget {
                               label: '所在区域',
                               child: CommonCityPickerFormField(
                                 name: 'city',
+                                validators: FormBuilderValidators.required(
+                                  errorText: '请选择省市区',
+                                ),
                                 hintText: '选择省/市/区',
                                 controller: ctrl.cityController,
                                 onChanged: (value) {
@@ -121,6 +124,9 @@ class BindStationScreen extends StatelessWidget {
                               label: '详细地址',
                               child: CommonTextFormField(
                                 name: 'addressDetail',
+                                validators: FormBuilderValidators.required(
+                                  errorText: '请输入详细地址',
+                                ),
                                 borderColor: colors.textFieldBorder,
                                 fillColor: const Color(0xFFF9FAFB),
                                 radius: 10,
@@ -136,32 +142,82 @@ class BindStationScreen extends StatelessWidget {
                             _buildInputWrapper(
                               context: context,
                               label: '营业执照',
-                              child: QualificationImageUpload(
-                                imageUrl: state.businessLicenseUrl,
-                                hintText: '点击上传照片',
-                                onChanged: (value) {
-                                  ctrl.updateBusinessLicense(value ?? '');
-                                  final formState = ctrl.formKey.currentState;
-                                  if (formState != null && value != null) {
-                                    formState.fields['businessLicenseUrl']
-                                        ?.didChange(value);
-                                  }
+                              child: FormBuilderField<String>(
+                                name: 'businessLicenseUrl',
+                                initialValue: state.businessLicenseUrl,
+                                validator: FormBuilderValidators.required(
+                                  errorText: '请上传营业执照',
+                                ),
+                                builder: (field) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      QualificationImageUpload(
+                                        imageUrl: state.businessLicenseUrl,
+                                        hintText: '点击上传照片',
+                                        onChanged: (value) {
+                                          ctrl.updateBusinessLicense(
+                                              value ?? '');
+                                          field.didChange(value ?? '');
+                                        },
+                                      ),
+                                      if (field.errorText != null &&
+                                          field.errorText!.isNotEmpty)
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            top: AppSizes.setHeight(6),
+                                          ),
+                                          child: CommonText(
+                                            text: field.errorText!,
+                                            fontSize: AppSizes.setFontSize(12),
+                                            textColor:
+                                                CustomAppColor.of(context).red,
+                                          ),
+                                        ),
+                                    ],
+                                  );
                                 },
                               ),
                             ),
                             _buildInputWrapper(
                               context: context,
                               label: '成品油零售许可证',
-                              child: QualificationImageUpload(
-                                imageUrl: state.fuelRetailPermitUrl,
-                                hintText: '点击上传照片',
-                                onChanged: (value) {
-                                  ctrl.updateFuelRetailPermit(value ?? '');
-                                  final formState = ctrl.formKey.currentState;
-                                  if (formState != null && value != null) {
-                                    formState.fields['fuelRetailPermitUrl']
-                                        ?.didChange(value);
-                                  }
+                              child: FormBuilderField<String>(
+                                name: 'fuelRetailPermitUrl',
+                                initialValue: state.fuelRetailPermitUrl,
+                                validator: FormBuilderValidators.required(
+                                  errorText: '请上传成品油零售许可',
+                                ),
+                                builder: (field) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      QualificationImageUpload(
+                                        imageUrl: state.fuelRetailPermitUrl,
+                                        hintText: '点击上传照片',
+                                        onChanged: (value) {
+                                          ctrl.updateFuelRetailPermit(
+                                              value ?? '');
+                                          field.didChange(value ?? '');
+                                        },
+                                      ),
+                                      if (field.errorText != null &&
+                                          field.errorText!.isNotEmpty)
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            top: AppSizes.setHeight(6),
+                                          ),
+                                          child: CommonText(
+                                            text: field.errorText!,
+                                            fontSize: AppSizes.setFontSize(12),
+                                            textColor:
+                                                CustomAppColor.of(context).red,
+                                          ),
+                                        ),
+                                    ],
+                                  );
                                 },
                               ),
                             ),
