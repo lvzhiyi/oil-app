@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -7,6 +10,7 @@ import 'package:oil_business_app/pages/main_oil_pay/service/oil_order_service.da
 import 'package:oil_business_app/pages/pay_order_list/service/pay_order_list.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
+import 'package:oil_business_app/widgets/popup/dialog.dart';
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
 import 'state.dart';
@@ -84,7 +88,70 @@ class OilPurchaseDetailCtrl extends Cubit<OilPurchaseDetailState> {
       }
     } catch (e) {
       emit(state.copyWith(isLoading: false));
-      // 错误提示由拦截器统一处理，这里不需要再次提示
+      if (e is DioException) {
+        final responseData = e.response?.data;
+        final responseMap =
+            responseData is Map<String, dynamic> ? responseData : null;
+        final code = responseMap?['code'] ?? e.response?.statusCode;
+
+        if (code == 4001) {
+          final orderId = _parseOrderId(responseMap?['data'] ?? responseData);
+          await _handlePendingOrder(context, orderId);
+          return;
+        }
+      }
     }
+  }
+
+  int? _parseOrderId(dynamic data) {
+    if (data is int) {
+      return data;
+    }
+    if (data is String) {
+      return int.tryParse(data);
+    }
+    if (data is Map<String, dynamic>) {
+      final rawOrderId = data['orderId'] ?? data['id'];
+      if (rawOrderId is int) {
+        return rawOrderId;
+      }
+      if (rawOrderId != null) {
+        return int.tryParse(rawOrderId.toString());
+      }
+    }
+    return null;
+  }
+
+  Future<void> _handlePendingOrder(BuildContext context, int? orderId) async {
+    final completer = Completer<bool>();
+
+    await SportsDialog.show(
+      title: '存在待支付的买油订单',
+      bodyText: '仅能同时存在一笔待支付的买油订单，是否前往订单详情继续处理？',
+      cancelText: '取消',
+      okText: '前往查看',
+      onCancel: () {
+        if (!completer.isCompleted) completer.complete(false);
+      },
+      onOk: () {
+        SportsDialog.dismiss();
+        if (!completer.isCompleted) completer.complete(true);
+      },
+    );
+
+    final confirm = await completer.future;
+    if (confirm != true) {
+      return;
+    }
+
+    if (orderId == null) {
+      SportsToast.showWarning('未获取到待支付订单信息');
+      return;
+    }
+
+    BaseRouter.push(
+      url: AppPage.payOrderDetailPage.path,
+      extra: {'orderId': orderId, 'from': 'confirmPendingOrder'},
+    );
   }
 }

@@ -55,6 +55,10 @@ class HttpRespInterceptor extends InterceptorsWrapper {
       requestOptions: response.requestOptions,
       response: response,
     );
+
+    if (statusCode == 4001) {
+      return handler.reject(badRes);
+    }
     // 检查是否是401错误，如果是则尝试token刷新
     if (statusCode == 401 || statusCode == 403) {
       final requestOptions = response.requestOptions;
