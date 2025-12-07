@@ -167,12 +167,14 @@ class BindStationScreen extends StatelessWidget {
                                         Padding(
                                           padding: EdgeInsets.only(
                                             top: AppSizes.setHeight(6),
+                                            left: AppSizes.setWidth(16),
                                           ),
                                           child: CommonText(
                                             text: field.errorText!,
                                             fontSize: AppSizes.setFontSize(12),
-                                            textColor:
-                                                CustomAppColor.of(context).red,
+                                            textColor: Theme.of(context)
+                                                .colorScheme
+                                                .error,
                                           ),
                                         ),
                                     ],
@@ -208,12 +210,14 @@ class BindStationScreen extends StatelessWidget {
                                         Padding(
                                           padding: EdgeInsets.only(
                                             top: AppSizes.setHeight(6),
+                                            left: AppSizes.setWidth(16),
                                           ),
                                           child: CommonText(
                                             text: field.errorText!,
                                             fontSize: AppSizes.setFontSize(12),
-                                            textColor:
-                                                CustomAppColor.of(context).red,
+                                            textColor: Theme.of(context)
+                                                .colorScheme
+                                                .error,
                                           ),
                                         ),
                                     ],

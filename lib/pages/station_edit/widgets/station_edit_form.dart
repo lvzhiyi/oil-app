@@ -206,7 +206,6 @@ class _StationEditFormState extends State<StationEditForm> {
                             errorText: '请上传营业执照',
                           ),
                           builder: (field) {
-                            final colors = CustomAppColor.of(context);
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -224,11 +223,14 @@ class _StationEditFormState extends State<StationEditForm> {
                                   Padding(
                                     padding: EdgeInsets.only(
                                       top: AppSizes.setHeight(6),
+                                      left: AppSizes.setWidth(16),
                                     ),
                                     child: CommonText(
                                       text: field.errorText!,
                                       fontSize: AppSizes.setFontSize(12),
-                                      textColor: colors.red,
+                                      textColor: Theme.of(context)
+                                          .colorScheme
+                                          .error,
                                     ),
                                   ),
                               ],
@@ -246,7 +248,6 @@ class _StationEditFormState extends State<StationEditForm> {
                             errorText: '请上传成品油零售许可',
                           ),
                           builder: (field) {
-                            final colors = CustomAppColor.of(context);
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -265,11 +266,14 @@ class _StationEditFormState extends State<StationEditForm> {
                                   Padding(
                                     padding: EdgeInsets.only(
                                       top: AppSizes.setHeight(6),
+                                      left: AppSizes.setWidth(16),
                                     ),
                                     child: CommonText(
                                       text: field.errorText!,
                                       fontSize: AppSizes.setFontSize(12),
-                                      textColor: colors.red,
+                                      textColor: Theme.of(context)
+                                          .colorScheme
+                                          .error,
                                     ),
                                   ),
                               ],
