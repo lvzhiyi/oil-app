@@ -204,7 +204,7 @@ class CreateNewAccountScreen extends StatelessWidget {
                         SizedBox(width: AppSizes.setWidth(4)),
                         InkWell(
                           onTap: () {
-                            BaseRouter.replace(url: AppPage.loginPage.path);
+                            BaseRouter.pop();
                           },
                           child: CommonText(
                             text: '立即登录',
