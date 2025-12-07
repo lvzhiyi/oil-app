@@ -33,6 +33,7 @@ class PayOrderDetailView extends HookWidget {
     if (state.isLoading) {
       return Scaffold(
         backgroundColor: const Color(0xFFF5F7FA),
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
@@ -171,13 +172,11 @@ class PayOrderDetailView extends HookWidget {
   /// 构建状态徽章
   Widget _buildStatusBadge(OrderStatus? status) {
     String text = status?.displayName ?? '';
-    Color bgColor;
     Color textColor;
     Widget? icon;
 
     switch (status) {
       case OrderStatus.PendingPayment:
-        bgColor = const Color(0xFFFFF7ED);
         textColor = const Color(0xFFF59E0B);
         icon = Icon(
           Icons.access_time,
@@ -186,19 +185,15 @@ class PayOrderDetailView extends HookWidget {
         );
         break;
       case OrderStatus.PaymentUploaded:
-        bgColor = const Color(0xFFEFF6FF);
         textColor = const Color(0xFF3B82F6);
         break;
       case OrderStatus.Completed:
-        bgColor = const Color(0xFFF0FDF4);
         textColor = const Color(0xFF22C55E);
         break;
       case OrderStatus.Cancelled:
-        bgColor = const Color(0xFFF3F4F6);
         textColor = const Color(0xFF9CA3AF);
         break;
       default:
-        bgColor = const Color(0xFFF3F4F6);
         textColor = const Color(0xFF9CA3AF);
     }
 
@@ -623,12 +618,41 @@ class PayOrderDetailView extends HookWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(pt(16)),
                 ),
-                title: Text(
-                  '请上传转账凭证',
-                  style: TextStyle(
-                      fontSize: pt(18, isFontSize: true),
-                      fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        '请上传转账凭证',
+                        style: TextStyle(
+                            fontSize: pt(18, isFontSize: true),
+                            fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        if (!dialogState.isUploading &&
+                            !dialogState.isSavingProof) {
+                          // 没有变更，直接关闭
+                          controller.clearSelectedImages();
+                          Navigator.of(dialogContext).pop();
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(pt(4)),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.close,
+                          size: pt(18),
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 content: SizedBox(
                   width: double.maxFinite,

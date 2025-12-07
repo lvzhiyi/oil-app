@@ -213,6 +213,21 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
         // 合并已上传的凭证和新上传的凭证
         final finalProofUrls = [...currentProofs, ...uploadedUrls];
 
+        // 验证最终凭证列表不能为空（后端要求至少1张）
+        if (finalProofUrls.isEmpty) {
+          emit(state.copyWith(
+            uploadingImageIndices: [],
+            isUploading: false,
+          ));
+          // 如果原凭证为空且新图片上传失败，给出更明确的提示
+          if (currentProofs.isEmpty && uploadedUrls.isEmpty) {
+            SportsToast.showError('图片上传失败，请重新选择图片');
+          } else {
+            SportsToast.showError('凭证上传失败，请至少保留1张转账凭证');
+          }
+          return false;
+        }
+
         // 更新状态
         emit(state.copyWith(
           selectedImagePaths: [],
@@ -261,7 +276,12 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
       return;
     }
 
-    // 验证凭证数量：后端要求1-5张之间（允许空列表以支持删除所有凭证）
+    // 验证凭证数量：后端要求至少1张，最多5张
+    if (proofUrls.isEmpty) {
+      SportsToast.showError('凭证不能为空，请至少保留1张转账凭证');
+      return;
+    }
+
     if (proofUrls.length > 5) {
       SportsToast.showError('凭证数量不能超过5张，请删除多余的凭证');
       return;

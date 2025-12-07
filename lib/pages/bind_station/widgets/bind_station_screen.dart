@@ -60,6 +60,7 @@ class BindStationScreen extends StatelessWidget {
                 fontWeight: FontWeight.w400,
                 textColor: colors.hintText,
               ),
+              SizedBox(height: AppSizes.setHeight(18)),
               Expanded(
                 child: SingleChildScrollView(
                   padding:
@@ -69,7 +70,6 @@ class BindStationScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: AppSizes.setHeight(16)),
                         _buildFormSection(
                           context: context,
                           title: '基础信息',

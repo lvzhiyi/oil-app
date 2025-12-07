@@ -48,6 +48,14 @@ class BindStationCtrl extends Cubit<BindStationState> {
   /// 注册前置检查
   bool registerPrecheck() {
     if (state.loading) return false;
+    if (state.businessLicenseUrl.isEmpty) {
+      SportsToast.showWarning('请上传营业执照');
+      return false;
+    }
+    if (state.fuelRetailPermitUrl.isEmpty) {
+      SportsToast.showWarning('请上传成品油零售许可');
+      return false;
+    }
     return formKey.currentState?.saveAndValidate() ?? false;
   }
 

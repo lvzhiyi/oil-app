@@ -98,14 +98,14 @@ class _PendingReviewScreenState extends State<PendingReviewScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        // leading: IconButton(
-        //   icon: Icon(
-        //     Icons.arrow_back,
-        //     color: const Color(0xFF1F2937),
-        //     size: AppSizes.setWidth(20),
-        //   ),
-        //   onPressed: () => Navigator.of(context).pop(),
-        // ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.transparent,
+            size: AppSizes.setWidth(20),
+          ),
+          onPressed: () => {},
+        ),
         title: CommonText(
           text: '审核状态',
           fontWeight: FontWeight.w700,

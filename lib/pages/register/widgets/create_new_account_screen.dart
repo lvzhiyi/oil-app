@@ -93,7 +93,7 @@ class CreateNewAccountScreen extends StatelessWidget {
                       leadingIcon: Icon(
                         Icons.phone_outlined,
                         size: AppSizes.setHeight(20),
-                        color: const Color(0xFF6B7280),
+                        color: const Color(0xFF6B7280).withValues(alpha: 0.5),
                       ),
                       hintText: '手机号码 (将作为登录账号)',
                       keyboardType: TextInputType.phone,
