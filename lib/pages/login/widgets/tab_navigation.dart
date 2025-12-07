@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:oil_business_app/pages/login/state.dart';
+import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 
 /// Tab导航组件
@@ -61,7 +62,7 @@ class TabNavigation extends StatelessWidget {
             width: isActive ? AppSizes.setWidth(20) : 0,
             height: AppSizes.setHeight(3),
             decoration: BoxDecoration(
-              color: const Color(0xFF7165E3),
+              color: CustomAppColor(context).primaryColor,
               borderRadius: BorderRadius.circular(2),
             ),
           ),

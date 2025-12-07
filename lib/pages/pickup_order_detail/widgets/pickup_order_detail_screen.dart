@@ -83,7 +83,9 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: _buildAppBar(context),
       body: const Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(
+          color: AppColor.primaryColor,
+        ),
       ),
     );
   }
@@ -120,7 +122,7 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
   /// 构建 AppBar
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor: CustomAppColor.of(context).bgScaffold,
+      backgroundColor: CustomAppColor(context).white,
       elevation: 0,
       leading: IconButton(
         icon: Icon(
@@ -235,7 +237,9 @@ class _PickupOrderDetailScreenState extends State<PickupOrderDetailScreen> {
             child: Container(
               color: Colors.black.withValues(alpha: 0.05),
               alignment: Alignment.center,
-              child: const CircularProgressIndicator(),
+              child: const CircularProgressIndicator(
+                color: AppColor.primaryColor,
+              ),
             ),
           ),
       ],

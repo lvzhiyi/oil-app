@@ -70,7 +70,7 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
         return Scaffold(
           backgroundColor: const Color(0xffF5F7FA),
           appBar: AppBar(
-            backgroundColor: CustomAppColor.of(context).bgScaffold,
+             backgroundColor: CustomAppColor(context).white,
             elevation: 0,
             shadowColor: const Color(0xffF5F7FA),
             leading: IconButton(
@@ -81,7 +81,7 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
               onPressed: () => Navigator.of(context).pop(),
             ),
             title: CommonText(
-              text: '提油详情',
+              text: '提油',
               fontSize: AppSizes.setFontSize(18),
               fontWeight: FontWeight.w600,
               textColor: CustomAppColor.of(context).txtBlack,
@@ -126,15 +126,12 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(
-                  left: AppSizes.setWidth(16),
-                  right: AppSizes.setWidth(16),
-                  top: AppSizes.setHeight(12),
-                  bottom: AppSizes.setHeight(12) +
-                      MediaQuery.of(context).padding.bottom,
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSizes.setWidth(16),
+                  vertical: AppSizes.setHeight(12),
                 ),
                 decoration: BoxDecoration(
-                  color: CustomAppColor.of(context).bgScaffold,
+                  color: CustomAppColor(context).white,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.05),

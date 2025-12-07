@@ -19,6 +19,10 @@ class OilPickupSuccessBottomActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final BorderRadius borderRadius =
         BorderRadius.circular(AppSizes.setWidth(12));
+    final Color primary = CustomAppColor.of(context).primaryColor;
+    final Color backOverlay =
+        CustomAppColor.of(context).containerBorder.withValues(alpha: 0.12);
+    final Color primaryOverlay = primary.withValues(alpha: 0.12);
 
     return Container(
       padding: EdgeInsets.only(
@@ -28,7 +32,7 @@ class OilPickupSuccessBottomActions extends StatelessWidget {
         bottom: AppSizes.setHeight(12) + MediaQuery.of(context).padding.bottom,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: CustomAppColor(context).white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -45,6 +49,10 @@ class OilPickupSuccessBottomActions extends StatelessWidget {
               borderRadius: borderRadius,
               child: InkWell(
                 borderRadius: borderRadius,
+                overlayColor: WidgetStateProperty.resolveWith(
+                  (states) =>
+                      states.contains(WidgetState.pressed) ? backOverlay : null,
+                ),
                 onTap: onBack,
                 child: Container(
                   height: AppSizes.setHeight(52),
@@ -68,22 +76,32 @@ class OilPickupSuccessBottomActions extends StatelessWidget {
           SizedBox(width: AppSizes.setWidth(12)),
           Expanded(
             child: Material(
-              color: CustomAppColor.of(context).btnPurple,
+              color: primary,
               borderRadius: borderRadius,
               child: InkWell(
                 borderRadius: borderRadius,
-                onTap: onSave,
+                overlayColor: WidgetStateProperty.resolveWith(
+                  (states) => states.contains(WidgetState.pressed)
+                      ? primaryOverlay
+                      : null,
+                ),
+                onTap: isSaving ? null : onSave,
                 child: Container(
                   height: AppSizes.setHeight(52),
                   alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: primary,
+                    borderRadius: borderRadius,
+                  ),
                   child: isSaving
                       ? SizedBox(
                           width: AppSizes.setWidth(20),
                           height: AppSizes.setWidth(20),
-                          child: const CircularProgressIndicator(
+                          child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.white),
+                            backgroundColor: Colors.white.withOpacity(0.25),
                           ),
                         )
                       : Row(

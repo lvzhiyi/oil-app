@@ -55,7 +55,7 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
-        backgroundColor: CustomAppColor.of(context).bgScaffold,
+        backgroundColor: CustomAppColor(context).white,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
@@ -152,8 +152,7 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
   }
 
   void _handleBack(BuildContext context) {
-    BaseRouter.pop(context: context, result: true);
-    BaseRouter.pop(context: context, result: true);
+    BaseRouter.popToRoot(context: context);
   }
 
   String get _dispatchContent {

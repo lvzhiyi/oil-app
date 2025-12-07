@@ -94,44 +94,6 @@ class ProfileCtrl extends Cubit<ProfileState> {
     }
   }
 
-  /// 更新开放平台配置
-  Future<bool> updateOpenPlatformConfig({
-    required List<String> ipWhitelist,
-    required int dailyCallLimit,
-    required bool enabled,
-  }) async {
-    try {
-      // 模拟API调用延迟
-      await Future.delayed(const Duration(seconds: 1));
-
-      // 重新加载配置
-      await loadOpenPlatformConfig();
-      SportsToast.showSuccess('开放平台配置更新成功');
-      return true;
-    } catch (e) {
-      SportsToast.showError('开放平台配置更新失败: ${e.toString()}');
-      return false;
-    }
-  }
-
-  /// 重新生成API Key
-  Future<String?> regenerateApiKey() async {
-    try {
-      // 模拟API调用延迟
-      await Future.delayed(const Duration(seconds: 1));
-
-      const newApiKey = 'sk_test_new_12345678901234567890';
-
-      // 重新加载配置以获取最新的API Key
-      await loadOpenPlatformConfig();
-      SportsToast.showSuccess('API Key重新生成成功');
-      return newApiKey;
-    } catch (e) {
-      SportsToast.showError('API Key重新生成失败: ${e.toString()}');
-      return null;
-    }
-  }
-
   /// 退出登录
   Future<void> logout() async {
     try {

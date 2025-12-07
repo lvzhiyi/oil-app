@@ -56,8 +56,8 @@ class OrderDetailHeader extends StatelessWidget {
     if (status == WithdrawStatus.pendingPickup.value) {
       return _HeaderConfig(
         icon: Icons.access_time_rounded,
-        iconColor: const Color(0xFF7165E3),
-        backgroundColor: const Color(0xFFEDE9FE),
+        iconColor: AppColor.primaryColor,
+        backgroundColor: AppColor.secondaryLight,
         title: '待提油',
         subtitle: '请保存凭证图片发送给司机',
       );
@@ -72,8 +72,8 @@ class OrderDetailHeader extends StatelessWidget {
     } else if (status == WithdrawStatus.cancelled.value) {
       return _HeaderConfig(
         icon: Icons.close,
-        iconColor: const Color(0xFF9CA3AF),
-        backgroundColor: const Color(0xFFF3F4F6),
+        iconColor: const Color(0xFFEF4444),
+        backgroundColor: const Color(0xFFFEF2F2),
         title: '已取消',
         subtitle: '提油订单已取消',
       );

@@ -51,7 +51,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
               borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
               border: Border.all(
                 color: _isPressed
-                    ? const Color(0xFF7165E3)
+                    ? AppColor.primaryColor
                     : Colors.black.withValues(alpha: 0.02),
                 width: 1,
               ),
@@ -160,13 +160,9 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
     final stationName = widget.item.station?.stationName ?? '未知油站';
     final label = isCompleted ? '实提量' : '提油量';
 
-    Color amountColor;
+    Color amountColor = const Color(0xFF1F2937);
     if (isCancelled) {
       amountColor = const Color(0xFF9CA3AF);
-    } else if (isCompleted) {
-      amountColor = const Color(0xFF10B981);
-    } else {
-      amountColor = const Color(0xFF1F2937);
     }
 
     return Row(
@@ -239,25 +235,9 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
     bool isCompleted,
     bool isCancelled,
   ) {
-    final plateNumber = vehicle?.plateNumber ?? '';
-    final driverName = vehicle?.driverName ?? '';
     final dateStr = _getDateString(
-      isCompleted ? widget.item.updatedAt : widget.item.createdAt,
+      !isCompleted && !isCancelled ? widget.item.createdAt : widget.item.updatedAt,
     );
-
-    Color plateNumberBgColor;
-    Color plateNumberTextColor;
-
-    if (isCancelled) {
-      plateNumberBgColor = const Color(0xFFF3F4F6);
-      plateNumberTextColor = const Color(0xFF9CA3AF);
-    } else if (isCompleted) {
-      plateNumberBgColor = const Color(0xFFF3F4F6);
-      plateNumberTextColor = const Color(0xFF6B7280);
-    } else {
-      plateNumberBgColor = const Color(0xFFEEECFC);
-      plateNumberTextColor = const Color(0xFF7165E3);
-    }
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -269,39 +249,22 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
         borderRadius: BorderRadius.circular(AppSizes.setWidth(6)),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              if (plateNumber.isNotEmpty)
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSizes.setWidth(4),
-                    vertical: AppSizes.setHeight(1),
-                  ),
-                  decoration: BoxDecoration(
-                    color: plateNumberBgColor,
-                    borderRadius: BorderRadius.circular(AppSizes.setWidth(3)),
-                  ),
-                  margin: EdgeInsets.only(right: AppSizes.setWidth(6)),
-                  child: CommonText(
-                    text: plateNumber,
-                    fontSize: AppSizes.setFontSize(11),
-                    fontWeight: FontWeight.w600,
-                    textColor: plateNumberTextColor,
-                  ),
-                ),
-              CommonText(
-                text: driverName.isNotEmpty ? driverName : '--',
-                fontSize: AppSizes.setFontSize(11),
-                textColor: const Color(0xFF6B7280),
-              ),
-            ],
+          Icon(
+            Icons.access_time_rounded,
+            size: AppSizes.setWidth(16),
+            color: const Color(0xFF6B7280),
           ),
-          CommonText(
-            text: dateStr,
-            fontSize: AppSizes.setFontSize(11),
-            textColor: const Color(0xFF6B7280),
+          SizedBox(width: AppSizes.setWidth(4)),
+          Expanded(
+            child: CommonText(
+              text: '${isCompleted ? '完成时间：' : isCancelled ? '取消时间：' : '申请时间：'}$dateStr',
+              fontSize: AppSizes.setFontSize(11),
+              textColor: const Color(0xFF6B7280),
+              textAlign: TextAlign.left,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),
@@ -317,7 +280,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
         children: [
           _buildCancelButton(context),
           SizedBox(width: AppSizes.setWidth(8)),
-          _buildDetailButton(context),
+          _buildDetailButton(context, isCancelled: isCancelled),
         ],
       );
     } else {
@@ -325,7 +288,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          _buildDetailButton(context),
+          _buildDetailButton(context, isCancelled: isCancelled),
         ],
       );
     }
@@ -356,7 +319,14 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
     );
   }
 
-  Widget _buildDetailButton(BuildContext context) {
+  Widget _buildDetailButton(BuildContext context,
+      {required bool isCancelled}) {
+    final Color detailColor = isCancelled
+        ? const Color(0xFF9CA3AF)
+        : AppColor.primaryColor;
+    final Color borderColor =
+        isCancelled ? const Color(0xFFE5E7EB) : AppColor.primaryColor;
+
     return SizedBox(
       width: AppSizes.setWidth(90),
       child: OutlinedButton(
@@ -365,7 +335,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
           padding: EdgeInsets.symmetric(
             vertical: AppSizes.setHeight(10),
           ),
-          side: const BorderSide(color: Color(0xFF7165E3), width: 1),
+          side: BorderSide(color: borderColor, width: 1),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSizes.setWidth(20)),
           ),
@@ -374,7 +344,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
         child: CommonText(
           text: '查看详情',
           fontSize: AppSizes.setFontSize(13),
-          textColor: const Color(0xFF7165E3),
+          textColor: detailColor,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -390,9 +360,7 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
           'withdrawId': widget.item.withdrawId,
         },
       );
-      if (context.mounted &&
-          result is Map &&
-          result['refresh'] == true) {
+      if (context.mounted && result is Map && result['refresh'] == true) {
         final ctrl = context.read<PickupOrderListCtrl>();
         await ctrl.onRefresh();
       }

@@ -70,7 +70,7 @@ class PayOrderDetailView extends HookWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: CustomAppColor(context).white,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
@@ -114,7 +114,7 @@ class PayOrderDetailView extends HookWidget {
                       _buildUploadedImages(
                           orderDetail?.paymentProofUrls ?? [], context),
                     ],
-                    SizedBox(height: AppSizes.setHeight(100)),
+                    SizedBox(height: AppSizes.setHeight(16)),
                   ],
                 ),
               ),
@@ -302,7 +302,7 @@ class PayOrderDetailView extends HookWidget {
       width: double.infinity,
       padding: EdgeInsets.all(AppSizes.setWidth(16)),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: CustomAppColor(context).white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -423,7 +423,7 @@ class PayOrderDetailView extends HookWidget {
       width: double.infinity,
       padding: EdgeInsets.all(AppSizes.setWidth(16)),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: CustomAppColor(context).white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -538,7 +538,7 @@ class PayOrderDetailView extends HookWidget {
     return Container(
       padding: EdgeInsets.all(AppSizes.setWidth(16)),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: CustomAppColor(context).white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
@@ -561,14 +561,17 @@ class PayOrderDetailView extends HookWidget {
                   height: AppSizes.setHeight(48),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF3F4F6),
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: CustomAppColor(context).red,
+                    ),
                   ),
                   alignment: Alignment.center,
                   child: CommonText(
                     text: '取消订单',
                     fontSize: AppSizes.setFontSize(16),
                     fontWeight: FontWeight.w500,
-                    textColor: const Color(0xFF6B7280),
+                    textColor: CustomAppColor(context).red,
                   ),
                 ),
               ),

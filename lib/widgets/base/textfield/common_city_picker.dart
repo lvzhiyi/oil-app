@@ -215,8 +215,8 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
       confirmText: '确定',
       cancelText: '取消',
       itemExtent: AppSizes.setHeight(44),
-      backgroundColor: Colors.white,
-      containerColor: Colors.white,
+      backgroundColor: const Color(0xffF5F7FA),
+      containerColor: const Color(0xffF5F7FA),
       selecteds: selectedIndexes, // 设置默认选中的索引
       textAlign: TextAlign.center,
       onBuilderItem: (BuildContext context, String? text, Widget? child,
@@ -265,7 +265,7 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
       ),
       magnification: 1.1,
       headerDecoration: BoxDecoration(
-        color: CustomAppColor.of(context).bgScaffold,
+        color: CustomAppColor(context).white,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(12),
           topRight: Radius.circular(12),
