@@ -44,7 +44,7 @@ Future<String?> uploadImage(String url) async {
 
   try {
     final uploadResponse = await Dio().post(
-      BaseAddress.commonBaseHost,
+      response.host!,
       data: formData,
       options: Options(
         headers: {
