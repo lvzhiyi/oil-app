@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +5,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:oil_business_app/pages/main_oil_pay/model/oil_order_req_type.dart';
 import 'package:oil_business_app/pages/main_oil_pay/model/oil_order_res.type.dart';
 import 'package:oil_business_app/pages/main_oil_pay/service/oil_order_service.dart';
+import 'package:oil_business_app/pages/pay_order_detail/service/pay_order_service.dart';
 import 'package:oil_business_app/pages/pay_order_list/service/pay_order_list.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
@@ -88,70 +87,43 @@ class OilPurchaseDetailCtrl extends Cubit<OilPurchaseDetailState> {
       }
     } catch (e) {
       emit(state.copyWith(isLoading: false));
-      if (e is DioException) {
+      if (e is DioException && e.response?.data['code'] == 4001) {
+        // 从错误响应中提取订单ID和错误消息
         final responseData = e.response?.data;
-        final responseMap =
-            responseData is Map<String, dynamic> ? responseData : null;
-        final code = responseMap?['code'] ?? e.response?.statusCode;
+        final nestedData = responseData?['data'];
+        final orderId = nestedData?['orderId'];
+        final message = nestedData?['message'] ?? '您已存在待支付订单，请先完成支付';
 
-        if (code == 4001) {
-          final orderId = _parseOrderId(responseMap?['data'] ?? responseData);
-          await _handlePendingOrder(context, orderId);
-          return;
+        if (orderId != null) {
+          // 显示对话框，提示用户有待支付订单
+          await SportsDialog.show(
+            title: '提示',
+            bodyText: message,
+            okText: '去支付',
+            onOk: () async {
+              // 关闭对话框
+              await SportsDialog.dismiss();
+              try {
+                // 根据订单ID获取订单详情
+                final order =
+                    await payOrderService.getOrderDetail(orderId.toString());
+                // 跳转到订单详情页
+                BaseRouter.push(
+                  url: AppPage.payOrderDetailPage.path,
+                  extra: {'order': order, 'from': 'oilPurchaseDetail'},
+                );
+              } catch (error) {
+                SportsToast.showError('获取订单详情失败，请稍后重试');
+              }
+            },
+          );
+        } else {
+          SportsToast.showError(message);
         }
+      } else {
+        // 其他错误，显示通用错误提示
+        SportsToast.showError('订单创建失败，请稍后重试');
       }
     }
-  }
-
-  int? _parseOrderId(dynamic data) {
-    if (data is int) {
-      return data;
-    }
-    if (data is String) {
-      return int.tryParse(data);
-    }
-    if (data is Map<String, dynamic>) {
-      final rawOrderId = data['orderId'] ?? data['id'];
-      if (rawOrderId is int) {
-        return rawOrderId;
-      }
-      if (rawOrderId != null) {
-        return int.tryParse(rawOrderId.toString());
-      }
-    }
-    return null;
-  }
-
-  Future<void> _handlePendingOrder(BuildContext context, int? orderId) async {
-    final completer = Completer<bool>();
-
-    await SportsDialog.show(
-      title: '存在待支付的买油订单',
-      bodyText: '仅能同时存在一笔待支付的买油订单，是否前往订单详情继续处理？',
-      cancelText: '取消',
-      okText: '前往查看',
-      onCancel: () {
-        if (!completer.isCompleted) completer.complete(false);
-      },
-      onOk: () {
-        SportsDialog.dismiss();
-        if (!completer.isCompleted) completer.complete(true);
-      },
-    );
-
-    final confirm = await completer.future;
-    if (confirm != true) {
-      return;
-    }
-
-    if (orderId == null) {
-      SportsToast.showWarning('未获取到待支付订单信息');
-      return;
-    }
-
-    BaseRouter.push(
-      url: AppPage.payOrderDetailPage.path,
-      extra: {'orderId': orderId, 'from': 'confirmPendingOrder'},
-    );
   }
 }

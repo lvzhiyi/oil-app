@@ -49,7 +49,7 @@ class _OilOrderService implements OilOrderService {
 
   @override
   Future<void> createOilOrder(OilOrderRequest request) async {
-    final _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{'noShowToast': true};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
