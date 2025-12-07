@@ -4,6 +4,7 @@ import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/app_state.dart';
 import 'package:oil_business_app/interfaces/top_bar_click_listener.dart';
+import 'package:oil_business_app/pages/pickup_order_list/controller.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
@@ -13,6 +14,7 @@ import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/bottom_sheet/bottom_sheet.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
+import 'package:oil_business_app/widgets/popup/dialog.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -128,7 +130,7 @@ class _AccountScreenState extends State<AccountScreen>
 
   Widget _buildActionBar() {
     final Color primary = CustomAppColor.of(context).primaryColor;
-    final Color iconBg = primary.withOpacity(0.1);
+    final Color iconBg = primary.withValues(alpha: 0.1);
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
@@ -138,7 +140,7 @@ class _AccountScreenState extends State<AccountScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -237,7 +239,7 @@ class _AccountScreenState extends State<AccountScreen>
           ),
           Divider(
               height: 1,
-              color: CustomAppColor.of(context).dividerGrey.withOpacity(0.5),
+              color: CustomAppColor.of(context).dividerGrey.withValues(alpha: 0.5),
               indent: 50,
               endIndent: 16),
           _buildMenuItem(
@@ -349,82 +351,18 @@ class _AccountScreenState extends State<AccountScreen>
   }
 
   void logoutBottomSheet(BuildContext context) {
-    customBottomSheet(
-      isPaddingRequired: false,
-      isDone: false,
-      maxHeightRatio: 0.4,
-      context: context,
-      title: '退出登录',
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Center(
-            child: CommonText(
-              text: '您确定要退出登录吗？',
-              fontSize: AppSizes.setFontSize(18),
-              fontWeight: FontWeight.w500,
-              textColor: CustomAppColor.of(context).txtGrey,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          SizedBox(height: AppSizes.setHeight(24)),
-          Container(
-            decoration: BoxDecoration(
-              color: CustomAppColor.of(context).btnWhite,
-              border: Border(
-                top: BorderSide(
-                  color: CustomAppColor.of(context)
-                      .borderGrey
-                      .withValues(alpha: 0.4),
-                ),
-              ),
-            ),
-            padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(6)),
-            margin: EdgeInsets.zero,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.setWidth(20),
-                      vertical: AppSizes.setHeight(12)),
-                  child: CommonButton(
-                    height: AppSizes.setHeight(44),
-                    btnText: '取消',
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    buttonColor: CustomAppColor.of(context).btnWhite,
-                    isButtonShadow: false,
-                    borderColor: CustomAppColor.of(context).borderPurple,
-                    radius: 3,
-                    child: CommonText(
-                      text: '取消',
-                      textColor: CustomAppColor.of(context).txtPurple,
-                      fontSize: AppSizes.setFontSize(16),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.setWidth(20),
-                      vertical: AppSizes.setHeight(6)),
-                  child: CommonButton(
-                      radius: 3,
-                      height: AppSizes.setHeight(44),
-                      btnText: '退出登录',
-                      onTap: () {
-                        BaseConfig.appContext?.read<AppController>().logout();
-                        Navigator.pop(context);
-                      }),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+
+    SportsDialog.show(
+      title: '取消订单',
+      bodyText: '确定要取消该提油订单吗？取消后无法恢复。',
+      onCancel: () {},
+      onOk: () async {
+        await SportsDialog.dismiss();
+        if (context.mounted) {
+          BaseConfig.appContext?.read<AppController>().logout();
+          Navigator.pop(context);
+        }
+      },
     );
   }
 
