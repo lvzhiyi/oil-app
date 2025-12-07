@@ -92,14 +92,19 @@ class OilPurchaseDetailCtrl extends Cubit<OilPurchaseDetailState> {
         final responseData = e.response?.data;
         final nestedData = responseData?['data'];
         final orderId = nestedData?['orderId'];
-        final message = nestedData?['message'] ?? '您已存在待支付订单，请先完成支付';
+        final message = nestedData?['message'] ?? '是否前往订单详情继续处理？';
 
         if (orderId != null) {
           // 显示对话框，提示用户有待支付订单
           await SportsDialog.show(
-            title: '提示',
+            title: '存在待支付的买油订单',
             bodyText: message,
-            okText: '去支付',
+            cancelText: '取消',
+            okText: '前往查看',
+            onCancel: () async {
+              // 关闭对话框
+              await SportsDialog.dismiss();
+            },
             onOk: () async {
               // 关闭对话框
               await SportsDialog.dismiss();
