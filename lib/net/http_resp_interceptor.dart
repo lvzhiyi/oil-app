@@ -6,6 +6,7 @@ import 'package:oil_business_app/global/model/auth_req_type.dart';
 import 'package:oil_business_app/global/model/auth_rep_type.dart';
 import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/net/code.dart';
+import 'package:oil_business_app/net/dio_io.dart';
 import 'package:oil_business_app/net/net_manager.dart';
 import 'package:oil_business_app/net/response.dart';
 import 'package:oil_business_app/utils/log.dart';
@@ -51,7 +52,7 @@ class HttpRespInterceptor extends InterceptorsWrapper {
       Response response, ResponseInterceptorHandler handler) async {
     final statusCode = response.data['code'];
     final badRes = DioException.badResponse(
-      statusCode: 401,
+      statusCode: response.statusCode ?? 0,
       requestOptions: response.requestOptions,
       response: response,
     );
@@ -75,7 +76,7 @@ class HttpRespInterceptor extends InterceptorsWrapper {
           final refreshSuccess = await _refreshCompleter!.future;
           if (refreshSuccess) {
             // 刷新成功，重新发送原始请求
-            return _retryRequest(response, handler);
+            return _retryRequest(response, handler, badRes);
           } else {
             // 刷新失败，直接拒绝请求
             return handler.reject(badRes);
@@ -125,7 +126,7 @@ class HttpRespInterceptor extends InterceptorsWrapper {
         _refreshCompleter = null;
 
         // 刷新成功，重新发送原始请求
-        return _retryRequest(response, handler);
+        return _retryRequest(response, handler, badRes);
       } catch (e) {
         l.e('HttpRespInterceptor', '刷新token失败: $e');
         _isRefreshing = false;
@@ -139,16 +140,20 @@ class HttpRespInterceptor extends InterceptorsWrapper {
       }
     }
 
-    // 处理其他错误
-    if (response.data is String) {
-      SportsToast.showWarning(response.data['message'] as String);
-      return handler.reject(badRes);
-    }
+    final noShowToast = response.requestOptions.extra['noShowToast'] ?? false;
 
-    if (response.data['message'] != null) {
-      SportsToast.showWarning(response.data['message']);
-    } else {
-      SportsToast.showWarning('网络错误');
+    if (!noShowToast) {
+      // 处理其他错误
+      if (response.data is String) {
+        SportsToast.showWarning(response.data['message'] as String);
+        return handler.reject(badRes);
+      }
+
+      if (response.data['message'] != null) {
+        SportsToast.showWarning(response.data['message']);
+      } else {
+        SportsToast.showWarning('网络错误');
+      }
     }
 
     return handler.reject(badRes);
@@ -158,10 +163,12 @@ class HttpRespInterceptor extends InterceptorsWrapper {
   Future<void> _retryRequest(
     Response response,
     ResponseInterceptorHandler handler,
+    DioException? badRes,
   ) async {
     try {
       // 获取Dio实例
       final dio = netManager.clientDio;
+      dio?.options.baseUrl = response.requestOptions.baseUrl;
       if (dio == null) {
         l.e('HttpRespInterceptor', 'Dio实例为空，无法重新发送请求');
         return handler.reject(DioException(
@@ -200,10 +207,11 @@ class HttpRespInterceptor extends InterceptorsWrapper {
       return handler.resolve(newResponse);
     } catch (e) {
       l.e('HttpRespInterceptor', '重新发送请求失败: $e');
-      return handler.reject(DioException(
-        requestOptions: response.requestOptions,
-        error: e,
-      ));
+      return handler.reject(badRes ??
+          DioException(
+            requestOptions: response.requestOptions,
+            error: '重新发送请求失败',
+          ));
     }
   }
 }

@@ -563,7 +563,7 @@ class PayOrderDetailView extends HookWidget {
                     // color: const Color(0xFFF3F4F6),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: CustomAppColor(context).red,
+                      color: CustomAppColor(context).borderGrey,
                     ),
                   ),
                   alignment: Alignment.center,
@@ -571,7 +571,7 @@ class PayOrderDetailView extends HookWidget {
                     text: '取消订单',
                     fontSize: AppSizes.setFontSize(16),
                     fontWeight: FontWeight.w500,
-                    textColor: CustomAppColor(context).red,
+                    textColor: CustomAppColor(context).txtBlack,
                   ),
                 ),
               ),

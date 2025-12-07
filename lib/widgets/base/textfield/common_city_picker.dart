@@ -292,8 +292,7 @@ class CommonCityPickerFormFieldState extends State<CommonCityPickerFormField> {
       initialValue: widget.controller?.text,
       validator: widget.validators != null
           ? FormBuilderValidators.compose([widget.validators!])
-          : FormBuilderValidators.required(
-              errorText: '${widget.name} is required'),
+          : FormBuilderValidators.required(errorText: '请选择所在地区'),
       builder: (field) {
         final value = widget.controller?.text ?? field.value ?? '';
         final hasText = value.isNotEmpty;
