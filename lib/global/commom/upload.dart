@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:oil_business_app/config/address.dart';
 import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/model/common_req_type.dart';
@@ -20,11 +21,6 @@ Future<String?> uploadImage(String url) async {
       contentLength: contentBytes.length,
     ),
   );
-
-  if (response.host == null || response.host!.isEmpty) {
-    l.e('uploadImage', '上传签名返回的host为空');
-    return null;
-  }
 
   if (response.path == null || response.path!.isEmpty) {
     l.e('uploadImage', '上传签名返回的path为空');
@@ -48,7 +44,7 @@ Future<String?> uploadImage(String url) async {
 
   try {
     final uploadResponse = await Dio().post(
-      response.host!,
+      BaseAddress.commonBaseHost,
       data: formData,
       options: Options(
         headers: {
