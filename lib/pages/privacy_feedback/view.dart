@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:oil_business_app/static/html.dart';
 import 'package:oil_business_app/widgets/common/html_webview_container.dart';
 import 'state.dart';
 
@@ -10,8 +9,8 @@ class PrivacyFeedbackView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HtmlWebViewContainer(
-      htmlAssetPath: AssetsHtml.PRIVACY_POLICY,
+    return const HtmlWebViewContainer(
+      url: 'https://www.maiyoubei.com/privacy_policy.html',
       title: '隐私政策',
     );
   }

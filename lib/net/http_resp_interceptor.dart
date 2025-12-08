@@ -3,10 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/model/auth_req_type.dart';
-import 'package:oil_business_app/global/model/auth_rep_type.dart';
 import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/net/code.dart';
-import 'package:oil_business_app/net/dio_io.dart';
 import 'package:oil_business_app/net/net_manager.dart';
 import 'package:oil_business_app/net/response.dart';
 import 'package:oil_business_app/utils/log.dart';
@@ -172,7 +170,6 @@ class HttpRespInterceptor extends InterceptorsWrapper {
     try {
       // 获取Dio实例
       final dio = netManager.clientDio;
-      dio?.options.baseUrl = response.requestOptions.baseUrl;
       if (dio == null) {
         l.e('HttpRespInterceptor', 'Dio实例为空，无法重新发送请求');
         return handler.reject(DioException(
@@ -190,7 +187,14 @@ class HttpRespInterceptor extends InterceptorsWrapper {
             'Bearer $newAccessToken';
       }
 
-      // 重新发送请求
+      // 构建完整的URL，使用原始请求的baseUrl，避免baseUrl混乱
+      // RequestOptions.uri 已经包含了完整的URI（包括baseUrl和path的组合）
+      final fullUrl = response.requestOptions.uri.toString();
+
+      l.d('HttpRespInterceptor',
+          '重试请求 - baseUrl: ${response.requestOptions.baseUrl}, path: ${response.requestOptions.path}, fullUrl: $fullUrl');
+
+      // 重新发送请求，使用完整URL
       final options = Options(
         method: response.requestOptions.method,
         headers: response.requestOptions.headers,
@@ -198,7 +202,7 @@ class HttpRespInterceptor extends InterceptorsWrapper {
       );
 
       final newResponse = await dio.request<dynamic>(
-        response.requestOptions.path,
+        fullUrl,
         data: response.requestOptions.data,
         queryParameters: response.requestOptions.queryParameters,
         options: options,

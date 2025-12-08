@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:oil_business_app/static/html.dart';
 import 'package:oil_business_app/widgets/common/html_webview_container.dart';
 import 'package:oil_business_app/pages/service_agreement/state.dart';
 
@@ -11,7 +10,7 @@ class ServiceAgreementView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const HtmlWebViewContainer(
-      htmlAssetPath: AssetsHtml.SERVICE_AGREEMENT,
+      url: 'https://www.maiyoubei.com/service_agreement.html',
       title: '用户协议',
     );
   }

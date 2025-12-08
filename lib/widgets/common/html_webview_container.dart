@@ -6,12 +6,14 @@ import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 
 class HtmlWebViewContainer extends StatefulWidget {
-  final String htmlAssetPath;
+  final String? htmlAssetPath;
+  final String? url;
   final String? title;
 
   const HtmlWebViewContainer({
     Key? key,
-    required this.htmlAssetPath,
+    this.htmlAssetPath,
+    this.url,
     this.title,
   }) : super(key: key);
 
@@ -28,7 +30,49 @@ class _HtmlWebViewContainerState extends State<HtmlWebViewContainer> {
   @override
   void initState() {
     super.initState();
-    _loadHtmlContent();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _initializeController();
+      if (widget.url != null) {
+        _loadUrl();
+      } else if (widget.htmlAssetPath != null) {
+        _loadHtmlContent();
+      }
+    });
+  }
+
+  void _initializeController() {
+    if (!mounted || _controller != null) return;
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(CustomAppColor.of(context).bgScaffold)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (String url) {
+            if (mounted) {
+              setState(() {
+                _isLoading = true;
+                _errorMessage = null;
+              });
+            }
+          },
+          onPageFinished: (String url) {
+            if (mounted) {
+              setState(() {
+                _isLoading = false;
+              });
+            }
+          },
+          onWebResourceError: (WebResourceError error) {
+            if (mounted) {
+              setState(() {
+                _errorMessage = '加载失败：${error.description}';
+                _isLoading = false;
+              });
+            }
+          },
+        ),
+      );
   }
 
   Future<void> _loadHtmlContent() async {
@@ -39,7 +83,7 @@ class _HtmlWebViewContainerState extends State<HtmlWebViewContainer> {
       });
 
       final String htmlString =
-          await rootBundle.loadString(widget.htmlAssetPath);
+          await rootBundle.loadString(widget.htmlAssetPath!);
 
       setState(() {
         _htmlContent = htmlString;
@@ -52,6 +96,22 @@ class _HtmlWebViewContainerState extends State<HtmlWebViewContainer> {
     } catch (e) {
       setState(() {
         _errorMessage = '加载失败：${e.toString()}';
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _loadUrl() {
+    if (!mounted) return;
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+    if (_controller != null && widget.url != null) {
+      _controller!.loadRequest(Uri.parse(widget.url!));
+    } else {
+      setState(() {
+        _errorMessage = 'WebView未初始化';
         _isLoading = false;
       });
     }
@@ -131,31 +191,8 @@ class _HtmlWebViewContainerState extends State<HtmlWebViewContainer> {
       );
     }
 
-    if (_htmlContent == null) {
-      return const SizedBox.shrink();
-    }
-
-    // ignore: prefer_conditional_assignment
     if (_controller == null) {
-      _controller = WebViewController()
-        ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..setBackgroundColor(CustomAppColor.of(context).bgScaffold)
-        ..setNavigationDelegate(
-          NavigationDelegate(
-            onPageFinished: (String url) {
-              setState(() {
-                _isLoading = false;
-              });
-            },
-            onWebResourceError: (WebResourceError error) {
-              setState(() {
-                _errorMessage = '加载失败：${error.description}';
-                _isLoading = false;
-              });
-            },
-          ),
-        )
-        ..loadHtmlString(_htmlContent!);
+      return const SizedBox.shrink();
     }
 
     return Scaffold(
