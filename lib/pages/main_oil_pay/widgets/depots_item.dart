@@ -129,6 +129,7 @@ class _DepotsItemWidgetState extends State<DepotsItemWidget> {
                   thickness: 1,
                   color: const Color(0xFFE5E7EB),
                 ),
+                SizedBox(height: AppSizes.setHeight(2)),
                 // 价格网格
                 if (widget.depot.fuels != null &&
                     widget.depot.fuels!.isNotEmpty)
@@ -203,7 +204,7 @@ class _PriceItem extends StatelessWidget {
             textColor: const Color(0xFF6B7280),
           ),
         ),
-        SizedBox(height: AppSizes.setHeight(6)),
+        SizedBox(height: AppSizes.setHeight(2)),
         RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
