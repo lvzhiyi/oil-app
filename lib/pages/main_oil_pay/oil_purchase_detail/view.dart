@@ -59,162 +59,171 @@ class OilPurchaseDetailView extends StatelessWidget {
           onPressed: () => BaseRouter.pop(),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(pt(16)),
-        child: FormBuilder(
-          key: ctrl.formKey,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: AppSize.radius,
-              boxShadow: AppSize.boxShadow,
-            ),
-            padding: EdgeInsets.all(pt(20)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 顶部：油库名称（居中）
-                Center(
-                  child: Text(
-                    depot.depotName ?? '未知油库',
-                    style: SportsTextStyle.baseBold.copyWith(
-                      fontSize: pt(20),
-                      color: CustomAppColor.of(context).txtBlack,
-                    ),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(pt(16)),
+              child: FormBuilder(
+                key: ctrl.formKey,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: AppSize.radius,
+                    boxShadow: AppSize.boxShadow,
                   ),
-                ),
-                Gap(pt(8)),
-                // 地址（居中）
-                Center(
-                  child: Text(
-                    _buildAddress(depot),
-                    style: SportsTextStyle.baseNormal.copyWith(
-                      fontSize: pt(14),
-                      color: CustomAppColor.of(context).txtGrey,
-                    ),
-                  ),
-                ),
-                Gap(pt(24)),
-                // 油品列表
-                if (depot.fuels != null && depot.fuels!.isNotEmpty) ...[
-                  ...depot.fuels!.map((fuel) {
-                    final isSelected =
-                        state.selectedFuel?.fuelType == fuel.fuelType;
-                    return _FuelItem(
-                      fuel: fuel,
-                      isSelected: isSelected,
-                      onTap: () {
-                        context.read<OilPurchaseDetailCtrl>().selectFuel(fuel);
-                      },
-                    );
-                  }),
-                  Gap(pt(24)),
-                ],
-                // 购买量输入框
-                Text(
-                  '购买量',
-                  style: SportsTextStyle.baseNormal.copyWith(
-                    fontSize: pt(14),
-                    color: CustomAppColor.of(context).txtBlack,
-                  ),
-                ),
-                Gap(pt(8)),
-                CommonTextFormField(
-                  name: 'purchaseTon',
-                  hintText: '请输入购买量',
-                  keyboardType: TextInputType.number,
-                  inputFormatter: FilteringTextInputFormatter.digitsOnly,
-                  validators: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '请输入购买量';
-                    }
-                    final intValue = int.tryParse(value);
-                    if (intValue == null) {
-                      return '购买量必须为整数';
-                    }
-                    if (intValue <= 0) {
-                      return '购买量必须大于0';
-                    }
-                    return null;
-                  },
-                ),
+                  padding: EdgeInsets.all(pt(20)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 顶部：油库名称（居中）
+                      Center(
+                        child: Text(
+                          depot.depotName ?? '未知油库',
+                          style: SportsTextStyle.baseBold.copyWith(
+                            fontSize: pt(20),
+                            color: CustomAppColor.of(context).txtBlack,
+                          ),
+                        ),
+                      ),
+                      Gap(pt(8)),
+                      // 地址（居中）
+                      Center(
+                        child: Text(
+                          _buildAddress(depot),
+                          style: SportsTextStyle.baseNormal.copyWith(
+                            fontSize: pt(14),
+                            color: CustomAppColor.of(context).txtGrey,
+                          ),
+                        ),
+                      ),
+                      Gap(pt(24)),
+                      // 油品列表
+                      if (depot.fuels != null && depot.fuels!.isNotEmpty) ...[
+                        ...depot.fuels!.map((fuel) {
+                          final isSelected =
+                              state.selectedFuel?.fuelType == fuel.fuelType;
+                          return _FuelItem(
+                            fuel: fuel,
+                            isSelected: isSelected,
+                            onTap: () {
+                              context
+                                  .read<OilPurchaseDetailCtrl>()
+                                  .selectFuel(fuel);
+                            },
+                          );
+                        }),
+                        Gap(pt(24)),
+                      ],
+                      // 购买量输入框
+                      Text(
+                        '购买量',
+                        style: SportsTextStyle.baseNormal.copyWith(
+                          fontSize: pt(14),
+                          color: CustomAppColor.of(context).txtBlack,
+                        ),
+                      ),
+                      Gap(pt(8)),
+                      CommonTextFormField(
+                        name: 'purchaseTon',
+                        hintText: '请输入购买量',
+                        keyboardType: TextInputType.number,
+                        inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                        validators: (value) {
+                          if (value == null || value.isEmpty) {
+                            return '请输入购买量';
+                          }
+                          final intValue = int.tryParse(value);
+                          if (intValue == null) {
+                            return '购买量必须为整数';
+                          }
+                          if (intValue <= 0) {
+                            return '购买量必须大于0';
+                          }
+                          return null;
+                        },
+                      ),
 
-                Gap(pt(16)),
-                Text(
-                  '备注信息',
-                  style: SportsTextStyle.baseNormal.copyWith(
-                    fontSize: pt(14),
-                    color: CustomAppColor.of(context).txtBlack,
+                      Gap(pt(16)),
+                      Text(
+                        '备注信息',
+                        style: SportsTextStyle.baseNormal.copyWith(
+                          fontSize: pt(14),
+                          color: CustomAppColor.of(context).txtBlack,
+                        ),
+                      ),
+                      Gap(pt(8)),
+                      CommonTextFormField(
+                        name: 'remark',
+                        hintText: '请输入备注信息',
+                        maxLines: 4,
+                        validators: (_) => null,
+                      ),
+                    ],
                   ),
                 ),
-                Gap(pt(8)),
-                CommonTextFormField(
-                  name: 'remark',
-                  hintText: '请输入备注信息',
-                  maxLines: 4,
-                  validators: (_) => null,
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: pt(16),
+              vertical: pt(12),
+            ),
+            decoration: BoxDecoration(
+              color: CustomAppColor(context).white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 4,
+                  offset: const Offset(0, -2),
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: pt(16),
-          vertical: pt(12),
-        ),
-        decoration: BoxDecoration(
-          color: CustomAppColor(context).white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 4,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          top: false,
-          minimum: EdgeInsets.only(bottom: pt(4)),
-          child: SizedBox(
-            width: double.infinity,
-            height: pt(48),
-            child: ElevatedButton(
-              onPressed: state.isLoading
-                  ? null
-                  : () {
-                      context
-                          .read<OilPurchaseDetailCtrl>()
-                          .submitPurchase(context);
-                    },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColor.btnPurple,
-                disabledBackgroundColor: CustomAppColor.of(context).txtGrey,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(pt(12)),
-                ),
-                elevation: 0,
-              ),
-              child: state.isLoading
-                  ? SizedBox(
-                      width: pt(20),
-                      height: pt(20),
-                      child: const CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    )
-                  : Text(
-                      '立刻购买',
-                      style: SportsTextStyle.baseBold.copyWith(
-                        fontSize: pt(16),
-                        color: Colors.white,
-                      ),
+            child: SafeArea(
+              top: false,
+              minimum: EdgeInsets.only(bottom: pt(4)),
+              child: SizedBox(
+                width: double.infinity,
+                height: pt(48),
+                child: ElevatedButton(
+                  onPressed: state.isLoading
+                      ? null
+                      : () {
+                          context
+                              .read<OilPurchaseDetailCtrl>()
+                              .submitPurchase(context);
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColor.btnPurple,
+                    disabledBackgroundColor: CustomAppColor.of(context).txtGrey,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(pt(12)),
                     ),
+                    elevation: 0,
+                  ),
+                  child: state.isLoading
+                      ? SizedBox(
+                          width: pt(20),
+                          height: pt(20),
+                          child: const CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : Text(
+                          '立刻购买',
+                          style: SportsTextStyle.baseBold.copyWith(
+                            fontSize: pt(16),
+                            color: Colors.white,
+                          ),
+                        ),
+                ),
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
