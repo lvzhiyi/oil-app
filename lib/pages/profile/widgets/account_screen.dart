@@ -4,15 +4,12 @@ import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/app_state.dart';
 import 'package:oil_business_app/interfaces/top_bar_click_listener.dart';
-import 'package:oil_business_app/pages/pickup_order_list/controller.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/utils/app_version_util.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
-import 'package:oil_business_app/widgets/base/bottom_sheet/bottom_sheet.dart';
-import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/popup/dialog.dart';
 
@@ -108,14 +105,14 @@ class _AccountScreenState extends State<AccountScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CommonText(
-                  text: state.authResponse?.account?.name ?? '11',
+                  text: state.authResponse?.account?.name ?? '-',
                   fontWeight: FontWeight.w700,
                   textColor: Colors.white,
                   fontSize: AppSizes.setFontSize(20),
                 ),
                 SizedBox(height: AppSizes.setHeight(4)),
                 CommonText(
-                  text: state.authResponse?.account?.phone ?? '22',
+                  text: _maskPhone(state.authResponse?.account?.phone),
                   fontWeight: FontWeight.w400,
                   textColor: Colors.white,
                   fontSize: AppSizes.setFontSize(14),
@@ -126,6 +123,15 @@ class _AccountScreenState extends State<AccountScreen>
         ),
       );
     });
+  }
+
+  String _maskPhone(String? phone) {
+    if (phone == null || phone.isEmpty) return '';
+    final normalized = phone.replaceAll(RegExp(r'\s+'), '');
+    if (normalized.length < 8) return normalized;
+    final head = normalized.substring(0, 3);
+    final tail = normalized.substring(normalized.length - 4);
+    return '$head****$tail';
   }
 
   Widget _buildActionBar() {
