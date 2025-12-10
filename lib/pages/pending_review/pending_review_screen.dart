@@ -13,6 +13,7 @@ import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/bottom_sheet/bottom_sheet.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
+import 'package:oil_business_app/widgets/popup/dialog.dart';
 
 class PendingReviewScreen extends StatefulWidget {
   const PendingReviewScreen({super.key, this.station});
@@ -292,82 +293,17 @@ class _PendingReviewScreenState extends State<PendingReviewScreen> {
 
   /// 显示退出登录确认对话框
   void _showLogoutDialog(BuildContext context) {
-    customBottomSheet(
-      isPaddingRequired: false,
-      isDone: false,
-      maxHeightRatio: 0.4,
-      context: context,
+    SportsDialog.show(
       title: '退出登录',
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Center(
-            child: CommonText(
-              text: '您确定要退出登录吗？',
-              fontSize: AppSizes.setFontSize(18),
-              fontWeight: FontWeight.w500,
-              textColor: CustomAppColor.of(context).txtGrey,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          SizedBox(height: AppSizes.setHeight(24)),
-          Container(
-            decoration: BoxDecoration(
-              color: CustomAppColor.of(context).btnWhite,
-              border: Border(
-                top: BorderSide(
-                  color: CustomAppColor.of(context)
-                      .borderGrey
-                      .withValues(alpha: 0.4),
-                ),
-              ),
-            ),
-            padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(6)),
-            margin: EdgeInsets.zero,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.setWidth(20),
-                      vertical: AppSizes.setHeight(12)),
-                  child: CommonButton(
-                    height: AppSizes.setHeight(44),
-                    btnText: '取消',
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    buttonColor: CustomAppColor.of(context).btnWhite,
-                    isButtonShadow: false,
-                    borderColor: CustomAppColor.of(context).borderPurple,
-                    radius: 3,
-                    child: CommonText(
-                      text: '取消',
-                      textColor: CustomAppColor.of(context).txtPurple,
-                      fontSize: AppSizes.setFontSize(16),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.setWidth(20),
-                      vertical: AppSizes.setHeight(6)),
-                  child: CommonButton(
-                      radius: 3,
-                      height: AppSizes.setHeight(44),
-                      btnText: '退出登录',
-                      onTap: () {
-                        BaseConfig.appContext?.read<AppController>().logout();
-                        Navigator.pop(context);
-                      }),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      bodyText: '确定要退出登录吗？退出后将返回登录页面。',
+      onCancel: () {},
+      onOk: () async {
+        await SportsDialog.dismiss();
+        if (context.mounted) {
+          BaseConfig.appContext?.read<AppController>().logout();
+          Navigator.pop(context);
+        }
+      },
     );
   }
 }
