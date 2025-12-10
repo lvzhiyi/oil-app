@@ -212,7 +212,6 @@ class _PriceItem extends StatelessWidget {
               fontSize: AppSizes.setFontSize(18),
               fontWeight: FontWeight.w700,
               color: AppColor.txtPurple,
-              fontFamily: 'DIN Alternate',
             ),
             children: [
               TextSpan(text: price.toString()),

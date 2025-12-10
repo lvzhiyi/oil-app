@@ -145,20 +145,20 @@ class OilPurchaseDetailView extends StatelessWidget {
                       ),
 
                       Gap(pt(16)),
-                      Text(
-                        '备注信息',
-                        style: SportsTextStyle.baseNormal.copyWith(
-                          fontSize: pt(14),
-                          color: CustomAppColor.of(context).txtBlack,
-                        ),
-                      ),
-                      Gap(pt(8)),
-                      CommonTextFormField(
-                        name: 'remark',
-                        hintText: '请输入备注信息',
-                        maxLines: 4,
-                        validators: (_) => null,
-                      ),
+                      // Text(
+                      //   '备注信息',
+                      //   style: SportsTextStyle.baseNormal.copyWith(
+                      //     fontSize: pt(14),
+                      //     color: CustomAppColor.of(context).txtBlack,
+                      //   ),
+                      // ),
+                      // Gap(pt(8)),
+                      // CommonTextFormField(
+                      //   name: 'remark',
+                      //   hintText: '请输入备注信息',
+                      //   maxLines: 4,
+                      //   validators: (_) => null,
+                      // ),
                     ],
                   ),
                 ),

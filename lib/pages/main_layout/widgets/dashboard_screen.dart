@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/interfaces/top_bar_click_listener.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
@@ -46,6 +49,12 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   @override
   Widget build(BuildContext context) {
+    final userName = BaseConfig.appContext
+        ?.read<AppController>()
+        .state
+        .authResponse
+        ?.account
+        ?.name;
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +62,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           TopBar(
             this,
             title: selectedBottomIndex == 0
-                ? '买油'
+                ? userName ?? ''
                 : selectedBottomIndex == 1
                     ? '提油'
                     : selectedBottomIndex == 2
