@@ -34,7 +34,7 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
 
     final availableTon = state.inventory?.availableTon ?? 0;
     if (oilAmountDouble > availableTon) {
-      return '提油量不能超过可用库存${availableTon.toInt()} 吨';
+      return '提油量不能超过可用库存${_formatTon(availableTon)} 吨';
     }
 
     return null;
@@ -202,5 +202,10 @@ class OilPickupDetailCtrl extends Cubit<OilPickupDetailState> {
       ));
       SportsToast.showWarning('提交失败，请重试');
     }
+  }
+
+  String _formatTon(double value) {
+    final fixed = value.toStringAsFixed(2);
+    return fixed.replaceAll(RegExp(r'\.?0+$'), '');
   }
 }

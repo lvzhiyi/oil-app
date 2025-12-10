@@ -117,7 +117,7 @@ class InventoryItem extends StatelessWidget {
                         textBaseline: TextBaseline.alphabetic,
                         children: [
                           Text(
-                            '${availableInventory.toInt()}',
+                            _formatTon(availableInventory),
                             style: TextStyle(
                               fontSize: pt(26),
                               fontWeight: FontWeight.w700,
@@ -359,5 +359,10 @@ class InventoryItem extends StatelessWidget {
       dashWidth: 4,
       dashSpace: 4,
     );
+  }
+
+  String _formatTon(double value) {
+    final fixed = value.toStringAsFixed(2);
+    return fixed.replaceAll(RegExp(r'\.?0+$'), '');
   }
 }

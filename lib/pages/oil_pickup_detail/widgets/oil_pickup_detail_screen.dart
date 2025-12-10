@@ -204,7 +204,7 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
               borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
             ),
             child: CommonText(
-              text: '可用库存: ${(inventory.availableTon ?? 0).toInt()} 吨',
+              text: '可用库存: ${_formatTon(inventory.availableTon ?? 0)} 吨',
               fontSize: AppSizes.setFontSize(12),
               fontWeight: FontWeight.w400,
               textColor: const Color(0xff6B7280),
@@ -308,5 +308,10 @@ class _OilPickupDetailScreenState extends State<OilPickupDetailScreen> {
         ],
       ),
     );
+  }
+
+  String _formatTon(double value) {
+    final fixed = value.toStringAsFixed(2);
+    return fixed.replaceAll(RegExp(r'\.?0+$'), '');
   }
 }
