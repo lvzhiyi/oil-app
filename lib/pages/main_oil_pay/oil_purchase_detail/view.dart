@@ -98,21 +98,30 @@ class OilPurchaseDetailView extends StatelessWidget {
                         ),
                       ),
                       Gap(pt(24)),
-                      // 油品列表
+                      // 油品列表 - 横向排列
                       if (depot.fuels != null && depot.fuels!.isNotEmpty) ...[
-                        ...depot.fuels!.map((fuel) {
-                          final isSelected =
-                              state.selectedFuel?.fuelType == fuel.fuelType;
-                          return _FuelItem(
-                            fuel: fuel,
-                            isSelected: isSelected,
-                            onTap: () {
-                              context
-                                  .read<OilPurchaseDetailCtrl>()
-                                  .selectFuel(fuel);
-                            },
-                          );
-                        }),
+                        Row(
+                          children: depot.fuels!.map((fuel) {
+                            final isSelected =
+                                state.selectedFuel?.fuelType == fuel.fuelType;
+                            return Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: pt(4),
+                                ),
+                                child: _FuelItem(
+                                  fuel: fuel,
+                                  isSelected: isSelected,
+                                  onTap: () {
+                                    context
+                                        .read<OilPurchaseDetailCtrl>()
+                                        .selectFuel(fuel);
+                                  },
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
                         Gap(pt(24)),
                       ],
                       // 购买量输入框
@@ -263,36 +272,49 @@ class _FuelItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(pt(12)),
       child: Container(
-        margin: EdgeInsets.only(bottom: pt(12)),
-        padding: EdgeInsets.all(pt(16)),
+        padding: EdgeInsets.symmetric(
+          horizontal: pt(8),
+          vertical: pt(12),
+        ),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFFF3F4F6),
           border: Border.all(
-            color: isSelected
-                ? AppColor.btnPurple
-                : CustomAppColor.of(context).textFieldBorder,
-            width: isSelected ? 2 : 1,
+            color: isSelected ? AppColor.btnPurple : Colors.transparent,
+            width: isSelected ? 2 : 0,
           ),
           borderRadius: BorderRadius.circular(pt(12)),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // 左侧：油品类型
+            // 油品类型
             Text(
-              fuel.fuelType ?? '',
-              style: SportsTextStyle.baseBold.copyWith(
-                fontSize: pt(16),
-                color: CustomAppColor.of(context).txtBlack,
-              ),
-            ),
-            // 右侧：价格
-            Text(
-              '${fuel.priceCny?.toStringAsFixed(0) ?? '0'}元/吨',
+              '${fuel.fuelType ?? ''}#',
               style: SportsTextStyle.baseNormal.copyWith(
                 fontSize: pt(14),
+                color: isSelected ? AppColor.btnPurple : Colors.grey,
+              ),
+            ),
+            Gap(pt(4)),
+            // 价格
+            Text(
+              '${fuel.priceCny?.toStringAsFixed(0) ?? '0'}元/吨',
+              style: SportsTextStyle.baseBold.copyWith(
+                fontSize: pt(14),
                 color: CustomAppColor.of(context).txtBlack,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            Gap(pt(4)),
+            // 密度（固定值，因为模型中没有此字段）
+            Text(
+              '密度: 0.74',
+              style: SportsTextStyle.baseNormal.copyWith(
+                fontSize: pt(12),
+                color: CustomAppColor.of(context).txtGrey,
               ),
             ),
           ],
