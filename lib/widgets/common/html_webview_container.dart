@@ -108,7 +108,17 @@ class _HtmlWebViewContainerState extends State<HtmlWebViewContainer> {
       _errorMessage = null;
     });
     if (_controller != null && widget.url != null) {
-      _controller!.loadRequest(Uri.parse(widget.url!));
+      // 添加时间戳参数来禁用缓存，确保每次加载都是最新内容
+      final uri = Uri.parse(widget.url!);
+      final uriWithTimestamp = uri.replace(
+        queryParameters: {
+          ...uri.queryParameters,
+          '_t': DateTime.now().millisecondsSinceEpoch.toString(),
+        },
+      );
+
+      // 加载 URL，时间戳参数会强制浏览器不使用缓存
+      _controller!.loadRequest(uriWithTimestamp);
     } else {
       setState(() {
         _errorMessage = 'WebView未初始化';
