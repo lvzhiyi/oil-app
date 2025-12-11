@@ -341,6 +341,7 @@ class PayOrderDetailView extends HookWidget {
           Expanded(
             child: CommonText(
               text: value,
+              textAlign: TextAlign.left,
               fontSize: AppSizes.setFontSize(14),
               fontWeight: FontWeight.w500,
               textColor: const Color(0xFF1F2937),
@@ -438,6 +439,7 @@ class PayOrderDetailView extends HookWidget {
           ),
           Expanded(
             child: CommonText(
+              textAlign: TextAlign.left,
               text: value,
               fontSize: AppSizes.setFontSize(14),
               fontWeight: FontWeight.w500,
