@@ -10,11 +10,15 @@ import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/global/service/station_service.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
+import 'package:oil_business_app/utils/app_version_util.dart';
+import 'package:oil_business_app/utils/log.dart';
 
 import 'app_state.dart';
 
 class AppController extends HydratedCubit<AppState>
     with WidgetsBindingObserver {
+  bool _hasCheckedStartup = false;
+
   AppController() : super(AppState()) {
     listenAppLifecycle();
     initState();
@@ -44,6 +48,25 @@ class AppController extends HydratedCubit<AppState>
       if (findStationActive?.id != null) {
         setSelectedStation(findStationActive!);
       }
+    }
+  }
+
+  /// 应用启动检查（版本更新检查和绑定加油站流程）
+  /// 在主页初始化时调用
+  Future<void> checkStartupProcess() async {
+    if (_hasCheckedStartup) return;
+    _hasCheckedStartup = true;
+
+    try {
+      // 检查版本更新
+      await AppVersionUtil.checkVersionShowDialog();
+
+      // 执行绑定加油站流程
+      if (state.authResponse?.accessToken != null) {
+        await bindStationProcess();
+      }
+    } catch (e) {
+      l.e('AppController', '启动检查失败: $e');
     }
   }
 
