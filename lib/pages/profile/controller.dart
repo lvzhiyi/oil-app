@@ -16,7 +16,7 @@ class ProfileCtrl extends Cubit<ProfileState> {
 
   initState() async {
     await loadUserProfile();
-    await loadOpenPlatformConfig();
+    // await loadOpenPlatformConfig();
   }
 
   /// 加载用户信息

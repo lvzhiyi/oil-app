@@ -18,19 +18,19 @@ class FuelTypeConfig {
 /// 预定义的油品类型配置
 const List<FuelTypeConfig> fuelTypeConfigs = [
   FuelTypeConfig(
-    type: '0#',
+    type: '0',
     label: '0#柴油',
     dotColor: Color(0xFF6366F1), // 紫色/靛蓝色
     valueColor: Color(0xFF6366F1),
   ),
   FuelTypeConfig(
-    type: '92#',
+    type: '92',
     label: '92#汽油',
     dotColor: Color(0xFFF97316), // 橙色
     valueColor: Color(0xFFF97316),
   ),
   FuelTypeConfig(
-    type: '95#',
+    type: '95',
     label: '95#汽油',
     dotColor: Color(0xFFEF4444), // 红色
     valueColor: Color(0xFFEF4444),

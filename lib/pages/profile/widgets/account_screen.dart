@@ -85,12 +85,12 @@ class _AccountScreenState extends State<AccountScreen>
                 if (_inventoryList != null && _inventoryList!.isNotEmpty)
                   _buildInventoryAssetsCard(),
 
-                SizedBox(height: AppSizes.setHeight(16)),
+                SizedBox(height: AppSizes.setHeight(12)),
 
                 // Floating Action Bar (Orders & Station)
                 _buildActionBar(),
 
-                SizedBox(height: AppSizes.setHeight(16)),
+                SizedBox(height: AppSizes.setHeight(12)),
 
                 // Menu List (Password & Privacy)
                 _buildMenuCard(),
@@ -171,7 +171,7 @@ class _AccountScreenState extends State<AccountScreen>
   Widget _buildInventoryAssetsCard() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
-      padding: EdgeInsets.all(AppSizes.setWidth(20)),
+      padding: EdgeInsets.all(AppSizes.setWidth(16)),
       decoration: BoxDecoration(
         color: CustomAppColor.of(context).white,
         borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
@@ -188,11 +188,11 @@ class _AccountScreenState extends State<AccountScreen>
         children: [
           CommonText(
             text: '我的库存',
-            fontSize: AppSizes.setFontSize(16),
+            fontSize: AppSizes.setFontSize(15),
             fontWeight: FontWeight.w600,
             textColor: const Color(0xFF6B7280),
           ),
-          SizedBox(height: AppSizes.setHeight(20)),
+          SizedBox(height: AppSizes.setHeight(14)),
           _buildFuelTypeGrid(),
         ],
       ),
@@ -229,23 +229,23 @@ class _AccountScreenState extends State<AccountScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 8,
-              height: 8,
+              width: 7,
+              height: 7,
               decoration: BoxDecoration(
                 color: config.dotColor,
                 shape: BoxShape.circle,
               ),
             ),
-            SizedBox(width: 4),
+            const SizedBox(width: 4),
             CommonText(
               text: config.label,
-              fontSize: AppSizes.setFontSize(12),
+              fontSize: AppSizes.setFontSize(11),
               fontWeight: FontWeight.w400,
               textColor: const Color(0xFF6B7280),
             ),
           ],
         ),
-        SizedBox(height: AppSizes.setHeight(8)),
+        SizedBox(height: AppSizes.setHeight(6)),
         // 数量显示
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -254,14 +254,14 @@ class _AccountScreenState extends State<AccountScreen>
           children: [
             CommonText(
               text: _formatTon(amount),
-              fontSize: AppSizes.setFontSize(32),
+              fontSize: AppSizes.setFontSize(28),
               fontWeight: FontWeight.w700,
               textColor: config.valueColor,
             ),
-            SizedBox(width: 4),
+            const SizedBox(width: 4),
             CommonText(
               text: '吨',
-              fontSize: AppSizes.setFontSize(14),
+              fontSize: AppSizes.setFontSize(13),
               fontWeight: FontWeight.w400,
               textColor: const Color(0xFF9CA3AF),
             ),
@@ -282,7 +282,7 @@ class _AccountScreenState extends State<AccountScreen>
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
-      padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(20)),
+      padding: EdgeInsets.symmetric(vertical: AppSizes.setHeight(16)),
       decoration: BoxDecoration(
         color: CustomAppColor.of(context).white,
         borderRadius: BorderRadius.circular(16),

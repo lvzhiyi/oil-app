@@ -11,7 +11,7 @@ abstract class ProfileService {
   factory ProfileService(Dio dio, {String baseUrl}) = _ProfileService;
 
   /// 获取用户个人资料（包含库存信息）
-  @POST('/users/profile')
+  @GET('/users/profile')
   Future<ProfileResponse> getUserProfile();
 }
 
