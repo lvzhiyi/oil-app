@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.lingyao.oil_business_app"
+    namespace = "com.maiyoubei.businessapp"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -17,6 +17,11 @@ android {
 
     kotlinOptions {
         jvmTarget = '11'
+    }
+
+    // 添加这个配置
+    buildFeatures {
+        viewBinding true
     }
 
     defaultConfig {
@@ -70,4 +75,9 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }
