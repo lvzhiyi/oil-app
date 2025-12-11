@@ -4,11 +4,15 @@ import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/app_state.dart';
 import 'package:oil_business_app/interfaces/top_bar_click_listener.dart';
+import 'package:oil_business_app/pages/oil_pickup_detail/models/fuel_type_config.dart';
+import 'package:oil_business_app/pages/profile/model/profile_response.dart';
+import 'package:oil_business_app/pages/profile/service/profile_service.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/static/icon.dart';
 import 'package:oil_business_app/utils/app_version_util.dart';
+import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/popup/dialog.dart';
@@ -26,6 +30,30 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen>
     implements TopBarClickListener {
+  List<InventoryItem>? _inventoryList;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInventoryData();
+  }
+
+  Future<void> _loadInventoryData() async {
+    try {
+      final response = await profileService.getUserProfile();
+
+      if (response.inventories != null &&
+          response.inventories!.isNotEmpty &&
+          mounted) {
+        setState(() {
+          _inventoryList = response.inventories;
+        });
+      }
+    } catch (e) {
+      l.e('AccountScreen', 'Failed to load inventory: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +80,12 @@ class _AccountScreenState extends State<AccountScreen>
                 _buildUserInfo(),
 
                 SizedBox(height: AppSizes.setHeight(30)),
+
+                // Inventory Assets Card
+                if (_inventoryList != null && _inventoryList!.isNotEmpty)
+                  _buildInventoryAssetsCard(),
+
+                SizedBox(height: AppSizes.setHeight(16)),
 
                 // Floating Action Bar (Orders & Station)
                 _buildActionBar(),
@@ -132,6 +166,114 @@ class _AccountScreenState extends State<AccountScreen>
     final head = normalized.substring(0, 3);
     final tail = normalized.substring(normalized.length - 4);
     return '$head****$tail';
+  }
+
+  Widget _buildInventoryAssetsCard() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
+      padding: EdgeInsets.all(AppSizes.setWidth(20)),
+      decoration: BoxDecoration(
+        color: CustomAppColor.of(context).white,
+        borderRadius: BorderRadius.circular(AppSizes.setWidth(12)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CommonText(
+            text: '我的库存',
+            fontSize: AppSizes.setFontSize(16),
+            fontWeight: FontWeight.w600,
+            textColor: const Color(0xFF6B7280),
+          ),
+          SizedBox(height: AppSizes.setHeight(20)),
+          _buildFuelTypeGrid(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFuelTypeGrid() {
+    // 将库存列表转换为Map，按油品类型索引并汇总
+    final inventoryMap = <String, double>{};
+    if (_inventoryList != null) {
+      for (var item in _inventoryList!) {
+        if (item.fuelType != null) {
+          inventoryMap[item.fuelType!] = (inventoryMap[item.fuelType!] ?? 0.0) +
+              (item.availableTon ?? 0.0);
+        }
+      }
+    }
+
+    return Row(
+      children: fuelTypeConfigs.map((config) {
+        final amount = inventoryMap[config.type] ?? 0.0;
+        return Expanded(
+          child: _buildFuelTypeItem(config, amount),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildFuelTypeItem(FuelTypeConfig config, double amount) {
+    return Column(
+      children: [
+        // 油品标签（带颜色点）
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: config.dotColor,
+                shape: BoxShape.circle,
+              ),
+            ),
+            SizedBox(width: 4),
+            CommonText(
+              text: config.label,
+              fontSize: AppSizes.setFontSize(12),
+              fontWeight: FontWeight.w400,
+              textColor: const Color(0xFF6B7280),
+            ),
+          ],
+        ),
+        SizedBox(height: AppSizes.setHeight(8)),
+        // 数量显示
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            CommonText(
+              text: _formatTon(amount),
+              fontSize: AppSizes.setFontSize(32),
+              fontWeight: FontWeight.w700,
+              textColor: config.valueColor,
+            ),
+            SizedBox(width: 4),
+            CommonText(
+              text: '吨',
+              fontSize: AppSizes.setFontSize(14),
+              fontWeight: FontWeight.w400,
+              textColor: const Color(0xFF9CA3AF),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  String _formatTon(double value) {
+    final fixed = value.toStringAsFixed(2);
+    return fixed.replaceAll(RegExp(r'\.?0+$'), '');
   }
 
   Widget _buildActionBar() {
@@ -245,7 +387,8 @@ class _AccountScreenState extends State<AccountScreen>
           ),
           Divider(
               height: 1,
-              color: CustomAppColor.of(context).dividerGrey.withValues(alpha: 0.5),
+              color:
+                  CustomAppColor.of(context).dividerGrey.withValues(alpha: 0.5),
               indent: 50,
               endIndent: 16),
           _buildMenuItem(
@@ -357,7 +500,6 @@ class _AccountScreenState extends State<AccountScreen>
   }
 
   void logoutBottomSheet(BuildContext context) {
-
     SportsDialog.show(
       title: '退出登录',
       bodyText: '确定要退出登录吗？退出后将返回登录页面。',
