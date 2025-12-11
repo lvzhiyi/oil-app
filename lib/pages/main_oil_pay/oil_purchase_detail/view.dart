@@ -91,6 +91,7 @@ class OilPurchaseDetailView extends StatelessWidget {
                       Center(
                         child: Text(
                           _buildAddress(depot),
+                          textAlign: TextAlign.center,
                           style: SportsTextStyle.baseNormal.copyWith(
                             fontSize: pt(14),
                             color: CustomAppColor.of(context).txtGrey,
@@ -311,7 +312,7 @@ class _FuelItem extends StatelessWidget {
             Gap(pt(4)),
             // 密度（固定值，因为模型中没有此字段）
             Text(
-              '密度: 0.74',
+              '密度: ${fuel.density?.toStringAsFixed(2) ?? '0.00'}',
               style: SportsTextStyle.baseNormal.copyWith(
                 fontSize: pt(12),
                 color: CustomAppColor.of(context).txtGrey,

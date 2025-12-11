@@ -30,21 +30,27 @@ class _OrdersScreenState extends State<OrdersScreen>
   late TabController _tabController;
   List<String> tabList = [];
 
+  final statusArr = [
+    null,
+    OrderStatus.PendingReview.value,
+    OrderStatus.Rejected.value,
+    OrderStatus.PendingPayment.value,
+    OrderStatus.PaymentUploaded.value,
+    OrderStatus.Completed.value,
+    OrderStatus.Cancelled.value
+  ];
+
+  int? get currentStatus => statusArr[_tabController.index];
+
   List<ReasonOfCancellationData> reasons = [];
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 5, vsync: this);
+    _tabController = TabController(length: 7, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
         print('tabController: ${_tabController.index}');
-        final statusArr = [
-          null,
-          OrderStatus.PendingPayment.value,
-          OrderStatus.PaymentUploaded.value,
-          OrderStatus.Completed.value,
-          OrderStatus.Cancelled.value
-        ];
+
         context
             .read<PayOrderListCtrl>()
             .onRefresh(status: statusArr[_tabController.index]);
@@ -63,6 +69,8 @@ class _OrdersScreenState extends State<OrdersScreen>
     super.didChangeDependencies();
     tabList = [
       '全部',
+      '待审核',
+      '驳回',
       '待支付',
       '已支付',
       '已完成',
@@ -191,7 +199,7 @@ class _OrdersScreenState extends State<OrdersScreen>
         // List with Pagination
         return PullOrRefreshEasy(
           refreshController: ctrl.refreshController,
-          onRefresh: () => ctrl.onRefresh(),
+          onRefresh: () => ctrl.onRefresh(status: currentStatus),
           onLoading: () => ctrl.onLoadMore(),
           child: ListView.builder(
             padding: EdgeInsets.all(AppSizes.setWidth(16)),
@@ -269,6 +277,7 @@ class _OrdersScreenState extends State<OrdersScreen>
     final isPaid = order.status?.value == OrderStatus.PaymentUploaded.value;
 
     final isComplete = order.status?.value == OrderStatus.Completed.value;
+    final isRejected = order.status?.value == OrderStatus.Rejected.value;
 
     return GestureDetector(
       onTap: () {
@@ -395,6 +404,52 @@ class _OrdersScreenState extends State<OrdersScreen>
               ],
             ),
             SizedBox(height: AppSizes.setHeight(12)),
+            // 驳回原因（仅当状态为驳回时显示）
+            if (isRejected &&
+                order.reviewRemark != null &&
+                order.reviewRemark!.isNotEmpty)
+              Container(
+                margin: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
+                padding: EdgeInsets.all(AppSizes.setWidth(12)),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF7ED),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: const Color(0xFFF59E0B).withValues(alpha: 0.2),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      size: AppSizes.setWidth(16),
+                      color: const Color(0xFFF59E0B),
+                    ),
+                    SizedBox(width: AppSizes.setWidth(8)),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CommonText(
+                            text: '驳回原因',
+                            fontSize: AppSizes.setFontSize(12),
+                            fontWeight: FontWeight.w600,
+                            textColor: const Color(0xFFF59E0B),
+                          ),
+                          SizedBox(height: AppSizes.setHeight(4)),
+                          CommonText(
+                            text: order.reviewRemark ?? '',
+                            fontSize: AppSizes.setFontSize(12),
+                            textColor: const Color(0xFF92400E),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             // 数据行：购买量、支付方式
             Container(
               padding: EdgeInsets.all(AppSizes.setWidth(10)),
@@ -518,7 +573,7 @@ class _OrdersScreenState extends State<OrdersScreen>
     Widget? icon;
 
     switch (status) {
-      case OrderStatus.PendingPayment:
+      case OrderStatus.PendingReview:
         bgColor = const Color(0xFFFFF7ED);
         textColor = const Color(0xFFF59E0B);
         icon = Icon(
@@ -526,6 +581,14 @@ class _OrdersScreenState extends State<OrdersScreen>
           size: AppSizes.setWidth(10),
           color: textColor,
         );
+        break;
+      case OrderStatus.PendingPayment:
+        bgColor = const Color(0xFFEFF6FF);
+        textColor = const Color(0xFF3B82F6);
+        break;
+      case OrderStatus.Rejected:
+        bgColor = const Color(0xFFF3F4F6);
+        textColor = const Color(0xFF9CA3AF);
         break;
       case OrderStatus.PaymentUploaded:
         bgColor = const Color(0xFFEFF6FF);

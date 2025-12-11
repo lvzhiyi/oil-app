@@ -40,7 +40,11 @@ class HttpRespInterceptor extends InterceptorsWrapper {
 
     l.e(
       "业务请求错误：",
-      '\n path:${response.requestOptions.path} \n code:${response.data['code']} \n message:${response.data['message']} \n requestId:${response.data['requestId']} ',
+      '\n path:${response.requestOptions.path}'
+          '\n code:${response.data['code']}'
+          '\n message:${response.data['message']}'
+          '\n requestId:${response.data['requestId']}'
+          '\n traceId:${response.headers['x-trace-id']?[0]} ',
     );
 
     handleResponseError(response, handler);

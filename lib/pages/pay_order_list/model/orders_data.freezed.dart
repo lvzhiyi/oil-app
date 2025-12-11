@@ -48,6 +48,8 @@ mixin _$OrderModel {
   set bankBranchNumber(String? value);
   String? get remark;
   set remark(String? value);
+  String? get reviewRemark;
+  set reviewRemark(String? value);
   double? get availableInventory;
   set availableInventory(double? value);
   List<String>? get paymentProofUrls;
@@ -65,7 +67,7 @@ mixin _$OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(id: $id, orderNo: $orderNo, status: $status, depotId: $depotId, depotName: $depotName, fuelType: $fuelType, fuelPriceCny: $fuelPriceCny, purchaseTon: $purchaseTon, totalAmount: $totalAmount, createdAt: $createdAt, updatedAt: $updatedAt, accountName: $accountName, bankAccount: $bankAccount, bankName: $bankName, bankBranchNumber: $bankBranchNumber, remark: $remark, availableInventory: $availableInventory, paymentProofUrls: $paymentProofUrls)';
+    return 'OrderModel(id: $id, orderNo: $orderNo, status: $status, depotId: $depotId, depotName: $depotName, fuelType: $fuelType, fuelPriceCny: $fuelPriceCny, purchaseTon: $purchaseTon, totalAmount: $totalAmount, createdAt: $createdAt, updatedAt: $updatedAt, accountName: $accountName, bankAccount: $bankAccount, bankName: $bankName, bankBranchNumber: $bankBranchNumber, remark: $remark, reviewRemark: $reviewRemark, availableInventory: $availableInventory, paymentProofUrls: $paymentProofUrls)';
   }
 }
 
@@ -92,6 +94,7 @@ abstract mixin class $OrderModelCopyWith<$Res> {
       String? bankName,
       String? bankBranchNumber,
       String? remark,
+      String? reviewRemark,
       double? availableInventory,
       List<String>? paymentProofUrls});
 }
@@ -124,6 +127,7 @@ class _$OrderModelCopyWithImpl<$Res> implements $OrderModelCopyWith<$Res> {
     Object? bankName = freezed,
     Object? bankBranchNumber = freezed,
     Object? remark = freezed,
+    Object? reviewRemark = freezed,
     Object? availableInventory = freezed,
     Object? paymentProofUrls = freezed,
   }) {
@@ -191,6 +195,10 @@ class _$OrderModelCopyWithImpl<$Res> implements $OrderModelCopyWith<$Res> {
       remark: freezed == remark
           ? _self.remark
           : remark // ignore: cast_nullable_to_non_nullable
+              as String?,
+      reviewRemark: freezed == reviewRemark
+          ? _self.reviewRemark
+          : reviewRemark // ignore: cast_nullable_to_non_nullable
               as String?,
       availableInventory: freezed == availableInventory
           ? _self.availableInventory
@@ -314,6 +322,7 @@ extension OrderModelPatterns on OrderModel {
             String? bankName,
             String? bankBranchNumber,
             String? remark,
+            String? reviewRemark,
             double? availableInventory,
             List<String>? paymentProofUrls)?
         $default, {
@@ -339,6 +348,7 @@ extension OrderModelPatterns on OrderModel {
             _that.bankName,
             _that.bankBranchNumber,
             _that.remark,
+            _that.reviewRemark,
             _that.availableInventory,
             _that.paymentProofUrls);
       case _:
@@ -378,6 +388,7 @@ extension OrderModelPatterns on OrderModel {
             String? bankName,
             String? bankBranchNumber,
             String? remark,
+            String? reviewRemark,
             double? availableInventory,
             List<String>? paymentProofUrls)
         $default,
@@ -402,6 +413,7 @@ extension OrderModelPatterns on OrderModel {
             _that.bankName,
             _that.bankBranchNumber,
             _that.remark,
+            _that.reviewRemark,
             _that.availableInventory,
             _that.paymentProofUrls);
       case _:
@@ -440,6 +452,7 @@ extension OrderModelPatterns on OrderModel {
             String? bankName,
             String? bankBranchNumber,
             String? remark,
+            String? reviewRemark,
             double? availableInventory,
             List<String>? paymentProofUrls)?
         $default,
@@ -464,6 +477,7 @@ extension OrderModelPatterns on OrderModel {
             _that.bankName,
             _that.bankBranchNumber,
             _that.remark,
+            _that.reviewRemark,
             _that.availableInventory,
             _that.paymentProofUrls);
       case _:
@@ -492,6 +506,7 @@ class _OrderModel implements OrderModel {
       this.bankName,
       this.bankBranchNumber,
       this.remark,
+      this.reviewRemark,
       this.availableInventory,
       this.paymentProofUrls});
   factory _OrderModel.fromJson(Map<String, dynamic> json) =>
@@ -531,6 +546,8 @@ class _OrderModel implements OrderModel {
   @override
   String? remark;
   @override
+  String? reviewRemark;
+  @override
   double? availableInventory;
   @override
   List<String>? paymentProofUrls;
@@ -552,7 +569,7 @@ class _OrderModel implements OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(id: $id, orderNo: $orderNo, status: $status, depotId: $depotId, depotName: $depotName, fuelType: $fuelType, fuelPriceCny: $fuelPriceCny, purchaseTon: $purchaseTon, totalAmount: $totalAmount, createdAt: $createdAt, updatedAt: $updatedAt, accountName: $accountName, bankAccount: $bankAccount, bankName: $bankName, bankBranchNumber: $bankBranchNumber, remark: $remark, availableInventory: $availableInventory, paymentProofUrls: $paymentProofUrls)';
+    return 'OrderModel(id: $id, orderNo: $orderNo, status: $status, depotId: $depotId, depotName: $depotName, fuelType: $fuelType, fuelPriceCny: $fuelPriceCny, purchaseTon: $purchaseTon, totalAmount: $totalAmount, createdAt: $createdAt, updatedAt: $updatedAt, accountName: $accountName, bankAccount: $bankAccount, bankName: $bankName, bankBranchNumber: $bankBranchNumber, remark: $remark, reviewRemark: $reviewRemark, availableInventory: $availableInventory, paymentProofUrls: $paymentProofUrls)';
   }
 }
 
@@ -581,6 +598,7 @@ abstract mixin class _$OrderModelCopyWith<$Res>
       String? bankName,
       String? bankBranchNumber,
       String? remark,
+      String? reviewRemark,
       double? availableInventory,
       List<String>? paymentProofUrls});
 }
@@ -613,6 +631,7 @@ class __$OrderModelCopyWithImpl<$Res> implements _$OrderModelCopyWith<$Res> {
     Object? bankName = freezed,
     Object? bankBranchNumber = freezed,
     Object? remark = freezed,
+    Object? reviewRemark = freezed,
     Object? availableInventory = freezed,
     Object? paymentProofUrls = freezed,
   }) {
@@ -680,6 +699,10 @@ class __$OrderModelCopyWithImpl<$Res> implements _$OrderModelCopyWith<$Res> {
       remark: freezed == remark
           ? _self.remark
           : remark // ignore: cast_nullable_to_non_nullable
+              as String?,
+      reviewRemark: freezed == reviewRemark
+          ? _self.reviewRemark
+          : reviewRemark // ignore: cast_nullable_to_non_nullable
               as String?,
       availableInventory: freezed == availableInventory
           ? _self.availableInventory

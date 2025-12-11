@@ -44,6 +44,8 @@ enum FileUploadTypeEnum {
 
 /// 订单状态枚举
 enum OrderStatus {
+  PendingReview('待审核', 5),
+  Rejected('驳回', 50),
   PendingPayment('待支付', 10),
   PaymentUploaded('已支付', 20),
   Cancelled('已取消', 30),

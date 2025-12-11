@@ -121,7 +121,9 @@ class PayOrderDetailView extends HookWidget {
             ),
           ),
           if (orderDetail?.status != OrderStatus.Completed &&
-              orderDetail?.status != OrderStatus.Cancelled)
+              orderDetail?.status != OrderStatus.Cancelled &&
+              orderDetail?.status != OrderStatus.PendingReview &&
+              orderDetail?.status != OrderStatus.Rejected)
             _buildBottomActions(context, controller),
         ],
       ),
@@ -131,6 +133,8 @@ class PayOrderDetailView extends HookWidget {
   /// 构建状态卡片
   Widget _buildStatusCard(OrderModel? orderDetail, BuildContext context) {
     if (orderDetail == null) return const SizedBox.shrink();
+
+    final isRejected = orderDetail.status == OrderStatus.Rejected;
 
     return Container(
       width: double.infinity,
@@ -164,6 +168,54 @@ class PayOrderDetailView extends HookWidget {
             textColor: const Color(0xFF1F2937),
             fontFamily: 'DIN Alternate',
           ),
+          // 驳回原因（仅当状态为驳回时显示）
+          if (isRejected &&
+              orderDetail.reviewRemark != null &&
+              orderDetail.reviewRemark!.isNotEmpty) ...[
+            SizedBox(height: AppSizes.setHeight(16)),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(AppSizes.setWidth(12)),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF7ED),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: const Color(0xFFF59E0B).withValues(alpha: 0.2),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    size: AppSizes.setWidth(16),
+                    color: const Color(0xFFF59E0B),
+                  ),
+                  SizedBox(width: AppSizes.setWidth(8)),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CommonText(
+                          text: '驳回原因',
+                          fontSize: AppSizes.setFontSize(12),
+                          fontWeight: FontWeight.w600,
+                          textColor: const Color(0xFFF59E0B),
+                        ),
+                        SizedBox(height: AppSizes.setHeight(4)),
+                        CommonText(
+                          text: orderDetail.reviewRemark ?? '',
+                          fontSize: AppSizes.setFontSize(12),
+                          textColor: const Color(0xFF92400E),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -256,6 +308,10 @@ class PayOrderDetailView extends HookWidget {
             DateFormat('yyyy-MM-dd HH:mm:ss')
                 .format(DateTime.parse(orderDetail.updatedAt ?? '')),
           ),
+          if (orderDetail.status == OrderStatus.Rejected &&
+              orderDetail.reviewRemark != null &&
+              orderDetail.reviewRemark!.isNotEmpty)
+            _buildDetailRow('驳回原因', orderDetail.reviewRemark ?? '无'),
           _buildDetailRow('备注信息', orderDetail.remark ?? '无'),
         ],
       ),

@@ -73,7 +73,10 @@ class Fuel {
   /// 价格
   final double? priceCny;
 
-  Fuel({this.fuelType, this.priceCny});
+  /// 密度
+  final double? density;
+
+  Fuel({this.fuelType, this.priceCny, this.density});
 
   factory Fuel.fromJson(Map<String, dynamic> json) => _$FuelFromJson(json);
 

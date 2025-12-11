@@ -43,6 +43,7 @@ abstract class OrderModel with _$OrderModel {
     String? bankName,
     String? bankBranchNumber,
     String? remark,
+    String? reviewRemark,
     double? availableInventory,
     List<String>? paymentProofUrls,
   }) = _OrderModel;

@@ -56,9 +56,11 @@ Map<String, dynamic> _$DepotToJson(Depot instance) => <String, dynamic>{
 Fuel _$FuelFromJson(Map<String, dynamic> json) => Fuel(
       fuelType: json['fuelType'] as String?,
       priceCny: (json['priceCny'] as num?)?.toDouble(),
+      density: (json['density'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$FuelToJson(Fuel instance) => <String, dynamic>{
       'fuelType': instance.fuelType,
       'priceCny': instance.priceCny,
+      'density': instance.density,
     };
