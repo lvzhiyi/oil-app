@@ -18,7 +18,7 @@ class _MainOilPayPage extends BaseState<MainOilPayPage> with BasicInitPage {
   @override
   Widget body(context) {
     return BlocProvider(
-      create: (BuildContext context) => oilPayCtrl,
+      create: (BuildContext context) => OilPayCtrl(),
       child:
           BlocBuilder<OilPayCtrl, MainOilPayState>(builder: (context, state) {
         return MainOilPayView(state: state, extra: widget.extra);

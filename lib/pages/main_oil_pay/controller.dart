@@ -1,5 +1,7 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oil_business_app/config/config.dart';
+import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/pages/main_oil_pay/model/oil_order_res.type.dart';
 import 'package:oil_business_app/pages/main_oil_pay/service/oil_order_service.dart';
 import 'package:oil_business_app/widgets/common/page_loading.dart';
@@ -12,6 +14,7 @@ class OilPayCtrl extends Cubit<MainOilPayState> {
   }
 
   initState() async {
+    await BaseConfig.appContext?.read<AppController>().checkStartupProcess();
     getOilStoreList();
   }
 
@@ -82,5 +85,3 @@ class OilPayCtrl extends Cubit<MainOilPayState> {
     }
   }
 }
-
-final oilPayCtrl = OilPayCtrl();

@@ -8,6 +8,7 @@ import 'package:oil_business_app/global/model/auth_req_type.dart';
 import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/global/service/auth_service.dart';
 import 'package:oil_business_app/global/service/station_service.dart';
+import 'package:oil_business_app/pages/profile/service/profile_service.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/utils/app_version_util.dart';
@@ -94,14 +95,15 @@ class AppController extends HydratedCubit<AppState>
 
   /// 绑定加油站流程
   bindStationProcess({bool isFromLogin = false}) async {
-    final activeStation = await getStationStatus(1, 1, [
-      StationStatus.active,
-    ]);
-    if (activeStation.list?.isNotEmpty ?? false) {
+    final response = await profileService.getUserProfile();
+
+    final status = response.status;
+
+    if (status == AccountStatus.active.value) {
       BaseRouter.replace(url: AppPage.mainLayoutPage.path, extra: {
         'isFromLogin': isFromLogin,
       });
-    } else {
+    } else if (status == AccountStatus.pending_review.value) {
       final pendingStation = await getStationStatus(1, 1, [
         StationStatus.pending_review,
         StationStatus.rejected,

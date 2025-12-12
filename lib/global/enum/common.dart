@@ -83,3 +83,18 @@ enum WithdrawStatus {
     );
   }
 }
+
+enum AccountStatus {
+  /// 启用
+  active(1),
+
+  /// 禁用
+  inactive(0),
+
+  /// 待审核
+  pending_review(-1);
+
+  const AccountStatus(this.value);
+
+  final int value;
+}
