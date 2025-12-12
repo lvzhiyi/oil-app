@@ -79,7 +79,7 @@ class CreateNewAccountScreen extends StatelessWidget {
                         width: AppSizes.setHeight(20),
                         height: AppSizes.setHeight(20),
                       ),
-                      hintText: '您的姓名',
+                      hintText: '公司全称',
                       radius: 12,
                       validators: FormBuilderValidators.compose([
                         FormBuilderValidators.required(errorText: '请输入全名'),

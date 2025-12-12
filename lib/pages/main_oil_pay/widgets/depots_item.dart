@@ -184,7 +184,7 @@ class _PriceItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = NumberFormat('#,###');
+    final formatter = NumberFormat('#');
     final formattedPrice = formatter.format(price);
 
     return Column(
@@ -214,7 +214,7 @@ class _PriceItem extends StatelessWidget {
               color: AppColor.txtPurple,
             ),
             children: [
-              TextSpan(text: price.toString()),
+              TextSpan(text: formattedPrice),
               TextSpan(
                 text: '元/吨',
                 style: TextStyle(
