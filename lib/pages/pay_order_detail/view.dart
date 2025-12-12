@@ -379,7 +379,7 @@ class PayOrderDetailView extends HookWidget {
           ),
           SizedBox(width: AppSizes.setWidth(12)),
           Expanded(
-            child: Padding(padding: EdgeInsets.only(top: AppSizes.setHeight(2)),
+            child: Padding(padding: EdgeInsets.only(top: AppSizes.setHeight(1)),
             child: CommonText(
               textAlign: TextAlign.left,
               text: value,
@@ -481,7 +481,7 @@ class PayOrderDetailView extends HookWidget {
           ),
           SizedBox(width: AppSizes.setWidth(12)),
           Expanded(
-            child: Padding(padding: EdgeInsets.only(top: AppSizes.setHeight(2)),
+            child: Padding(padding: EdgeInsets.only(top: AppSizes.setHeight(1)),
             child: CommonText(
               textAlign: TextAlign.left,
               text: value,
