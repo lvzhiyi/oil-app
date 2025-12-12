@@ -162,7 +162,7 @@ class HttpRespInterceptor extends InterceptorsWrapper {
       }
     }
 
-    return handler.reject(badRes);
+    return handler.resolve(response);
   }
 
   /// 重新发送原始请求

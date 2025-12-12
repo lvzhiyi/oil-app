@@ -9,6 +9,7 @@ import 'package:oil_business_app/router/router.dart';
 import 'widgets/upload_voucher_dialog.dart';
 import 'widgets/image_viewer.dart';
 import 'package:oil_business_app/resources/colors.dart';
+import 'package:oil_business_app/utils/fuel_type_helper.dart';
 import 'package:oil_business_app/utils/pt.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
@@ -58,6 +59,18 @@ class PayOrderDetailView extends HookWidget {
             textColor: const Color(0xFF1F2937),
           ),
           centerTitle: true,
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.refresh,
+                color: const Color(0xFF1F2937),
+                size: AppSizes.setWidth(20),
+              ),
+              onPressed: () {
+                controller.loadOrderDetail();
+              },
+            ),
+          ],
         ),
         body: const Center(
           child: CircularProgressIndicator(),
@@ -93,6 +106,18 @@ class PayOrderDetailView extends HookWidget {
           textColor: const Color(0xFF1F2937),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.refresh,
+              color: const Color(0xFF1F2937),
+              size: AppSizes.setWidth(20),
+            ),
+            onPressed: () {
+              controller.loadOrderDetail();
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -297,6 +322,19 @@ class PayOrderDetailView extends HookWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildDetailRow('订单编号', orderDetail.orderNo ?? '-'),
+          if (orderDetail.depotName != null &&
+              orderDetail.depotName!.isNotEmpty)
+            _buildDetailRow('油库', orderDetail.depotName ?? '-'),
+          if (orderDetail.fuelType != null && orderDetail.fuelType!.isNotEmpty)
+            _buildDetailRow(
+              '油品',
+              FuelTypeHelper.getDisplayName(orderDetail.fuelType),
+            ),
+          if (orderDetail.purchaseTon != null)
+            _buildDetailRow(
+              '购买吨数',
+              '${orderDetail.purchaseTon!.toStringAsFixed(0)} 吨',
+            ),
           _buildDetailRow(
             '提交时间',
             DateFormat('yyyy-MM-dd HH:mm:ss')
@@ -330,13 +368,15 @@ class PayOrderDetailView extends HookWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: AppSizes.setWidth(80),
+            width: AppSizes.setWidth(70),
             child: CommonText(
+              textAlign: TextAlign.right,
               text: label,
               fontSize: AppSizes.setFontSize(14),
               textColor: const Color(0xFF6B7280),
             ),
           ),
+          SizedBox(width: AppSizes.setWidth(12)),
           Expanded(
             child: CommonText(
               text: value,
