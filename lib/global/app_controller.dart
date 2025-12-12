@@ -5,8 +5,10 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/auth_rep_type.dart';
 import 'package:oil_business_app/global/model/auth_req_type.dart';
+import 'package:oil_business_app/global/model/bank_info_model.dart';
 import 'package:oil_business_app/global/model/station_res_type.dart';
 import 'package:oil_business_app/global/service/auth_service.dart';
+import 'package:oil_business_app/global/service/payment_service.dart';
 import 'package:oil_business_app/global/service/station_service.dart';
 import 'package:oil_business_app/pages/profile/service/profile_service.dart';
 import 'package:oil_business_app/router/router.dart';
@@ -83,6 +85,29 @@ class AppController extends HydratedCubit<AppState>
     emit(state.copyWith(selectedStation: Station()));
   }
 
+  /// 设置银行信息
+  void setBankInfo(BankInfoModel bankInfo) {
+    emit(state.copyWith(bankInfo: bankInfo));
+  }
+
+  /// 获取对公转账银行信息（带缓存）
+  /// 如果已缓存则直接返回，否则从接口获取
+  Future<BankInfoModel?> getBankInfo({bool forceRefresh = false}) async {
+    // 如果已有缓存且不强制刷新，直接返回
+    if (!forceRefresh && state.bankInfo != null) {
+      return state.bankInfo;
+    }
+
+    try {
+      final bankInfo = await paymentService.getBankInfo();
+      setBankInfo(bankInfo);
+      return bankInfo;
+    } catch (e) {
+      l.e('AppController', '获取银行信息失败: $e');
+      return null;
+    }
+  }
+
   /// 登录成功后流程
   loginSucessProcess(AuthResponse authResponse, {AuthReqType? type}) async {
     setAuthResponse(authResponse);
@@ -155,6 +180,9 @@ class AppController extends HydratedCubit<AppState>
       selectedStation: json['selectedStation'] != null
           ? Station.fromJson(json['selectedStation'] as Map<String, dynamic>)
           : null,
+      bankInfo: json['bankInfo'] != null
+          ? BankInfoModel.fromJson(json['bankInfo'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -163,6 +191,7 @@ class AppController extends HydratedCubit<AppState>
     return {
       'authResponse': state.authResponse?.toJson(),
       'selectedStation': state.selectedStation?.toJson(),
+      'bankInfo': state.bankInfo?.toJson(),
     };
   }
 }

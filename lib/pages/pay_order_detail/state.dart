@@ -1,5 +1,5 @@
 import '../pay_order_list/model/orders_data.dart';
-import '../pay_order_detail/model/bank_info_model.dart';
+import 'package:oil_business_app/global/model/bank_info_model.dart';
 
 class PayOrderDetailState {
   final OrderModel? order;

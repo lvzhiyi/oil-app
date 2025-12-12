@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/commom/upload.dart';
 import 'package:oil_business_app/global/enum/common.dart';
+import 'package:oil_business_app/global/model/bank_info_model.dart';
 import 'package:oil_business_app/pages/pay_order_list/service/pay_order_list.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
@@ -15,7 +17,6 @@ import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dar
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
 import '../pay_order_list/model/orders_data.dart';
-import 'model/bank_info_model.dart';
 import 'model/payment_proof_request.dart';
 import 'service/pay_order_service.dart';
 import 'state.dart';
@@ -33,13 +34,13 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
   }
 
   initState() async {
-    await loadOrderDetail();
+    await loadData();
   }
 
   TextEditingController cancelOrderReasonController = TextEditingController();
 
   /// 加载订单详情
-  Future<void> loadOrderDetail() async {
+  Future<void> loadData() async {
     try {
       emit(state.copyWith(isLoading: true, errorMessage: null));
 
@@ -52,10 +53,10 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
         return;
       }
 
-      // 并行获取订单详情和银行信息
+      // 并行获取订单详情和银行信息（银行信息从全局获取，带缓存）
       final results = await Future.wait([
         payOrderService.getOrderDetail(id.toString()),
-        _loadBankInfo(),
+        appController.getBankInfo(),
       ]);
 
       final response = results[0] as OrderModel;
@@ -78,16 +79,6 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
         isLoading: false,
         errorMessage: '加载订单详情失败: ${e.toString()}',
       ));
-    }
-  }
-
-  /// 获取对公转账银行信息
-  Future<BankInfoModel?> _loadBankInfo() async {
-    try {
-      return await payOrderService.getBankInfo();
-    } catch (e) {
-      // 获取银行信息失败时返回null，不影响订单详情显示
-      return null;
     }
   }
 
@@ -319,7 +310,7 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
       ));
 
       // 刷新订单详情，更新订单状态
-      await loadOrderDetail();
+      await loadData();
     } catch (e) {
       emit(state.copyWith(isSavingProof: false));
       SportsToast.showError('保存支付凭证失败: ${e.toString()}');
@@ -348,7 +339,7 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
   Future<void> cancelOrder(String id) async {
     await payOrderListService.cancelOrder(id, cancelOrderReasonController.text);
     SportsToast.showSuccess('取消订单成功');
-    loadOrderDetail();
+    loadData();
     cancelOrderReasonController.clear();
   }
 

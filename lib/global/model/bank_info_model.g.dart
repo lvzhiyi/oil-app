@@ -8,16 +8,16 @@ part of 'bank_info_model.dart';
 
 BankInfoModel _$BankInfoModelFromJson(Map<String, dynamic> json) =>
     BankInfoModel(
-      accountName: json['AccountName'] as String?,
-      bankAccount: json['BankAccount'] as String?,
-      bankName: json['BankName'] as String?,
-      bankCode: json['BankCode'] as String?,
+      accountName: json['accountName'] as String?,
+      bankAccount: json['bankAccount'] as String?,
+      bankName: json['bankName'] as String?,
+      bankCode: json['bankCode'] as String?,
     );
 
 Map<String, dynamic> _$BankInfoModelToJson(BankInfoModel instance) =>
     <String, dynamic>{
-      'AccountName': instance.accountName,
-      'BankAccount': instance.bankAccount,
-      'BankName': instance.bankName,
-      'BankCode': instance.bankCode,
+      'accountName': instance.accountName,
+      'bankAccount': instance.bankAccount,
+      'bankName': instance.bankName,
+      'bankCode': instance.bankCode,
     };

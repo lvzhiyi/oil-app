@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:oil_business_app/global/enum/common.dart';
+import 'package:oil_business_app/global/model/bank_info_model.dart';
 import 'package:oil_business_app/pages/pay_order_list/model/orders_data.dart';
 import 'package:oil_business_app/router/router.dart';
 import 'widgets/upload_voucher_dialog.dart';
@@ -67,7 +68,7 @@ class PayOrderDetailView extends HookWidget {
                 size: AppSizes.setWidth(20),
               ),
               onPressed: () {
-                controller.loadOrderDetail();
+                controller.loadData();
               },
             ),
           ],
@@ -114,7 +115,7 @@ class PayOrderDetailView extends HookWidget {
               size: AppSizes.setWidth(20),
             ),
             onPressed: () {
-              controller.loadOrderDetail();
+              controller.loadData();
             },
           ),
         ],
@@ -130,7 +131,7 @@ class PayOrderDetailView extends HookWidget {
                     _buildStatusCard(orderDetail, context),
                     SizedBox(height: AppSizes.setHeight(16)),
                     if (orderDetail?.status != OrderStatus.Completed)
-                      _buildTransferInfoCard(context),
+                      _buildTransferInfoCard(state.bankInfo, context),
                     if (orderDetail?.status != OrderStatus.Completed)
                       SizedBox(height: AppSizes.setHeight(16)),
                     _buildOrderDetailCard(orderDetail, context),
@@ -378,21 +379,21 @@ class PayOrderDetailView extends HookWidget {
           ),
           SizedBox(width: AppSizes.setWidth(12)),
           Expanded(
+            child: Padding(padding: EdgeInsets.only(top: AppSizes.setHeight(2)),
             child: CommonText(
-              text: value,
               textAlign: TextAlign.left,
+              text: value,
               fontSize: AppSizes.setFontSize(14),
               fontWeight: FontWeight.w500,
               textColor: const Color(0xFF1F2937),
-            ),
+            ),),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTransferInfoCard(BuildContext context) {
-    final bankInfo = context.read<PayOrderDetailCtrl>().state.bankInfo;
+  Widget _buildTransferInfoCard(BankInfoModel? bankInfo, BuildContext context) {
     if (bankInfo == null) return const SizedBox.shrink();
 
     return Container(
@@ -470,21 +471,24 @@ class PayOrderDetailView extends HookWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: AppSizes.setWidth(80),
+            width: AppSizes.setWidth(70),
             child: CommonText(
               text: label,
+              textAlign: TextAlign.right,
               fontSize: AppSizes.setFontSize(14),
               textColor: const Color(0xFF6B7280),
             ),
           ),
+          SizedBox(width: AppSizes.setWidth(12)),
           Expanded(
+            child: Padding(padding: EdgeInsets.only(top: AppSizes.setHeight(2)),
             child: CommonText(
               textAlign: TextAlign.left,
               text: value,
               fontSize: AppSizes.setFontSize(14),
               fontWeight: FontWeight.w500,
               textColor: const Color(0xFF1F2937),
-            ),
+            ),),
           ),
           SizedBox(width: AppSizes.setWidth(8)),
           if (canCopy)

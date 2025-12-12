@@ -22,3 +22,4 @@ CommonService get commonService => CommonService(
       netManager.clientDio ?? Dio(),
       baseUrl: BaseAddress.commonBaseHost,
     );
+
