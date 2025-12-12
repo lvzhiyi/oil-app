@@ -78,6 +78,12 @@ mixin BasicInitPage<Page extends BasePage> on BaseState<Page> {
   Orientation? orientationNow;
   int renderCount = 1; // 用于触发重新渲染
 
+  /// 启动页最小显示时长（毫秒）
+  static const int _splashMinDuration = 1000;
+
+  /// 标记是否是首次启动（静态变量，只在第一次页面初始化时等待）
+  static bool _isFirstLaunch = true;
+
   @override
   void initState() {
     super.initState();
@@ -86,9 +92,26 @@ mixin BasicInitPage<Page extends BasePage> on BaseState<Page> {
 
   Future init() async {
     l.i('', '######################## base page init ########################');
+    
+    // 记录初始化开始时间
+    final startTime = DateTime.now();
+    
     screen.init();
+    
     l.i('',
         '######################## base page init end ########################');
+    
+    // 只在首次启动时等待，确保启动页显示足够时间
+    if (_isFirstLaunch) {
+      final elapsed = DateTime.now().difference(startTime).inMilliseconds;
+      final remainingDelay = _splashMinDuration - elapsed;
+      
+      if (remainingDelay > 0) {
+        await Future.delayed(Duration(milliseconds: remainingDelay));
+      }
+      _isFirstLaunch = false;
+    }
+    
     setState(() {
       inited = true;
     });
