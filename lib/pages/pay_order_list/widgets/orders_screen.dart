@@ -578,15 +578,20 @@ class _OrdersScreenState extends State<OrdersScreen>
           Icons.access_time,
           size: AppSizes.setWidth(10),
           color: textColor,
-        );
+        );  
         break;
       case OrderStatus.PendingPayment:
         bgColor = const Color(0xFFEFF6FF);
         textColor = const Color(0xFF3B82F6);
         break;
       case OrderStatus.Rejected:
-        bgColor = const Color(0xFFF3F4F6);
-        textColor = const Color(0xFF9CA3AF);
+        bgColor = const Color(0xFFFEF2F2);
+        textColor = const Color(0xFFEF4444);
+        icon = Icon(
+          Icons.error_outline,
+          size: AppSizes.setWidth(10),
+          color: textColor,
+        );
         break;
       case OrderStatus.PaymentUploaded:
         bgColor = const Color(0xFFEFF6FF);
@@ -616,6 +621,7 @@ class _OrdersScreenState extends State<OrdersScreen>
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (icon != null) ...[
             icon,

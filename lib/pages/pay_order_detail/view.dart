@@ -270,6 +270,22 @@ class PayOrderDetailView extends HookWidget {
       case OrderStatus.Cancelled:
         textColor = const Color(0xFF9CA3AF);
         break;
+      case OrderStatus.Rejected:
+        textColor = const Color(0xFFEF4444);
+        icon = Icon(
+          Icons.error_outline,
+          size: AppSizes.setWidth(20),
+          color: textColor,
+        );
+        break;
+      case OrderStatus.PendingReview:
+        textColor = const Color(0xFFF59E0B);
+        icon = Icon(
+          Icons.access_time,
+          size: AppSizes.setWidth(20),
+          color: textColor,
+        );
+        break;
       default:
         textColor = const Color(0xFF9CA3AF);
     }
