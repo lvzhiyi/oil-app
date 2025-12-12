@@ -166,7 +166,6 @@ class PayOrderDetailView extends HookWidget {
             fontSize: AppSizes.setFontSize(24),
             fontWeight: FontWeight.w700,
             textColor: const Color(0xFF1F2937),
-            fontFamily: 'DIN Alternate',
           ),
           // 驳回原因（仅当状态为驳回时显示）
           if (isRejected &&

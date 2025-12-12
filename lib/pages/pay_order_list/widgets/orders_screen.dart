@@ -321,7 +321,6 @@ class _OrdersScreenState extends State<OrdersScreen>
                       text: order.orderNo ?? '',
                       fontSize: AppSizes.setFontSize(12),
                       textColor: const Color(0xFF6B7280),
-                      fontFamily: 'DIN Alternate',
                     ),
                   ],
                 ),
@@ -391,7 +390,6 @@ class _OrdersScreenState extends State<OrdersScreen>
                       textColor: isCancelled
                           ? const Color(0xFF6B7280)
                           : const Color(0xFF1F2937),
-                      fontFamily: 'DIN Alternate',
                     ),
                     SizedBox(height: AppSizes.setHeight(2)),
                     CommonText(

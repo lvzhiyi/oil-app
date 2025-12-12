@@ -15,21 +15,21 @@ graph TB
         SED[StationEditPage]
         IEP[InvoiceEditPage]
     end
-    
+
     subgraph State Management
         IEC[InvoiceEditCtrl]
         IES[InvoiceEditState]
     end
-    
+
     subgraph Service Layer
         SS[StationService]
     end
-    
+
     subgraph Network Layer
         NM[NetManager]
         API[Backend API]
     end
-    
+
     SML -->|navigate with stationId| IEP
     SED -->|navigate with stationId| IEP
     IEP --> IEC
@@ -62,7 +62,7 @@ class InvoiceEditPage extends BasePage {
 ```dart
 class InvoiceEditCtrl extends Cubit<InvoiceEditState> {
   InvoiceEditCtrl({required int stationId, InvoiceInfo? invoice});
-  
+
   void updateInvoiceTitle(String value);
   void updateTaxNumber(String value);
   void updateBankName(String value);
@@ -70,7 +70,7 @@ class InvoiceEditCtrl extends Cubit<InvoiceEditState> {
   void updateCompanyAddress(String value);
   void updateCompanyPhone(String value);
   void updateInvoiceType(String value);
-  
+
   Future<bool> save(BuildContext context);
   bool validate();
 }
@@ -195,7 +195,7 @@ class UpdateInvoiceRequest {
 | 用途 | 字体 | 说明 |
 |------|------|------|
 | 普通文本 | -apple-system, PingFang SC | 系统默认字体 |
-| 税号/账号 | DIN Alternate, monospace | 等宽字体，提高可读性 |
+| 税号/账号 | -apple-system, monospace | 等宽字体，提高可读性 |
 
 ### 组件样式规范
 

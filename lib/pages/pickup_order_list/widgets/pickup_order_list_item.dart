@@ -184,7 +184,6 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
                   fontSize: AppSizes.setFontSize(24),
                   fontWeight: FontWeight.w700,
                   textColor: amountColor,
-                  fontFamily: 'DIN Alternate',
                 ),
                 SizedBox(width: AppSizes.setWidth(2)),
                 Padding(
@@ -236,7 +235,9 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
     bool isCancelled,
   ) {
     final dateStr = _getDateString(
-      !isCompleted && !isCancelled ? widget.item.createdAt : widget.item.updatedAt,
+      !isCompleted && !isCancelled
+          ? widget.item.createdAt
+          : widget.item.updatedAt,
     );
 
     return Container(
@@ -258,7 +259,8 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
           SizedBox(width: AppSizes.setWidth(4)),
           Expanded(
             child: CommonText(
-              text: '${isCompleted ? '完成时间：' : isCancelled ? '取消时间：' : '申请时间：'}$dateStr',
+              text:
+                  '${isCompleted ? '完成时间：' : isCancelled ? '取消时间：' : '申请时间：'}$dateStr',
               fontSize: AppSizes.setFontSize(11),
               textColor: const Color(0xFF6B7280),
               textAlign: TextAlign.left,
@@ -319,11 +321,9 @@ class _PickupOrderListItemState extends State<PickupOrderListItem> {
     );
   }
 
-  Widget _buildDetailButton(BuildContext context,
-      {required bool isCancelled}) {
-    final Color detailColor = isCancelled
-        ? const Color(0xFF9CA3AF)
-        : AppColor.primaryColor;
+  Widget _buildDetailButton(BuildContext context, {required bool isCancelled}) {
+    final Color detailColor =
+        isCancelled ? const Color(0xFF9CA3AF) : AppColor.primaryColor;
     final Color borderColor =
         isCancelled ? const Color(0xFFE5E7EB) : AppColor.primaryColor;
 
