@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:oil_business_app/net/net_manager.dart';
+import 'package:oil_business_app/pages/pay_order_detail/model/bank_info_model.dart';
 import 'package:oil_business_app/pages/pay_order_detail/model/payment_proof_request.dart';
 import 'package:oil_business_app/pages/pay_order_list/model/orders_data.dart';
 import 'package:retrofit/retrofit.dart';
@@ -23,6 +24,10 @@ abstract class PayOrderService {
     @Path('id') String id,
     @Body() PaymentProofRequest request,
   );
+
+  /// 获取对公转账银行信息
+  @GET('/app/payment/bank-info')
+  Future<BankInfoModel> getBankInfo();
 }
 
 /// 获取OrderDetailService实例

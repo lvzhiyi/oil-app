@@ -105,7 +105,7 @@ class PayOrderDetailView extends HookWidget {
                     _buildStatusCard(orderDetail, context),
                     SizedBox(height: AppSizes.setHeight(16)),
                     if (orderDetail?.status != OrderStatus.Completed)
-                      _buildTransferInfoCard(orderDetail, context),
+                      _buildTransferInfoCard(context),
                     if (orderDetail?.status != OrderStatus.Completed)
                       SizedBox(height: AppSizes.setHeight(16)),
                     _buildOrderDetailCard(orderDetail, context),
@@ -351,8 +351,9 @@ class PayOrderDetailView extends HookWidget {
     );
   }
 
-  Widget _buildTransferInfoCard(OrderModel? orderDetail, BuildContext context) {
-    if (orderDetail == null) return const SizedBox.shrink();
+  Widget _buildTransferInfoCard(BuildContext context) {
+    final bankInfo = context.read<PayOrderDetailCtrl>().state.bankInfo;
+    if (bankInfo == null) return const SizedBox.shrink();
 
     return Container(
       width: double.infinity,
@@ -391,25 +392,25 @@ class PayOrderDetailView extends HookWidget {
           _buildTransferInfoRow(
             context,
             '收款户名',
-            orderDetail.accountName ?? '',
+            bankInfo.accountName ?? '',
             canCopy: true,
           ),
           _buildTransferInfoRow(
             context,
             '银行账号',
-            orderDetail.bankAccount ?? '',
+            bankInfo.bankAccount ?? '',
             canCopy: true,
           ),
           _buildTransferInfoRow(
             context,
             '开户银行',
-            orderDetail.bankName ?? '',
+            bankInfo.bankName ?? '',
             canCopy: true,
           ),
           _buildTransferInfoRow(
             context,
             '联行号',
-            orderDetail.bankBranchNumber ?? '',
+            bankInfo.bankCode ?? '',
             canCopy: true,
           ),
         ],

@@ -15,6 +15,7 @@ import 'package:oil_business_app/widgets/base/textfield/common_textformfield.dar
 import 'package:oil_business_app/widgets/popup/toast.dart';
 
 import '../pay_order_list/model/orders_data.dart';
+import 'model/bank_info_model.dart';
 import 'model/payment_proof_request.dart';
 import 'service/pay_order_service.dart';
 import 'state.dart';
@@ -51,40 +52,42 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
         return;
       }
 
-      final response = await payOrderService.getOrderDetail(id.toString());
+      // 并行获取订单详情和银行信息
+      final results = await Future.wait([
+        payOrderService.getOrderDetail(id.toString()),
+        _loadBankInfo(),
+      ]);
 
-      // 合并银行信息（这些信息可能来自配置或其他接口）
-      final orderDetail = response.copyWith(
-        accountName: 'XXXX科技有限公司', // 这里应该从配置或其他接口获取
-        bankAccount: 'XXXX',
-        bankName: 'XXXX',
-        bankBranchNumber: 'XXXX',
-      );
+      final response = results[0] as OrderModel;
+      final bankInfo = results[1] as BankInfoModel?;
 
       // 初始化已上传的凭证列表
-      final proofUrls = orderDetail.paymentProofUrls ?? [];
+      final proofUrls = response.paymentProofUrls ?? [];
 
       emit(state.copyWith(
-        order: orderDetail,
+        order: response,
+        bankInfo: bankInfo,
         isLoading: false,
-        hasUploaded: orderDetail.status == OrderStatus.PaymentUploaded,
+        hasUploaded: response.status == OrderStatus.PaymentUploaded,
         selectedImagePaths: const [], // 初始化时清空选中的图片
         lastSavedProofUrls: const [], // 初始化时清空上次保存的凭证列表
         currentProofUrls: proofUrls, // 初始化当前凭证列表
       ));
-
-      // 如果已有凭证路径，获取可访问的URL
-      // if (orderDetail.attachments?.isNotEmpty ?? false) {
-      //   await _loadVoucherImageUrls(orderDetail.attachments!);
-      // } else {
-      //   // 如果没有附件，清空已上传的图片URL列表
-      //   emit(state.copyWith(uploadedImageUrls: []));
-      // }
     } catch (e) {
       emit(state.copyWith(
         isLoading: false,
         errorMessage: '加载订单详情失败: ${e.toString()}',
       ));
+    }
+  }
+
+  /// 获取对公转账银行信息
+  Future<BankInfoModel?> _loadBankInfo() async {
+    try {
+      return await payOrderService.getBankInfo();
+    } catch (e) {
+      // 获取银行信息失败时返回null，不影响订单详情显示
+      return null;
     }
   }
 
