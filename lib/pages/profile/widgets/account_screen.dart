@@ -254,7 +254,7 @@ class _AccountScreenState extends State<AccountScreen>
           children: [
             CommonText(
               text: _formatTon(amount),
-              fontSize: AppSizes.setFontSize(28),
+              fontSize: AppSizes.setFontSize(16),
               fontWeight: FontWeight.w700,
               textColor: config.valueColor,
             ),
