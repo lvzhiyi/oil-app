@@ -21,10 +21,8 @@ class InventoryItem extends StatelessWidget {
     final fuelType = inventory.fuelType ?? '';
     final availableInventory = inventory.availableTon ?? 0.0;
     final isOutOfStock = availableInventory <= 0;
-    final isLowStock = !isOutOfStock && availableInventory < 5.0;
 
     final fuelInfo = _parseFuelType(fuelType);
-    final isDiesel = _isDiesel(fuelInfo.code);
 
     return Container(
       margin: EdgeInsets.only(bottom: pt(12)),
@@ -93,7 +91,6 @@ class InventoryItem extends StatelessWidget {
                 // Left: Oil Badge
                 _buildOilBadge(
                   fuelInfo: fuelInfo,
-                  isDiesel: isDiesel,
                   isOutOfStock: isOutOfStock,
                 ),
 
@@ -162,7 +159,6 @@ class InventoryItem extends StatelessWidget {
 
   Widget _buildOilBadge({
     required ({String code, String name}) fuelInfo,
-    required bool isDiesel,
     required bool isOutOfStock,
   }) {
     Color badgeBgColor;
@@ -171,9 +167,6 @@ class InventoryItem extends StatelessWidget {
     if (isOutOfStock) {
       badgeBgColor = const Color(0xFFF5F5F5);
       badgeTextColor = const Color(0xFFAAAAAA);
-    } else if (isDiesel) {
-      badgeBgColor = AppColor.dieselBg;
-      badgeTextColor = AppColor.dieselText;
     } else {
       badgeBgColor = AppColor.gasBg;
       badgeTextColor = AppColor.gasText;
@@ -210,42 +203,6 @@ class InventoryItem extends StatelessWidget {
           ],
         ],
       ),
-    );
-  }
-
-  Widget _buildStockStatusTag(bool isLowStock) {
-    final Color tagColor;
-    final String tagText;
-
-    if (isLowStock) {
-      tagColor = AppColor.stockLow;
-      tagText = '库存紧张';
-    } else {
-      tagColor = AppColor.stockSufficient;
-      tagText = '库存充足';
-    }
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: pt(6),
-          height: pt(6),
-          decoration: BoxDecoration(
-            color: tagColor,
-            shape: BoxShape.circle,
-          ),
-        ),
-        Gap(pt(4)),
-        Text(
-          tagText,
-          style: TextStyle(
-            fontSize: pt(11),
-            fontWeight: FontWeight.w500,
-            color: tagColor,
-          ),
-        ),
-      ],
     );
   }
 
@@ -290,22 +247,6 @@ class InventoryItem extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  bool _isDiesel(String code) {
-    if (code.isEmpty) return false;
-
-    final numberPart = RegExp(r'[-]?\d+').stringMatch(code) ?? '';
-
-    if (['0', '-10', '-20', '-35', '-50'].contains(numberPart)) {
-      return true;
-    }
-
-    if (['92', '95', '98'].any((e) => numberPart.contains(e))) {
-      return false;
-    }
-
-    return false;
   }
 
   ({String code, String name}) _parseFuelType(String fuelType) {

@@ -63,7 +63,7 @@ class _AccountScreenState extends State<AccountScreen>
         children: [
           // Purple Header Background
           Container(
-            height: AppSizes.setHeight(220),
+            height: AppSizes.setHeight(160),
             width: double.infinity,
             color: CustomAppColor.of(context).btnPurple,
           ),
@@ -74,12 +74,12 @@ class _AccountScreenState extends State<AccountScreen>
               children: [
                 SizedBox(
                     height:
-                        AppSizes.setHeight(60)), // Top padding for status bar
+                        AppSizes.setHeight(20)), // Top padding for status bar
 
                 // User Info
                 _buildUserInfo(),
 
-                SizedBox(height: AppSizes.setHeight(30)),
+                SizedBox(height: AppSizes.setHeight(20)),
 
                 // Inventory Assets Card
                 if (_inventoryList != null && _inventoryList!.isNotEmpty)

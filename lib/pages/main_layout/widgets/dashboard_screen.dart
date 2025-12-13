@@ -72,7 +72,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             isShowNotification: false,
             isShowLike: false,
             isShowSearchField: false,
-            height: 120,
+            height: 100,
             isShowCart: selectedBottomIndex == 0 || selectedBottomIndex == 1,
             topBarColor: CustomAppColor(context).bgBlackWhiteScaffold,
             isShowShadow: true,
@@ -116,7 +116,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             tabs: bottomNavigationBarList.map((item) {
               int i = bottomNavigationBarList.indexOf(item);
               return Padding(
-                padding: EdgeInsets.only(bottom: AppSizes.setHeight(12)),
+                padding: EdgeInsets.only(bottom: AppSizes.setHeight(0)),
                 child: Tab(
                   height: AppSizes.setHeight(65),
                   icon: Padding(
