@@ -67,10 +67,10 @@ void oilAppFlutterRun(
       if (appRun != null) {
         appRun();
       } else {
-        // 确保状态栏正常显示
+        // 确保状态栏和导航栏正常显示
         await SystemChrome.setEnabledSystemUIMode(
-          SystemUiMode.edgeToEdge,
-          overlays: SystemUiOverlay.values,
+          SystemUiMode.manual,
+          overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
         );
         await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
           DeviceOrientation.portraitUp,

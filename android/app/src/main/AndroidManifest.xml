@@ -24,7 +24,7 @@
             android:name=".MainActivity"
             android:exported="false"
             android:launchMode="singleTop"
-            android:theme="@style/LaunchTheme">
+            android:theme="@style/NormalTheme">
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
