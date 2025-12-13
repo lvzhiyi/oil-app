@@ -102,22 +102,26 @@ class OilPurchaseDetailView extends StatelessWidget {
                       // 油品列表 - 横向排列
                       if (depot.fuels != null && depot.fuels!.isNotEmpty) ...[
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: depot.fuels!.map((fuel) {
                             final isSelected =
                                 state.selectedFuel?.fuelType == fuel.fuelType;
                             return Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: pt(4),
-                                ),
-                                child: _FuelItem(
-                                  fuel: fuel,
-                                  isSelected: isSelected,
-                                  onTap: () {
-                                    context
-                                        .read<OilPurchaseDetailCtrl>()
-                                        .selectFuel(fuel);
-                                  },
+                              child: AspectRatio(
+                                aspectRatio: 1.05,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: pt(4),
+                                  ),
+                                  child: _FuelItem(
+                                    fuel: fuel,
+                                    isSelected: isSelected,
+                                    onTap: () {
+                                      context
+                                          .read<OilPurchaseDetailCtrl>()
+                                          .selectFuel(fuel);
+                                    },
+                                  ),
                                 ),
                               ),
                             );
@@ -128,17 +132,29 @@ class OilPurchaseDetailView extends StatelessWidget {
                       // 购买量输入框
                       Text(
                         '购买量',
-                        style: SportsTextStyle.baseNormal.copyWith(
+                        style: SportsTextStyle.baseBold.copyWith(
                           fontSize: pt(14),
                           color: CustomAppColor.of(context).txtBlack,
                         ),
                       ),
-                      Gap(pt(8)),
+                      Gap(pt(12)),
                       CommonTextFormField(
                         name: 'purchaseTon',
                         hintText: '请输入购买量',
                         keyboardType: TextInputType.number,
                         inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                        suffixIcon: Container(
+                          padding: EdgeInsets.only(right: pt(16)),
+                          alignment: Alignment.centerRight,
+                          width: pt(50),
+                          child: Text(
+                            '吨',
+                            style: SportsTextStyle.baseNormal.copyWith(
+                              fontSize: pt(14),
+                              color: CustomAppColor.of(context).txtBlack,
+                            ),
+                          ),
+                        ),
                         validators: (value) {
                           if (value == null || value.isEmpty) {
                             return '请输入购买量';
@@ -269,55 +285,106 @@ class _FuelItem extends StatelessWidget {
     required this.onTap,
   });
 
+
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(pt(12)),
       child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: pt(8),
-          vertical: pt(12),
-        ),
         decoration: BoxDecoration(
-          color: const Color(0xFFF3F4F6),
+          borderRadius: BorderRadius.circular(pt(8)),
+          color: isSelected ? const Color(0xFFFFFAF5) : const Color(0xFFF5F7FA),
           border: Border.all(
-            color: isSelected ? AppColor.btnPurple : Colors.transparent,
-            width: isSelected ? 2 : 0,
+            color: isSelected ? const Color(0xFFFF8D1A) : Colors.transparent,
+            width: 1.5,
           ),
-          borderRadius: BorderRadius.circular(pt(12)),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Stack(
           children: [
-            // 油品类型
-            Text(
-              '${fuel.fuelType ?? ''}#',
-              style: SportsTextStyle.baseNormal.copyWith(
-                fontSize: pt(14),
-                color: isSelected ? AppColor.btnPurple : Colors.grey,
+            // 主要内容 - 居中对齐
+            Container(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // 油品类型
+                  Text(
+                    '${fuel.fuelType ?? ''}#',
+                    textAlign: TextAlign.center,
+                    style: SportsTextStyle.baseBold.copyWith(
+                      fontSize: pt(16),
+                      color: isSelected
+                          ? const Color(0xFFFF8D1A)
+                          : CustomAppColor.of(context).txtBlack,
+                    ),
+                  ),
+                  Gap(pt(4)),
+                  // 价格行
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        fuel.priceCny?.toStringAsFixed(0) ?? '0',
+                        style: SportsTextStyle.baseBold.copyWith(
+                          fontSize: pt(14),
+                          color: isSelected
+                              ? const Color(0xFFFF8D1A)
+                              : CustomAppColor.of(context).txtBlack,
+                          height: 1.1,
+                        ),
+                      ),
+                      Gap(pt(2)),
+                      Text(
+                        '元/吨',
+                        style: SportsTextStyle.baseNormal.copyWith(
+                          fontSize: pt(12),
+                          color: isSelected
+                              ? const Color(0xFFFF8D1A)
+                              : CustomAppColor.of(context).txtBlack,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Gap(pt(4)),
+                  // 密度
+                  Text(
+                    '密度: ${fuel.density?.toStringAsFixed(2) ?? '0.00'}',
+                    textAlign: TextAlign.center,
+                    style: SportsTextStyle.baseNormal.copyWith(
+                      fontSize: pt(12),
+                      color: isSelected ? const Color(0xFFFF8D1A) : CustomAppColor.of(context).txtGrey,
+                    ),
+                  ),
+                ],
               ),
             ),
-            Gap(pt(4)),
-            // 价格
-            Text(
-              '${fuel.priceCny?.toStringAsFixed(0) ?? '0'}元/吨',
-              style: SportsTextStyle.baseBold.copyWith(
-                fontSize: pt(14),
-                color: CustomAppColor.of(context).txtBlack,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            Gap(pt(4)),
-            // 密度（固定值，因为模型中没有此字段）
-            Text(
-              '密度: ${fuel.density?.toStringAsFixed(2) ?? '0.00'}',
-              style: SportsTextStyle.baseNormal.copyWith(
-                fontSize: pt(12),
-                color: CustomAppColor.of(context).txtGrey,
-              ),
-            ),
+            // 选中时的勾选图标 - 右下角
+            // if (isSelected)
+            //   Positioned(
+            //     right: 0,
+            //     bottom: 0,
+            //     child: Container(
+            //       width: pt(24),
+            //       height: pt(20),
+            //       decoration: BoxDecoration(
+            //         color: const Color(0xFFFF8D1A),
+            //         borderRadius: BorderRadius.only(
+            //           topLeft: Radius.circular(pt(60)),
+            //           bottomRight: Radius.circular(pt(6)),
+            //         ),
+            //       ),
+            //       alignment: Alignment.center,
+            //       child: Icon(
+            //         Icons.check,
+            //         color: Colors.white,
+            //         size: pt(14),
+            //       ),
+            //     ),
+            //   ),
           ],
         ),
       ),
