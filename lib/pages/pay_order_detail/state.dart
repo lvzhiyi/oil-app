@@ -1,7 +1,9 @@
 import '../pay_order_list/model/orders_data.dart';
+import 'package:oil_business_app/global/model/bank_info_model.dart';
 
 class PayOrderDetailState {
   final OrderModel? order;
+  final BankInfoModel? bankInfo; // 对公转账银行信息
   final bool isLoading; // 是否正在加载订单详情
   final bool isUploading;
   final bool hasUploaded;
@@ -16,6 +18,7 @@ class PayOrderDetailState {
 
   PayOrderDetailState({
     this.order,
+    this.bankInfo,
     this.isLoading = false,
     this.isUploading = false,
     this.hasUploaded = false,
@@ -31,6 +34,7 @@ class PayOrderDetailState {
 
   PayOrderDetailState copyWith({
     OrderModel? order,
+    BankInfoModel? bankInfo,
     bool? isLoading,
     bool? isUploading,
     bool? hasUploaded,
@@ -47,6 +51,7 @@ class PayOrderDetailState {
   }) {
     return PayOrderDetailState(
       order: order ?? this.order,
+      bankInfo: bankInfo ?? this.bankInfo,
       isLoading: isLoading ?? this.isLoading,
       isUploading: isUploading ?? this.isUploading,
       hasUploaded: hasUploaded ?? this.hasUploaded,

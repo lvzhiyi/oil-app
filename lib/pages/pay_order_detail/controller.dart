@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/commom/upload.dart';
 import 'package:oil_business_app/global/enum/common.dart';
+import 'package:oil_business_app/global/model/bank_info_model.dart';
 import 'package:oil_business_app/pages/pay_order_list/service/pay_order_list.dart';
 import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/router/router.dart';
@@ -32,13 +34,13 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
   }
 
   initState() async {
-    await loadOrderDetail();
+    await loadData();
   }
 
   TextEditingController cancelOrderReasonController = TextEditingController();
 
   /// 加载订单详情
-  Future<void> loadOrderDetail() async {
+  Future<void> loadData() async {
     try {
       emit(state.copyWith(isLoading: true, errorMessage: null));
 
@@ -51,35 +53,27 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
         return;
       }
 
-      final response = await payOrderService.getOrderDetail(id.toString());
+      // 并行获取订单详情和银行信息（银行信息从全局获取，带缓存）
+      final results = await Future.wait([
+        payOrderService.getOrderDetail(id.toString()),
+        appController.getBankInfo(),
+      ]);
 
-      // 合并银行信息（这些信息可能来自配置或其他接口）
-      final orderDetail = response.copyWith(
-        accountName: 'XXXX科技有限公司', // 这里应该从配置或其他接口获取
-        bankAccount: 'XXXX',
-        bankName: 'XXXX',
-        bankBranchNumber: 'XXXX',
-      );
+      final response = results[0] as OrderModel;
+      final bankInfo = results[1] as BankInfoModel?;
 
       // 初始化已上传的凭证列表
-      final proofUrls = orderDetail.paymentProofUrls ?? [];
+      final proofUrls = response.paymentProofUrls ?? [];
 
       emit(state.copyWith(
-        order: orderDetail,
+        order: response,
+        bankInfo: bankInfo,
         isLoading: false,
-        hasUploaded: orderDetail.status == OrderStatus.PaymentUploaded,
+        hasUploaded: response.status == OrderStatus.PaymentUploaded,
         selectedImagePaths: const [], // 初始化时清空选中的图片
         lastSavedProofUrls: const [], // 初始化时清空上次保存的凭证列表
         currentProofUrls: proofUrls, // 初始化当前凭证列表
       ));
-
-      // 如果已有凭证路径，获取可访问的URL
-      // if (orderDetail.attachments?.isNotEmpty ?? false) {
-      //   await _loadVoucherImageUrls(orderDetail.attachments!);
-      // } else {
-      //   // 如果没有附件，清空已上传的图片URL列表
-      //   emit(state.copyWith(uploadedImageUrls: []));
-      // }
     } catch (e) {
       emit(state.copyWith(
         isLoading: false,
@@ -316,7 +310,7 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
       ));
 
       // 刷新订单详情，更新订单状态
-      await loadOrderDetail();
+      await loadData();
     } catch (e) {
       emit(state.copyWith(isSavingProof: false));
       SportsToast.showError('保存支付凭证失败: ${e.toString()}');
@@ -345,7 +339,7 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
   Future<void> cancelOrder(String id) async {
     await payOrderListService.cancelOrder(id, cancelOrderReasonController.text);
     SportsToast.showSuccess('取消订单成功');
-    loadOrderDetail();
+    loadData();
     cancelOrderReasonController.clear();
   }
 
