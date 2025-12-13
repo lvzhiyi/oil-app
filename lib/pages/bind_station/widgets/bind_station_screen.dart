@@ -25,240 +25,245 @@ class BindStationScreen extends StatelessWidget {
         final ctrl = context.read<BindStationCtrl>();
         final colors = CustomAppColor.of(context);
 
-        return Scaffold(
-          backgroundColor: const Color(0xffF5F7FA),
-          appBar: AppBar(
-            backgroundColor: colors.white,
-            elevation: 0,
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: colors.txtBlack,
+        return PopScope(
+          canPop: false,
+          child: Scaffold(
+            backgroundColor: const Color(0xffF5F7FA),
+            appBar: AppBar(
+              backgroundColor: colors.white,
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: colors.txtBlack,
+                ),
+                onPressed: () {
+                  if (extra?['isFromLogin'] == true) {
+                    BaseRouter.replace(url: AppPage.loginPage.path);
+                  } else {
+                    BaseRouter.replace(url: AppPage.loginPage.path);
+                  }
+                },
               ),
-              onPressed: () {
-                if (extra?['isFromLogin'] == true) {
-                  BaseRouter.replace(url: AppPage.loginPage.path);
-                } else {
-                  BaseRouter.replace(url: AppPage.loginPage.path);
-                }
-              },
-            ),
-            title: CommonText(
-              text: '绑定加油站',
-              fontSize: AppSizes.setFontSize(18),
-              fontWeight: FontWeight.w600,
-              textColor: colors.txtBlack,
-            ),
-            centerTitle: true,
-          ),
-          body: Column(
-            children: [
-              SizedBox(height: AppSizes.setHeight(18)),
-              CommonText(
-                text: '请完善加油站信息以完成企业入驻',
-                fontSize: AppSizes.setFontSize(14),
-                fontWeight: FontWeight.w400,
-                textColor: colors.hintText,
+              title: CommonText(
+                text: '绑定加油站',
+                fontSize: AppSizes.setFontSize(18),
+                fontWeight: FontWeight.w600,
+                textColor: colors.txtBlack,
               ),
-              SizedBox(height: AppSizes.setHeight(18)),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
-                  child: FormBuilder(
-                    key: ctrl.formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildFormSection(
-                          context: context,
-                          title: '基础信息',
-                          children: [
-                            _buildInputWrapper(
-                              context: context,
-                              label: '加油站名称',
-                              child: CommonTextFormField(
-                                name: 'stationName',
-                                validators: FormBuilderValidators.compose([
-                                  FormBuilderValidators.required(
-                                      errorText: '请输入加油站名称'),
-                                  FormBuilderValidators.minLength(2,
-                                      errorText: '加油站名称至少2个字符'),
-                                ]),
-                                borderColor: colors.textFieldBorder,
-                                fillColor: const Color(0xFFF9FAFB),
-                                radius: 10,
-                                hintText: '请输入加油站名称',
-                              ),
-                            ),
-                            _buildInputWrapper(
-                              context: context,
-                              label: '所在区域',
-                              child: CommonCityPickerFormField(
-                                name: 'city',
-                                validators: FormBuilderValidators.required(
-                                  errorText: '请选择省市区',
-                                ),
-                                hintText: '选择省/市/区',
-                                controller: ctrl.cityController,
-                                onChanged: (value) {
-                                  ctrl.provinceName = value[0];
-                                  ctrl.cityName = value[1];
-                                  ctrl.areaName = value[2];
-                                  ctrl.provinceCode = value[3];
-                                  ctrl.cityCode = value[4];
-                                  ctrl.areaCode = value[5];
-                                },
-                                borderColor: colors.textFieldBorder,
-                                fillColor: Colors.white,
-                                radius: 10,
-                                suffixIcon: Icon(
-                                  Icons.keyboard_arrow_down,
-                                  size: AppSizes.setFontSize(20),
-                                  color: const Color(0xFF9CA3AF),
+              centerTitle: true,
+            ),
+            body: Column(
+              children: [
+                SizedBox(height: AppSizes.setHeight(18)),
+                CommonText(
+                  text: '请完善加油站信息以完成企业入驻',
+                  fontSize: AppSizes.setFontSize(14),
+                  fontWeight: FontWeight.w400,
+                  textColor: colors.hintText,
+                ),
+                SizedBox(height: AppSizes.setHeight(18)),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
+                    child: FormBuilder(
+                      key: ctrl.formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildFormSection(
+                            context: context,
+                            title: '基础信息',
+                            children: [
+                              _buildInputWrapper(
+                                context: context,
+                                label: '加油站名称',
+                                child: CommonTextFormField(
+                                  name: 'stationName',
+                                  validators: FormBuilderValidators.compose([
+                                    FormBuilderValidators.required(
+                                        errorText: '请输入加油站名称'),
+                                    FormBuilderValidators.minLength(2,
+                                        errorText: '加油站名称至少2个字符'),
+                                  ]),
+                                  borderColor: colors.textFieldBorder,
+                                  fillColor: const Color(0xFFF9FAFB),
+                                  radius: 10,
+                                  hintText: '请输入加油站名称',
                                 ),
                               ),
-                            ),
-                            _buildInputWrapper(
-                              context: context,
-                              label: '详细地址',
-                              child: CommonTextFormField(
-                                name: 'addressDetail',
-                                validators: FormBuilderValidators.required(
-                                  errorText: '请输入详细地址',
+                              _buildInputWrapper(
+                                context: context,
+                                label: '所在区域',
+                                child: CommonCityPickerFormField(
+                                  name: 'city',
+                                  validators: FormBuilderValidators.required(
+                                    errorText: '请选择省市区',
+                                  ),
+                                  hintText: '选择省/市/区',
+                                  controller: ctrl.cityController,
+                                  onChanged: (value) {
+                                    ctrl.provinceName = value[0];
+                                    ctrl.cityName = value[1];
+                                    ctrl.areaName = value[2];
+                                    ctrl.provinceCode = value[3];
+                                    ctrl.cityCode = value[4];
+                                    ctrl.areaCode = value[5];
+                                  },
+                                  borderColor: colors.textFieldBorder,
+                                  fillColor: Colors.white,
+                                  radius: 10,
+                                  suffixIcon: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    size: AppSizes.setFontSize(20),
+                                    color: const Color(0xFF9CA3AF),
+                                  ),
                                 ),
-                                borderColor: colors.textFieldBorder,
-                                fillColor: const Color(0xFFF9FAFB),
-                                radius: 10,
-                                hintText: '请输入详细地址（不含省市区）',
                               ),
-                            ),
-                          ],
-                        ),
-                        _buildFormSection(
-                          context: context,
-                          title: '资质证照',
-                          children: [
-                            _buildInputWrapper(
-                              context: context,
-                              label: '营业执照',
-                              child: FormBuilderField<String>(
-                                name: 'businessLicenseUrl',
-                                initialValue: state.businessLicenseUrl,
-                                validator: FormBuilderValidators.required(
-                                  errorText: '请上传营业执照',
+                              _buildInputWrapper(
+                                context: context,
+                                label: '详细地址',
+                                child: CommonTextFormField(
+                                  name: 'addressDetail',
+                                  validators: FormBuilderValidators.required(
+                                    errorText: '请输入详细地址',
+                                  ),
+                                  borderColor: colors.textFieldBorder,
+                                  fillColor: const Color(0xFFF9FAFB),
+                                  radius: 10,
+                                  hintText: '请输入详细地址（不含省市区）',
                                 ),
-                                builder: (field) {
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      QualificationImageUpload(
-                                        imageUrl: state.businessLicenseUrl,
-                                        hintText: '点击上传照片',
-                                        onChanged: (value) {
-                                          ctrl.updateBusinessLicense(
-                                              value ?? '');
-                                          field.didChange(value ?? '');
-                                        },
-                                      ),
-                                      if (field.errorText != null &&
-                                          field.errorText!.isNotEmpty)
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            top: AppSizes.setHeight(6),
-                                            left: AppSizes.setWidth(16),
-                                          ),
-                                          child: CommonText(
-                                            text: field.errorText!,
-                                            fontSize: AppSizes.setFontSize(12),
-                                            textColor: Theme.of(context)
-                                                .colorScheme
-                                                .error,
-                                          ),
+                              ),
+                            ],
+                          ),
+                          _buildFormSection(
+                            context: context,
+                            title: '资质证照',
+                            children: [
+                              _buildInputWrapper(
+                                context: context,
+                                label: '营业执照',
+                                child: FormBuilderField<String>(
+                                  name: 'businessLicenseUrl',
+                                  initialValue: state.businessLicenseUrl,
+                                  validator: FormBuilderValidators.required(
+                                    errorText: '请上传营业执照',
+                                  ),
+                                  builder: (field) {
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        QualificationImageUpload(
+                                          imageUrl: state.businessLicenseUrl,
+                                          hintText: '点击上传照片',
+                                          onChanged: (value) {
+                                            ctrl.updateBusinessLicense(
+                                                value ?? '');
+                                            field.didChange(value ?? '');
+                                          },
                                         ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ),
-                            _buildInputWrapper(
-                              context: context,
-                              label: '成品油零售许可证',
-                              child: FormBuilderField<String>(
-                                name: 'fuelRetailPermitUrl',
-                                initialValue: state.fuelRetailPermitUrl,
-                                validator: FormBuilderValidators.required(
-                                  errorText: '请上传成品油零售许可',
+                                        if (field.errorText != null &&
+                                            field.errorText!.isNotEmpty)
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              top: AppSizes.setHeight(6),
+                                              left: AppSizes.setWidth(16),
+                                            ),
+                                            child: CommonText(
+                                              text: field.errorText!,
+                                              fontSize:
+                                                  AppSizes.setFontSize(12),
+                                              textColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .error,
+                                            ),
+                                          ),
+                                      ],
+                                    );
+                                  },
                                 ),
-                                builder: (field) {
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      QualificationImageUpload(
-                                        imageUrl: state.fuelRetailPermitUrl,
-                                        hintText: '点击上传照片',
-                                        onChanged: (value) {
-                                          ctrl.updateFuelRetailPermit(
-                                              value ?? '');
-                                          field.didChange(value ?? '');
-                                        },
-                                      ),
-                                      if (field.errorText != null &&
-                                          field.errorText!.isNotEmpty)
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            top: AppSizes.setHeight(6),
-                                            left: AppSizes.setWidth(16),
-                                          ),
-                                          child: CommonText(
-                                            text: field.errorText!,
-                                            fontSize: AppSizes.setFontSize(12),
-                                            textColor: Theme.of(context)
-                                                .colorScheme
-                                                .error,
-                                          ),
-                                        ),
-                                    ],
-                                  );
-                                },
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              _buildInputWrapper(
+                                context: context,
+                                label: '成品油零售许可证',
+                                child: FormBuilderField<String>(
+                                  name: 'fuelRetailPermitUrl',
+                                  initialValue: state.fuelRetailPermitUrl,
+                                  validator: FormBuilderValidators.required(
+                                    errorText: '请上传成品油零售许可',
+                                  ),
+                                  builder: (field) {
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        QualificationImageUpload(
+                                          imageUrl: state.fuelRetailPermitUrl,
+                                          hintText: '点击上传照片',
+                                          onChanged: (value) {
+                                            ctrl.updateFuelRetailPermit(
+                                                value ?? '');
+                                            field.didChange(value ?? '');
+                                          },
+                                        ),
+                                        if (field.errorText != null &&
+                                            field.errorText!.isNotEmpty)
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              top: AppSizes.setHeight(6),
+                                              left: AppSizes.setWidth(16),
+                                            ),
+                                            child: CommonText(
+                                              text: field.errorText!,
+                                              fontSize:
+                                                  AppSizes.setFontSize(12),
+                                              textColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .error,
+                                            ),
+                                          ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.all(AppSizes.setWidth(16)),
-                decoration: BoxDecoration(
-                  color: colors.bgContainer,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 8,
-                      offset: const Offset(0, -2),
+                Container(
+                  padding: EdgeInsets.all(AppSizes.setWidth(16)),
+                  decoration: BoxDecoration(
+                    color: colors.bgContainer,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 8,
+                        offset: const Offset(0, -2),
+                      ),
+                    ],
+                  ),
+                  child: SafeArea(
+                    top: false,
+                    child: CommonButton(
+                      isLoading: state.loading,
+                      btnText: '提交审核',
+                      radius: 28,
+                      pVertical: AppSizes.setHeight(14),
+                      fontSize: AppSizes.setFontSize(16),
+                      onTap: () {
+                        ctrl.submit();
+                      },
                     ),
-                  ],
-                ),
-                child: SafeArea(
-                  top: false,
-                  child: CommonButton(
-                    isLoading: state.loading,
-                    btnText: '提交审核',
-                    radius: 28,
-                    pVertical: AppSizes.setHeight(14),
-                    fontSize: AppSizes.setFontSize(16),
-                    onTap: () {
-                      ctrl.submit();
-                    },
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
