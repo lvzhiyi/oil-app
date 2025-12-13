@@ -40,7 +40,7 @@ security import $CERT -k "$MY_KEYCHAIN" -P "$CERT_PASSWORD" -T "/usr/bin/codesig
 CERT_IDENTITY=$(security find-identity -v -p codesigning "$MY_KEYCHAIN" | head -1 | grep '"' | sed -e 's/[^"]*"//' -e 's/".*//') # Programmatically derive the identity
 CERT_UUID=$(security find-identity -v -p codesigning "$MY_KEYCHAIN" | head -1 | grep '"' | awk '{print $2}') # Handy to have UUID (just in case)
 security set-key-partition-list -S apple-tool:,apple: -s -k $MY_KEYCHAIN_PASSWORD -D "$CERT_IDENTITY" -t private $MY_KEYCHAIN # Enable codesigning from a non user interactive shell
-  flutter build ipa --no-tree-shake-icons --dart-define=BUILD_NUMBER=$1 --export-options-plist="./ios/ExportOptions.plist"
+  flutter build ipa --no-tree-shake-icons --dart-define=BUILD_NUMBER=$1 --dart-define=HTTP_ENV=$3 --export-options-plist="./ios/ExportOptions.plist"
   # 检查构建是否成功
   if [ $? -ne 0 ]; then
     echo "Error: Export failed."
@@ -67,5 +67,7 @@ security set-key-partition-list -S apple-tool:,apple: -s -k $MY_KEYCHAIN_PASSWOR
 }
 
 # 执行构建函数
-build_ios $1 $2
+# 使用方式：./build_ios.sh <build number> <download_name> <http env>
+# 示例：./build_ios.sh 100 test 3  (构建号100，下载名为test，使用qa环境)
+build_ios $1 $2 $3
 security delete-keychain "$MY_KEYCHAIN" # Delete temporary keychain

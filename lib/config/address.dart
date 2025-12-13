@@ -14,15 +14,20 @@ class BaseAddress {
   /// 远程服务器地址映射
   static Map<HttpEnv, String> envDomainMap = {
     HttpEnv.qa: 'https://test.maiyoubei.com',
-    HttpEnv.pro: 'https://test.maiyoubei.com',
+    HttpEnv.pro: 'https://api.maiyoubei.com',
+  };
+
+  static Map<HttpEnv, String> envPathMap = {
+    HttpEnv.qa: '/api/app/',
+    HttpEnv.pro: '/app/',
   };
 
   /// 远程服务器地址映射
   static String get envBaseUrlPath =>
-      '${envDomainMap[BaseConfig.share.httpEnv]}/api/app/';
+      '${envDomainMap[BaseConfig.share.httpEnv]}${envPathMap[BaseConfig.share.httpEnv]}';
 
   static String get commonBaseHost =>
-      '${envDomainMap[BaseConfig.share.httpEnv]}/api/common/';
+      '${envDomainMap[BaseConfig.share.httpEnv]}${envPathMap[BaseConfig.share.httpEnv]}common/';
 
   static String get clientBaseUrl =>
       '${envDomainMap[BaseConfig.share.httpEnv]}';
