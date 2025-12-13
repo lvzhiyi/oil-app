@@ -1,5 +1,6 @@
 #!/bin/bash
 # 使用方式：./build_android.sh <渠道> <分支> <build number> <http env>
+# 示例：./build_android.sh tencent main_branch 001 pro
 set -e
 
 ver=`grep -m 1 '^version:' pubspec.yaml | awk '{print $2}'`
