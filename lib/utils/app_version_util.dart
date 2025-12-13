@@ -13,6 +13,11 @@ import 'package:url_launcher/url_launcher.dart';
 /// print(result); // 输出 1, 因为 '1.0.1' 较新。
 /// ```
 class AppVersionUtil {
+  static String get appStoreUrl => 'https://apps.apple.com/app/6755539430';
+
+  static String get tencentUrl =>
+      'https://a.app.qq.com/o/simple.jsp?pkgname=com.maiyoubei.businessapp';
+
   /// 比较两个版本号，返回比较结果。
   ///
   /// - [version1] 和 [version2] 是需要比较的版本号字符串。
@@ -96,8 +101,9 @@ class AppVersionUtil {
       bodyText: newVersion?.updateMessage ?? '',
       okText: '立即更新',
       onOk: () async {
-        if (!await launchUrl(Uri.parse(BaseAddress.appDownloadUrl))) {
-          throw Exception('Could not launch ${BaseAddress.appDownloadUrl}');
+        final updateUrl = Platform.isAndroid ? tencentUrl : appStoreUrl;
+        if (!await launchUrl(Uri.parse(updateUrl))) {
+          throw Exception('Could not launch $updateUrl');
         }
         if (!isForceUpdate) {
           SportsDialog.dismiss();

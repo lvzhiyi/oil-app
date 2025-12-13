@@ -21,13 +21,8 @@ class BaseAddress {
   static String get envBaseUrlPath =>
       '${envDomainMap[BaseConfig.share.httpEnv]}/api/app/';
 
-  static String get envAppDownloadUrl =>
-      '${envDomainMap[BaseConfig.share.httpEnv]}/app-download';
-
   static String get commonBaseHost =>
       '${envDomainMap[BaseConfig.share.httpEnv]}/api/common/';
-
-  static String get appDownloadUrl => envAppDownloadUrl;
 
   static String get clientBaseUrl =>
       '${envDomainMap[BaseConfig.share.httpEnv]}';
