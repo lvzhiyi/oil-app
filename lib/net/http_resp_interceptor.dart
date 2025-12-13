@@ -27,13 +27,16 @@ class HttpRespInterceptor extends InterceptorsWrapper {
     ResponseInterceptorHandler handler,
   ) async {
     BaseResponse res = BaseResponse.fromJson(response.data);
+    final noShowToast = response.requestOptions.extra['noShowToast'] ?? false;
 
     if (res.code == HttpCode.success) {
       return handler.next(
         Response(
           requestOptions: response.requestOptions,
           statusCode: response.statusCode,
-          data: response.data['data'], // 传递完整的响应数据，而不是只传递data字段
+          data: noShowToast
+              ? response.data
+              : response.data['data'], // 传递完整的响应数据，而不是只传递data字段
         ),
       );
     }
@@ -59,9 +62,6 @@ class HttpRespInterceptor extends InterceptorsWrapper {
       response: response,
     );
 
-    if (statusCode == 4001) {
-      return handler.reject(badRes);
-    }
     // 检查是否是401错误，如果是则尝试token刷新
     if (statusCode == 401 || statusCode == 403) {
       final requestOptions = response.requestOptions;

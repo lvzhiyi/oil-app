@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:oil_business_app/net/response.dart';
 import 'package:oil_business_app/pages/main_oil_pay/model/oil_order_req_type.dart';
 import 'package:oil_business_app/pages/main_oil_pay/model/oil_order_res.type.dart';
 import 'package:oil_business_app/pages/main_oil_pay/service/oil_order_service.dart';
@@ -57,8 +58,13 @@ class OilPurchaseDetailCtrl extends Cubit<OilPurchaseDetailState> {
         remark: formData['remark'] ?? '',
       );
 
-      await oilOrderService.createOilOrder(request);
+      final response = await oilOrderService.createOilOrder(request);
+      print('response: $response');
       emit(state.copyWith(isLoading: false));
+      if (response.code == 4001) {
+        handleResponseError(response);
+        return;
+      }
       SportsToast.showSuccess('订单创建成功');
 
       // 延迟一下再返回，让用户看到成功提示
@@ -87,48 +93,44 @@ class OilPurchaseDetailCtrl extends Cubit<OilPurchaseDetailState> {
       }
     } catch (e) {
       emit(state.copyWith(isLoading: false));
-      if (e is DioException && e.response?.data['code'] == 4001) {
-        // 从错误响应中提取订单ID和错误消息
-        final responseData = e.response?.data;
-        final nestedData = responseData?['data'];
-        final orderId = nestedData?['orderId'];
-        final message = nestedData?['message'] ?? '是否前往订单详情继续处理？';
+      SportsToast.showError('订单创建失败，请稍后重试');
+    }
+  }
 
-        if (orderId != null) {
-          // 显示对话框，提示用户有待支付订单
-          await SportsDialog.show(
-            title: '存在待支付的买油订单',
-            bodyText: message,
-            cancelText: '取消',
-            okText: '前往查看',
-            onCancel: () async {
-              // 关闭对话框
-              await SportsDialog.dismiss();
-            },
-            onOk: () async {
-              // 关闭对话框
-              await SportsDialog.dismiss();
-              try {
-                // 根据订单ID获取订单详情
-                final order =
-                    await payOrderService.getOrderDetail(orderId.toString());
-                // 跳转到订单详情页
-                BaseRouter.push(
-                  url: AppPage.payOrderDetailPage.path,
-                  extra: {'order': order, 'from': 'oilPurchaseDetail'},
-                );
-              } catch (error) {
-                SportsToast.showError('获取订单详情失败，请稍后重试');
-              }
-            },
-          );
-        } else {
-          SportsToast.showError(message);
-        }
-      } else {
-        // 其他错误，显示通用错误提示
-        SportsToast.showError('订单创建失败，请稍后重试');
-      }
+  void handleResponseError(BaseResponse response) async {
+    final orderId = response.data?['orderId'];
+    final message = response.data?['message'] ?? '是否前往订单详情继续处理？';
+
+    if (orderId != null) {
+      // 显示对话框，提示用户有待支付订单
+      await SportsDialog.show(
+        title: '存在待支付的买油订单',
+        bodyText: message,
+        cancelText: '取消',
+        okText: '前往查看',
+        onCancel: () async {
+          // 关闭对话框
+          await SportsDialog.dismiss();
+        },
+        onOk: () async {
+          // 关闭对话框
+          await SportsDialog.dismiss();
+          try {
+            // 根据订单ID获取订单详情
+            final order =
+                await payOrderService.getOrderDetail(orderId.toString());
+            // 跳转到订单详情页
+            BaseRouter.push(
+              url: AppPage.payOrderDetailPage.path,
+              extra: {'order': order, 'from': 'oilPurchaseDetail'},
+            );
+          } catch (error) {
+            SportsToast.showError('获取订单详情失败，请稍后重试');
+          }
+        },
+      );
+    } else {
+      SportsToast.showError(message);
     }
   }
 }
