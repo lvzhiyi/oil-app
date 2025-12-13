@@ -42,5 +42,12 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+        <!-- 应用宝 scheme 查询 -->
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="tmast"/>
+        </intent>
+        <!-- 应用宝包名查询 -->
+        <package android:name="com.tencent.android.qqdownloader"/>
     </queries>
 </manifest>

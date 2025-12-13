@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:oil_business_app/config/address.dart';
 import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/model/app_version_type.dart';
 import 'package:oil_business_app/global/service/app_version_service.dart';
@@ -17,7 +16,7 @@ class AppVersionUtil {
 
   /// 应用宝APP深度链接
   static String get tencentAppUrl =>
-      'tmast://appdetails?pkgName=com.maiyoubei.businessapp';
+      'tmast://appdetails?pname=com.maiyoubei.businessapp';
 
   /// 应用宝网页版链接（备用）
   static String get tencentWebUrl =>
@@ -27,11 +26,19 @@ class AppVersionUtil {
   /// 优先尝试打开应用宝APP，如果失败则打开网页版
   static Future<bool> launchTencentStore() async {
     final appUri = Uri.parse(tencentAppUrl);
-    // 先尝试打开应用宝APP
-    if (await canLaunchUrl(appUri)) {
-      return await launchUrl(appUri);
+    try {
+      // 直接尝试打开应用宝APP
+      final launched = await launchUrl(
+        appUri,
+        mode: LaunchMode.externalApplication,
+      );
+      if (launched) {
+        return true;
+      }
+    } catch (_) {
+      // 打开失败，继续尝试网页版
     }
-    // 如果应用宝APP未安装，则打开网页版
+    // 如果应用宝APP未安装或打开失败，则打开网页版
     final webUri = Uri.parse(tencentWebUrl);
     return await launchUrl(webUri, mode: LaunchMode.externalApplication);
   }
