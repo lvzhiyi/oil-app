@@ -15,8 +15,26 @@ import 'package:url_launcher/url_launcher.dart';
 class AppVersionUtil {
   static String get appStoreUrl => 'https://apps.apple.com/app/6755539430';
 
-  static String get tencentUrl =>
+  /// 应用宝APP深度链接
+  static String get tencentAppUrl =>
+      'tmast://appdetails?pkgName=com.maiyoubei.businessapp';
+
+  /// 应用宝网页版链接（备用）
+  static String get tencentWebUrl =>
       'https://a.app.qq.com/o/simple.jsp?pkgname=com.maiyoubei.businessapp';
+
+  /// 打开应用宝更新页面
+  /// 优先尝试打开应用宝APP，如果失败则打开网页版
+  static Future<bool> launchTencentStore() async {
+    final appUri = Uri.parse(tencentAppUrl);
+    // 先尝试打开应用宝APP
+    if (await canLaunchUrl(appUri)) {
+      return await launchUrl(appUri);
+    }
+    // 如果应用宝APP未安装，则打开网页版
+    final webUri = Uri.parse(tencentWebUrl);
+    return await launchUrl(webUri, mode: LaunchMode.externalApplication);
+  }
 
   /// 比较两个版本号，返回比较结果。
   ///
@@ -101,9 +119,14 @@ class AppVersionUtil {
       bodyText: newVersion?.updateMessage ?? '',
       okText: '立即更新',
       onOk: () async {
-        final updateUrl = Platform.isAndroid ? tencentUrl : appStoreUrl;
-        if (!await launchUrl(Uri.parse(updateUrl))) {
-          throw Exception('Could not launch $updateUrl');
+        bool launched = false;
+        if (Platform.isAndroid) {
+          launched = await launchTencentStore();
+        } else {
+          launched = await launchUrl(Uri.parse(appStoreUrl));
+        }
+        if (!launched) {
+          throw Exception('Could not launch app store');
         }
         if (!isForceUpdate) {
           SportsDialog.dismiss();
