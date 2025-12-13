@@ -160,6 +160,7 @@ class HttpRespInterceptor extends InterceptorsWrapper {
       } else {
         SportsToast.showWarning('网络错误');
       }
+      return handler.reject(badRes);
     }
 
     return handler.resolve(response);

@@ -37,9 +37,9 @@ class BindStationScreen extends StatelessWidget {
               ),
               onPressed: () {
                 if (extra?['isFromLogin'] == true) {
-                  BaseRouter.popToRoot();
+                  BaseRouter.replace(url: AppPage.loginPage.path);
                 } else {
-                  BaseRouter.push(url: AppPage.loginPage.path);
+                  BaseRouter.replace(url: AppPage.loginPage.path);
                 }
               },
             ),

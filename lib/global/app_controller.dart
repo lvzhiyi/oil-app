@@ -22,6 +22,7 @@ class AppController extends HydratedCubit<AppState>
 
   AppController() : super(AppState()) {
     listenAppLifecycle();
+
     initState();
   }
 
@@ -90,7 +91,7 @@ class AppController extends HydratedCubit<AppState>
       BaseRouter.push(url: AppPage.bindStationPage.path);
       return;
     }
-    bindStationProcess(isFromLogin: true);
+    await bindStationProcess(isFromLogin: true);
   }
 
   /// 绑定加油站流程
@@ -110,14 +111,14 @@ class AppController extends HydratedCubit<AppState>
       ]);
 
       if (pendingStation.list?.isNotEmpty ?? false) {
-        BaseRouter.replace(url: AppPage.pendingReviewPage.path, extra: {
+        BaseRouter.push(url: AppPage.pendingReviewPage.path, extra: {
           'station': pendingStation.list?[0],
           'isFromLogin': isFromLogin,
         });
         return;
       }
 
-      BaseRouter.replace(url: AppPage.bindStationPage.path, extra: {
+      BaseRouter.push(url: AppPage.bindStationPage.path, extra: {
         'isFromLogin': isFromLogin,
       });
     }
