@@ -352,7 +352,7 @@ class _FuelItem extends StatelessWidget {
                   Gap(pt(4)),
                   // 密度
                   Text(
-                    '密度: ${fuel.density?.toStringAsFixed(2) ?? '0.00'}',
+                    '密度: ${fuel.density?.toStringAsFixed(3) ?? '0.00'}',
                     textAlign: TextAlign.center,
                     style: SportsTextStyle.baseNormal.copyWith(
                       fontSize: pt(12),
