@@ -11,7 +11,7 @@ abstract class AppVersionService {
 
   /// 获取版本信息
   @GET('/version/latest')
-  Future<AppVersionInfo> appVersion(
+  Future<AppVersionInfo?> appVersion(
     @Query('platform') String platform,
   );
 }

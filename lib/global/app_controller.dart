@@ -58,9 +58,6 @@ class AppController extends HydratedCubit<AppState>
   /// 应用启动检查（版本更新检查和绑定加油站流程）
   /// 在主页初始化时调用
   Future<void> checkStartupProcess() async {
-    if (_hasCheckedStartup) return;
-    _hasCheckedStartup = true;
-
     try {
       // 检查版本更新
       await AppVersionUtil.checkVersionShowDialog();

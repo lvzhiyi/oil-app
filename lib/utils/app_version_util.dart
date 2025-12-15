@@ -108,9 +108,7 @@ class AppVersionUtil {
     try {
       AppVersionInfo _res = await appVersionService
           .appVersion(Platform.isAndroid ? 'android' : 'ios')
-          .then((value) {
-        return value;
-      });
+          .then((value) => value ?? const AppVersionInfo());
       appVersionUpdateTip = _res.updateMessage;
       return _res;
     } on DioException catch (_) {
@@ -209,7 +207,7 @@ class AppVersionUtil {
 
   /// 是否有更新新版本
   static bool? hasNewVersionUpdate() {
-    if (newVersion?.version.isEmpty ?? true) {
+    if (newVersion?.version?.isEmpty == true) {
       return false;
     }
     return AppVersionUtil.compareVersion(

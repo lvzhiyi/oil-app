@@ -120,20 +120,20 @@ class _AccountScreenState extends State<AccountScreen>
         padding: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(24)),
         child: Row(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 2),
-              ),
-              child: ClipOval(
-                child: Image.asset(
-                  AssetsIcon.IC_AVATAR,
-                  height: AppSizes.setHeight(64),
-                  width: AppSizes.setWidth(64),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+            // Container(
+            //   decoration: BoxDecoration(
+            //     shape: BoxShape.circle,
+            //     border: Border.all(color: Colors.white, width: 2),
+            //   ),
+            //   child: ClipOval(
+            //     child: Image.asset(
+            //       AssetsIcon.IC_AVATAR,
+            //       height: AppSizes.setHeight(64),
+            //       width: AppSizes.setWidth(64),
+            //       fit: BoxFit.cover,
+            //     ),
+            //   ),
+            // ),
             SizedBox(width: AppSizes.setWidth(16)),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
