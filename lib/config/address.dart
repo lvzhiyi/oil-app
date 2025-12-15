@@ -27,7 +27,7 @@ class BaseAddress {
       '${envDomainMap[BaseConfig.share.httpEnv]}${envPathMap[BaseConfig.share.httpEnv]}';
 
   static String get commonBaseHost =>
-      '${envDomainMap[BaseConfig.share.httpEnv]}${envPathMap[BaseConfig.share.httpEnv]}common/';
+      '${envDomainMap[BaseConfig.share.httpEnv]}/common/';
 
   static String get clientBaseUrl =>
       '${envDomainMap[BaseConfig.share.httpEnv]}';
