@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/global/app_state.dart';
 import 'package:oil_business_app/interfaces/top_bar_click_listener.dart';
@@ -15,7 +14,6 @@ import 'package:oil_business_app/utils/app_version_util.dart';
 import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
-import 'package:oil_business_app/widgets/popup/dialog.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -94,11 +92,6 @@ class _AccountScreenState extends State<AccountScreen>
 
                 // Menu List (Password & Privacy)
                 _buildMenuCard(),
-
-                SizedBox(height: AppSizes.setHeight(30)),
-
-                // Logout Button
-                _buildLogoutButton(),
 
                 SizedBox(height: AppSizes.setHeight(20)),
 
@@ -382,8 +375,8 @@ class _AccountScreenState extends State<AccountScreen>
         children: [
           _buildMenuItem(
             icon: AssetsIcon.IC_PASSWORD,
-            label: '修改密码',
-            onTap: () => BaseRouter.push(url: AppPage.changePasswordPage.path),
+            label: '账户安全',
+            onTap: () => BaseRouter.push(url: AppPage.accountSecurityPage.path),
           ),
           Divider(
               height: 1,
@@ -433,31 +426,6 @@ class _AccountScreenState extends State<AccountScreen>
     );
   }
 
-  Widget _buildLogoutButton() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: AppSizes.setWidth(16)),
-      width: double.infinity,
-      height: AppSizes.setHeight(50),
-      decoration: BoxDecoration(
-        color: CustomAppColor.of(context).white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: TextButton(
-        onPressed: () => logoutBottomSheet(context),
-        style: TextButton.styleFrom(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        ),
-        child: CommonText(
-          text: '退出登录',
-          fontWeight: FontWeight.w600,
-          fontSize: AppSizes.setFontSize(16),
-          textColor: CustomAppColor.of(context).txtGrey,
-        ),
-      ),
-    );
-  }
-
   Widget _buildVersionInfo() {
     return Column(
       children: [
@@ -496,21 +464,6 @@ class _AccountScreenState extends State<AccountScreen>
           ),
         ],
       ],
-    );
-  }
-
-  void logoutBottomSheet(BuildContext context) {
-    SportsDialog.show(
-      title: '退出登录',
-      bodyText: '确定要退出登录吗？退出后将返回登录页面。',
-      onCancel: () {},
-      onOk: () async {
-        await SportsDialog.dismiss();
-        if (context.mounted) {
-          BaseConfig.appContext?.read<AppController>().logout();
-          Navigator.pop(context);
-        }
-      },
     );
   }
 

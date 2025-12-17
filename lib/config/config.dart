@@ -100,7 +100,7 @@ class BaseConfig {
     ).value;
 
     final httpEnv =
-        BaseConfig.debug ? HttpEnv.pro : HttpEnv.mapEnv(GlobalStorage.httpEnv);
+        BaseConfig.debug ? HttpEnv.qa : HttpEnv.mapEnv(GlobalStorage.httpEnv);
     l.d('env---------------->', 'httpEnv:$httpEnv');
     setEnvName(httpEnv);
   }

@@ -20,6 +20,7 @@ import 'package:oil_business_app/pages/change_password/page.dart';
 import 'package:oil_business_app/pages/privacy_feedback/page.dart';
 import 'package:oil_business_app/pages/service_agreement/page.dart';
 import 'package:oil_business_app/pages/forgot_password/page.dart';
+import 'package:oil_business_app/pages/account_security/page.dart';
 
 import 'package:oil_business_app/pages/profile/page.dart';
 import 'package:oil_business_app/pages/main_layout/page.dart';
@@ -77,6 +78,9 @@ enum AppPage {
 
   /// 修改密码（个人中心）
   changePasswordPage('/changePassword'),
+
+  /// 账户安全页面
+  accountSecurityPage('/accountSecurity'),
 
   /// 提油页面
   oilPickupPage('/oilPickup'),
@@ -173,6 +177,9 @@ extension PageRoute on AppPage {
         return (context, state) => ChangePasswordPage(
               extra: state.extra as Map<String, dynamic>? ?? {},
             );
+
+      case AppPage.accountSecurityPage:
+        return (context, state) => const AccountSecurityPage();
 
       case AppPage.mainLayoutPage:
         return (context, state) => const MainLayoutPage();
