@@ -240,7 +240,7 @@ class StationManagementItem extends StatelessWidget {
                       vertical: AppSizes.setHeight(6),
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF5F3FF),
+                      color: Colors.white,
                       border: Border.all(
                         color: colors.btnPurple,
                         width: 1,
@@ -266,7 +266,7 @@ class StationManagementItem extends StatelessWidget {
                         vertical: AppSizes.setHeight(6),
                       ),
                       decoration: BoxDecoration(
-                        color: colors.bgContainer,
+                        color: colors.white,
                         border: Border.all(
                           color: colors.containerBorder,
                           width: 1,
@@ -290,7 +290,7 @@ class StationManagementItem extends StatelessWidget {
                       vertical: AppSizes.setHeight(6),
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF5F3FF),
+                      color: Colors.white,
                       border: Border.all(
                         color: colors.btnPurple,
                         width: 1,

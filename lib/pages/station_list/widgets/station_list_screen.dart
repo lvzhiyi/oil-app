@@ -26,7 +26,7 @@ class StationListScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xffF5F7FA),
       appBar: AppBar(
-        backgroundColor: CustomAppColor.of(context).bgScaffold,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
