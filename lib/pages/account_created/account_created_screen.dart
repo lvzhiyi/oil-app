@@ -16,7 +16,7 @@ class AccountCreatedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomAppColor.of(context).bgScaffold,
+      backgroundColor: const Color(0xFFF5F5F5),
       body: SizedBox(
         width: AppSizes.fullWidth,
         child: Padding(
