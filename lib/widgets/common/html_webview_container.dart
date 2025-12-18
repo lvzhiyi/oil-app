@@ -156,7 +156,7 @@ class _HtmlWebViewContainerState extends State<HtmlWebViewContainer> {
 
     if (_errorMessage != null) {
       return Scaffold(
-        backgroundColor: CustomAppColor.of(context).bgScaffold,
+        backgroundColor: const Color(0xFFF5F5F5),
         appBar: AppBar(
           backgroundColor: CustomAppColor.of(context).bgTopBar,
           elevation: 0,

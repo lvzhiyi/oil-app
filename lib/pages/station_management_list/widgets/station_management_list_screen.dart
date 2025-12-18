@@ -44,7 +44,7 @@ class StationManagementListScreen extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: CustomAppColor.of(context).bgContainer,
+            color: Colors.white,
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.03),
