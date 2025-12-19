@@ -51,7 +51,7 @@ class AppVersionUtil {
   /// - 返回 `0` 表示两个版本号相等。
   static int compareVersion(String version1, String version2) {
     if (version1.isEmpty || version2.isEmpty) {
-      return -1;
+      return 0;
     }
     // 将版本号按照点号分割并转成整型的列表
     List<int> v1Parts = version1.split('.').map(int.parse).toList();
