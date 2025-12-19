@@ -891,7 +891,7 @@ extension PageRoute on AppPage {
   - `refresh_token`: 用于刷新 access_token 的长期令牌
   - 自动过期刷新：当 access_token 过期时自动刷新
 - **Base URL**: 
-  - 开发环境（测试）: https://test.maiyoubei.com/api/app
+  - 开发环境（测试）: https://myb-api.test.maiyoubei.com/app
   - 生产环境: 待配置
 
 ## Important Constraints

@@ -13,12 +13,12 @@ class BaseAddress {
 
   /// 远程服务器地址映射
   static Map<HttpEnv, String> envDomainMap = {
-    HttpEnv.qa: 'https://test.maiyoubei.com',
+    HttpEnv.qa: 'https://myb-api.test.maiyoubei.com',
     HttpEnv.pro: 'https://api.maiyoubei.com',
   };
 
   static Map<HttpEnv, String> envPathMap = {
-    HttpEnv.qa: '/api/app/',
+    HttpEnv.qa: '/app/',
     HttpEnv.pro: '/app/',
   };
 

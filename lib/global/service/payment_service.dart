@@ -6,7 +6,7 @@ import 'package:retrofit/retrofit.dart';
 
 part 'payment_service.g.dart';
 
-/// 支付相关服务API（使用 /api/app/ 前缀）
+/// 支付相关服务API（使用 /app/ 前缀）
 @RestApi()
 abstract class PaymentService {
   factory PaymentService(Dio dio, {String baseUrl}) = _PaymentService;
