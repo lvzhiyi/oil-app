@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:oil_business_app/global/enum/common.dart';
 import 'package:oil_business_app/global/model/auth_rep_type.dart';
 import 'package:oil_business_app/global/model/auth_req_type.dart';
@@ -64,20 +63,6 @@ class AppController extends HydratedCubit<AppState>
   /// 在主页初始化时调用
   Future<void> checkStartupProcess() async {
     try {
-      if (_hasCheckedStartup) {
-        return;
-      }
-
-      _hasCheckedStartup = true;
-
-      /// 先进行网络权限与连接检测
-      final hasNetworkPermission =
-          await _ensureNetworkPermissionAndConnection();
-      if (!hasNetworkPermission) {
-        l.e('AppController', '用户未授予网络权限或当前无可用网络，终止启动流程');
-        return;
-      }
-
       // 检查版本更新
       await AppVersionUtil.checkVersionShowDialog();
 
@@ -87,65 +72,6 @@ class AppController extends HydratedCubit<AppState>
       }
     } catch (e) {
       l.e('AppController', '启动检查失败: $e');
-    }
-  }
-
-  /// 网络权限检测与网络连接检测
-  ///
-  /// 返回：
-  /// - `true`：用户已授权且当前有可用网络
-  /// - `false`：用户未授权或仍然无网络（内部可能已触发退出应用）
-  Future<bool> _ensureNetworkPermissionAndConnection() async {
-    // Web 环境不做权限拦截，直接放行
-    if (kIsWeb) {
-      return true;
-    }
-
-    try {
-      // 先检查当前是否已经有可用网络
-      final bool hasConnection =
-          await InternetConnectionChecker.instance.hasConnection;
-      if (hasConnection) {
-        return true;
-      }
-
-      var isAuthorized = false;
-
-      await SportsDialog.show(
-        title: '需要网络权限',
-        bodyText: '请在系统设置中为本应用开启网络权限并保持网络连接。',
-        cancelText: '退出应用',
-        okText: '去设置',
-        clickMaskDismiss: false,
-        showClose: false,
-        onCancel: () {
-          exitApp();
-        },
-        onOk: () async {
-          try {
-            // 打开应用设置页面，引导用户开启网络权限/网络访问
-            await openAppSettings();
-          } catch (e) {
-            l.e('AppController', '打开系统设置失败: $e');
-          }
-
-          // 用户从系统设置返回后再次检测网络连接
-          final recheck =
-              await InternetConnectionChecker.instance.hasConnection;
-          if (recheck) {
-            isAuthorized = true;
-            await SportsDialog.dismiss();
-          } else {
-            // 仍然无网络则按未授权处理，直接退出应用
-            exitApp();
-          }
-        },
-      );
-
-      return isAuthorized;
-    } catch (e) {
-      l.e('AppController', '网络权限检测失败: $e');
-      return false;
     }
   }
 

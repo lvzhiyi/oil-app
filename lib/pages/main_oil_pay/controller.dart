@@ -1,10 +1,17 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/pages/main_oil_pay/model/oil_order_res.type.dart';
 import 'package:oil_business_app/pages/main_oil_pay/service/oil_order_service.dart';
+import 'package:oil_business_app/utils/exit_app.dart';
+import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/widgets/common/page_loading.dart';
+import 'package:oil_business_app/widgets/popup/dialog.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'state.dart';
 
@@ -12,10 +19,52 @@ class OilPayCtrl extends Cubit<MainOilPayState> {
   OilPayCtrl() : super(MainOilPayState()) {
     initState();
   }
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
   initState() async {
-    await BaseConfig.appContext?.read<AppController>().checkStartupProcess();
-    getOilStoreList();
+    _subscribeNetworkStateChange();
+  }
+
+  _subscribeNetworkStateChange() {
+    _connectivitySubscription =
+        Connectivity().onConnectivityChanged.listen((result) async {
+      result = await (Connectivity().checkConnectivity());
+
+      if (result.contains(ConnectivityResult.wifi) ||
+          result.contains(ConnectivityResult.mobile)) {
+        await BaseConfig.appContext
+            ?.read<AppController>()
+            .checkStartupProcess();
+        getOilStoreList();
+
+        /// 执行完所有初始化操作后，需要取消事件监听
+        _unSubscribeNetworkStateChange();
+      } else {
+        await SportsDialog.show(
+          title: '需要网络权限',
+          bodyText: '请在系统设置中为本应用开启网络权限并保持网络连接。',
+          cancelText: '退出应用',
+          okText: '去设置',
+          clickMaskDismiss: false,
+          showClose: false,
+          onCancel: () {
+            exitApp();
+          },
+          onOk: () async {
+            try {
+              // 打开应用设置页面，引导用户开启网络权限/网络访问
+              await openAppSettings();
+            } catch (e) {
+              l.e('AppController', '打开系统设置失败: $e');
+            }
+          },
+        );
+      }
+    });
+  }
+
+  _unSubscribeNetworkStateChange() {
+    _connectivitySubscription.cancel();
   }
 
   final EasyRefreshController refreshController = EasyRefreshController(
