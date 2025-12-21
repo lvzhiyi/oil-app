@@ -21,6 +21,8 @@ class OilPayCtrl extends Cubit<MainOilPayState> {
   }
   late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
+  List<ConnectivityResult> _connectivityResult = [];
+
   initState() async {
     _subscribeNetworkStateChange();
   }
@@ -29,7 +31,8 @@ class OilPayCtrl extends Cubit<MainOilPayState> {
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen((result) async {
       result = await (Connectivity().checkConnectivity());
-
+      _connectivityResult = result;
+      print('result: $result');
       if (result.contains(ConnectivityResult.wifi) ||
           result.contains(ConnectivityResult.mobile)) {
         await BaseConfig.appContext
@@ -37,28 +40,30 @@ class OilPayCtrl extends Cubit<MainOilPayState> {
             .checkStartupProcess();
         getOilStoreList();
 
+        SportsDialog.dismiss();
+
         /// 执行完所有初始化操作后，需要取消事件监听
         _unSubscribeNetworkStateChange();
       } else {
-        // await SportsDialog.show(
-        //   title: '需要网络权限',
-        //   bodyText: '请在系统设置中为本应用开启网络权限并保持网络连接。',
-        //   cancelText: '退出应用',
-        //   okText: '去设置',
-        //   clickMaskDismiss: false,
-        //   showClose: false,
-        //   onCancel: () {
-        //     exitApp();
-        //   },
-        //   onOk: () async {
-        //     try {
-        //       // 打开应用设置页面，引导用户开启网络权限/网络访问
-        //       await openAppSettings();
-        //     } catch (e) {
-        //       l.e('AppController', '打开系统设置失败: $e');
-        //     }
-        //   },
-        // );
+        await SportsDialog.show(
+          title: '需要网络权限',
+          bodyText: '请在系统设置中为本应用开启网络权限并保持网络连接。',
+          cancelText: '退出应用',
+          okText: '去设置',
+          clickMaskDismiss: false,
+          showClose: false,
+          onCancel: () {
+            exitApp();
+          },
+          onOk: () async {
+            try {
+              // 打开应用设置页面，引导用户开启网络权限/网络访问
+              await openAppSettings();
+            } catch (e) {
+              l.e('AppController', '打开系统设置失败: $e');
+            }
+          },
+        );
       }
     });
   }
