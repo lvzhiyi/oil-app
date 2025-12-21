@@ -211,8 +211,8 @@ class AppVersionUtil {
       return false;
     }
     return AppVersionUtil.compareVersion(
-            newVersion?.version ?? '', BaseConfig.share.packageInfo.version) !=
-        0;
+            newVersion?.version ?? '', BaseConfig.share.packageInfo.version) ==
+        1;
   }
 
   /// 拼接好的版本信息字符串
