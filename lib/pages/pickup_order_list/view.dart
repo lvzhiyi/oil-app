@@ -12,6 +12,10 @@ import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/common/empty_card.dart';
 import 'package:oil_business_app/widgets/common/pull_refresh_easy.dart';
 import 'package:oil_business_app/static/icon.dart';
+import 'package:oil_business_app/static/img.dart';
+import 'package:oil_business_app/widgets/base/button/common_button.dart';
+import 'package:oil_business_app/utils/pt.dart';
+import 'package:oil_business_app/widgets/common/image_asset_pro.dart';
 
 class PickupOrderListView extends StatefulWidget {
   final PickupOrderListState state;
@@ -57,6 +61,35 @@ class _PickupOrderListViewState extends State<PickupOrderListView>
     if (widget.state.isLoading && widget.state.orderList.isEmpty) {
       return const Center(
         child: CupertinoActivityIndicator(),
+      );
+    }
+
+    // 网络请求失败时显示错误占位页面
+    if (widget.state.errorMessage != null && widget.state.orderList.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ImageAsset(
+              assetName: AssetsImg.PAGE_ERROR,
+              width: pt(180),
+            ),
+            SizedBox(height: pt(20)),
+            CommonText(
+              text: '加载失败',
+              fontSize: AppSizes.setFontSize(16),
+              textColor: CustomAppColor.of(context).txtGrey,
+            ),
+            SizedBox(height: pt(16)),
+            CommonButton(
+              btnText: '刷新',
+              width: AppSizes.setWidth(120),
+              height: AppSizes.setHeight(40),
+              fontSize: AppSizes.setFontSize(14),
+              onTap: () => ctrl.onRefresh(),
+            ),
+          ],
+        ),
       );
     }
 

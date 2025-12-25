@@ -49,6 +49,7 @@ class _MainOilPayViewState extends State<MainOilPayView> {
       color: CustomAppColor.of(context).bgTopBar,
       child: OilPageLoading(
         status: state.pageStatus,
+        retry: () => context.read<OilPayCtrl>().onRefresh(),
         child: PullOrRefreshEasy(
           refreshController: _refreshController,
           onRefresh: () async {
