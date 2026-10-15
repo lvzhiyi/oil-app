@@ -27,10 +27,7 @@ class ActionLinks extends StatelessWidget {
             SizedBox(width: AppSizes.setWidth(4)),
             InkWell(
               onTap: () {
-                BaseRouter.push(
-                  url: AppPage.registerPage.path,
-                  extra: null,
-                );
+                BaseRouter.push(url: AppPage.registerPage.path);
               },
               child: CommonText(
                 text: '立即注册',

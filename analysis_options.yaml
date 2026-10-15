@@ -10,6 +10,12 @@ analyzer:
     - "**/*.r.g.dart"
     - "**/*.part.dart"
     - "lib/generated_plugin_registrant.dart"
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - macos/**
+    - linux/**
   errors:
     invalid_annotation_target: false
     always_require_non_null_named_parameters: info
