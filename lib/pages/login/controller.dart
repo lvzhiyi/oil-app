@@ -28,9 +28,7 @@ class LoginCtrl extends Cubit<LoginState> {
 
   Timer? _countdownTimer;
 
-  initState() async {
-    await _loadLastPhone();
-  }
+  initState() async {}
 
   @override
   Future<void> close() {
