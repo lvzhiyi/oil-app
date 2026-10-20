@@ -19,7 +19,7 @@ void main() {
 
       for (final field in inputFields) {
         // Simulate getting field style
-        final bgColor = expectedBgColor;
+        const bgColor = expectedBgColor;
 
         expect(
           bgColor,
@@ -38,7 +38,7 @@ void main() {
 
       for (final field in inputFields) {
         // Simulate getting field style
-        final borderColor = expectedBorderColor;
+        const borderColor = expectedBorderColor;
 
         expect(
           borderColor,
@@ -57,7 +57,7 @@ void main() {
 
       for (final field in inputFields) {
         // Simulate getting field style
-        final borderRadius = expectedBorderRadius;
+        const borderRadius = expectedBorderRadius;
 
         expect(
           borderRadius,
@@ -70,9 +70,9 @@ void main() {
     test('styling consistency across 100 field instances', () {
       for (int i = 0; i < 100; i++) {
         // Simulate creating field instances
-        final bgColor = expectedBgColor;
-        final borderColor = expectedBorderColor;
-        final borderRadius = expectedBorderRadius;
+        const bgColor = expectedBgColor;
+        const borderColor = expectedBorderColor;
+        const borderRadius = expectedBorderRadius;
 
         expect(
           bgColor,
@@ -99,9 +99,9 @@ void main() {
 
       for (final form in forms) {
         // Each form has input fields with default styling
-        final bgColor = expectedBgColor;
-        final borderColor = expectedBorderColor;
-        final borderRadius = expectedBorderRadius;
+        const bgColor = expectedBgColor;
+        const borderColor = expectedBorderColor;
+        const borderRadius = expectedBorderRadius;
 
         expect(
           bgColor,
@@ -125,13 +125,19 @@ void main() {
 
     test('color values are within valid range', () {
       // Verify color components are valid (0-255)
-      expect(expectedBgColor.red, inInclusiveRange(0, 255));
-      expect(expectedBgColor.green, inInclusiveRange(0, 255));
-      expect(expectedBgColor.blue, inInclusiveRange(0, 255));
+      expect((expectedBgColor.r * 255.0).round().clamp(0, 255),
+          inInclusiveRange(0, 255));
+      expect((expectedBgColor.g * 255.0).round().clamp(0, 255),
+          inInclusiveRange(0, 255));
+      expect((expectedBgColor.b * 255.0).round().clamp(0, 255),
+          inInclusiveRange(0, 255));
 
-      expect(expectedBorderColor.red, inInclusiveRange(0, 255));
-      expect(expectedBorderColor.green, inInclusiveRange(0, 255));
-      expect(expectedBorderColor.blue, inInclusiveRange(0, 255));
+      expect((expectedBorderColor.r * 255.0).round().clamp(0, 255),
+          inInclusiveRange(0, 255));
+      expect((expectedBorderColor.g * 255.0).round().clamp(0, 255),
+          inInclusiveRange(0, 255));
+      expect((expectedBorderColor.b * 255.0).round().clamp(0, 255),
+          inInclusiveRange(0, 255));
     });
 
     test('border radius is positive', () {

@@ -82,7 +82,7 @@ class HttpRespInterceptor extends InterceptorsWrapper {
           final refreshSuccess = await _refreshCompleter!.future;
           if (refreshSuccess) {
             // 刷新成功，重新发送原始请求
-            return _retryRequest(response, handler, badRes);
+            return await _retryRequest(response, handler, badRes);
           } else {
             // 刷新失败，直接拒绝请求
             return handler.reject(badRes);
@@ -132,7 +132,7 @@ class HttpRespInterceptor extends InterceptorsWrapper {
         _refreshCompleter = null;
 
         // 刷新成功，重新发送原始请求
-        return _retryRequest(response, handler, badRes);
+        return await _retryRequest(response, handler, badRes);
       } catch (e) {
         l.e('HttpRespInterceptor', '刷新token失败: $e');
         _isRefreshing = false;

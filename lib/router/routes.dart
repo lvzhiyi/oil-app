@@ -194,7 +194,7 @@ extension PageRoute on AppPage {
         return (context, state) => const PickupOrderListPage();
 
       case AppPage.stationListPage:
-        return (context, state) => StationListPage();
+        return (context, state) => const StationListPage();
 
       case AppPage.stationEditPage:
         return (context, state) => const StationEditPage();

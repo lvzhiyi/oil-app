@@ -110,7 +110,7 @@ void main() {
       BoxShadow? getShadow(bool isFocused) {
         if (!isFocused) return null;
         return BoxShadow(
-          color: const Color(0xFF7165E3).withOpacity(0.1),
+          color: const Color(0xFF7165E3).withValues(alpha: 0.1),
           blurRadius: 3,
           spreadRadius: 0,
         );

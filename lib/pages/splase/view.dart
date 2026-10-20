@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:oil_business_app/pages/splase/state.dart';
-import 'package:oil_business_app/resources/colors.dart';
-import 'package:oil_business_app/static/img.dart';
-import 'package:oil_business_app/utils/constant.dart';
-import 'package:oil_business_app/utils/sizer_utils.dart';
-import 'package:oil_business_app/widgets/common/image_asset_pro.dart';
 
 class SplaseView extends HookWidget {
   final SplaseState state;
@@ -14,7 +9,7 @@ class SplaseView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Colors.white,
       // body: Stack(
       //   fit: StackFit.expand,

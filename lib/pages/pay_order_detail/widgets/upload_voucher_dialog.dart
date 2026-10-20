@@ -42,7 +42,7 @@ class _UploadVoucherDialogState extends State<UploadVoucherDialog> {
         // 已上传和新选择的图片
         if (hasImages) ...[
           Text(
-            '已上传凭证 (${_totalImageCount}张)',
+            '已上传凭证 ($_totalImageCount张)',
             style: TextStyle(
               fontSize: pt(14, isFontSize: true),
               fontWeight: FontWeight.w500,

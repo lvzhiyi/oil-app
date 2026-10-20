@@ -5,28 +5,26 @@ import 'package:flutter/material.dart';
 /// 来源于 iconfont(assets/fonts)
 class SportsIcons {
   /// 全屏展开
-  static IconData fullscreen = getIcon(0xe640);
+  static const IconData fullscreen =
+      IconData(0xe640, fontFamily: 'sportsIcon', matchTextDirection: true);
 
   /// 全屏收起
-  static IconData fullscreen_up = getIcon(0xe63f);
+  static const IconData fullscreen_up =
+      IconData(0xe63f, fontFamily: 'sportsIcon', matchTextDirection: true);
 
   /// 播放
-  static IconData play = getIcon(0xe63a);
+  static const IconData play =
+      IconData(0xe63a, fontFamily: 'sportsIcon', matchTextDirection: true);
 
   /// 暂停
-  static IconData pause = getIcon(0xe63b);
+  static const IconData pause =
+      IconData(0xe63b, fontFamily: 'sportsIcon', matchTextDirection: true);
 
   /// 返回
-  static IconData back = getIcon(0xe639);
+  static const IconData back =
+      IconData(0xe639, fontFamily: 'sportsIcon', matchTextDirection: true);
 
   /// 复制
-  static IconData copy = getIcon(0xe649);
-}
-
-IconData getIcon(int i) {
-  return IconData(
-    i,
-    fontFamily: 'sportsIcon',
-    matchTextDirection: true,
-  );
+  static const IconData copy =
+      IconData(0xe649, fontFamily: 'sportsIcon', matchTextDirection: true);
 }

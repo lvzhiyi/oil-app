@@ -22,7 +22,7 @@ void main() {
 
       for (final field in inputFields) {
         // Simulate field receiving focus
-        final focusedBgColor = expectedFocusBgColor;
+        const focusedBgColor = expectedFocusBgColor;
 
         expect(
           focusedBgColor,
@@ -41,7 +41,7 @@ void main() {
 
       for (final field in inputFields) {
         // Simulate field receiving focus
-        final focusedBorderColor = expectedFocusBorderColor;
+        const focusedBorderColor = expectedFocusBorderColor;
 
         expect(
           focusedBorderColor,
@@ -89,8 +89,8 @@ void main() {
     test('focus styling consistency across 100 iterations', () {
       for (int i = 0; i < 100; i++) {
         // Simulate focus event
-        final focusedBgColor = expectedFocusBgColor;
-        final focusedBorderColor = expectedFocusBorderColor;
+        const focusedBgColor = expectedFocusBgColor;
+        const focusedBorderColor = expectedFocusBorderColor;
 
         expect(
           focusedBgColor,
@@ -136,8 +136,8 @@ void main() {
 
       for (final field in fields) {
         // Simulate focus
-        final focusedBgColor = expectedFocusBgColor;
-        final focusedBorderColor = expectedFocusBorderColor;
+        const focusedBgColor = expectedFocusBgColor;
+        const focusedBorderColor = expectedFocusBorderColor;
 
         expect(
           focusedBgColor,
@@ -158,8 +158,8 @@ void main() {
 
       for (final content in fieldContents) {
         // Focus styling should be same regardless of content
-        final focusedBgColor = expectedFocusBgColor;
-        final focusedBorderColor = expectedFocusBorderColor;
+        const focusedBgColor = expectedFocusBgColor;
+        const focusedBorderColor = expectedFocusBorderColor;
 
         expect(
           focusedBgColor,
@@ -180,9 +180,12 @@ void main() {
       expect(expectedFocusBgColor, equals(Colors.white));
 
       // Verify primary color components are valid
-      expect(expectedFocusBorderColor.red, inInclusiveRange(0, 255));
-      expect(expectedFocusBorderColor.green, inInclusiveRange(0, 255));
-      expect(expectedFocusBorderColor.blue, inInclusiveRange(0, 255));
+      expect((expectedFocusBorderColor.r * 255.0).round().clamp(0, 255),
+          inInclusiveRange(0, 255));
+      expect((expectedFocusBorderColor.g * 255.0).round().clamp(0, 255),
+          inInclusiveRange(0, 255));
+      expect((expectedFocusBorderColor.b * 255.0).round().clamp(0, 255),
+          inInclusiveRange(0, 255));
     });
 
     test('focus and default colors are different', () {

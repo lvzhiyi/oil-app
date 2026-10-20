@@ -229,7 +229,7 @@ void main() {
     });
 
     test('validation is deterministic', () {
-      final testPhone = '13800138000';
+      const testPhone = '13800138000';
 
       // Call validation multiple times
       for (int i = 0; i < 10; i++) {
@@ -241,7 +241,7 @@ void main() {
         );
       }
 
-      final invalidPhone = '138';
+      const invalidPhone = '138';
       for (int i = 0; i < 10; i++) {
         final result = PhoneValidator.validatePhone(invalidPhone);
         expect(

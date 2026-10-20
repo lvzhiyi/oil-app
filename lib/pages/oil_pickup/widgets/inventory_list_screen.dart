@@ -62,8 +62,9 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
               textColor: CustomAppColor.of(context).txtGrey,
             ),
             TextButton(
-              onPressed: () => widget.controller.loadInventories(isRefresh: true),
-              child: Text('重试'),
+              onPressed: () =>
+                  widget.controller.loadInventories(isRefresh: true),
+              child: const Text('重试'),
             ),
           ],
         ),

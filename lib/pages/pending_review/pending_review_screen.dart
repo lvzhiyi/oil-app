@@ -10,7 +10,6 @@ import 'package:oil_business_app/router/router.dart';
 import 'package:oil_business_app/router/routes.dart';
 import 'package:oil_business_app/static/img.dart';
 import 'package:oil_business_app/utils/sizer_utils.dart';
-import 'package:oil_business_app/widgets/base/bottom_sheet/bottom_sheet.dart';
 import 'package:oil_business_app/widgets/base/button/common_button.dart';
 import 'package:oil_business_app/widgets/base/text/common_text.dart';
 import 'package:oil_business_app/widgets/popup/dialog.dart';
@@ -117,11 +116,11 @@ class _PendingReviewScreenState extends State<PendingReviewScreen> {
         actions: [
           IconButton(
             icon: _isRefreshing
-                ? SizedBox(
+                ? const SizedBox(
                     width: 20,
                     height: 20,
                     child: CupertinoActivityIndicator(
-                      color: const Color(0xFF1F2937),
+                      color: Color(0xFF1F2937),
                     ),
                   )
                 : Icon(

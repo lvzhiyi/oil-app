@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:oil_business_app/pages/oil_pickup/controller.dart';
 import 'package:oil_business_app/pages/oil_pickup/state.dart';
-import 'package:oil_business_app/resources/colors.dart';
 import 'package:oil_business_app/widgets/common/global_update_ui.dart';
 
 import 'inventory_list_screen.dart';

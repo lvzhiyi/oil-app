@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:file_picker/file_picker.dart';
@@ -272,6 +271,7 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
       );
       final dynamic filePath =
           result['filePath'] ?? result['filePathList']?.first;
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -282,6 +282,7 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
         ),
       );
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('保存到相册失败，请检查权限'),
@@ -303,6 +304,7 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
           '$directoryPath/oil_certificate_${DateTime.now().millisecondsSinceEpoch}.png';
       final File file = await File(filePath).create(recursive: true);
       await file.writeAsBytes(bytes);
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('图片已保存：$filePath'),
@@ -311,6 +313,7 @@ class _OilPickupSuccessScreenState extends State<OilPickupSuccessScreen> {
         ),
       );
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('保存失败，请重试'),

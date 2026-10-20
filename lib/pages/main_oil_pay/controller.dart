@@ -7,11 +7,8 @@ import 'package:oil_business_app/config/config.dart';
 import 'package:oil_business_app/global/app_controller.dart';
 import 'package:oil_business_app/pages/main_oil_pay/model/oil_order_res.type.dart';
 import 'package:oil_business_app/pages/main_oil_pay/service/oil_order_service.dart';
-import 'package:oil_business_app/utils/exit_app.dart';
-import 'package:oil_business_app/utils/log.dart';
 import 'package:oil_business_app/widgets/common/page_loading.dart';
 import 'package:oil_business_app/widgets/popup/dialog.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'state.dart';
 
@@ -21,8 +18,6 @@ class OilPayCtrl extends Cubit<MainOilPayState> {
   }
   late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
 
-  List<ConnectivityResult> _connectivityResult = [];
-
   initState() async {
     _subscribeNetworkStateChange();
   }
@@ -31,7 +26,6 @@ class OilPayCtrl extends Cubit<MainOilPayState> {
     _connectivitySubscription =
         Connectivity().onConnectivityChanged.listen((result) async {
       result = await (Connectivity().checkConnectivity());
-      _connectivityResult = result;
       print('result: $result');
       if (result.contains(ConnectivityResult.wifi) ||
           result.contains(ConnectivityResult.mobile)) {

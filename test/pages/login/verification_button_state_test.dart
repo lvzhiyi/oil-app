@@ -59,7 +59,7 @@ void main() {
       }
 
       // Button should be enabled when countdown reaches 0
-      final isButtonEnabled = 0 == 0;
+      const isButtonEnabled = 0 == 0;
       expect(
         isButtonEnabled,
         true,

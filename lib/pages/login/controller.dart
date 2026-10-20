@@ -326,18 +326,6 @@ class LoginCtrl extends Cubit<LoginState> {
     ));
   }
 
-  Future<void> _loadLastPhone() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final cachedPhone = prefs.getString(_lastLoginPhoneKey);
-      if (cachedPhone != null && cachedPhone.isNotEmpty) {
-        phoneController.text = cachedPhone;
-      }
-    } catch (_) {
-      // 读取失败时静默处理，不影响登录流程
-    }
-  }
-
   Future<void> _saveLastPhone(String phone) async {
     final trimmed = phone.trim();
     if (trimmed.isEmpty) return;

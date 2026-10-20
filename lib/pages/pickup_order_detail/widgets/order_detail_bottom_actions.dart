@@ -23,7 +23,7 @@ class OrderDetailBottomActions extends StatelessWidget {
     final BorderRadius borderRadius =
         BorderRadius.circular(AppSizes.setWidth(12));
     final Color primary = CustomAppColor.of(context).primaryColor;
-    final Color cancelOverlay = const Color(0xFFEF4444).withOpacity(0.12);
+    final Color cancelOverlay = const Color(0xFFEF4444).withValues(alpha: 0.12);
     final Color primaryOverlay = primary.withValues(alpha: 0.12);
 
     return Container(
@@ -52,8 +52,9 @@ class OrderDetailBottomActions extends StatelessWidget {
               child: InkWell(
                 borderRadius: borderRadius,
                 overlayColor: WidgetStateProperty.resolveWith(
-                  (states) =>
-                      states.contains(WidgetState.pressed) ? cancelOverlay : null,
+                  (states) => states.contains(WidgetState.pressed)
+                      ? cancelOverlay
+                      : null,
                 ),
                 onTap: onCancel,
                 child: Container(
@@ -83,8 +84,9 @@ class OrderDetailBottomActions extends StatelessWidget {
               child: InkWell(
                 borderRadius: borderRadius,
                 overlayColor: WidgetStateProperty.resolveWith(
-                  (states) =>
-                      states.contains(WidgetState.pressed) ? primaryOverlay : null,
+                  (states) => states.contains(WidgetState.pressed)
+                      ? primaryOverlay
+                      : null,
                 ),
                 onTap: isSaving ? null : onSave,
                 child: Container(
@@ -100,9 +102,10 @@ class OrderDetailBottomActions extends StatelessWidget {
                           height: AppSizes.setWidth(20),
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor:
-                                const AlwaysStoppedAnimation<Color>(Colors.white),
-                            backgroundColor: Colors.white.withOpacity(0.25),
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.white),
+                            backgroundColor:
+                                Colors.white.withValues(alpha: 0.25),
                           ),
                         )
                       : Row(

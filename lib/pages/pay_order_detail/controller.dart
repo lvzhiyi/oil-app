@@ -238,7 +238,7 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
         if (uploadedUrls.length < imagePaths.length) {
           SportsToast.showWarning(
               '${uploadedUrls.length}张图片上传成功，${imagePaths.length - uploadedUrls.length}张图片上传失败');
-        } else if (imagePaths.length > 0) {
+        } else if (imagePaths.isNotEmpty) {
           SportsToast.showSuccess('凭证上传成功');
         }
       } else {
@@ -386,7 +386,9 @@ class PayOrderDetailCtrl extends Cubit<PayOrderDetailState> {
               color: CustomAppColor(context).white,
               border: Border(
                 top: BorderSide(
-                    color: CustomAppColor(context).borderGrey.withValues(alpha: 0.5)),
+                    color: CustomAppColor(context)
+                        .borderGrey
+                        .withValues(alpha: 0.5)),
               ),
             ),
             padding: EdgeInsets.symmetric(

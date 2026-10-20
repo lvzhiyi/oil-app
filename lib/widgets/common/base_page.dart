@@ -13,7 +13,7 @@ abstract class BasePage extends StatefulWidget {
   void onPause() {}
 }
 
-abstract class BaseState<Page extends BasePage> extends State<Page>
+abstract class BaseState<TPage extends BasePage> extends State<TPage>
     with WidgetsBindingObserver {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
@@ -72,7 +72,7 @@ abstract class BaseState<Page extends BasePage> extends State<Page>
 }
 
 /// 混入 init 状态
-mixin BasicInitPage<Page extends BasePage> on BaseState<Page> {
+mixin BasicInitPage<TPage extends BasePage> on BaseState<TPage> {
   bool inited = false;
 
   Orientation? orientationNow;
@@ -92,26 +92,26 @@ mixin BasicInitPage<Page extends BasePage> on BaseState<Page> {
 
   Future init() async {
     l.i('', '######################## base page init ########################');
-    
+
     // 记录初始化开始时间
     final startTime = DateTime.now();
-    
+
     screen.init();
-    
+
     l.i('',
         '######################## base page init end ########################');
-    
+
     // 只在首次启动时等待，确保启动页显示足够时间
     if (_isFirstLaunch) {
       final elapsed = DateTime.now().difference(startTime).inMilliseconds;
       final remainingDelay = _splashMinDuration - elapsed;
-      
+
       if (remainingDelay > 0) {
         await Future.delayed(Duration(milliseconds: remainingDelay));
       }
       _isFirstLaunch = false;
     }
-    
+
     setState(() {
       inited = true;
     });
@@ -139,7 +139,7 @@ mixin BasicInitPage<Page extends BasePage> on BaseState<Page> {
 }
 
 /// 混入 init 状态 hooks专用
-mixin BasicInitHooksPage<Page extends BasePage> on State<Page> {
+mixin BasicInitHooksPage<TPage extends BasePage> on State<TPage> {
   bool inited = false;
 
   Orientation? orientationNow;

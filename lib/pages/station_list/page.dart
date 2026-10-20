@@ -7,7 +7,7 @@ import 'package:oil_business_app/widgets/common/base_page.dart';
 import 'controller.dart';
 
 class StationListPage extends BasePage {
-  StationListPage({Key? key}) : super(key: key);
+  const StationListPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _StationListPage();

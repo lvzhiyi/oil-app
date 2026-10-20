@@ -20,7 +20,7 @@ class StationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = CustomAppColor.of(context);
-    final primaryBg = const Color(0xFFF0EEFC);
+    const primaryBg = Color(0xFFF0EEFC);
 
     return GestureDetector(
       onTap: onTap,

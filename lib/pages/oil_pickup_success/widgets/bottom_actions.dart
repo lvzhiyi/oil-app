@@ -101,7 +101,8 @@ class OilPickupSuccessBottomActions extends StatelessWidget {
                             strokeWidth: 2,
                             valueColor: const AlwaysStoppedAnimation<Color>(
                                 Colors.white),
-                            backgroundColor: Colors.white.withOpacity(0.25),
+                            backgroundColor:
+                                Colors.white.withValues(alpha: 0.25),
                           ),
                         )
                       : Row(

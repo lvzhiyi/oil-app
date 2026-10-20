@@ -4,10 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:flutter_ume_kit_console_plus/flutter_ume_kit_console_plus.dart';
-import 'package:flutter_ume_kit_device_plus/flutter_ume_kit_device_plus.dart';
-import 'package:flutter_ume_kit_perf_plus/flutter_ume_kit_perf_plus.dart';
-import 'package:flutter_ume_kit_ui_plus/flutter_ume_kit_ui_plus.dart';
 import 'package:flutter_ume_plus/flutter_ume_plus.dart';
 // ignore: depend_on_referenced_packages
 import 'package:hive/hive.dart';

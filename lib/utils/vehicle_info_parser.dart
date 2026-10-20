@@ -137,7 +137,7 @@ class VehicleInfoParser {
       // 更新：加入句号(。.)作为停止符
       final stopChars = isStrict ? r'[^,，;；.。\n\s]+' : r'[^,，;；.。\n]+';
       final pattern =
-          RegExp('(?:$key)\s*[:：]?\s*($stopChars)', caseSensitive: false);
+          RegExp('(?:$key)s*[:：]?s*($stopChars)', caseSensitive: false);
 
       final match = pattern.firstMatch(text);
       if (match != null) {

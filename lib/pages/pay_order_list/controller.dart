@@ -166,6 +166,7 @@ class PayOrderListCtrl extends Cubit<PayOrderListState> {
               btnText: '取消订单',
               onTap: () async {
                 await cancelOrder(order.id?.toString() ?? '');
+                if (!context.mounted) return;
                 Navigator.of(context).pop();
               },
             ),

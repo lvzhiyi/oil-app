@@ -216,7 +216,7 @@ class CommonImgUploadState extends State<CommonImgUpload> {
                         width: AppSizes.setWidth(126),
                         height: AppSizes.setHeight(126),
                         color: Colors.grey[200],
-                        child: Center(
+                        child: const Center(
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             color: AppColor.primaryColor,
@@ -227,7 +227,7 @@ class CommonImgUploadState extends State<CommonImgUpload> {
                         width: AppSizes.setWidth(126),
                         height: AppSizes.setHeight(126),
                         color: Colors.grey[200],
-                        child: Icon(Icons.error),
+                        child: const Icon(Icons.error),
                       ),
                     ),
                   )

@@ -18,8 +18,6 @@ import 'app_state.dart';
 
 class AppController extends HydratedCubit<AppState>
     with WidgetsBindingObserver {
-  bool _hasCheckedStartup = false;
-
   AppController() : super(AppState()) {
     listenAppLifecycle();
 

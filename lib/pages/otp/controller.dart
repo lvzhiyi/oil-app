@@ -208,7 +208,7 @@ class OtpCtrl extends Cubit<OtpState> {
     emit(state.copyWith(loading: true));
     try {
       final response = await authService.login(LoginRequest(
-          phone: extra?['phone'] ?? '',
+          phone: extra['phone'] ?? '',
           code: codeController.map((e) => e.text).join('')));
       print('response: $response');
       BaseConfig.appContext?.read<AppController>().loginSucessProcess(response);
